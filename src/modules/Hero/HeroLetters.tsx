@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { useGsapAnimation } from './hooks/useGsapAnimation';
+import { HeroLettersProps } from '@/types/hero.types';
 
 export const HeroLetters = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,7 +15,7 @@ export const HeroLetters = () => {
     groupDelay: '0.66',
   };
 
-  useGsapAnimation(containerRef, data);
+  useGsapAnimation(containerRef as React.RefObject<Element>, data);
 
   return (
     <div className="hero__container-letters" ref={containerRef}>

@@ -2,6 +2,8 @@
 
 import { useRef } from 'react';
 import { useGsapAnimation } from './hooks/useGsapAnimation';
+import { HeroContentRightProps } from '@/types/hero.types';
+import { SpriteIcon } from '../../ui/SpriteIcon/SpriteIcon';
 
 export const HeroContentRight = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -29,9 +31,9 @@ export const HeroContentRight = () => {
     groupDelay: '0.55',
   };
 
-  useGsapAnimation(headingRef, headingData);
-  useGsapAnimation(spanRef, spanData);
-  useGsapAnimation(brushRef, brushData);
+  useGsapAnimation(headingRef as React.RefObject<Element>, headingData);
+  useGsapAnimation(spanRef as React.RefObject<Element>, spanData);
+  useGsapAnimation(brushRef as React.RefObject<Element>, brushData);
 
   return (
     <div className="hero__content hero__content--right">
@@ -40,9 +42,7 @@ export const HeroContentRight = () => {
       </h2>
       <span className="hero__paragraph">
         <span ref={spanRef}>and Web Design</span>
-        <svg className="hero__brush" ref={brushRef} width="260" height="30" alt="brush">
-          <use xlinkHref="/images/sprite.svg#brush" />
-        </svg>
+        <SpriteIcon id="brush" className="hero__brush" />
       </span>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import './Btn.modal.scss';
-import { ContactButtonProps } from '@/types/contact-button.types';
+import { ContactButtonProps } from '@/types/btn.types';
 
 /**
  * Кнопка "Contact me" с SVG-иконкой для хедера

@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import { useGsapAnimation } from './hooks/useGsapAnimation';
+import { HeroAvatarProps } from '@/types/hero.types';
 
 export const HeroAvatar = () => {
   const imgRef = useRef<HTMLImageElement>(null);
@@ -14,7 +15,7 @@ export const HeroAvatar = () => {
     groupDelay: '0.3',
   };
 
-  useGsapAnimation(imgRef, data);
+  useGsapAnimation(imgRef as React.RefObject<Element>, data);
 
   return (
     <div className="hero__avatar-container">

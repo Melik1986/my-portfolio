@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpriteIcon } from '@/components/SpriteIcon';
+import { SpriteIcon } from '@/ui/SpriteIcon';
 import { LogoProps } from '@/types/logo.types';
 
 /**

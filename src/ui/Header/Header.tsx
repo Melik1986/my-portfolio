@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Logo } from '@/components/Logo';
-import { Navigation } from '@/components/Navigation';
-import { ContactButton } from '@/components/ContactButton';
+import { Logo } from '@/ui/Logo/logo';
+import { Navigation } from '@/ui/Navigation/Navigation';
+import { ContactButton } from '@/ui/Button/ContactButton';
 
 export function Header() {
   return (

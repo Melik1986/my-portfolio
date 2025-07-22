@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { AnimationProps } from '@/types/use-card-animation.types';
+import { AnimationProps } from '@/types/gsap.types';
 
 gsap.registerPlugin(ScrollTrigger);
 

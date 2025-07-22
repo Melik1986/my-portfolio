@@ -4,18 +4,11 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Back } from 'gsap';
+import { AnimationData, UseGsapAnimation } from '@/types/gsap.types';
 
 gsap.registerPlugin(ScrollTrigger, Back);
 
-type AnimationData = {
-  animation?: string;
-  duration?: string;
-  ease?: string;
-  stagger?: string;
-  groupDelay?: string;
-};
-
-export const useGsapAnimation = (ref: React.RefObject<HTMLElement>, data: AnimationData) => {
+export const useGsapAnimation: UseGsapAnimation = (ref, data) => {
   useEffect(() => {
     if (!ref.current) return;
 
@@ -41,9 +34,15 @@ export const useGsapAnimation = (ref: React.RefObject<HTMLElement>, data: Animat
         break;
       case 'svg-draw':
         animationProps = { ...animationProps, strokeDashoffset: 0 };
-        // Предполагаем, что для SVG draw нужно установить strokeDasharray заранее
-        gsap.set(ref.current, { strokeDasharray: ref.current.getTotalLength?.() });
-        gsap.set(ref.current, { strokeDashoffset: ref.current.getTotalLength?.() });
+        if (
+          ref.current &&
+          'getTotalLength' in ref.current &&
+          typeof (ref.current as unknown as SVGGeometryElement).getTotalLength === 'function'
+        ) {
+          const length = (ref.current as unknown as SVGGeometryElement).getTotalLength();
+          gsap.set(ref.current, { strokeDasharray: length });
+          gsap.set(ref.current, { strokeDashoffset: length });
+        }
         break;
       default:
         return;

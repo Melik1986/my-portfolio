@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import { useGsapAnimation } from './hooks/useGsapAnimation';
+import { HeroContentLeftProps } from '@/types/hero.types';
 
 export const HeroContentLeft = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -14,7 +15,7 @@ export const HeroContentLeft = () => {
     groupDelay: '0.2',
   };
 
-  useGsapAnimation(containerRef, data);
+  useGsapAnimation(containerRef as React.RefObject<Element>, data);
 
   return (
     <div className="hero__content hero__content--left">
