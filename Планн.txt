@@ -1,0 +1,53 @@
+my-portfolio/  # Корень проекта
+├── public/    # Статические ассеты (из images/ старого проекта)
+│   ├── favicon.ico
+│   ├── images/    # Перенести из старого images/
+│   │   ├── avatar.webp
+│   │   ├── family/    # Семейные фото для About
+│   │   ├── poster/    # Постеры проектов
+│   │   └── ... 
+│   └── fonts/     # Перенести шрифты
+├── src/
+│   ├── app/       # App Router: страницы и layouts
+│   │   ├── layout.tsx     # Глобальный layout с Header
+│   │   ├── page.tsx       # Главная страница (с Hero, About, Skills, Projects, Contact)
+│   │   ├── globals.css    # Глобальные стили (импорт SCSS)
+│   │   └── favicon.ico    # Если нужно
+│   ├── components/        # Модульные компоненты (из js/components/ и HTML-секций)
+│   │   ├── Header/        # Навигация
+│   │   │   └── Header.tsx
+│   │   ├── Hero/          # Вводная секция
+│   │   │   └── Hero.tsx
+│   │   ├── About/         # С текстом и слайдером
+│   │   │   ├── About.tsx
+│   │   │   └── FamilyGallery.tsx  # Подкомпонент слайдера
+│   │   ├── Skills/        # Навыки с чартами
+│   │   │   └── Skills.tsx
+│   │   ├── Projects/      # Каталог проектов
+│   │   │   ├── Projects.tsx
+│   │   │   └── ProjectCard.tsx  # Карточка проекта
+│   │   ├── Contact/       # Форма контактов
+│   │   │   └── Contact.tsx
+│   │   ├── ui/            # UI-компоненты (кнопки, формы из Shadcn/ui)
+│   │   │   └── Button.tsx
+│   │   └── animations/    # Анимации (GSAP wrappers)
+│   │       └── Spiral.tsx # Из spiral.js
+│   ├── lib/               # Утилиты и helpers (из js/utils/)
+│   │   └── helpers.ts
+│   ├── styles/            # SCSS с BEM (перенести из scss/)
+│   │   ├── block/         # BEM блоки
+│   │   │   └── _hero.scss
+│   │   ├── global/        # Глобальные (variables, mixins)
+│   │   └── style.scss     # Основной импорт
+│   ├── types/             # TypeScript типы
+│   │   └── index.ts
+│   └── hooks/             # Кастомные хуки (для анимаций, форм)
+│       └── useAnimation.ts
+├── tests/                 # Тесты (перенести из tests/)
+│   └── ...
+├── next.config.ts         # Конфиг Next.js
+├── tsconfig.json          # TypeScript config
+├── package.json           # Зависимости (добавить React 19, Next 15, Tailwind, GSAP, etc.)
+├── .eslintrc.json         # Линтер
+├── .gitignore
+└── README.md

@@ -1,0 +1,11 @@
+import { ReactNode } from 'react';
+
+export interface AnimatedCardSectionProps {
+  id: string;
+  title: string;
+  children: ReactNode;
+  direction?: 'horizontal' | 'vertical';
+  activationThreshold?: number;
+  onActivate?: () => void;
+  onDeactivate?: () => void;
+}
