@@ -1,0 +1,26 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/mixins.scss' as *;
+
+.logo__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border: none;
+  color: inherit;
+  opacity: 0;
+
+  .logo__icon:focus-visible,
+  .logo__icon:hover {
+    outline: none;
+    fill: $color-accent;
+    scale: 1.1;
+  }
+}
+
+.logo__icon {
+  position: relative;
+  z-index: 1;
+  width: 120px;
+  height: auto;
+}

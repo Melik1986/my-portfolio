@@ -1,0 +1,9 @@
+@use '@/global/mixins' as *;
+@use '@/global/variables' as *;
+
+.hero {
+  width: 100%;
+  display: flex;
+  position: relative;
+  margin: 0 auto;
+}

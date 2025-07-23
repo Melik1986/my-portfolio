@@ -1,6 +1,7 @@
 import React from 'react';
 import { SpriteIcon } from '@/ui/SpriteIcon';
 import { LogoProps } from '@/types/logo.types';
+import './logo.module.scss';
 
 /**
  * Логотип компании с использованием SVG-спрайта
@@ -9,7 +10,7 @@ export function Logo({ className = '', iconClassName = '', ...rest }: LogoProps)
   return (
     <a
       href="#header"
-      className={`header__logo-link ${className}`.trim()}
+      className={`logo__link ${className}`.trim()}
       data-animation="slide-left"
       data-duration="0.8"
       data-ease="power2.out"
@@ -18,7 +19,7 @@ export function Logo({ className = '', iconClassName = '', ...rest }: LogoProps)
     >
       <SpriteIcon
         id="logo"
-        className={`header__logo-icon ${iconClassName}`.trim()}
+        className={`logo__icon ${iconClassName}`.trim()}
         width={50}
         height={50}
         aria-label="Logo"

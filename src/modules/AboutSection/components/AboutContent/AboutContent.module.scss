@@ -1,0 +1,31 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/mixins.scss' as *;
+
+.about {
+  &__content-left {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 140px;
+    background-color: $color-bg-white;
+  }
+
+  &__heading {
+    font-family: $font-family-chango;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    will-change: transform;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    font-family: $font-family-roboto;
+    will-change: transform;
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavigationItem, NavigationProps } from '@/types/navigation.types';
+import './nav.module.scss';
 
 /**
  * Меню навигации для хедера
@@ -15,7 +16,7 @@ export function Navigation({
 }: NavigationProps) {
   return (
     <ul
-      className={`header__nav ${className}`.trim()}
+      className={`nav__list ${className}`.trim()}
       data-animation="slide-down"
       data-duration="0.6"
       data-ease="power2.out"
@@ -23,9 +24,9 @@ export function Navigation({
       data-stagger="0.1"
     >
       {items.map(({ href, label }) => (
-        <li className="header__nav-item" key={href}>
-          <a className="header__nav-link" href={href}>
-            <span className="header__nav-text">{label}</span>
+        <li className="nav__item" key={href}>
+          <a className="nav__link" href={href}>
+            <span className="nav__text">{label}</span>
           </a>
         </li>
       ))}

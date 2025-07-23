@@ -1,6 +1,6 @@
 // Типы для HeroAvatar
 // Пока пропсы не используются, но файл создан для расширяемости
-export interface HeroAvatarProps {}
+export interface HeroImageProps {}
 
 // Типы для HeroContentLeft
 export interface HeroContentLeftProps {}
