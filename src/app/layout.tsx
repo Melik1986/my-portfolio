@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.scss';
-import Container from '../ui/Container/Container';
+import Container from '../lib/ui/Container/Container';
 
 export const metadata: Metadata = {
   title: 'My Portfolio',

@@ -6,8 +6,8 @@ interface ContainerProps {
   className?: string;
 }
 
-const Container = ({ children, className = '' }: ContainerProps) => {
+function Container({ children, className = '' }: ContainerProps) {
   return <div className={`${styles.container} ${className}`.trim()}>{children}</div>;
-};
+}
 
 export default Container;

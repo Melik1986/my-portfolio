@@ -1,41 +1,30 @@
 'use client';
 
-import { useRef } from 'react';
-import { useGsapAnimation } from '@/modules/HeroSection/hooks/useGsapAnimation';
-import { HeroLettersProps } from '@/types/hero.types';
 import styles from './HeroLetters.module.scss';
 
-const containerData = {
-  animation: 'slide-down',
-  duration: '0.8',
-  stagger: '0.1',
-  ease: 'power2.out',
-  groupDelay: '0.66',
-};
-const containerAnimation = {
-  'data-animation': containerData.animation,
-  'data-duration': containerData.duration,
-  'data-stagger': containerData.stagger,
-  'data-ease': containerData.ease,
-  'data-delay': containerData.groupDelay,
-};
+function Letter({ letter }: { letter: string }) {
+  return (
+    <span className={styles['hero__text']} data-title={letter}>
+      {letter}
+    </span>
+  );
+}
 
-export const HeroLetters: React.FC<HeroLettersProps> = (props) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGsapAnimation(containerRef as React.RefObject<Element>, containerData);
+export function HeroLetters() {
+  const letters = ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'];
 
   return (
-    <div className={styles['hero__container-letters']} ref={containerRef} {...containerAnimation}>
-      <span className={styles['hero__text']} data-title="P">P</span>
-      <span className={styles['hero__text']} data-title="O">O</span>
-      <span className={styles['hero__text']} data-title="R">R</span>
-      <span className={styles['hero__text']} data-title="T">T</span>
-      <span className={styles['hero__text']} data-title="F">F</span>
-      <span className={styles['hero__text']} data-title="O">O</span>
-      <span className={styles['hero__text']} data-title="L">L</span>
-      <span className={styles['hero__text']} data-title="I">I</span>
-      <span className={styles['hero__text']} data-title="O">O</span>
+    <div
+      className={styles['hero__container-letters']}
+      data-animation="slide-down"
+      data-duration="0.8"
+      data-stagger="0.1"
+      data-ease="power2.out"
+      data-delay="0.66"
+    >
+      {letters.map((letter, index) => (
+        <Letter key={index} letter={letter} />
+      ))}
     </div>
   );
-};
+}

@@ -1,0 +1,92 @@
+import { AnimationType, AnimationConfig } from '@/types/gsap.types';
+
+// Интерфейс для определения свойств анимации
+export interface AnimationDefinition {
+  from: gsap.TweenVars; // Начальное состояние
+  to: gsap.TweenVars; // Конечное состояние
+  duration?: number; // Длительность анимации (опционально)
+  ease?: string; // Функция сглаживания (опционально)
+}
+
+// Предустановки анимаций с from и to свойствами
+export const animationDefinitions: Record<AnimationType, AnimationDefinition> = {
+  'slide-left': {
+    from: { x: -100, opacity: 0 },
+    to: { x: 0, opacity: 1 },
+    duration: 0.8,
+    ease: 'power2.out',
+  },
+  'slide-right': {
+    from: { x: 100, opacity: 0 },
+    to: { x: 0, opacity: 1 },
+    duration: 0.8,
+    ease: 'power2.out',
+  },
+  'slide-down': {
+    from: { y: -50, opacity: 0 },
+    to: { y: 0, opacity: 1 },
+    duration: 0.6,
+    ease: 'power2.out',
+  },
+  'slide-up': {
+    from: { y: 50, opacity: 0 },
+    to: { y: 0, opacity: 1 },
+    duration: 0.6,
+    ease: 'power2.out',
+  },
+  'fade-up': {
+    from: { y: 30, opacity: 0 },
+    to: { y: 0, opacity: 1 },
+    duration: 0.6,
+    ease: 'power2.out',
+  },
+  'fade-left': {
+    from: { x: 30, opacity: 0 },
+    to: { x: 0, opacity: 1 },
+    duration: 0.6,
+    ease: 'power2.out',
+  },
+  'fade-right': {
+    from: { x: -30, opacity: 0 },
+    to: { x: 0, opacity: 1 },
+    duration: 0.6,
+    ease: 'power2.out',
+  },
+  'zoom-in': {
+    from: { scale: 0, opacity: 0 },
+    to: { scale: 1, opacity: 1 },
+    duration: 0.6,
+    ease: 'back.out(1.7)',
+  },
+  'scale-up': {
+    from: { scale: 0.8, opacity: 0 },
+    to: { scale: 1, opacity: 1 },
+    duration: 0.6,
+    ease: 'back.out(1.7)',
+  },
+  'svg-draw': {
+    from: { strokeDashoffset: 'auto' }, // Будет вычислено динамически
+    to: { strokeDashoffset: 0 },
+    duration: 1.0,
+    ease: 'power2.out',
+  },
+  'text-reveal': {
+    from: { clipPath: 'inset(0 100% 0 0)' },
+    to: { clipPath: 'inset(0 0% 0 0)' },
+    duration: 0.8,
+    ease: 'power2.out',
+  },
+};
+
+// Функция для получения определения анимации с учетом пользовательских параметров
+export function getAnimationDefinition(
+  type: AnimationType,
+  customConfig?: Partial<AnimationConfig>,
+): AnimationDefinition {
+  const baseDefinition = animationDefinitions[type];
+  return {
+    ...baseDefinition,
+    duration: customConfig?.duration ?? baseDefinition.duration ?? 0.6,
+    ease: customConfig?.ease ?? baseDefinition.ease ?? 'power2.out',
+  };
+}
