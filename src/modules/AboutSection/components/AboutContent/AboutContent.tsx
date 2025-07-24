@@ -1,6 +1,6 @@
 'use client';
 
-import { AboutAnimation } from '../AboutAnimation/AboutAnimation';
+import { AboutAnimation } from '../index';
 import styles from './AboutContent.module.scss';
 
 function AboutHeading() {

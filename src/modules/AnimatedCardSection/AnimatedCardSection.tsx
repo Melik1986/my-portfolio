@@ -1,25 +1,28 @@
 'use client';
 
 import { useCardAnimation } from './hooks/useCardAnimation';
-import { AnimatedCardSectionProps } from '../../types/animated-card-section.types';
+import { AnimatedCardSectionProps } from '@/types/animated-card-section.types';
 import './Section.module.scss';
+import { useRef } from 'react';
 
-export default function AnimatedCardSection({
+export function AnimatedCardSection({
   id,
   title,
   children,
   direction = 'vertical',
 }: AnimatedCardSectionProps) {
-  const { sectionRef, contentRef } = useCardAnimation({
+  const contentTimelinesRef = useRef(new Map<number, gsap.core.Timeline>());
+  const { wrapperRef } = useCardAnimation({
     direction,
+    contentTimelinesRef,
   });
 
   return (
-    <section ref={sectionRef} className="portfolio__section" id={id}>
+    <section ref={wrapperRef} className="portfolio__section" id={id}>
       <h2 className="portfolio__title">{title}</h2>
-      <div ref={contentRef} className="portfolio__wrapper">
-        {children}
-      </div>
+      <ul className="portfolio__wrapper">
+        <li className="portfolio__item">{children}</li>
+        </ul>
     </section>
   );
 }

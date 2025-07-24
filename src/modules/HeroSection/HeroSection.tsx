@@ -1,17 +1,15 @@
 'use client';
 
-import { useAutoGsapAnimation } from '@/lib/hooks/useGsap';
-import { HeroLetters } from './components/HeroLetters/HeroLetters';
-import { HeroAvatar } from './components/HeroImage/HeroImage';
-import { HeroContentLeft } from './components/HeroContentLeft/HeroContentLeft';
-import { HeroContentRight } from './components/HeroContentRight/HeroContentRight';
+import { useGsap } from '@/lib/hooks/useGsap';
+import { HeroLetters, HeroAvatar } from './components/index';
+import { HeroContentLeft, HeroContentRight } from './components/index';
 import './HeroSection.module.scss';
 
 export function HeroSection() {
-  const heroContainerRef = useAutoGsapAnimation();
+  const { containerRef } = useGsap();
 
   return (
-    <div ref={heroContainerRef} className="hero" id="hero">
+    <div ref={containerRef} className="hero" id="hero">
       <h2
         className="hero__title"
         data-animation="slide-down"
