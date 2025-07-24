@@ -1,0 +1,92 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.skills-charts__container {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  min-height: 500px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-wrapper {
+  flex: 1 1;
+  min-height: 650px;
+  width: 50%;
+  height: 100%;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#dev-skills-chart,
+#design-skills-chart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+  color: $color-white;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.echarts-x-axis-label, .echarts-y-axis-label {
+  font-size: 11px;
+  color: $color-white;
+}
+
+.echarts-bar-series .echarts-bar {
+  fill: $color-accent;
+}
+
+.echarts-pie-series .echarts-pie {
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .skills-charts__container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .chart-wrapper {
+    flex-basis: auto;
+    min-height: 400px;
+    padding: 15px;
+  }
+  #dev-skills-chart,
+  #design-skills-chart {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-charts__container {
+    gap: 10px;
+  }
+  .chart-wrapper {
+    min-height: 300px;
+    min-width: 280px;
+    padding: 10px;
+  }
+  #dev-skills-chart,
+  #design-skills-chart {
+    min-height: 250px;
+    min-width: 250px;
+  }
+}

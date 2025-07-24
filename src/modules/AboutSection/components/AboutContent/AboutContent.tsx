@@ -3,9 +3,14 @@
 import { AboutAnimation } from '../index';
 import styles from './AboutContent.module.scss';
 
+import { useGsap } from '@/lib/hooks/useGsap';
+
 function AboutHeading() {
+  const { containerRef } = useGsap({});
+
   return (
     <h2
+      ref={containerRef}
       className={styles['about__heading']}
       data-animation="slide-left"
       data-duration="0.8"

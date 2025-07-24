@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './HeroLetters.module.scss';
+import { useGsap } from '@/lib/hooks/useGsap';
 
 function Letter({ letter }: { letter: string }) {
   return (
@@ -11,10 +12,13 @@ function Letter({ letter }: { letter: string }) {
 }
 
 export function HeroLetters() {
+  const { containerRef } = useGsap({});
+
   const letters = ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'];
 
   return (
     <div
+      ref={containerRef}
       className={styles['hero__container-letters']}
       data-animation="slide-down"
       data-duration="0.8"

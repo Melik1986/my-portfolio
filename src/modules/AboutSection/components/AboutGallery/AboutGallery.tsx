@@ -1,6 +1,7 @@
 'use client';
 
 import styles from './AboutGallery.module.scss';
+import { useGsap } from '@/lib/hooks/useGsap';
 
 const familyImages = [
   { src: 'images/family/family.webp', alt: 'Family photo' },
@@ -15,15 +16,11 @@ const familyImages = [
   { src: 'images/family/family9.webp', alt: 'Family photo 9' },
 ];
 
-function GalleryItem({ image, index }: { image: { src: string; alt: string }; index: number }) {
+function GalleryItem({ image }: { image: { src: string; alt: string } }) {
+
   return (
     <li
       className={styles['about__slider-item']}
-      data-position={index + 1}
-      data-animation="fade-up"
-      data-duration="0.6"
-      data-ease="power2.out"
-      data-delay={`${0.8 + index * 0.1}`}
     >
       <picture>
         <source srcSet={image.src} type="image/webp" />
@@ -34,8 +31,10 @@ function GalleryItem({ image, index }: { image: { src: string; alt: string }; in
 }
 
 export function AboutGallery() {
+  const { containerRef } = useGsap({});
+
   return (
-    <div className={styles['about__content-right']}>
+    <div ref={containerRef} className={styles['about__content-right']}>
       <ul
         className={styles['about__slider']}
         data-quantity={familyImages.length}
@@ -45,7 +44,7 @@ export function AboutGallery() {
         data-delay="0.6"
       >
         {familyImages.map((image, index) => (
-          <GalleryItem key={index} image={image} index={index} />
+          <GalleryItem key={index} image={image} />
         ))}
       </ul>
     </div>

@@ -2,10 +2,14 @@
 
 import { SpriteIcon } from '@/lib/ui/SpriteIcon/SpriteIcon';
 import styles from './HeroContentRight.module.scss';
+import { useGsap } from '@/lib/hooks/useGsap';
 
 function HeroHeading() {
+  const { containerRef } = useGsap({});
+
   return (
     <h2
+      ref={containerRef}
       className={styles['hero__heading']}
       data-animation="slide-right"
       data-duration="0.8"
@@ -41,8 +45,10 @@ function HeroParagraphContent() {
 }
 
 function HeroParagraph() {
+  const { containerRef } = useGsap({});
+
   return (
-    <span className={styles['hero__paragraph']}>
+    <span ref={containerRef} className={styles['hero__paragraph']}>
       <HeroParagraphContent />
     </span>
   );

@@ -6,7 +6,7 @@ import { HeroContentLeft, HeroContentRight } from './components/index';
 import './HeroSection.module.scss';
 
 export function HeroSection() {
-  const { containerRef } = useGsap();
+  const { containerRef } = useGsap({});
 
   return (
     <div ref={containerRef} className="hero" id="hero">

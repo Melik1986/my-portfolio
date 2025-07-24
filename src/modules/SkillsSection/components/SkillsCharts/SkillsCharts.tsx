@@ -1,8 +1,13 @@
 'use client';
 
+import { useGsap } from '@/lib/hooks/useGsap';
+import './SkillsCharts.module.scss';
+
 export function SkillsCharts() {
+  const { containerRef } = useGsap({});
+
   return (
-    <div className="skills__content skills__content--right">
+    <div ref={containerRef} className="skills__charts" data-animation="slide-right">
       <div className="skills-charts__container">
         <div className="chart-wrapper" id="dev-skills-chart-wrapper">
           <div id="dev-skills-chart" />

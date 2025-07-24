@@ -1,15 +1,11 @@
 'use client';
 
 import { SkillsContent, SkillsCharts } from './components/index';
+import './SkillsSection.module.scss';
 
-interface SkillsSectionProps {
-  id?: string;
-  className?: string;
-}
-
-export function SkillsSection({ id = "skills", className = "" }: SkillsSectionProps) {
+export function SkillsSection() {
   return (
-    <div className={`skills ${className}`} id={id}>
+    <div className="skills" id="skills">
       <h2 className="skills__title">Skills</h2>
       <SkillsContent />
       <SkillsCharts />

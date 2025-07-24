@@ -1,10 +1,17 @@
-interface SkillsTextProps {
-  animation?: string;
-}
+import { useGsap } from '@/lib/hooks/useGsap';
+import './SkillsText.module.scss';
 
-export function SkillsText({ animation = 'text-reveal' }: SkillsTextProps) {
+export function SkillsText() {
+  const { containerRef } = useGsap({});
+
   return (
-    <p className="skills__text" data-animation={animation}>
+    <p
+      ref={containerRef}
+      className="skills__text"
+      data-animation="text-reveal"
+      data-duration="0.8"
+      data-ease="power2.out"
+    >
       I&nbsp;bring together a&nbsp;solid technical foundation and a&nbsp;creative design approach,
       enabling me&nbsp;to&nbsp;build modern, high-performance websites that are both functional and
       visually stunning. My&nbsp;focus is&nbsp;on&nbsp;creating seamless user experiences,

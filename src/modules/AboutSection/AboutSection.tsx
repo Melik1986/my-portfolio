@@ -5,10 +5,10 @@ import { AboutContent, AboutGallery } from './components/index';
 import './About.module.scss';
 
 export function AboutSection() {
-  const ContainerRef = useGsap();
+  const { containerRef } = useGsap({});
 
   return (
-    <div ref={ContainerRef} className="about" id="about">
+    <div ref={containerRef} className="about" id="about">
       <h2
         className="about__title"
         data-animation="fade-up"

@@ -2,10 +2,13 @@
 
 import Image from 'next/image';
 import styles from './HeroImage.module.scss';
+import { useGsap } from '@/lib/hooks/useGsap';
 
 export function HeroAvatar() {
+  const { containerRef } = useGsap({});
+
   return (
-    <div className={styles['hero__image-container']}>
+    <div ref={containerRef} className={styles['hero__image-container']}>
       <Image
         className={styles['hero__image']}
         id="avatar"

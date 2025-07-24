@@ -1,0 +1,12 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.skills {
+  &__text {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-family: $font-family-roboto;
+    will-change: transform
+  }
+}
