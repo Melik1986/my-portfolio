@@ -140,53 +140,53 @@
 }
 
 /* Брендовые цвета для иконок через nth-child (для совместимости) */
-.spiral i:nth-child(10n+1) {
-  --icon-color: #E34F26;
+.spiral i:nth-child(10n + 1) {
+  --icon-color: #e34f26;
   /* HTML5 */
 }
 
-.spiral i:nth-child(10n+2) {
-  --icon-color: #1572B6;
+.spiral i:nth-child(10n + 2) {
+  --icon-color: #1572b6;
   /* CSS3 */
 }
 
-.spiral i:nth-child(10n+3) {
-  --icon-color: #F7DF1E;
+.spiral i:nth-child(10n + 3) {
+  --icon-color: #f7df1e;
   /* JavaScript */
 }
 
-.spiral i:nth-child(10n+4) {
-  --icon-color: #61DAFB;
+.spiral i:nth-child(10n + 4) {
+  --icon-color: #61dafb;
   /* React */
 }
 
-.spiral i:nth-child(10n+5) {
+.spiral i:nth-child(10n + 5) {
   --icon-color: #339933;
   /* Node.js */
 }
 
-.spiral i:nth-child(10n+6) {
-  --icon-color: #F05032;
+.spiral i:nth-child(10n + 6) {
+  --icon-color: #f05032;
   /* Git */
 }
 
-.spiral i:nth-child(10n+7) {
+.spiral i:nth-child(10n + 7) {
   --icon-color: #181717;
   /* GitHub */
 }
 
-.spiral i:nth-child(10n+8) {
+.spiral i:nth-child(10n + 8) {
   --icon-color: #336791;
   /* Database */
 }
 
-.spiral i:nth-child(10n+9) {
-  --icon-color: #F5792A;
+.spiral i:nth-child(10n + 9) {
+  --icon-color: #f5792a;
   /* Blender */
 }
 
-.spiral i:nth-child(10n+10) {
-  --icon-color: #DDDCDE;
+.spiral i:nth-child(10n + 10) {
+  --icon-color: #dddcde;
   /* Figma */
 }
 
@@ -207,8 +207,8 @@
   .tech-icon--github {
     color: $color-accent;
   }
-  
-  .spiral i:nth-child(10n+7) {
+
+  .spiral i:nth-child(10n + 7) {
     --icon-color: $color-accent;
   }
 }
@@ -218,7 +218,7 @@
   .spiral-container .tech-icon {
     font-size: 20px;
   }
-  
+
   .icon {
     font-size: 2.2rem;
   }

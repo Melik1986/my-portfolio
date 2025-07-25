@@ -1,7 +1,7 @@
 'use client';
 
 import { useCardAnimation } from './hooks/useCardAnimation';
-import { AnimatedCardSectionProps } from '@/types/animated-card-section.types';
+import { AnimatedCardSectionProps } from '@/modules/AnimatedCardSection/types/animated-card-section.types';
 import './Section.module.scss';
 import { useRef } from 'react';
 
@@ -22,7 +22,7 @@ export function AnimatedCardSection({
       <h2 className="portfolio__title">{title}</h2>
       <ul className="portfolio__wrapper">
         <li className="portfolio__item">{children}</li>
-        </ul>
+      </ul>
     </section>
   );
 }

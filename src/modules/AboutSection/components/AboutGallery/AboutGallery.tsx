@@ -17,11 +17,8 @@ const familyImages = [
 ];
 
 function GalleryItem({ image }: { image: { src: string; alt: string } }) {
-
   return (
-    <li
-      className={styles['about__slider-item']}
-    >
+    <li className={styles['about__slider-item']}>
       <picture>
         <source srcSet={image.src} type="image/webp" />
         <img src={image.src} alt={image.alt} width={200} height={150} />

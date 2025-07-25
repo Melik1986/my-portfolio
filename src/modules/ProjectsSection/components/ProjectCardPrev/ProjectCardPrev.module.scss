@@ -1,0 +1,28 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.projects-card {
+  &__number {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.5em;
+    font-weight: 700;
+    color: $color-white;
+    text-shadow: 0 0 10px #000;
+    transition: all 0.3s ease;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+
+    &--small {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+  }
+}

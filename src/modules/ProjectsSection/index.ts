@@ -1,4 +1,4 @@
 // Модуль
-export { HeroSection } from './HeroSection';
-export * from './components';
+export { ProjectsSection } from './ProjectsSection';
+export * from './components/index';
 // Экспорт только через модуль для инкапсуляции

@@ -34,4 +34,3 @@ export interface AnimationProps {
   onActivate?: () => void;
   onDeactivate?: () => void;
 }
-

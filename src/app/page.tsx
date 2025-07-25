@@ -1,10 +1,10 @@
 'use client';
 
-import { Header } from '../lib/ui/Header/Header';
-import { AnimatedCardSection } from '../modules/AnimatedCardSection/AnimatedCardSection';
-import { HeroSection } from '../modules/HeroSection/HeroSection';
-import { AboutSection } from '../modules/AboutSection/AboutSection';
-import { SkillsSection } from '../modules/SkillsSection/SkillsSection';
+import { Header } from '@/lib/ui/Header/Header';
+import { AnimatedCardSection } from '@/modules/AnimatedCardSection/AnimatedCardSection';
+import { HeroSection } from '@/modules/HeroSection/HeroSection';
+import { AboutSection } from '@/modules/AboutSection/AboutSection';
+import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 
 export default function Home() {
   return (

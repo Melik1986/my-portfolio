@@ -22,7 +22,7 @@
   padding: 15px;
   background-color: #1e1e1e;
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -46,7 +46,8 @@
   box-sizing: border-box;
 }
 
-.echarts-x-axis-label, .echarts-y-axis-label {
+.echarts-x-axis-label,
+.echarts-y-axis-label {
   font-size: 11px;
   color: $color-white;
 }

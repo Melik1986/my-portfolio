@@ -30,7 +30,7 @@ export const useCardAnimation = (
     const mainTimeline = createSectionTimeline({
       section: wrapper,
       animation: { items, direction, contentTimelinesRef },
-      activeIndexRef
+      activeIndexRef,
     });
     return () => {
       mainTimeline.scrollTrigger?.kill();
@@ -47,10 +47,18 @@ interface AnimationConfig {
   contentTimelinesRef: MutableRef<Map<number, gsap.core.Timeline>>;
 }
 
-function createSectionTimeline(config: { section: HTMLDivElement; animation: AnimationConfig; activeIndexRef: MutableRef<number> }): gsap.core.Timeline {
+function createSectionTimeline(config: {
+  section: HTMLDivElement;
+  animation: AnimationConfig;
+  activeIndexRef: MutableRef<number>;
+}): gsap.core.Timeline {
   const { section, animation, activeIndexRef } = config;
   const { items, direction, contentTimelinesRef } = animation;
-  const onSectionUpdate = getOnSectionUpdate({ activeIndexRef, contentTimelinesRef, numItems: items.length });
+  const onSectionUpdate = getOnSectionUpdate({
+    activeIndexRef,
+    contentTimelinesRef,
+    numItems: items.length,
+  });
   const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: section,
@@ -88,7 +96,10 @@ function getOnSectionUpdate(config: {
   };
 }
 
-function addSectionTransitions(timeline: gsap.core.Timeline, config: Pick<AnimationConfig, 'items' | 'direction'>): void {
+function addSectionTransitions(
+  timeline: gsap.core.Timeline,
+  config: Pick<AnimationConfig, 'items' | 'direction'>,
+): void {
   const { items, direction } = config;
   items.forEach((item, index) => {
     if (index < items.length - 1) {

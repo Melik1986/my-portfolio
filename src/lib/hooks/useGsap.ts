@@ -67,10 +67,7 @@ export function useGsap({
 /**
  * Добавляет анимацию для одного элемента в timeline по типу анимации.
  */
-function addAnimationToTimeline(
-  timeline: gsap.core.Timeline,
-  config: AddAnimationConfig
-) {
+function addAnimationToTimeline(timeline: gsap.core.Timeline, config: AddAnimationConfig) {
   const { element, animationType, params } = config;
   const animationDef = getAnimationDefinition(animationType, params);
   gsap.set(element, animationDef.from);
@@ -124,3 +121,5 @@ function addBaseAnimation(timeline: gsap.core.Timeline, config: AnimationConfig)
     delay: params.delay,
   });
 }
+
+export { gsap };

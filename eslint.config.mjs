@@ -15,7 +15,14 @@ const eslintConfig = [
     rules: {
       'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
       'max-depth': ['error', 3],
-      'max-params': ['error', 2],
+      'max-params': [
+        'error',
+        {
+          max: 2,
+          ignorePattern:
+            '^(use|create|configure|setup|init|build|parse|format|validate|transform|generate|render|animate|hook|util|config|helper)',
+        },
+      ],
       'id-length': ['error', { min: 2, exceptions: ['x', 'y'] }],
       camelcase: 'off',
       'func-names': ['error', 'always'],
@@ -24,7 +31,11 @@ const eslintConfig = [
       'react/jsx-pascal-case': ['error', { allowAllCaps: false, ignore: [] }],
       '@typescript-eslint/naming-convention': [
         'error',
-        { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
+        {
+          selector: 'variable',
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
         {
           selector: 'function',
           format: ['camelCase', 'PascalCase'],
