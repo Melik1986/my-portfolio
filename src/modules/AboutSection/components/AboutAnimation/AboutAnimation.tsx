@@ -1,9 +1,12 @@
 'use client';
 
 import { useGsap } from '@/lib/hooks/useGsap';
+import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
+import './AboutAnimation.module.scss';
 
 export function AboutAnimation() {
   const { containerRef } = useGsap({});
+  useAuroraAnimation(containerRef);
 
   return (
     <div
