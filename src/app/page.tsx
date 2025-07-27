@@ -5,6 +5,8 @@ import { AnimatedCardSection } from '@/modules/AnimatedCardSection/AnimatedCardS
 import { HeroSection } from '@/modules/HeroSection/HeroSection';
 import { AboutSection } from '@/modules/AboutSection/AboutSection';
 import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
+import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
+import { GallerySection } from '@/modules/GallerySection/GallerySection';
 
 export default function Home() {
   return (
@@ -22,6 +24,14 @@ export default function Home() {
 
         <AnimatedCardSection id="skills-section" title="Skills">
           <SkillsSection />
+        </AnimatedCardSection>
+
+        <AnimatedCardSection id="projects-section" title="Projects" direction="horizontal">
+          <ProjectsSection />
+        </AnimatedCardSection>
+
+        <AnimatedCardSection id="gallery-section" title="Gallery" direction="horizontal">
+          <GallerySection />
         </AnimatedCardSection>
       </div>
     </main>

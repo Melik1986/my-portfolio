@@ -1,5 +1,5 @@
-@use '@/global/mixins' as *;
-@use '@/global/variables' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .hero__content-right {
   position: relative;
@@ -18,9 +18,7 @@
     height: auto;
     margin: 0 0 10px 400px;
     padding: 0;
-    font-size: clamp(1.5rem, 5vw, 2.3rem);
-    line-height: 40px;
-    font-weight: 700;
+    font: $font-size-h6;
     letter-spacing: 0.1em;
     z-index: 13;
     color: #29abe2;
@@ -38,9 +36,7 @@
 
     span {
       font-family: $font-family-okinawa;
-      font-size: clamp(1.2rem, 5vw, 1.5rem);
-      font-weight: 700;
-      line-height: 30px;
+      font: $font-size-h6;
       letter-spacing: 0.1em;
       color: $color-accent;
       transform: rotate3d(1, 1, 1, -5deg);

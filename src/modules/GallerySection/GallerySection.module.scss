@@ -1,5 +1,5 @@
-@use './styles/variables' as *;
-@use './styles/mixins' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .gallery {
   width: 100%;
@@ -223,11 +223,9 @@
     transition: all $carousel-transition-time;
 
     .gallery__title {
-      font-size: 12px;
       text-transform: uppercase;
       color: $color-white;
-      font-weight: bold;
-      line-height: 1;
+      font: $font-size-h6;
       margin-bottom: 10px;
       transition: all $carousel-transition-time;
       position: relative;
@@ -245,7 +243,7 @@
         content: attr(data-item);
         border-radius: 50%;
         color: $color-white;
-        font-size: 12px;
+        font: $font-size-p-x-small;
         position: absolute;
         top: -20px;
         left: 0px;
@@ -256,18 +254,15 @@
   }
 
   &__name {
-    font-size: 10px;
+    font: $font-size-p-x-small;
     text-transform: uppercase;
-    font-weight: 500;
-    line-height: 1;
     transition: all $carousel-transition-time;
     margin-bottom: 10px;
     color: $carousel-accent-orange;
   }
 
   &__des {
-    font-size: 16px;
-    font-weight: 400;
+    font: $font-size-p;
     transition: all $carousel-transition-time;
     opacity: 0;
     display: none;
@@ -293,8 +288,7 @@
     color: $color-white;
     background-color: transparent;
     outline: none;
-    font-size: 25px;
-    font-weight: bold;
+    font: $font-size-h6;
     transition: all $carousel-transition-time;
     cursor: pointer;
     display: flex;
@@ -315,9 +309,8 @@
   }
 
   &__slide-number {
-    font-size: 25px;
+    font: $font-size-h6;
     color: $color-white;
-    font-weight: 400;
     margin-left: auto;
     letter-spacing: 5px;
     opacity: 0;

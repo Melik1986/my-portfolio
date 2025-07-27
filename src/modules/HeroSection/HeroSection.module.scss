@@ -1,5 +1,5 @@
-@use '@/global/mixins' as *;
-@use '@/global/variables' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .hero {
   width: 100%;

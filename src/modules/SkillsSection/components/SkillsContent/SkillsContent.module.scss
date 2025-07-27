@@ -1,5 +1,5 @@
-@use '@/styles/variables' as *;
-@use '@/styles/mixins' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .skills {
   &__content-left {
@@ -57,7 +57,7 @@
 
   &__heading {
     font-family: $font-family-chango;
-    font-size: 2.5rem;
+    font: $font-size-h6;
     margin-bottom: 1rem;
     will-change: transform;
   }

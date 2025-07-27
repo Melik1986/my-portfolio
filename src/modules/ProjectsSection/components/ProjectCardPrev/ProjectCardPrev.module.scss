@@ -1,13 +1,12 @@
-@use '@/styles/variables' as *;
-@use '@/styles/mixins' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .projects-card {
   &__number {
     position: absolute;
     top: 10px;
     left: 10px;
-    font-size: 0.5em;
-    font-weight: 700;
+    font: $font-size-h6;
     color: $color-white;
     text-shadow: 0 0 10px #000;
     transition: all 0.3s ease;

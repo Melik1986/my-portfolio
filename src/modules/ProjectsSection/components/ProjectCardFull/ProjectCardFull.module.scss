@@ -1,5 +1,5 @@
-@use '@/styles/variables' as *;
-@use '@/styles/mixins' as *;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 .projects-card {
   &__img {
@@ -37,20 +37,17 @@
 
     &__title {
       padding: 0;
-      font-size: clamp(1.5em, 5vw, 2em);
-      font-weight: 700;
+      font: $font-size-h6;
       margin-bottom: 10px;
     }
 
     &__text {
       padding: 0;
-      font-size: clamp(0.2em, 3vw, 0.4em);
-      font-weight: 400;
+      font: $font-size-h6;
     }
 
     &__link {
-      font-size: clamp(0.3em, 3vw, 1em);
-      font-weight: 400;
+      font: $font-size-h6;
       text-decoration: none;
       color: $color-white;
       border-bottom: 1px solid $color-white;

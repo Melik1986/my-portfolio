@@ -1,7 +1,7 @@
-@import '../styles/global/_variables';
-@import '../styles/global/_mixins';
-@import '../styles/global/_normalize';
-@import '../styles/global/_reboot';
-@import '../styles/global/_fonts';
-@import '../styles/global/_container';
-@import '../styles/global/_visually-hidden';
+@use '../styles/_variables' as *;
+@use '../styles/_mixins' as *;
+@use '../styles/_normalize' as *;
+@use '../styles/_reboot' as *;
+@use '../styles/_fonts' as *;
+@use '../styles/_container' as *;
+@use '../styles/_visually-hidden' as *;
