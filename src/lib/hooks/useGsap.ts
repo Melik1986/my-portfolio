@@ -122,4 +122,3 @@ function addBaseAnimation(timeline: gsap.core.Timeline, config: AnimationConfig)
   });
 }
 
-export { gsap };

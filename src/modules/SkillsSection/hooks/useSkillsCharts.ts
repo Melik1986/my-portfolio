@@ -10,7 +10,12 @@ import {
   LegendComponent,
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { SELECTORS, COLOR_PALETTE, SKILLS_DATA, RESPONSIVE_BREAKPOINTS } from '../config/skillsCharts.config';
+import {
+  SELECTORS,
+  COLOR_PALETTE,
+  SKILLS_DATA,
+  RESPONSIVE_BREAKPOINTS,
+} from '../config/skillsCharts.config';
 
 echarts.use([
   TitleComponent,
@@ -60,7 +65,12 @@ export const useSkillsCharts = () => {
 
     const containerWidth = devChartElement.offsetWidth;
     const barWidth = Math.max(25, Math.min(45, containerWidth / 12));
-    const fontSize = containerWidth < RESPONSIVE_BREAKPOINTS.mobile ? 10 : containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 11 : 12;
+    const fontSize =
+      containerWidth < RESPONSIVE_BREAKPOINTS.mobile
+        ? 10
+        : containerWidth < RESPONSIVE_BREAKPOINTS.tablet
+          ? 11
+          : 12;
     const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 45 : 0;
 
     const barChartOptions = {
@@ -121,7 +131,12 @@ export const useSkillsCharts = () => {
     const designHeight = designChartElement.offsetHeight;
     const minDimension = Math.min(designWidth, designHeight);
     const radius = Math.max(100, minDimension * 0.35);
-    const legendFontSize = designWidth < RESPONSIVE_BREAKPOINTS.mobile ? 10 : designWidth < RESPONSIVE_BREAKPOINTS.tablet ? 11 : 12;
+    const legendFontSize =
+      designWidth < RESPONSIVE_BREAKPOINTS.mobile
+        ? 10
+        : designWidth < RESPONSIVE_BREAKPOINTS.tablet
+          ? 11
+          : 12;
 
     const pieChartOptions = {
       legend: {
@@ -161,22 +176,26 @@ export const useSkillsCharts = () => {
     if (!devChartRef.current || !designChartRef.current) return;
 
     devChartRef.current.setOption({
-      series: [{
-        data: SKILLS_DATA.development.map((item) => item.score),
-        animation: true,
-        animationDuration: 1000,
-        animationEasing: 'cubicOut',
-        animationDelay: (idx: number) => idx * 100,
-      }],
+      series: [
+        {
+          data: SKILLS_DATA.development.map((item) => item.score),
+          animation: true,
+          animationDuration: 1000,
+          animationEasing: 'cubicOut',
+          animationDelay: (idx: number) => idx * 100,
+        },
+      ],
     });
 
     designChartRef.current.setOption({
-      series: [{
-        data: SKILLS_DATA.design,
-        animationType: 'expansion',
-        animationDuration: 1200,
-        animationDelay: (idx: number) => idx * 150,
-      }],
+      series: [
+        {
+          data: SKILLS_DATA.design,
+          animationType: 'expansion',
+          animationDuration: 1200,
+          animationDelay: (idx: number) => idx * 150,
+        },
+      ],
     });
   };
 
@@ -184,21 +203,25 @@ export const useSkillsCharts = () => {
     if (!devChartRef.current || !designChartRef.current) return;
 
     devChartRef.current.setOption({
-      series: [{
-        data: new Array(SKILLS_DATA.development.length).fill(0),
-        animation: true,
-        animationDuration: 800,
-        animationEasing: 'cubicIn',
-      }],
+      series: [
+        {
+          data: new Array(SKILLS_DATA.development.length).fill(0),
+          animation: true,
+          animationDuration: 800,
+          animationEasing: 'cubicIn',
+        },
+      ],
     });
 
     designChartRef.current.setOption({
-      series: [{
-        data: SKILLS_DATA.design.map((item) => ({ ...item, value: 0 })),
-        animationType: 'expansion',
-        animationDuration: 800,
-        animationEasing: 'cubicIn',
-      }],
+      series: [
+        {
+          data: SKILLS_DATA.design.map((item) => ({ ...item, value: 0 })),
+          animationType: 'expansion',
+          animationDuration: 800,
+          animationEasing: 'cubicIn',
+        },
+      ],
     });
   };
 
@@ -226,7 +249,12 @@ export const useSkillsCharts = () => {
 
     const containerWidth = devChartElement.offsetWidth;
     const barWidth = Math.max(25, Math.min(45, containerWidth / 12));
-    const fontSize = containerWidth < RESPONSIVE_BREAKPOINTS.mobile ? 10 : containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 11 : 12;
+    const fontSize =
+      containerWidth < RESPONSIVE_BREAKPOINTS.mobile
+        ? 10
+        : containerWidth < RESPONSIVE_BREAKPOINTS.tablet
+          ? 11
+          : 12;
     const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 45 : 0;
 
     devChartRef.current.setOption({
@@ -241,7 +269,12 @@ export const useSkillsCharts = () => {
     const designHeight = designChartElement.offsetHeight;
     const minDimension = Math.min(designWidth, designHeight);
     const radius = Math.max(100, minDimension * 0.35);
-    const legendFontSize = designWidth < RESPONSIVE_BREAKPOINTS.mobile ? 10 : designWidth < RESPONSIVE_BREAKPOINTS.tablet ? 11 : 12;
+    const legendFontSize =
+      designWidth < RESPONSIVE_BREAKPOINTS.mobile
+        ? 10
+        : designWidth < RESPONSIVE_BREAKPOINTS.tablet
+          ? 11
+          : 12;
 
     designChartRef.current.setOption({
       legend: {

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { gsap } from '@/lib/hooks/useGsap';
+import { gsap } from 'gsap';
 import { AnimationConfig, CardPosition } from '@/modules/ProjectsSection/types/projects-catalog';
 
 // Хук для расчета позиций карточек и анимаций (позиционирование, hover).
