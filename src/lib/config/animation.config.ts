@@ -1,6 +1,9 @@
 import { AnimationType, AnimationConfig } from '@/types/gsap.types';
 
-// Интерфейс для определения свойств анимации
+/**
+ * Интерфейс для определения свойств анимации
+ * Описывает начальное и конечное состояние анимации
+ */
 export interface AnimationDefinition {
   from: gsap.TweenVars; // Начальное состояние
   to: gsap.TweenVars; // Конечное состояние
@@ -8,7 +11,10 @@ export interface AnimationDefinition {
   ease?: string; // Функция сглаживания (опционально)
 }
 
-// Предустановки анимаций с from и to свойствами
+/**
+ * Предустановки анимаций с from и to свойствами
+ * Содержит все доступные типы анимаций с их конфигурацией
+ */
 export const animationDefinitions: Record<AnimationType, AnimationDefinition> = {
   'slide-left': {
     from: { x: -100, opacity: 0 },
@@ -78,7 +84,10 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
   },
 };
 
-// Функция для получения определения анимации с учетом пользовательских параметров
+/**
+ * Функция для получения определения анимации с учетом пользовательских параметров
+ * Объединяет базовое определение с пользовательскими настройками
+ */
 export function getAnimationDefinition(
   type: AnimationType,
   customConfig?: Partial<AnimationConfig>,

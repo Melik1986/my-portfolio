@@ -2,6 +2,10 @@ import React from 'react';
 import { NavigationProps } from '@/types/navigation.types';
 import './nav.module.scss';
 
+/**
+ * Массив элементов навигации по умолчанию
+ * Определяет ссылки и метки для навигационного меню
+ */
 const defaultItems = [
   { href: '#about', label: 'About' },
   { href: '#skills', label: 'Skills' },
@@ -9,6 +13,10 @@ const defaultItems = [
   { href: '#contact', label: 'Contact' },
 ];
 
+/**
+ * Компонент элемента навигации
+ * Рендерит отдельный пункт навигационного меню
+ */
 function NavigationItem({ href, label }: { href: string; label: string }) {
   return (
     <li className="nav__item">
@@ -19,6 +27,10 @@ function NavigationItem({ href, label }: { href: string; label: string }) {
   );
 }
 
+/**
+ * Компонент навигации с анимацией
+ * Отображает список ссылок с GSAP анимацией
+ */
 export function Navigation({ items = defaultItems, className = '' }: NavigationProps) {
   return (
     <ul

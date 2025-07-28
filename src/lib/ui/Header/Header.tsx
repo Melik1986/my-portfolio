@@ -1,13 +1,17 @@
 'use client';
 
 import React from 'react';
-import { useAutoGsapAnimation } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/hooks/useGsap';
 import { Logo } from '@/lib/ui/Logo/logo';
 import { Navigation } from '@/lib/ui/Navigation/Navigation';
 import { ContactButton } from '@/lib/ui/Button/ContactButton';
 
+/**
+ * Компонент шапки сайта
+ * Содержит логотип, навигацию и кнопку контакта
+ */
 export function Header() {
-  const headerRef = useAutoGsapAnimation();
+  const { containerRef: headerRef } = useGsap({});
 
   return (
     <header ref={headerRef} className="header" id="header">

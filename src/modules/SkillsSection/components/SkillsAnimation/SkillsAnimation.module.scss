@@ -24,20 +24,20 @@
   gap: 20px;
   font-family: sans-serif;
 
-  @include vp-360 {
+  @include vp-375 {
     max-width: 300px;
     .icon {
       font-size: 2rem;
       width: 60px;
       height: 60px;
     }
-    @include vp-768 {
+    @include vp-mobile {
       max-width: 400px;
     }
-    @include vp-1024 {
+    @include vp-tablet {
       max-width: 500px;
     }
-    @include vp-1304 {
+    @include vp-desktop {
       max-width: 600px;
     }
   }
@@ -214,7 +214,7 @@
 }
 
 /* Адаптивность */
-@include vp-768 {
+@include vp-mobile {
   .spiral-container .tech-icon {
     font-size: 20px;
   }

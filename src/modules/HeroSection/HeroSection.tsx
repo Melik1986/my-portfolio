@@ -3,13 +3,13 @@
 import { useGsap } from '@/lib/hooks/useGsap';
 import { HeroLetters, HeroAvatar } from './components/index';
 import { HeroContentLeft, HeroContentRight } from './components/index';
-import './HeroSection.module.scss';
+import styles from './HeroSection.module.scss';
 
 export function HeroSection() {
   const { containerRef } = useGsap({});
 
   return (
-    <div ref={containerRef} className="hero" id="hero">
+    <div ref={containerRef} className={styles.hero} id="hero">
       <h2
         className="hero__title"
         data-animation="slide-down"

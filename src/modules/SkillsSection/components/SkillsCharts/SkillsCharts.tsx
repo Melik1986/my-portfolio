@@ -6,7 +6,6 @@ import './SkillsCharts.module.scss';
 
 export function SkillsCharts() {
   const { containerRef } = useGsap({});
-  const { playAnimation, hideCharts, resetAnimation } = useSkillsCharts();
 
   // Пример интеграции: запуск анимации при монтировании
   // Вы можете интегрировать с GSAP или другими хуками по необходимости

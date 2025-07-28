@@ -7,7 +7,7 @@ import { useDeckAnimation } from '../../hooks/useDeckAnimation';
 import { ANIMATION_CONFIG, PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
 import './ProjectsCatalog.module.scss';
 
-export const ProjectsCatalog: React.FC = () => {
+export function ProjectsCatalog() {
   const { positions, animateToPosition, animateHover } = useCardAnimation(
     ANIMATION_CONFIG,
     PROJECTS_DATA.length,
@@ -43,4 +43,4 @@ export const ProjectsCatalog: React.FC = () => {
       ))}
     </div>
   );
-};
+}

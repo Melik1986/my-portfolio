@@ -4,6 +4,10 @@ import { useGsap } from '@/lib/hooks/useGsap';
 import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
 import './AboutAnimation.module.scss';
 
+/**
+ * Компонент Aurora анимации
+ * Создает контейнер для Three.js Aurora эффекта
+ */
 export function AboutAnimation() {
   const { containerRef } = useGsap({});
   useAuroraAnimation(containerRef);

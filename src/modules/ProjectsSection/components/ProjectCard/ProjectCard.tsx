@@ -85,15 +85,18 @@ function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber:
   );
 }
 
-function getHandleClick(
-  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>,
-  animateTransition: () => void,
-) {
-  return () => {
-    setIsFullscreen((prev) => !prev);
-    animateTransition();
-  };
-}
+const getHandleClick = useCallback(
+  (
+    setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>,
+    animateTransition: () => void,
+  ) => {
+    return () => {
+      setIsFullscreen((prev) => !prev);
+      animateTransition();
+    };
+  },
+  [],
+);
 
 export function ProjectCard(props: ProjectCardProps) {
   const { project, index, totalCards, onHoverStart, onHoverEnd } = props;
@@ -103,9 +106,10 @@ export function ProjectCard(props: ProjectCardProps) {
 
   const { animateTransition } = useProjectCardAnimation(cardRef, { index, cardNumber, totalCards });
 
-  const handleClick = useCallback(getHandleClick(setIsFullscreen, animateTransition), [
-    animateTransition,
-  ]);
+  const handleClick = useCallback(() => {
+    setIsFullscreen((prev) => !prev);
+    animateTransition();
+  }, [animateTransition]);
 
   const content = getCardContent(isFullscreen, project, cardNumber);
 

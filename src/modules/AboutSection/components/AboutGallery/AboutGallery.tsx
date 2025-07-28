@@ -3,6 +3,10 @@
 import styles from './AboutGallery.module.scss';
 import { useGsap } from '@/lib/hooks/useGsap';
 
+/**
+ * Массив изображений семьи для галереи
+ * Содержит пути к изображениям и alt тексты
+ */
 const familyImages = [
   { src: 'images/family/family.webp', alt: 'Family photo' },
   { src: 'images/family/family1.webp', alt: 'Family photo 1' },
@@ -16,6 +20,10 @@ const familyImages = [
   { src: 'images/family/family9.webp', alt: 'Family photo 9' },
 ];
 
+/**
+ * Компонент элемента галереи
+ * Рендерит изображение с оптимизацией для webp
+ */
 function GalleryItem({ image }: { image: { src: string; alt: string } }) {
   return (
     <li className={styles['about__slider-item']}>
@@ -27,6 +35,10 @@ function GalleryItem({ image }: { image: { src: string; alt: string } }) {
   );
 }
 
+/**
+ * Галерея изображений семьи с 3D анимацией
+ * Отображает вращающуюся карусель с семейными фото
+ */
 export function AboutGallery() {
   const { containerRef } = useGsap({});
 

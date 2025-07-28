@@ -5,6 +5,10 @@ import styles from './AboutContent.module.scss';
 
 import { useGsap } from '@/lib/hooks/useGsap';
 
+/**
+ * Заголовок секции "Обо мне"
+ * Отображает анимированный заголовок с GSAP
+ */
 function AboutHeading() {
   const { containerRef } = useGsap({});
 
@@ -22,6 +26,10 @@ function AboutHeading() {
   );
 }
 
+/**
+ * Содержимое текста "Обо мне"
+ * Содержит основной текст описания разработчика
+ */
 function AboutTextContent() {
   return (
     <>
@@ -42,6 +50,10 @@ function AboutTextContent() {
   );
 }
 
+/**
+ * Текстовый блок с анимацией раскрытия
+ * Применяет text-reveal анимацию к тексту
+ */
 function AboutText() {
   return (
     <p
@@ -56,6 +68,10 @@ function AboutText() {
   );
 }
 
+/**
+ * Основной контент секции "Обо мне"
+ * Композирует заголовок, текст и Aurora анимацию
+ */
 export function AboutContent() {
   return (
     <div className={styles['about__content-left']}>

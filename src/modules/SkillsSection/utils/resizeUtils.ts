@@ -1,0 +1,62 @@
+import * as echarts from 'echarts/core';
+import { SELECTORS, RESPONSIVE_BREAKPOINTS } from '../config/skillsCharts.config';
+
+/**
+ * Изменяет размеры графиков при изменении окна
+ * Адаптирует графики под новый размер контейнера
+ * @param devChart - график навыков разработки
+ * @param designChart - график навыков дизайна
+ */
+export const resizeCharts = (
+  devChart: echarts.ECharts | null,
+  designChart: echarts.ECharts | null,
+) => {
+  if (!devChart || !designChart) return;
+
+  /** Поиск DOM элементов графиков */
+  const devChartElement = document.querySelector(SELECTORS.DEV_CHART) as HTMLElement | null;
+  const designChartElement = document.querySelector(SELECTORS.DESIGN_CHART) as HTMLElement | null;
+
+  if (!devChartElement || !designChartElement) return;
+
+  /** Вычисление адаптивных параметров для столбчатой диаграммы */
+  const containerWidth = devChartElement.offsetWidth;
+  const barWidth = Math.max(25, Math.min(45, containerWidth / 12));
+  const fontSize =
+    containerWidth < RESPONSIVE_BREAKPOINTS.mobile
+      ? 10
+      : containerWidth < RESPONSIVE_BREAKPOINTS.tablet
+        ? 11
+        : 12;
+  const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 45 : 0;
+
+  /** Обновление настроек столбчатой диаграммы */
+  devChart.setOption({
+    xAxis: {
+      axisLabel: { fontSize, rotate: labelRotation },
+    },
+    series: [{ barWidth, barGap: 15 }],
+  });
+  devChart.resize();
+
+  /** Вычисление адаптивных параметров для круговой диаграммы */
+  const designWidth = designChartElement.offsetWidth;
+  const designHeight = designChartElement.offsetHeight;
+  const minDimension = Math.min(designWidth, designHeight);
+  const radius = Math.max(100, minDimension * 0.35);
+  const legendFontSize =
+    designWidth < RESPONSIVE_BREAKPOINTS.mobile
+      ? 10
+      : designWidth < RESPONSIVE_BREAKPOINTS.tablet
+        ? 11
+        : 12;
+
+  /** Обновление настроек круговой диаграммы */
+  designChart.setOption({
+    legend: {
+      textStyle: { fontSize: legendFontSize },
+    },
+    series: [{ radius: [0, radius] }],
+  });
+  designChart.resize();
+};

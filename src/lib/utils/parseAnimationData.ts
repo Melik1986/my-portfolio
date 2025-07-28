@@ -1,6 +1,9 @@
 import { AnimationType, AnimationConfig } from '@/types/gsap.types';
 
-// Утилита для парсинга data-атрибутов
+/**
+ * Утилита для парсинга data-атрибутов анимации
+ * Извлекает настройки анимации из DOM элемента
+ */
 export function parseAnimationData(element: Element): AnimationConfig | null {
   const animation = element.getAttribute('data-animation') || element.getAttribute('data-animate');
   if (!animation) return null;

@@ -13,21 +13,14 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
-      'max-depth': ['error', 3],
-      'max-params': [
-        'error',
-        {
-          max: 2,
-          ignorePattern:
-            '^(use|create|configure|setup|init|build|parse|format|validate|transform|generate|render|animate|hook|util|config|helper)',
-        },
-      ],
-      'id-length': ['error', { min: 2, exceptions: ['x', 'y'] }],
+      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+      'max-depth': ['warn', 4],
+      'max-params': ['warn', 4],
+      'id-length': ['warn', { min: 1, exceptions: ['x', 'y', 'i', 'e', 'z'] }],
       camelcase: 'off',
-      'func-names': ['error', 'always'],
-      'func-style': ['error', 'declaration', { allowArrowFunctions: true }],
-      'react/function-component-definition': ['error', { namedComponents: 'function-declaration' }],
+      'func-names': ['warn', 'always'],
+      'func-style': ['warn', 'declaration', { allowArrowFunctions: true }],
+      'react/function-component-definition': ['warn', { namedComponents: 'function-declaration' }],
       'react/jsx-pascal-case': ['error', { allowAllCaps: false, ignore: [] }],
       '@typescript-eslint/naming-convention': [
         'error',

@@ -10,7 +10,7 @@ interface ProjectCardFullscreenProps {
   project: ProjectData;
 }
 
-export const ProjectCardFullscreen: React.FC<ProjectCardFullscreenProps> = ({ project }) => {
+export function ProjectCardFullscreen({ project }: ProjectCardFullscreenProps) {
   return (
     <>
       <Image
@@ -35,4 +35,4 @@ export const ProjectCardFullscreen: React.FC<ProjectCardFullscreenProps> = ({ pr
       </div>
     </>
   );
-};
+}

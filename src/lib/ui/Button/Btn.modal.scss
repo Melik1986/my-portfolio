@@ -1,5 +1,5 @@
-@use '../global/mixins' as *;
-@use '../global/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/variables' as *;
 
 .btn {
   color: $color-text-main;

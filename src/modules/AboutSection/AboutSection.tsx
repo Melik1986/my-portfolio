@@ -4,6 +4,10 @@ import { useGsap } from '@/lib/hooks/useGsap';
 import { AboutContent, AboutGallery } from './components/index';
 import './About.module.scss';
 
+/**
+ * Секция "Обо мне" с анимацией
+ * Содержит информацию о разработчике с Aurora анимацией
+ */
 export function AboutSection() {
   const { containerRef } = useGsap({});
 

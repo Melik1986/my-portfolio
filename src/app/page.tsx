@@ -8,6 +8,10 @@ import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
 
+/**
+ * Главная страница портфолио
+ * Содержит все секции портфолио с анимированными картами
+ */
 export default function Home() {
   return (
     <main className="portfolio" id="smooth-wrapper">

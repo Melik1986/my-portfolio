@@ -11,9 +11,23 @@
   }
 }
 
+// Мобильные устройства (360px)
+@mixin vp-360 {
+  @media (max-width: 360px) {
+    @content;
+  }
+}
+
 // Мобильные устройства (до планшета)
 @mixin vp-mobile {
   @media (max-width: 767px) {
+    @content;
+  }
+}
+
+// Планшеты (768px)
+@mixin vp-768 {
+  @media (max-width: 768px) {
     @content;
   }
 }
@@ -25,9 +39,23 @@
   }
 }
 
+// Планшеты (1024px)
+@mixin vp-1024 {
+  @media (max-width: 1024px) {
+    @content;
+  }
+}
+
 // Десктоп (до максимального размера)
 @mixin vp-desktop {
   @media (max-width: 1439px) {
+    @content;
+  }
+}
+
+// Десктоп (1304px)
+@mixin vp-1304 {
+  @media (max-width: 1304px) {
     @content;
   }
 }

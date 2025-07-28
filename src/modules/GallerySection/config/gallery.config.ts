@@ -40,15 +40,13 @@ export const galleryItems: GalleryItem[] = [
     className: 'clouds',
     title: 'PEAKS IN THE CLOUDS',
     name: 'Clouds',
-    description:
-      'Mountain peaks wrapped in clouds. A dreamy sight that inspires awe and wonder.',
+    description: 'Mountain peaks wrapped in clouds. A dreamy sight that inspires awe and wonder.',
   },
   {
     className: 'riverbank',
     title: 'RIVERBANK PARADISE',
     name: 'Riverbank',
-    description:
-      'A picturesque riverbank flowing through lush greenery and vibrant landscapes.',
+    description: 'A picturesque riverbank flowing through lush greenery and vibrant landscapes.',
   },
   {
     className: 'ridges',

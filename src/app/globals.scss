@@ -5,3 +5,45 @@
 @use '../styles/_fonts' as *;
 @use '../styles/_container' as *;
 @use '../styles/_visually-hidden' as *;
+
+/**
+ * Базовые стили для портфолио
+ * Определяет основную структуру и стили для всех секций
+ */
+.portfolio {
+  width: 100%;
+  min-height: 100vh;
+
+  /** Обертка для всех секций портфолио */
+  &__section-wrapper {
+    width: 100%;
+  }
+
+  &__section {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  &__wrapper {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  &__item {
+    width: 100%;
+  }
+}

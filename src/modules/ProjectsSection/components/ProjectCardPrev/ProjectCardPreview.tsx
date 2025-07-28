@@ -10,11 +10,7 @@ interface ProjectCardPreviewProps {
   title: string;
 }
 
-export const ProjectCardPreview: React.FC<ProjectCardPreviewProps> = ({
-  number,
-  previewImage,
-  title,
-}) => {
+export function ProjectCardPreview({ number, previewImage, title }: ProjectCardPreviewProps) {
   return (
     <>
       <span className="projects-card__number">{number}</span>
@@ -28,4 +24,4 @@ export const ProjectCardPreview: React.FC<ProjectCardPreviewProps> = ({
       />
     </>
   );
-};
+}

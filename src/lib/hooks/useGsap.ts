@@ -9,18 +9,27 @@ import { getAnimationDefinition, AnimationDefinition } from '@/lib/config/animat
 
 gsap.registerPlugin(SplitText);
 
+/**
+ * Параметры анимации для элементов
+ */
 type AnimationParams = {
   duration: number;
   ease: string;
   delay: number;
 };
 
+/**
+ * Конфигурация анимации для одного элемента
+ */
 type AnimationConfig = {
   element: Element;
   params: AnimationParams;
   animationDef?: AnimationDefinition;
 };
 
+/**
+ * Конфигурация для добавления анимации в timeline
+ */
 type AddAnimationConfig = {
   element: Element;
   animationType: AnimationType;
@@ -67,6 +76,10 @@ export function useGsap({
 /**
  * Добавляет анимацию для одного элемента в timeline по типу анимации.
  */
+/**
+ * Добавляет анимацию для одного элемента в timeline по типу анимации
+ * Выбирает подходящий метод анимации в зависимости от типа
+ */
 function addAnimationToTimeline(timeline: gsap.core.Timeline, config: AddAnimationConfig) {
   const { element, animationType, params } = config;
   const animationDef = getAnimationDefinition(animationType, params);
@@ -83,6 +96,10 @@ function addAnimationToTimeline(timeline: gsap.core.Timeline, config: AddAnimati
   addBaseAnimation(timeline, { element, params, animationDef });
 }
 
+/**
+ * Добавляет анимацию рисования SVG элементов
+ * Анимирует stroke-dashoffset для эффекта рисования
+ */
 function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
   const { element, params } = config;
   const pathElements = element.querySelectorAll('path');
@@ -98,6 +115,10 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: AnimationConf
   });
 }
 
+/**
+ * Добавляет анимацию раскрытия текста
+ * Разбивает текст на символы и анимирует их появление
+ */
 function addTextRevealAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
   const { element, params } = config;
   const split = new SplitText(element, { type: 'words,chars' });
@@ -111,6 +132,10 @@ function addTextRevealAnimation(timeline: gsap.core.Timeline, config: AnimationC
   });
 }
 
+/**
+ * Добавляет базовую анимацию элемента
+ * Применяет стандартную анимацию from/to с пользовательскими параметрами
+ */
 function addBaseAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
   const { element, params, animationDef } = config;
   if (!animationDef) return;
@@ -121,4 +146,3 @@ function addBaseAnimation(timeline: gsap.core.Timeline, config: AnimationConfig)
     delay: params.delay,
   });
 }
-

@@ -2,6 +2,10 @@ import React from 'react';
 import './Btn.modal.scss';
 import { ContactButtonProps } from '@/types/btn.types';
 
+/**
+ * SVG иконка для кнопки контакта
+ * Рендерит SVG элемент с путями для стилизации
+ */
 function ContactIcon({ iconClassName }: { iconClassName: string }) {
   return (
     <svg
@@ -17,6 +21,10 @@ function ContactIcon({ iconClassName }: { iconClassName: string }) {
   );
 }
 
+/**
+ * Кнопка контакта с анимацией
+ * Отображает кнопку с SVG иконкой и текстом для связи
+ */
 export function ContactButton({ className = '', iconClassName = '', ...rest }: ContactButtonProps) {
   return (
     <button

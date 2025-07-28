@@ -3,6 +3,10 @@ import { SpriteIcon } from '@/lib/ui/SpriteIcon';
 import { LogoProps } from '@/types/logo.types';
 import './logo.module.scss';
 
+/**
+ * SVG иконка логотипа
+ * Рендерит логотип через SpriteIcon компонент
+ */
 function LogoIcon({ iconClassName }: { iconClassName: string }) {
   return (
     <SpriteIcon
@@ -15,6 +19,10 @@ function LogoIcon({ iconClassName }: { iconClassName: string }) {
   );
 }
 
+/**
+ * Компонент логотипа с анимацией
+ * Отображает кликабельный логотип с переходом на главную
+ */
 export function Logo({ className = '', iconClassName = '', ...rest }: LogoProps) {
   return (
     <a

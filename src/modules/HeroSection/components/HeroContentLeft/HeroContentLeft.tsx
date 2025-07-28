@@ -22,10 +22,8 @@ function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
 }
 
 export function HeroContentLeft() {
-  const { containerRef } = useGsap({});
-
   return (
-    <div ref={containerRef} className={styles['hero__content-left']}>
+    <div className={styles['hero__content-left']}>
       <div
         className={styles['hero__container-img']}
         data-animation="slide-left"
