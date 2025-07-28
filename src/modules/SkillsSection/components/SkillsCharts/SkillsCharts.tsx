@@ -1,7 +1,6 @@
 'use client';
 
 import { useGsap } from '@/lib/hooks/useGsap';
-import { useSkillsCharts } from '../../hooks/useSkillsCharts';
 import './SkillsCharts.module.scss';
 
 export function SkillsCharts() {

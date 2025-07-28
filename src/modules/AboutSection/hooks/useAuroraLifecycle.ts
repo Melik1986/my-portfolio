@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { AuroraSceneManager } from '@/modules/AboutSection/utils/AuroraSceneManager';
-import { AuroraState } from "../types/about.types";
+import { AuroraState } from '../types/about.types';
 
 interface UseAuroraLifecycleProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -26,41 +26,52 @@ const useEventListeners = ({
   initializeAnimation,
   stopAnimation,
   sceneManagerRef,
-}: Pick<UseAuroraLifecycleProps, 'containerRef' | 'handleMouseMove' | 'handleTouchMove' | 'handleResize' | 'initializeAnimation' | 'stopAnimation' | 'sceneManagerRef'>) => {
+}: Pick<
+  UseAuroraLifecycleProps,
+  | 'containerRef'
+  | 'handleMouseMove'
+  | 'handleTouchMove'
+  | 'handleResize'
+  | 'initializeAnimation'
+  | 'stopAnimation'
+  | 'sceneManagerRef'
+>) => {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const sceneManager = sceneManagerRef.current;
 
+    // Вызываем функции напрямую, не передавая их в зависимости
     initializeAnimation();
 
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('touchstart', handleTouchMove);
-    container.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('resize', handleResize);
+    // Создаем обертки для стабилизации
+    const stableHandleMouseMove = (e: MouseEvent) => handleMouseMove(e);
+    const stableHandleTouchMove = (e: TouchEvent) => handleTouchMove(e);
+    const stableHandleResize = () => handleResize();
+    const stableStopAnimation = () => stopAnimation();
+
+    container.addEventListener('mousemove', stableHandleMouseMove);
+    container.addEventListener('touchstart', stableHandleTouchMove, { passive: true });
+    container.addEventListener('touchmove', stableHandleTouchMove, { passive: true });
+    window.addEventListener('resize', stableHandleResize);
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove);
-      container.removeEventListener('touchstart', handleTouchMove);
-      container.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('resize', handleResize);
+      container.removeEventListener('mousemove', stableHandleMouseMove);
+      container.removeEventListener('touchstart', stableHandleTouchMove);
+      container.removeEventListener('touchmove', stableHandleTouchMove);
+      window.removeEventListener('resize', stableHandleResize);
 
-      stopAnimation();
+      stableStopAnimation();
       sceneManager?.destroy();
     };
-  }, [
-    containerRef,
-    handleMouseMove,
-    handleTouchMove,
-    handleResize,
-    initializeAnimation,
-    stopAnimation,
-    sceneManagerRef,
-  ]);
+  }, []); // Пустой массив зависимостей
 };
 
-const useVisibilityHandlers = ({ stopAnimation, resumeAnimation }: Pick<UseAuroraLifecycleProps, 'stopAnimation' | 'resumeAnimation'>) => {
+const useVisibilityHandlers = ({
+  stopAnimation,
+  resumeAnimation,
+}: Pick<UseAuroraLifecycleProps, 'stopAnimation' | 'resumeAnimation'>) => {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -79,23 +90,25 @@ const useVisibilityHandlers = ({ stopAnimation, resumeAnimation }: Pick<UseAuror
       window.removeEventListener('blur', stopAnimation);
       window.removeEventListener('focus', resumeAnimation);
     };
-  }, [stopAnimation, resumeAnimation]);
+  }, []); // Пустой массив зависимостей
 };
 
-const useAnimationLoop = ({ state, animate, animationFrameRef }: Pick<UseAuroraLifecycleProps, 'state' | 'animate' | 'animationFrameRef'>) => {
+const useAnimationLoop = ({
+  state,
+  animate,
+  animationFrameRef,
+}: Pick<UseAuroraLifecycleProps, 'state' | 'animate' | 'animationFrameRef'>) => {
   useEffect(() => {
-    const frameId = animationFrameRef.current;
-    
     if (state.isRunning) {
       animate();
     }
 
     return () => {
-      if (frameId) {
-        cancelAnimationFrame(frameId);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [state.isRunning, animate, animationFrameRef]);
+  }, [state.isRunning]); // Только состояние, не функции
 };
 
 export const useAuroraLifecycle = ({

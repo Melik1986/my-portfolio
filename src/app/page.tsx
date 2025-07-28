@@ -17,26 +17,28 @@ export default function Home() {
     <main className="portfolio" id="smooth-wrapper">
       <div className="portfolio__section-wrapper" id="smooth-content">
         <Header />
+        
+        <ul className="portfolio__wrapper">
+          <AnimatedCardSection id="hero-section" title="Hero">
+            <HeroSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection id="hero-section" title="Hero">
-          <HeroSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection id="about-section" title="About">
+            <AboutSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection id="about-section" title="About">
-          <AboutSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection id="skills-section" title="Skills">
+            <SkillsSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection id="skills-section" title="Skills">
-          <SkillsSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection id="projects-section" title="Projects" direction="horizontal">
+            <ProjectsSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection id="projects-section" title="Projects" direction="horizontal">
-          <ProjectsSection />
-        </AnimatedCardSection>
-
-        <AnimatedCardSection id="gallery-section" title="Gallery" direction="horizontal">
-          <GallerySection />
-        </AnimatedCardSection>
+          <AnimatedCardSection id="gallery-section" title="Gallery" direction="horizontal">
+            <GallerySection />
+          </AnimatedCardSection>
+        </ul>
       </div>
     </main>
   );

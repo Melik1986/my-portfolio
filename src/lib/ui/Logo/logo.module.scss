@@ -1,26 +1,28 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
 
-.logo__link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  border: none;
-  color: inherit;
-  opacity: 0;
+.logo {
+  &__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border: none;
+    color: inherit;
 
-  .logo__icon:focus-visible,
-  .logo__icon:hover {
-    outline: none;
-    fill: $color-accent;
-    scale: 1.1;
+    &:hover &__icon,
+    &:focus-visible &__icon {
+      outline: none;
+      fill: $color-accent;
+      transform: scale(1.1);
+      transition: all 0.3s ease;
+    }
   }
-}
 
-.logo__icon {
-  position: relative;
-  z-index: 1;
-  width: 120px;
-  height: auto;
+  &__icon {
+    position: relative;
+    z-index: 1;
+    width: 120px;
+    height: auto;
+  }
 }

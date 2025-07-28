@@ -15,8 +15,8 @@ export const ANIMATION_CONFIG: AnimationConfig = {
 
 export const PROJECTS_DATA: ProjectData[] = [
   {
-    image: 'public/images/catalog/project10.webp',
-    previewImage: 'public/images/catalog/project10.webp',
+    image: '/images/catalog/project10.webp',
+    previewImage: '/images/catalog/project10.webp',
     title: 'Algora',
     text:
       'A modern website on Next.js for small and medium-sized businesses. ' +
@@ -25,8 +25,8 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/algora',
   },
   {
-    image: 'public/images/catalog/project9.webp',
-    previewImage: 'public/images/catalog/project9.webp',
+    image: '/images/catalog/project9.webp',
+    previewImage: '/images/catalog/project9.webp',
     title: 'Houzzy',
     text:
       'This is a modern online furniture store with an adaptive design. ' +
@@ -35,8 +35,8 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/Houzzy',
   },
   {
-    image: 'public/images/catalog/project8.webp',
-    previewImage: 'public/images/catalog/project8.webp',
+    image: '/images/catalog/project8.webp',
+    previewImage: '/images/catalog/project8.webp',
     title: 'Format Archive',
     text:
       'A catalog of products and articles with the ability to filter and search. ' +
@@ -45,8 +45,8 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/format-archive',
   },
   {
-    image: 'public/images/catalog/project7.webp',
-    previewImage: 'public/images/catalog/project7.webp',
+    image: '/images/catalog/project7.webp',
+    previewImage: '/images/catalog/project7.webp',
     title: 'Balanced Pitch',
     text:
       'Modern one-page website for small and medium-sized businesses. ' +
@@ -55,15 +55,15 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/balanced-pitch',
   },
   {
-    image: 'public/images/catalog/project1.webp',
-    previewImage: 'public/images/catalog/project1.webp',
+    image: '/images/catalog/project1.webp',
+    previewImage: '/images/catalog/project1.webp',
     title: 'Проект 6',
     text: 'Описание шестого проекта.',
     link: 'https://example.com/project6',
   },
   {
-    image: 'public/images/catalog/project5.webp',
-    previewImage: 'public/images/catalog/project5.webp',
+    image: '/images/catalog/project5.webp',
+    previewImage: '/images/catalog/project5.webp',
     title: 'Aiden-Brooks',
     text:
       'This is a one-page SPA application developed on React and Vite, representing the Aiden Brooks portfolio. ' +
@@ -72,15 +72,15 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/aiden-brooks',
   },
   {
-    image: 'public/images/catalog/project4.webp',
-    previewImage: 'public/images/catalog/project4.webp',
+    image: '/images/catalog/project4.webp',
+    previewImage: '/images/catalog/project4.webp',
     title: 'Nico Palmer',
     text: 'A showcase of works, services, and reviews to attract new small and medium-sized business customers.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/nico-palmer',
   },
   {
-    image: 'public/images/catalog/project3.webp',
-    previewImage: 'public/images/catalog/project3.webp',
+    image: '/images/catalog/project3.webp',
+    previewImage: '/images/catalog/project3.webp',
     title: 'Origin Studio',
     text:
       'Minimalistic structure and clean code. Instant build and launch thanks to Vite. ' +
@@ -90,15 +90,15 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/origin',
   },
   {
-    image: 'public/images/catalog/project2.webp',
-    previewImage: 'public/images/catalog/project2.webp',
+    image: '/images/catalog/project2.webp',
+    previewImage: '/images/catalog/project2.webp',
     title: 'Проект 2',
     text: 'Описание второго проекта.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/social_media_app-main',
   },
   {
-    image: 'public/images/catalog/project1-mini.png',
-    previewImage: 'public/images/catalog/project1.webp',
+    image: '/images/catalog/project1-mini.png',
+    previewImage: '/images/catalog/project1.webp',
     title: 'Проект 1',
     text: 'Описание первого проекта.',
     link: 'https://github.com/Melik1986/Car_Hub',

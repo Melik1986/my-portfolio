@@ -6,4 +6,15 @@
   display: flex;
   position: relative;
   margin: 0 auto;
+
+  &__title {
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+    font-family: $font-family-leckerli;
+    font-size: $font-size-h6;
+    color: $color-white;
+    z-index: 10;
+    margin: 0;
+  }
 }

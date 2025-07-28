@@ -1,20 +1,22 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
 
-.hero__content-right {
-  position: relative;
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 3rem;
-  background-color: $color-bg-dark;
+.hero {
+  &__content-right {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: $color-bg-dark;
+  }
 
   &__heading {
     font-family: $font-family-chango;
-    width: 600px;
+    max-width: 600px;
     height: auto;
     margin: 0 0 10px 400px;
     padding: 0;
@@ -23,8 +25,23 @@
     z-index: 13;
     color: #29abe2;
     -webkit-text-stroke: 1px $color-white;
-    opacity: 0;
     z-index: 2;
+
+    @include vp-1024 {
+      max-width: 400px;
+      font: $font-size-h5;
+      margin-left: 0;
+    }
+
+    @include vp-768 {
+      max-width: 300px;
+      font: $font-size-h6;
+    }
+
+    @include vp-360 {
+      max-width: 200px;
+      font: $font-size-p-small;
+    }
   }
 
   &__paragraph {
@@ -40,7 +57,6 @@
       letter-spacing: 0.1em;
       color: $color-accent;
       transform: rotate3d(1, 1, 1, -5deg);
-      opacity: 0;
       z-index: 4;
     }
   }
@@ -50,7 +66,6 @@
     width: 240px;
     height: 35px;
     margin-top: -10px;
-    opacity: 0;
     z-index: 0;
 
     &[data-animation='svg-draw'] {

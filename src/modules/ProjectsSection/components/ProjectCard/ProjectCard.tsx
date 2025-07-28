@@ -44,7 +44,7 @@ function usePositionAnimation(
       gsap.set(cardRef.current, {
         x: pos.x,
         y: pos.y,
-        zPosition: 0,
+        z: 0,
         filter: `hue-rotate(${options.index * 30}deg)`,
         zIndex: options.cardNumber,
       });
@@ -84,19 +84,6 @@ function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber:
     />
   );
 }
-
-const getHandleClick = useCallback(
-  (
-    setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>,
-    animateTransition: () => void,
-  ) => {
-    return () => {
-      setIsFullscreen((prev) => !prev);
-      animateTransition();
-    };
-  },
-  [],
-);
 
 export function ProjectCard(props: ProjectCardProps) {
   const { project, index, totalCards, onHoverStart, onHoverEnd } = props;

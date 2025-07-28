@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationProps } from '@/types/navigation.types';
-import './nav.module.scss';
+import styles from './nav.module.scss';
 
 /**
  * Массив элементов навигации по умолчанию
@@ -19,9 +19,9 @@ const defaultItems = [
  */
 function NavigationItem({ href, label }: { href: string; label: string }) {
   return (
-    <li className="nav__item">
-      <a className="nav__link" href={href}>
-        <span className="nav__text">{label}</span>
+    <li className={styles.nav__item}>
+      <a className={styles.nav__link} href={href}>
+        <span className={styles.nav__text}>{label}</span>
       </a>
     </li>
   );
@@ -34,7 +34,7 @@ function NavigationItem({ href, label }: { href: string; label: string }) {
 export function Navigation({ items = defaultItems, className = '' }: NavigationProps) {
   return (
     <ul
-      className={`nav__list ${className}`.trim()}
+      className={`${styles.nav__list} ${className}`.trim()}
       data-animation="slide-down"
       data-duration="0.6"
       data-ease="power2.out"

@@ -4,7 +4,7 @@
 .btn {
   color: $color-text-main;
   background-color: transparent;
-  padding: 13px 0;
+  padding: 13px 10px;
   width: 170px;
   position: relative;
   text-align: center;
@@ -13,8 +13,8 @@
   display: block;
   margin: 0 0 0 auto;
   font-family: $font-family-poppins;
-  font-size: 16px;
-  line-height: 18px;
+  font: $font-size-p-small;
+  white-space: nowrap;
 
   &:hover,
   &:focus-visible {
@@ -39,11 +39,9 @@
     width: 160px;
     font-size: 18px;
     line-height: 20px;
-    padding: 16px 0;
   }
 
   @media (min-width: 1920px) {
-    padding: 16px 0;
     font-size: 22px;
     line-height: 26px;
   }
@@ -56,7 +54,7 @@
     height: 100%;
   }
 
-  &__icon-path {
+  &__icon_path {
     fill: none;
     stroke: $color-text-main;
     stroke-width: 1;
@@ -72,7 +70,7 @@
     color: $color-accent;
     text-shadow: rgba(0, 191, 255, 0.9) 0px 0px 24px;
 
-    .btn__icon-path {
+    .btn__icon_path {
       stroke: $color-accent;
       stroke-dasharray: 30, 310;
       stroke-dashoffset: 290;

@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { AuroraSceneManager } from '@/modules/AboutSection/utils/AuroraSceneManager';
-import { AuroraState } from "../types/about.types";
+import { AuroraState } from '../types/about.types';
 
 interface UseAuroraEventsProps {
   containerRef: React.RefObject<HTMLDivElement | null>;

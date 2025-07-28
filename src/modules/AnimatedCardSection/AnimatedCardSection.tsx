@@ -18,11 +18,8 @@ export function AnimatedCardSection({
   });
 
   return (
-    <section ref={wrapperRef} className={styles.portfolio__section} id={id}>
-      <h2 className={styles.portfolio__title}>{title}</h2>
-      <ul className={styles.portfolio__wrapper}>
-        <li className={styles.portfolio__item}>{children}</li>
-      </ul>
-    </section>
+    <li ref={wrapperRef} className={styles.portfolio__item} id={id}>
+      {children}
+    </li>
   );
 }

@@ -29,4 +29,4 @@ export const useSpiralState = (config: Partial<SpiralConfig> = {}) => {
     animatorRef,
     finalConfig,
   };
-}; 
+};

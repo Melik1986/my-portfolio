@@ -1,16 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-
 import styles from './HeroContentLeft.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
-  const { containerRef } = useGsap({});
-
   return (
     <Image
-      className={styles['hero__image']}
+      className={`${styles['hero__image']} ${styles[`hero__image--${id}`]}`}
       id={id}
       src={src}
       alt={alt}

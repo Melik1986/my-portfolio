@@ -19,7 +19,7 @@ export const useCardAnimation = (
   },
 ) => {
   const { direction = 'vertical', contentTimelinesRef } = props;
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLLIElement>(null);
   const activeIndexRef = useRef<number>(0) as MutableRef<number>;
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const useCardAnimation = (
     const items = wrapper.querySelectorAll('.portfolio__item');
     if (items.length === 0) return;
     const mainTimeline = createSectionTimeline({
-      section: wrapper,
+      section: wrapper as unknown as HTMLDivElement,
       animation: { items, direction, contentTimelinesRef },
       activeIndexRef,
     });

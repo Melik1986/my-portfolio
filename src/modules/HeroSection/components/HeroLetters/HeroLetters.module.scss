@@ -1,20 +1,32 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
 
-.hero__container-letters {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 40px;
-  padding: 0;
-  z-index: 2;
-  grid-area: container;
-  opacity: 0;
+.hero {
+  &__container-letters {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    padding: 0;
+    z-index: 2;
+
+    @include vp-1024 {
+      gap: 20px;
+    }
+
+    @include vp-768 {
+      gap: 10px;
+    }
+
+    @include vp-360 {
+      gap: 5px;
+    }
+  }
 
   &__text:nth-child(1) {
     font-size: 7.2rem;

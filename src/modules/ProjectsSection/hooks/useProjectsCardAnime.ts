@@ -34,7 +34,6 @@ export const useCardAnimation = (config: AnimationConfig, totalCards: number) =>
 };
 
 function calculatePositions(count: number, config: AnimationConfig): CardPosition[] {
-  // eslint-disable-next-line id-length
   return Array.from({ length: count }, (_, i) => ({
     x: i * config.xStep,
     y: i * config.yStep,

@@ -21,8 +21,6 @@ interface UseCarouselNavigationProps {
 /**
  * Хук для управления навигацией карусели
  * Обеспечивает переходы между слайдами с анимацией
- * @param props - объект с состояниями и методами для навигации
- * @returns объект с методами навигации
  */
 export const useCarouselNavigation = ({
   totalItems,
@@ -34,10 +32,45 @@ export const useCarouselNavigation = ({
   startAutoSlide,
   stopAutoSlide,
 }: UseCarouselNavigationProps) => {
-  /**
-   * Корректирует индекс для бесконечной прокрутки
-   * Обеспечивает плавный переход между началом и концом списка
-   */
+  const { adjustIndex } = useAdjustIndex(totalItems);
+  const { handleAnimationComplete } = useHandleAnimationComplete({
+    adjustIndex,
+    setCurrentIndex,
+    listRef,
+    setIsAnimating,
+    startAutoSlide,
+  });
+  const { createTransitionAnimation } = useCreateTransitionAnimation({
+    listRef,
+    handleAnimationComplete,
+  });
+  const { handleSlideTransition } = useHandleSlideTransition({ createTransitionAnimation });
+
+  const { nextSlide } = useNextSlide({
+    isAnimating,
+    setIsAnimating,
+    stopAutoSlide,
+    currentIndex,
+    handleSlideTransition,
+  });
+  const { prevSlide } = usePrevSlide({
+    isAnimating,
+    setIsAnimating,
+    stopAutoSlide,
+    currentIndex,
+    handleSlideTransition,
+  });
+
+  return {
+    nextSlide,
+    prevSlide,
+  };
+};
+
+/**
+ * Корректирует индекс для бесконечной прокрутки
+ */
+const useAdjustIndex = (totalItems: number) => {
   const adjustIndex = useCallback(
     (newIndex: number): number => {
       if (newIndex >= totalItems * 2) {
@@ -50,33 +83,95 @@ export const useCarouselNavigation = ({
     },
     [totalItems],
   );
+  return { adjustIndex };
+};
 
-  /**
-   * Обрабатывает переход между слайдами с анимацией
-   * Выполняет анимацию и корректирует индекс после завершения
-   */
-  const handleSlideTransition = useCallback(
+/**
+ * Обрабатывает завершение анимации перехода
+ */
+const useHandleAnimationComplete = ({
+  adjustIndex,
+  setCurrentIndex,
+  listRef,
+  setIsAnimating,
+  startAutoSlide,
+}: {
+  adjustIndex: (newIndex: number) => number;
+  setCurrentIndex: (index: number) => void;
+  listRef: React.RefObject<HTMLUListElement | null>;
+  setIsAnimating: (animating: boolean) => void;
+  startAutoSlide: () => void;
+}) => {
+  const handleAnimationComplete = useCallback(
     (newIndex: number) => {
-      gsap.to(listRef.current, {
+      const adjustedIndex = adjustIndex(newIndex);
+      setCurrentIndex(adjustedIndex);
+      gsap.set(listRef.current, { xPercent: -100 * adjustedIndex });
+      setIsAnimating(false);
+      startAutoSlide();
+    },
+    [adjustIndex, setCurrentIndex, listRef, setIsAnimating, startAutoSlide],
+  );
+  return { handleAnimationComplete };
+};
+
+/**
+ * Создает анимацию перехода
+ */
+const useCreateTransitionAnimation = ({
+  listRef,
+  handleAnimationComplete,
+}: {
+  listRef: React.RefObject<HTMLUListElement | null>;
+  handleAnimationComplete: (newIndex: number) => void;
+}) => {
+  const createTransitionAnimation = useCallback(
+    (newIndex: number) => {
+      return gsap.to(listRef.current, {
         xPercent: -100 * newIndex,
         duration: CAROUSEL_CONFIG.animation.duration,
         ease: CAROUSEL_CONFIG.animation.ease,
-        onComplete: () => {
-          const adjustedIndex = adjustIndex(newIndex);
-          setCurrentIndex(adjustedIndex);
-          gsap.set(listRef.current, { xPercent: -100 * adjustedIndex });
-          setIsAnimating(false);
-          startAutoSlide();
-        },
+        onComplete: () => handleAnimationComplete(newIndex),
       });
     },
-    [listRef, adjustIndex, setCurrentIndex, setIsAnimating, startAutoSlide],
+    [listRef, handleAnimationComplete],
   );
+  return { createTransitionAnimation };
+};
 
-  /**
-   * Переключает на следующий слайд
-   * Проверяет состояние анимации и запускает переход
-   */
+/**
+ * Обрабатывает переход между слайдами с анимацией
+ */
+const useHandleSlideTransition = ({
+  createTransitionAnimation,
+}: {
+  createTransitionAnimation: (newIndex: number) => gsap.core.Tween;
+}) => {
+  const handleSlideTransition = useCallback(
+    (newIndex: number) => {
+      createTransitionAnimation(newIndex);
+    },
+    [createTransitionAnimation],
+  );
+  return { handleSlideTransition };
+};
+
+/**
+ * Переключает на следующий слайд
+ */
+const useNextSlide = ({
+  isAnimating,
+  setIsAnimating,
+  stopAutoSlide,
+  currentIndex,
+  handleSlideTransition,
+}: {
+  isAnimating: boolean;
+  setIsAnimating: (animating: boolean) => void;
+  stopAutoSlide: () => void;
+  currentIndex: number;
+  handleSlideTransition: (newIndex: number) => void;
+}) => {
   const nextSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -84,11 +179,25 @@ export const useCarouselNavigation = ({
     const newIndex = currentIndex + 1;
     handleSlideTransition(newIndex);
   }, [isAnimating, setIsAnimating, stopAutoSlide, currentIndex, handleSlideTransition]);
+  return { nextSlide };
+};
 
-  /**
-   * Переключает на предыдущий слайд
-   * Проверяет состояние анимации и запускает переход
-   */
+/**
+ * Переключает на предыдущий слайд
+ */
+const usePrevSlide = ({
+  isAnimating,
+  setIsAnimating,
+  stopAutoSlide,
+  currentIndex,
+  handleSlideTransition,
+}: {
+  isAnimating: boolean;
+  setIsAnimating: (animating: boolean) => void;
+  stopAutoSlide: () => void;
+  currentIndex: number;
+  handleSlideTransition: (newIndex: number) => void;
+}) => {
   const prevSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -96,9 +205,5 @@ export const useCarouselNavigation = ({
     const newIndex = currentIndex - 1;
     handleSlideTransition(newIndex);
   }, [isAnimating, setIsAnimating, stopAutoSlide, currentIndex, handleSlideTransition]);
-
-  return {
-    nextSlide,
-    prevSlide,
-  };
+  return { prevSlide };
 };

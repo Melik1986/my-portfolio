@@ -1,12 +1,12 @@
 'use client';
 
 import { SkillsContent, SkillsCharts } from './components/index';
-import './SkillsSection.module.scss';
+import styles from './SkillsSection.module.scss';
 
 export function SkillsSection() {
   return (
-    <div className="skills" id="skills">
-      <h2 className="skills__title">Skills</h2>
+    <div className={styles.skills} id="skills">
+      <h2 className={`${styles.skills__title} visually-hidden`}>Skills</h2>
       <SkillsContent />
       <SkillsCharts />
     </div>

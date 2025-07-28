@@ -1,14 +1,16 @@
 'use client';
 
 import { useCallback } from 'react';
+import { SpiralState } from '../config/spiral.config';
+import { SpiralAnimator } from '../utils/spiralAnimator';
 
 /**
  * Интерфейс пропсов для основного хука спиральной анимации
  */
 interface UseSpiralAnimationCoreProps {
   containerRef: React.RefObject<HTMLElement>;
-  animatorRef: React.RefObject<any>;
-  setState: (updater: (prev: any) => any) => void;
+  animatorRef: React.RefObject<SpiralAnimator | null>;
+  setState: (updater: (prev: SpiralState) => SpiralState) => void;
 }
 
 /**
@@ -32,7 +34,7 @@ export const useSpiralAnimationCore = ({
     const icons = containerRef.current.querySelectorAll('.icon');
     if (icons.length > 0) {
       animatorRef.current.start(icons);
-      setState((prev: any) => ({ ...prev, isAnimating: true }));
+      setState((prev) => ({ ...prev, isAnimating: true }));
     }
   }, [containerRef, animatorRef, setState]);
 
@@ -43,7 +45,7 @@ export const useSpiralAnimationCore = ({
   const stopAnimation = useCallback(() => {
     if (animatorRef.current) {
       animatorRef.current.stop();
-      setState((prev: any) => ({ ...prev, isAnimating: false }));
+      setState((prev) => ({ ...prev, isAnimating: false }));
     }
   }, [animatorRef, setState]);
 
@@ -51,4 +53,4 @@ export const useSpiralAnimationCore = ({
     startAnimation,
     stopAnimation,
   };
-}; 
+};

@@ -13,7 +13,7 @@ export function GallerySection(): ReactElement {
   const totalItems = galleryItems.length;
   return (
     <div className={styles.gallery} id="portfolio" ref={carouselRef}>
-      <h2 className={styles.gallery__title}>My Portfolio</h2>
+      <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
       <ul className={styles.gallery__list}>
         {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
           <li

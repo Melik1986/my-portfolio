@@ -2,7 +2,7 @@
 
 import { useGsap } from '@/lib/hooks/useGsap';
 import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
-import './AboutAnimation.module.scss';
+import styles from './AboutAnimation.module.scss';
 
 /**
  * Компонент Aurora анимации
@@ -15,7 +15,7 @@ export function AboutAnimation() {
   return (
     <div
       ref={containerRef}
-      className="about__animation"
+      className={styles.about__animation}
       id="aurora-container"
       data-animation="fade-up"
       data-duration="0.8"

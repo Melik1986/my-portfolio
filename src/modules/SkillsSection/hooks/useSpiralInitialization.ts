@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { SpiralConfig } from '../config/spiral.config';
+import { SpiralConfig, SpiralState } from '../config/spiral.config';
 import { SpiralIconFactory } from '../utils/spiralIcon';
 import { TECH_ICONS } from '../config/spiral.config';
 import { SpiralAnimator } from '../utils/spiralAnimator';
@@ -12,8 +12,8 @@ import { SpiralAnimator } from '../utils/spiralAnimator';
 interface UseSpiralInitializationProps {
   containerRef: React.RefObject<HTMLElement>;
   finalConfig: SpiralConfig;
-  animatorRef: React.RefObject<any>;
-  setState: (updater: (prev: any) => any) => void;
+  animatorRef: React.RefObject<SpiralAnimator | null>;
+  setState: (updater: (prev: SpiralState) => SpiralState) => void;
 }
 
 /**
@@ -59,7 +59,7 @@ export const useSpiralInitialization = ({
         createIcons(spiral2, Math.PI);
 
         animatorRef.current = new SpiralAnimator(finalConfig);
-        setState((prev: any) => ({ ...prev, isInitialized: true }));
+        setState((prev) => ({ ...prev, isInitialized: true }));
         return true;
       }
     } catch (error) {
@@ -71,4 +71,4 @@ export const useSpiralInitialization = ({
   return {
     initializeSpirals,
   };
-}; 
+};

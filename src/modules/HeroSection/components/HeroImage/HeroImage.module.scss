@@ -1,25 +1,32 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
 
-.hero__image-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  grid-area: img;
-  z-index: 1;
-  opacity: 0;
-
-  &__image#avatar {
+.hero {
+  &__image-container {
     position: absolute;
     top: 62%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 700px;
-    height: 530px;
-    z-index: 4;
-    grid-area: avatar;
-    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    grid-area: img;
+    z-index: 1;
+  }
+
+  &__image {
+    position: relative;
+    
+    &#musinian {
+      max-width: 220px;
+      max-height: 80px;
+      margin-top: -30px;
+    }
+
+    &#melik {
+      max-width: 120px;
+      max-height: 60px;
+    }
   }
 }

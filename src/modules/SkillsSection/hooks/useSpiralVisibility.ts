@@ -36,4 +36,4 @@ export const useSpiralVisibility = ({
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [isInitialized, startAnimation, stopAnimation]);
-}; 
+};
