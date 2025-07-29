@@ -169,3 +169,33 @@
 
   @content;
 }
+
+// =============================================================================
+// МИКСИНЫ ДЛЯ ШРИФТОВ
+// =============================================================================
+
+// Миксин для создания font стилей
+@mixin font-style($size, $weight: normal, $family: $font-family-roboto, $line-height: 1.2) {
+  font: $weight $size/$line-height $family;
+}
+
+// Готовые миксины для разных шрифтов
+@mixin font-chango($size, $weight: normal, $line-height: 1.2) {
+  @include font-style($size, $weight, $font-family-chango, $line-height);
+}
+
+@mixin font-roboto($size, $weight: normal, $line-height: 1.2) {
+  @include font-style($size, $weight, $font-family-roboto, $line-height);
+}
+
+@mixin font-poppins($size, $weight: normal, $line-height: 1.2) {
+  @include font-style($size, $weight, $font-family-poppins, $line-height);
+}
+
+@mixin font-okinawa($size, $weight: normal, $line-height: 1.2) {
+  @include font-style($size, $weight, $font-family-okinawa, $line-height);
+}
+
+@mixin font-leckerli($size, $weight: normal, $line-height: 1.2) {
+  @include font-style($size, $weight, $font-family-leckerli, $line-height);
+}

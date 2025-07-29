@@ -2,28 +2,17 @@
 @use '@/styles/_mixins.scss' as *;
 
 .about {
-  &__content-left {
-    position: relative;
-    width: 50%;
-    height: 100%;
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: 140px;
-    background-color: $color-bg-white;
-  }
 
   &__heading {
     font-family: $font-family-chango;
-    font-size: $font-size-h1;
+    font: $font-h2;
     margin-bottom: 1rem;
     will-change: transform;
   }
 
   &__text {
     margin: 0;
-    font-size: $font-size-p;
+    font: $font-p;
     font-family: $font-family-roboto;
     will-change: transform;
   }

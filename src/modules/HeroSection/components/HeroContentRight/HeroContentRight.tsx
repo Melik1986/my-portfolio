@@ -56,9 +56,9 @@ function HeroParagraph() {
 
 export function HeroContentRight() {
   return (
-    <div className={styles['hero__content-right']}>
+    <>
       <HeroHeading />
       <HeroParagraph />
-    </div>
+    </>
   );
 }

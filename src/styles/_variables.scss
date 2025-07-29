@@ -23,16 +23,16 @@ $font-family-poppins: 'Poppins', Arial, sans-serif;
 $font-family-okinawa: 'Okinawa', Arial, sans-serif;
 $font-family-leckerli: 'Leckerli One', Arial, sans-serif;
 
-// Font sizes
-$font-size-h1: 700 48px/56px;
-$font-size-h2: 700 32px/40px;
-$font-size-h3: 700 24px/32px;
-$font-size-h4: 700 20px/28px;
-$font-size-h5: 700 16px/24px;
-$font-size-h6: 700 14px/20px;
-$font-size-p: 400 16px/24px;
-$font-size-p-small: 400 14px/20px;
-$font-size-p-x-small: 400 12px/16px;
+// Часто используемые font комбинации
+$font-h1: bold 48px/1.2 $font-family-chango;
+$font-h2: bold 32px/1.2 $font-family-chango;
+$font-h3: bold 24px/1.2 $font-family-chango;
+$font-h4: bold 20px/1.2 $font-family-chango;
+$font-h5: bold 16px/1.2 $font-family-chango;
+$font-h6: bold 14px/1.2 $font-family-chango;
+$font-p: normal 16px/1.5 $font-family-roboto;
+$font-p-small: normal 14px/1.4 $font-family-roboto;
+$font-p-x-small: normal 12px/1.3 $font-family-roboto;
 
 // Viewport
 $vp-desktop: 1304px;

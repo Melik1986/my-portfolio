@@ -8,5 +8,31 @@
   display: flex;
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+
+  &__title {
+    font-family: $font-family-leckerli;
+    font: $font-size-h6;
+  }
+
+  &__content {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+  }
+
+  &__content-left {
+    position: relative;
+    background-color: $color-bg-white;
+    height: 100%;
+  }
+
+  &__content-right {
+    background-color: $color-bg-dark;
+    height: 100%;
+    justify-content: stretch;
+  }
 }

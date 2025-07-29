@@ -13,16 +13,17 @@ export function HeroSection() {
     <div ref={containerRef} className={styles.hero} id="hero">
       <h2
         className={`${styles.hero__title} visually-hidden`}
-        data-animation="slide-down"
-        data-duration="0.8"
-        data-ease="power2.out"
       >
         Hi, I&apos;m
       </h2>
       <HeroLetters />
       <HeroAvatar />
-      <HeroContentLeft />
-      <HeroContentRight />
+      <div className={`${styles['hero__content']} ${styles['hero__content-left']}`}>
+        <HeroContentLeft />
+      </div>
+      <div className={`${styles['hero__content']} ${styles['hero__content-right']}`}>
+        <HeroContentRight />
+      </div>
     </div>
   );
 }

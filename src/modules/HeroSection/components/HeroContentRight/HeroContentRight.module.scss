@@ -2,17 +2,6 @@
 @use '@/styles/_mixins.scss' as *;
 
 .hero {
-  &__content-right {
-    position: relative;
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-    background-color: $color-bg-dark;
-  }
 
   &__heading {
     font-family: $font-family-chango;
@@ -20,7 +9,7 @@
     height: auto;
     margin: 0 0 10px 400px;
     padding: 0;
-    font: $font-size-h6;
+    font: $font-h6;
     letter-spacing: 0.1em;
     z-index: 13;
     color: #29abe2;
@@ -29,18 +18,18 @@
 
     @include vp-1024 {
       max-width: 400px;
-      font: $font-size-h5;
+      font: $font-h5;
       margin-left: 0;
     }
 
     @include vp-768 {
       max-width: 300px;
-      font: $font-size-h6;
+      font: $font-h6;
     }
 
     @include vp-360 {
       max-width: 200px;
-      font: $font-size-p-small;
+      font: $font-p-small;
     }
   }
 
@@ -53,7 +42,7 @@
 
     span {
       font-family: $font-family-okinawa;
-      font: $font-size-h6;
+      font: $font-h6;
       letter-spacing: 0.1em;
       color: $color-accent;
       transform: rotate3d(1, 1, 1, -5deg);
@@ -67,14 +56,5 @@
     height: 35px;
     margin-top: -10px;
     z-index: 0;
-
-    &[data-animation='svg-draw'] {
-      clip-path: inset(0 100% 0 0);
-      transition: clip-path 1.2s ease-out;
-
-      &.animated {
-        clip-path: inset(0 0% 0 0);
-      }
-    }
   }
 }

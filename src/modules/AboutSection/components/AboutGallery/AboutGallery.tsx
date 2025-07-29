@@ -43,19 +43,16 @@ export function AboutGallery() {
   const { containerRef } = useGsap({});
 
   return (
-    <div ref={containerRef} className={styles['about__content-right']}>
+    <>
       <ul
+        ref={containerRef as React.Ref<HTMLUListElement>}
         className={styles['about__slider']}
         data-quantity={familyImages.length}
-        data-animation="slide-right"
-        data-duration="1.0"
-        data-ease="power2.out"
-        data-delay="0.6"
       >
         {familyImages.map((image, index) => (
           <GalleryItem key={index} image={image} />
         ))}
       </ul>
-    </div>
+    </>
   );
 }

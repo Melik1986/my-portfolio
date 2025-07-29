@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useGsap } from '@/lib/hooks/useGsap';
 import styles from './HeroContentLeft.module.scss';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
@@ -18,9 +19,12 @@ function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
 }
 
 export function HeroContentLeft() {
+  const { containerRef } = useGsap({});
+
   return (
-    <div className={styles['hero__content-left']}>
+    <>
       <div
+        ref={containerRef}
         className={styles['hero__container-img']}
         data-animation="slide-left"
         data-duration="0.7"
@@ -30,6 +34,6 @@ export function HeroContentLeft() {
         <HeroImage id="melik" src="/images/melik.svg" alt="Melik" />
         <HeroImage id="musinian" src="/images/musinian.svg" alt="Musinian" />
       </div>
-    </div>
+    </>
   );
 }

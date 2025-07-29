@@ -2,7 +2,6 @@
 
 import { AboutAnimation } from '../index';
 import styles from './AboutContent.module.scss';
-
 import { useGsap } from '@/lib/hooks/useGsap';
 
 /**
@@ -13,7 +12,7 @@ function AboutHeading() {
   const { containerRef } = useGsap({});
 
   return (
-    <h2
+    <h3
       ref={containerRef}
       className={styles['about__heading']}
       data-animation="slide-left"
@@ -22,7 +21,7 @@ function AboutHeading() {
       data-delay="0.2"
     >
       About Me
-    </h2>
+    </h3>
   );
 }
 
@@ -55,8 +54,11 @@ function AboutTextContent() {
  * Применяет text-reveal анимацию к тексту
  */
 function AboutText() {
+  const { containerRef } = useGsap({});
+
   return (
     <p
+      ref={containerRef}
       className={styles['about__text']}
       data-animation="text-reveal"
       data-duration="1.2"
@@ -74,10 +76,10 @@ function AboutText() {
  */
 export function AboutContent() {
   return (
-    <div className={styles['about__content-left']}>
+    <>
       <AboutHeading />
       <AboutText />
       <AboutAnimation />
-    </div>
+    </>
   );
 }
