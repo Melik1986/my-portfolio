@@ -12,7 +12,7 @@
   height: 530px;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  font: $font-size-h6;
+  font: $font-h6;
   border: 1px solid rgba(0, 0, 0, 1);
   -webkit-text-stroke: 1px #fff5;
   color: transparent;
@@ -35,7 +35,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font: $font-size-h6;
+  font: $font-h6;
 
   &:hover {
     top: 50% !important;

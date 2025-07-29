@@ -225,7 +225,7 @@
     .gallery__title {
       text-transform: uppercase;
       color: $color-white;
-      font: $font-size-h6;
+      font: $font-h6;
       margin-bottom: 10px;
       transition: all $carousel-transition-time;
       position: relative;
@@ -243,7 +243,7 @@
         content: attr(data-item);
         border-radius: 50%;
         color: $color-white;
-        font: $font-size-p-x-small;
+        font: $font-p-x-small;
         position: absolute;
         top: -20px;
         left: 0px;
@@ -254,7 +254,7 @@
   }
 
   &__name {
-    font: $font-size-p-x-small;
+    font: $font-p-x-small;
     text-transform: uppercase;
     transition: all $carousel-transition-time;
     margin-bottom: 10px;
@@ -262,7 +262,7 @@
   }
 
   &__des {
-    font: $font-size-p;
+    font: $font-p;
     transition: all $carousel-transition-time;
     opacity: 0;
     display: none;
@@ -288,7 +288,7 @@
     color: $color-white;
     background-color: transparent;
     outline: none;
-    font: $font-size-h6;
+    font: $font-h6;
     transition: all $carousel-transition-time;
     cursor: pointer;
     display: flex;
@@ -309,7 +309,7 @@
   }
 
   &__slide-number {
-    font: $font-size-h6;
+    font: $font-h6;
     color: $color-white;
     margin-left: auto;
     letter-spacing: 5px;

@@ -12,8 +12,8 @@
   border: none;
   display: block;
   margin: 0 0 0 auto;
+  font: $font-p-small;
   font-family: $font-family-poppins;
-  font: $font-size-p-small;
   white-space: nowrap;
 
   &:hover,
@@ -31,19 +31,16 @@
 
   @include vp-1024 {
     width: 140px;
-    font-size: 16px;
-    line-height: 18px;
+    font: $font-p-small;
   }
 
   @include vp-1304 {
     width: 160px;
-    font-size: 18px;
-    line-height: 20px;
+    font: $font-p-small;
   }
 
   @media (min-width: 1920px) {
-    font-size: 22px;
-    line-height: 26px;
+    font: $font-p-small;
   }
 
   &__icon {
