@@ -24,9 +24,12 @@ const familyImages = [
  * Компонент элемента галереи
  * Рендерит изображение с оптимизацией для webp
  */
-function GalleryItem({ image }: { image: { src: string; alt: string } }) {
+function GalleryItem({ image, index }: { image: { src: string; alt: string }; index: number }) {
   return (
-    <li className={styles['about__slider-item']}>
+    <li
+      className={styles['about__slider-item']}
+      style={{ '--position': index + 1 } as React.CSSProperties}
+    >
       <picture>
         <source srcSet={image.src} type="image/webp" />
         <img src={image.src} alt={image.alt} width={200} height={150} />
@@ -47,10 +50,10 @@ export function AboutGallery() {
       <ul
         ref={containerRef as React.Ref<HTMLUListElement>}
         className={styles['about__slider']}
-        data-quantity={familyImages.length}
+        style={{ '--quantity': familyImages.length } as React.CSSProperties}
       >
         {familyImages.map((image, index) => (
-          <GalleryItem key={index} image={image} />
+          <GalleryItem key={index} image={image} index={index} />
         ))}
       </ul>
     </>
