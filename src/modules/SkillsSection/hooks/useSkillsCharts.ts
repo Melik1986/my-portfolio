@@ -30,30 +30,42 @@ export const useSkillsCharts = () => {
    * Регистрирует компоненты и создает экземпляры графиков
    */
   const initializeCharts = () => {
-    echarts.use([
-      BarChart,
-      PieChart,
-      TitleComponent,
-      TooltipComponent,
-      GridComponent,
-      LegendComponent,
-      CanvasRenderer,
-    ]);
+    // Задержка для полного рендера DOM
+    setTimeout(() => {
+      echarts.use([
+        BarChart,
+        PieChart,
+        TitleComponent,
+        TooltipComponent,
+        GridComponent,
+        LegendComponent,
+        CanvasRenderer,
+      ]);
 
-    const devChartElement = document.querySelector(SELECTORS.DEV_CHART) as HTMLElement | null;
-    const designChartElement = document.querySelector(SELECTORS.DESIGN_CHART) as HTMLElement | null;
+      const devChartElement = document.querySelector(SELECTORS.DEV_CHART) as HTMLElement | null;
+      const designChartElement = document.querySelector(SELECTORS.DESIGN_CHART) as HTMLElement | null;
 
-    if (!devChartElement || !designChartElement) return;
+      if (!devChartElement || !designChartElement) {
+        console.warn('Chart elements not found');
+        return;
+      }
 
-    devChartRef.current = echarts.init(devChartElement);
-    designChartRef.current = echarts.init(designChartElement);
+      // Проверяем размеры контейнеров
+      if (devChartElement.offsetHeight === 0 || designChartElement.offsetHeight === 0) {
+        console.warn('Chart containers have zero height');
+        return;
+      }
 
-    const containerWidth = devChartElement.offsetWidth;
-    devChartRef.current.setOption(getDevChartOptions(containerWidth));
+      devChartRef.current = echarts.init(devChartElement);
+      designChartRef.current = echarts.init(designChartElement);
 
-    const designWidth = designChartElement.offsetWidth;
-    const designHeight = designChartElement.offsetHeight;
-    designChartRef.current.setOption(getDesignChartOptions(designWidth, designHeight));
+      const containerWidth = devChartElement.offsetWidth;
+      devChartRef.current.setOption(getDevChartOptions(containerWidth));
+
+      const designWidth = designChartElement.offsetWidth;
+      const designHeight = designChartElement.offsetHeight;
+      designChartRef.current.setOption(getDesignChartOptions(designWidth, designHeight));
+    }, 100); // Задержка 100ms
   };
 
   /** Инициализация графиков и обработка изменения размера окна */

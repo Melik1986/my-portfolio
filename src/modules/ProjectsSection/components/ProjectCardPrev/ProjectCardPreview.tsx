@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import './ProjectCardPrev.module.scss';
+import styles from './ProjectCardPrev.module.scss';
 
 interface ProjectCardPreviewProps {
   number: number;
@@ -13,9 +13,9 @@ interface ProjectCardPreviewProps {
 export function ProjectCardPreview({ number, previewImage, title }: ProjectCardPreviewProps) {
   return (
     <>
-      <span className="projects-card__number">{number}</span>
+      <span className={styles['projects-card__number']}>{number}</span>
       <Image
-        className="projects-card__img projects-card__img--small"
+        className={styles['projects-card__img']}
         src={previewImage}
         alt={title}
         width={300}

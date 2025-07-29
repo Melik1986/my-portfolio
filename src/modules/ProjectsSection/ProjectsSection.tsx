@@ -5,8 +5,8 @@ import styles from './ProjectsSection.module.scss';
 
 export function ProjectsSection() {
   return (
-    <div className="projects-catalog" id="projects-catalog">
-      <h2 className={`${styles.projects__title} visually-hidden`}>Projects Catalog</h2>
+    <div className={styles['projects-catalog']} id="projects-catalog">
+      <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>
       <ProjectsCatalog />
     </div>
   );

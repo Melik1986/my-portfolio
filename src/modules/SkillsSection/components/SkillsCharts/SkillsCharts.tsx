@@ -1,22 +1,27 @@
 'use client';
 
 import { useGsap } from '@/lib/hooks/useGsap';
+import { useSkillsCharts } from '../../hooks';
+import { useEffect } from 'react';
 import styles from './SkillsCharts.module.scss';
 
 export function SkillsCharts() {
   const { containerRef } = useGsap({});
+  const { initializeCharts, playAnimation } = useSkillsCharts();
 
-  // Пример интеграции: запуск анимации при монтировании
-  // Вы можете интегрировать с GSAP или другими хуками по необходимости
+  useEffect(() => {
+    initializeCharts();
+    playAnimation();
+  }, [initializeCharts, playAnimation]);
 
   return (
     <div ref={containerRef} className={styles['skills__charts']} data-animation="slide-right">
       <div className={styles['skills-charts__container']}>
-        <div className={styles['chart-wrapper']} id="dev-skills-chart-wrapper">
-          <div id="dev-skills-chart" />
+        <div className={styles['chart-wrapper']}>
+          <div id="dev-skills-chart" className={styles['dev-skills-chart']} />
         </div>
-        <div className={styles['chart-wrapper']} id="design-skills-chart-wrapper">
-          <div id="design-skills-chart" />
+        <div className={styles['chart-wrapper']}>
+          <div id="design-skills-chart" className={styles['design-skills-chart']} />
         </div>
       </div>
     </div>

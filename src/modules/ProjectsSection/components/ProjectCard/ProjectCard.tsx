@@ -7,7 +7,7 @@ import { ProjectCardPreview } from '@/modules/ProjectsSection/components/index';
 import { ProjectCardFullscreen } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '@/modules/ProjectsSection/hooks/useProjectsCardAnime';
 import { AnimationConfig } from '@/modules/ProjectsSection/types/projects-catalog';
-import './ProjectCard.module.scss';
+import styles from './ProjectCard.module.scss';
 
 interface ProjectCardProps {
   project: ProjectData;
@@ -103,7 +103,7 @@ export function ProjectCard(props: ProjectCardProps) {
   return (
     <div
       ref={cardRef}
-      className={`projects-card ${isFullscreen ? 'fullscreen' : ''}`}
+      className={`${styles['projects-card']} ${isFullscreen ? styles['fullscreen'] : ''}`}
       data-index={index}
       onClick={handleClick}
       onMouseEnter={onHoverStart}

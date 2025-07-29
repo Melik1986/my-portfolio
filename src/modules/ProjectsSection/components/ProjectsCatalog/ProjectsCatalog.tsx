@@ -5,7 +5,7 @@ import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
 import { useDeckAnimation } from '../../hooks/useDeckAnimation';
 import { ANIMATION_CONFIG, PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
-import './ProjectsCatalog.module.scss';
+import styles from './ProjectsCatalog.module.scss';
 
 export function ProjectsCatalog() {
   const { positions, animateToPosition, animateHover } = useCardAnimation(
@@ -27,7 +27,7 @@ export function ProjectsCatalog() {
 
   return (
     <div
-      className="projects-catalog__container"
+      className={styles['projects-catalog__container']}
       onMouseEnter={expandDeck}
       onMouseLeave={collapseDeck}
     >
