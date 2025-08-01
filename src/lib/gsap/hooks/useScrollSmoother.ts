@@ -117,7 +117,6 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps // Удаляем, если deps полные
   useEffect(() => {
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {

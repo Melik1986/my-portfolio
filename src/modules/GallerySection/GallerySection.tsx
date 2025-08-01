@@ -1,6 +1,5 @@
 'use client';
 
-import { galleryItems } from './config/gallery.config';
 import { type GalleryItem } from './types/gallery';
 import { useCarousel } from './hooks/useCarousel';
 import { SpriteIcon } from '@/lib/ui/SpriteIcon';
