@@ -159,4 +159,3 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     kill,
   };
 };
-
