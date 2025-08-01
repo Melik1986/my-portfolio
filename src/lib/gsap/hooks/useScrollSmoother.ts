@@ -106,6 +106,12 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
+  // Проверка готовности DOM
+  const checkDOMReady = () => {
+    const elements = checkElements(wrapper, content);
+    return elements.wrapperElement && elements.contentElement;
+  };
+
   useEffect(() => {
     // Проверяем, не инициализирован ли уже ScrollSmoother
     const existingSmoother = ScrollSmoother.get();
@@ -115,7 +121,9 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     }
 
     const timer = setTimeout(() => {
-      initScrollSmoother({ wrapper, content, options: { smooth, effects, normalizeScroll }, smootherRef, isInitializingRef });
+      if (checkDOMReady()) {
+        initScrollSmoother({ wrapper, content, options: { smooth, effects, normalizeScroll }, smootherRef, isInitializingRef });
+      }
     }, 50);
     
     return () => {
