@@ -1,11 +1,11 @@
 {
-	"folders": [
-		{
-			"path": "../../Portfolio-new"
-		},
-		{
-			"path": ".."
-		}
-	],
-  "settings": {}
+  "folders": [
+    {
+      "path": "../../Portfolio-new",
+    },
+    {
+      "path": "..",
+    },
+  ],
+  "settings": {},
 }

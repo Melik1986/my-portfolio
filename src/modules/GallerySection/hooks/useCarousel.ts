@@ -59,5 +59,6 @@ export const useCarousel = () => {
     carouselRef,
     listRef,
     progressRef,
+    totalItems,
   };
 };

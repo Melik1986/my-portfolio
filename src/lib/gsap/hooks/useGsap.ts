@@ -39,9 +39,12 @@ type AddAnimationConfig = {
  * Функция для создания timeline с анимациями элементов в контейнере
  * Создает timeline без ScrollTrigger для управления извне
  */
-export function createElementTimeline(container: HTMLElement, selector = '[data-animate]'): gsap.core.Timeline {
+export function createElementTimeline(
+  container: HTMLElement,
+  selector = '[data-animate]',
+): gsap.core.Timeline {
   const elements = Array.from(container.querySelectorAll(selector));
-  
+
   if (elements.length === 0) {
     return gsap.timeline({ paused: true });
   }
@@ -51,13 +54,13 @@ export function createElementTimeline(container: HTMLElement, selector = '[data-
   elements.forEach((element) => {
     const config = parseAnimationData(element);
     if (!config) return;
-    
+
     const params = {
       duration: config.duration ?? 1,
       delay: config.delay ?? 0,
       ease: config.ease ?? 'power1.out',
     };
-    
+
     addAnimationToTimeline(tl, { element, animationType: config.animation, params });
   });
 

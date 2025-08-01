@@ -53,7 +53,7 @@ const createChartInstances = (
   devChartRef: { current: echarts.ECharts | null },
   designChartRef: { current: echarts.ECharts | null },
   devChartElement: HTMLElement,
-  designChartElement: HTMLElement
+  designChartElement: HTMLElement,
 ) => {
   // Проверяем, не инициализированы ли уже графики
   if (devChartRef.current) {
@@ -62,7 +62,7 @@ const createChartInstances = (
   if (designChartRef.current) {
     designChartRef.current.dispose();
   }
-  
+
   devChartRef.current = echarts.init(devChartElement);
   designChartRef.current = echarts.init(designChartElement);
 };
@@ -74,7 +74,7 @@ const configureChartOptions = (
   devChartRef: { current: echarts.ECharts | null },
   designChartRef: { current: echarts.ECharts | null },
   devChartElement: HTMLElement,
-  designChartElement: HTMLElement
+  designChartElement: HTMLElement,
 ) => {
   const containerWidth = devChartElement.offsetWidth;
   devChartRef.current?.setOption(getDevChartOptions(containerWidth));

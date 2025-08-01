@@ -56,7 +56,7 @@
     width: 100%;
     height: 100vh;
     position: relative;
-    
+
     // Все элементы кроме первого позиционируются абсолютно
     &:not(:first-child) {
       position: absolute;

@@ -254,13 +254,7 @@ const useAnimationController = ({
       frameRef: animationFrameRef,
     };
     runAnimate(params);
-  }, [
-    runAnimate,
-    finalConfig,
-    sceneManagerRef,
-    countRef,
-    animationFrameRef,
-  ]);
+  }, [runAnimate, finalConfig, sceneManagerRef, countRef, animationFrameRef]);
 
   return { animate };
 };

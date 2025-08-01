@@ -33,11 +33,21 @@ export default function Home() {
             <SkillsSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection id="projects-section" title="Projects" direction="horizontal" sectionIndex={3}>
+          <AnimatedCardSection
+            id="projects-section"
+            title="Projects"
+            direction="horizontal"
+            sectionIndex={3}
+          >
             <ProjectsSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection id="gallery-section" title="Gallery" direction="horizontal" sectionIndex={4}>
+          <AnimatedCardSection
+            id="gallery-section"
+            title="Gallery"
+            direction="horizontal"
+            sectionIndex={4}
+          >
             <GallerySection />
           </AnimatedCardSection>
         </ul>

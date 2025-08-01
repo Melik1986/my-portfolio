@@ -1,11 +1,18 @@
 'use client';
 
 import { SkillsText, SkillsAnimation } from '../index';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import styles from './SkillsContent.module.scss';
 
 export function SkillsContent() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <>

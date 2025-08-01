@@ -1,7 +1,8 @@
 'use client';
 
 import styles from './HeroLetters.module.scss';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import React, { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 
 function Letter({ letter }: { letter: string }) {
   return (
@@ -12,7 +13,13 @@ function Letter({ letter }: { letter: string }) {
 }
 
 export function HeroLetters() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   const letters = ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'];
 

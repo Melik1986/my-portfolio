@@ -49,7 +49,7 @@ const createSmoother = (
     if (existingSmoother) {
       return existingSmoother;
     }
-    
+
     return ScrollSmoother.create({
       wrapper: options.wrapperElement,
       content: options.contentElement,
@@ -71,33 +71,44 @@ interface InitParams {
   isInitializingRef: React.RefObject<boolean>;
 }
 
-const initScrollSmoother = ({ wrapper, content, options, smootherRef, isInitializingRef }: InitParams) => {
+const initScrollSmoother = ({
+  wrapper,
+  content,
+  options,
+  smootherRef,
+  isInitializingRef,
+}: InitParams) => {
   if (smootherRef.current || isInitializingRef.current) return;
-  
+
   isInitializingRef.current = true;
   const { wrapperElement, contentElement } = checkElements(wrapper, content);
-  
+
   if (!wrapperElement || !contentElement) {
     isInitializingRef.current = false;
     return;
   }
-  
+
   smootherRef.current = createSmoother({
     wrapperElement,
     contentElement,
     ...options,
   });
-  
+
   if (smootherRef.current) {
     // Убираем лишнее логирование
   }
   isInitializingRef.current = false;
 };
 
+// Проверка готовности DOM
+const checkDOMReady = (wrapper: string, content: string) => {
+  const elements = checkElements(wrapper, content);
+  return elements.wrapperElement && elements.contentElement;
+};
+
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const smootherRef = useRef<ScrollSmootherInstance | null>(null);
   const isInitializingRef = useRef(false);
-
   const {
     wrapper = '#smooth-wrapper',
     content = '#smooth-content',
@@ -106,14 +117,8 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
-  // Проверка готовности DOM
-  const checkDOMReady = () => {
-    const elements = checkElements(wrapper, content);
-    return elements.wrapperElement && elements.contentElement;
-  };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps // Удаляем, если deps полные
   useEffect(() => {
-    // Проверяем, не инициализирован ли уже ScrollSmoother
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {
       smootherRef.current = existingSmoother;
@@ -121,24 +126,25 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     }
 
     const timer = setTimeout(() => {
-      if (checkDOMReady()) {
-        initScrollSmoother({ wrapper, content, options: { smooth, effects, normalizeScroll }, smootherRef, isInitializingRef });
+      if (checkDOMReady(wrapper, content)) {
+        initScrollSmoother({
+          wrapper,
+          content,
+          options: { smooth, effects, normalizeScroll },
+          smootherRef,
+          isInitializingRef,
+        });
       }
     }, 50);
-    
-    return () => {
-      clearTimeout(timer);
-      // Не убиваем глобальный экземпляр в cleanup
-    };
+
+    return () => clearTimeout(timer);
   }, [wrapper, content, smooth, effects, normalizeScroll]);
 
   const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
     smootherRef.current?.scrollTo(target, smooth, position);
   };
 
-  const scrollTop = (value?: number) => {
-    return smootherRef.current?.scrollTop(value) ?? 0;
-  };
+  const scrollTop = (value?: number) => smootherRef.current?.scrollTop(value) ?? 0;
 
   const kill = () => {
     smootherRef.current?.kill();
@@ -153,3 +159,4 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     kill,
   };
 };
+

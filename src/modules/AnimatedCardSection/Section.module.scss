@@ -14,7 +14,7 @@
     width: 100%;
     position: relative;
     overflow: hidden;
-    
+
     // Обеспечиваем правильное позиционирование для анимации
     &:not(:first-child) {
       position: absolute;

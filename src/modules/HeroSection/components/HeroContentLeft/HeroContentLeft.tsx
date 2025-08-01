@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import styles from './HeroContentLeft.module.scss';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
@@ -19,7 +20,13 @@ function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
 }
 
 export function HeroContentLeft() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <>

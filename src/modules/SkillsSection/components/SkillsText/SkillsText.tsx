@@ -1,8 +1,15 @@
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import './SkillsText.module.scss';
 
 export function SkillsText() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <p

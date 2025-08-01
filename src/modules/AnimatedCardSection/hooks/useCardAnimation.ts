@@ -37,7 +37,7 @@ export const useCardAnimation = (
 
     // В нашей архитектуре wrapper - это li элемент внутри ul с классом scroll-section
     const section = wrapper;
-    
+
     // Ищем родительский ul (portfolio__wrapper) и получаем все li элементы
     const parentWrapper = section.parentElement;
     if (!parentWrapper || !parentWrapper.children.length) return;
@@ -46,8 +46,13 @@ export const useCardAnimation = (
 
     // Создаем timeline для элементов с data-animate один раз
     elementTimelineRef.current = createElementTimeline(section as HTMLElement);
-    
-    const timeline = initScroll(section as HTMLElement, items, direction, elementTimelineRef.current);
+
+    const timeline = initScroll(
+      section as HTMLElement,
+      items,
+      direction,
+      elementTimelineRef.current,
+    );
     timelineRef.current = timeline;
 
     return () => {
@@ -62,7 +67,6 @@ export const useCardAnimation = (
 
   return { wrapperRef };
 };
-
 
 function initScroll(
   section: HTMLElement,
@@ -92,16 +96,15 @@ function initScroll(
     defaults: { ease: 'none' },
   });
 
-
   items.forEach((_, index) => {
     if (index === items.length - 1) return;
-    if (direction === "horizontal") {
+    if (direction === 'horizontal') {
       timeline.to(
         items[index + 1],
         {
           xPercent: 0,
         },
-        "<"
+        '<',
       );
     } else {
       timeline.to(
@@ -109,7 +112,7 @@ function initScroll(
         {
           yPercent: 0,
         },
-        "<"
+        '<',
       );
     }
   });

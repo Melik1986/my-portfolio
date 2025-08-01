@@ -4,8 +4,6 @@ import { AboutContent, AboutGallery } from './components/index';
 import styles from './About.module.scss';
 
 export function AboutSection() {
-
-
   return (
     <div className={styles.about} id="about">
       <h2 className={`${styles.about__title} visually-hidden`}>About</h2>

@@ -1,6 +1,5 @@
 'use client';
 
-import { type ReactElement } from 'react';
 import { galleryItems } from './config/gallery.config';
 import { type GalleryItem } from './types/gallery';
 import { useCarousel } from './hooks/useCarousel';
@@ -8,6 +7,9 @@ import { SpriteIcon } from '@/lib/ui/SpriteIcon';
 import styles from './GallerySection.module.scss';
 
 export function GallerySection() {
+  const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems } =
+    useCarousel();
+
   return (
     <div className={styles.gallery} id="gallery">
       <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
@@ -27,7 +29,6 @@ export function GallerySection() {
           ))}
         </ul>
       </div>
-
       <div className={styles.gallery__arrows}>
         <button className={styles.gallery__prev} onClick={prevSlide} title="Previous slide">
           <SpriteIcon
@@ -49,7 +50,6 @@ export function GallerySection() {
           {displayedIndex + 1}/{totalItems}
         </div>
       </div>
-
       <div className={styles.gallery__timeRunning} ref={progressRef} />
     </div>
   );

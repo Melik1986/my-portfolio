@@ -65,7 +65,15 @@ const useEventListeners = ({
       stableStopAnimation();
       sceneManager?.destroy();
     };
-  }, [containerRef, handleMouseMove, handleTouchMove, handleResize, initializeAnimation, stopAnimation, sceneManagerRef]);
+  }, [
+    containerRef,
+    handleMouseMove,
+    handleTouchMove,
+    handleResize,
+    initializeAnimation,
+    stopAnimation,
+    sceneManagerRef,
+  ]);
 };
 
 const useVisibilityHandlers = ({

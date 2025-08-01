@@ -1,15 +1,18 @@
 'use client';
 
 import { AboutAnimation } from '../index';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import styles from './AboutContent.module.scss';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
-/**
- * Заголовок секции "Обо мне"
- * Отображает анимированный заголовок с GSAP
- */
 function AboutHeading() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <h3
@@ -22,6 +25,29 @@ function AboutHeading() {
     >
       About Me
     </h3>
+  );
+}
+
+function AboutText() {
+  const containerRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
+
+  return (
+    <p
+      ref={containerRef}
+      className={styles['about__text']}
+      data-animation="text-reveal"
+      data-duration="1.2"
+      data-ease="power2.out"
+      data-delay="0.4"
+    >
+      <AboutTextContent />
+    </p>
   );
 }
 
@@ -46,27 +72,6 @@ function AboutTextContent() {
       professional and a&nbsp;proud father, I&nbsp;know the value of&nbsp;responsibility,
       persistence, and inspiring those around&nbsp;me.
     </>
-  );
-}
-
-/**
- * Текстовый блок с анимацией раскрытия
- * Применяет text-reveal анимацию к тексту
- */
-function AboutText() {
-  const { containerRef } = useGsap({});
-
-  return (
-    <p
-      ref={containerRef}
-      className={styles['about__text']}
-      data-animation="text-reveal"
-      data-duration="1.2"
-      data-ease="power2.out"
-      data-delay="0.4"
-    >
-      <AboutTextContent />
-    </p>
   );
 }
 

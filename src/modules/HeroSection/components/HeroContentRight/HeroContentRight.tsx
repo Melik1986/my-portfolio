@@ -1,11 +1,18 @@
 'use client';
 
 import { SpriteIcon } from '@/lib/ui/SpriteIcon/SpriteIcon';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import styles from './HeroContentRight.module.scss';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 function HeroHeading() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <h2
@@ -18,6 +25,22 @@ function HeroHeading() {
     >
       Frontend development
     </h2>
+  );
+}
+
+function HeroParagraph() {
+  const containerRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
+
+  return (
+    <span ref={containerRef} className={styles['hero__paragraph']}>
+      <HeroParagraphContent />
+    </span>
   );
 }
 
@@ -41,16 +64,6 @@ function HeroParagraphContent() {
         data-delay="0.55"
       />
     </>
-  );
-}
-
-function HeroParagraph() {
-  const { containerRef } = useGsap({});
-
-  return (
-    <span ref={containerRef} className={styles['hero__paragraph']}>
-      <HeroParagraphContent />
-    </span>
   );
 }
 

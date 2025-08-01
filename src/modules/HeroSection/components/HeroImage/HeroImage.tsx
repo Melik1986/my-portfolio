@@ -1,11 +1,18 @@
 'use client';
 
 import Image from 'next/image';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import styles from './HeroImage.module.scss';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 export function HeroAvatar() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
     <div ref={containerRef} className={styles['hero__image-container']}>

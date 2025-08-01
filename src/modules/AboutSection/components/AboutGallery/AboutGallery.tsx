@@ -1,7 +1,8 @@
 'use client';
 
 import styles from './AboutGallery.module.scss';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 
 /**
  * Массив изображений семьи для галереи
@@ -43,19 +44,32 @@ function GalleryItem({ image, index }: { image: { src: string; alt: string }; in
  * Отображает вращающуюся карусель с семейными фото
  */
 export function AboutGallery() {
-  const { containerRef } = useGsap({});
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      createElementTimeline(containerRef.current);
+    }
+  }, []);
 
   return (
-    <>
-      <ul
-        ref={containerRef as React.Ref<HTMLUListElement>}
-        className={styles['about__slider']}
-        style={{ '--quantity': familyImages.length } as React.CSSProperties}
-      >
-        {familyImages.map((image, index) => (
-          <GalleryItem key={index} image={image} index={index} />
-        ))}
-      </ul>
-    </>
+    <div
+      ref={containerRef}
+      className={styles['about__gallery']}
+      data-animation="fade-up"
+      data-duration="0.8"
+      data-stagger="0.1"
+      data-ease="power2.out"
+      data-delay="0.6"
+    >
+      {familyImages.map((image, index) => (
+        <img
+          key={index}
+          src={image.src}
+          alt={image.alt}
+          className={styles['about__gallery-image']}
+        />
+      ))}
+    </div>
   );
 }

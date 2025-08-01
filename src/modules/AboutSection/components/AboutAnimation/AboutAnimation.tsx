@@ -1,6 +1,6 @@
 'use client';
 
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import React from 'react';
 import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
 import styles from './AboutAnimation.module.scss';
 
@@ -9,7 +9,15 @@ import styles from './AboutAnimation.module.scss';
  * Создает контейнер для Three.js Aurora эффекта
  */
 export function AboutAnimation() {
-  const { containerRef } = useGsap({});
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (containerRef.current) {
+      // Инициализация анимации для контейнера
+      import('@/lib/gsap/hooks/useGsap').then(({ createElementTimeline }) => {
+        createElementTimeline(containerRef.current!);
+      });
+    }
+  }, []);
   useAuroraAnimation(containerRef);
 
   return (

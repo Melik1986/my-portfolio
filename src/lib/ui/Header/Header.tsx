@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useGsap } from '@/lib/gsap/hooks/useGsap';
+import { useRef, useEffect } from 'react';
+import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import { Logo } from '@/lib/ui/Logo/logo';
 import { Navigation } from '@/lib/ui/Navigation/Navigation';
 import { ContactButton } from '@/lib/ui/Button/ContactButton';
@@ -12,7 +13,13 @@ import styles from './header.module.scss';
  * Содержит логотип, навигацию и кнопку контакта
  */
 export function Header() {
-  const { containerRef: headerRef } = useGsap({});
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      createElementTimeline(headerRef.current);
+    }
+  }, []);
 
   return (
     <header ref={headerRef} className={styles.header} id="header">
