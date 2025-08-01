@@ -41,7 +41,7 @@ export const useAuroraEvents = ({
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
       if (e.touches.length === 1) {
-        e.preventDefault();
+        // Убираем preventDefault для passive событий
         updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
       }
     },

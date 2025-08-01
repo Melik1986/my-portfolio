@@ -166,7 +166,7 @@ const useAnimationInitializer = ({
     } catch (error) {
       console.error('Failed to initialize aurora animation:', error);
     }
-  }, [containerRef, finalConfig, sceneManagerRef, setState, clearContainer]);
+  }, [containerRef, finalConfig, sceneManagerRef, setState, clearContainer, state.isInitialized]);
 
   return { initializeAnimation };
 };
@@ -181,15 +181,18 @@ const useAnimationStopper = ({
   animationFrameRef: React.RefObject<number | null>;
   setState: React.Dispatch<React.SetStateAction<AuroraState>>;
 }) => {
-  const stopAnimation = useCallback((updateState = true) => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-    if (updateState) {
-      setState((prev) => ({ ...prev, isRunning: false }));
-    }
-  }, [animationFrameRef.current, setState]);
+  const stopAnimation = useCallback(
+    (updateState = true) => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+      if (updateState) {
+        setState((prev) => ({ ...prev, isRunning: false }));
+      }
+    },
+    [setState, animationFrameRef],
+  );
 
   return { stopAnimation };
 };
@@ -253,10 +256,10 @@ const useAnimationController = ({
     runAnimate(params);
   }, [
     runAnimate,
-    sceneManagerRef.current,
-    countRef.current,
     finalConfig,
-    animationFrameRef.current,
+    sceneManagerRef,
+    countRef,
+    animationFrameRef,
   ]);
 
   return { animate };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
 import styles from './AboutAnimation.module.scss';
 

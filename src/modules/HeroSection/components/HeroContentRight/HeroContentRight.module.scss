@@ -2,12 +2,11 @@
 @use '@/styles/_mixins.scss' as *;
 
 .hero {
-
   &__heading {
     font-family: $font-family-chango;
     max-width: 600px;
     height: auto;
-    margin: 0 0 10px 400px;
+    margin: 0 0 10px 0;
     padding: 0;
     font: $font-h6;
     letter-spacing: 0.1em;

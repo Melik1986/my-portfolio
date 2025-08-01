@@ -1,18 +1,17 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
-import { AnimationType } from '@/types/gsap.types';
-import { parseAnimationData } from '@/lib/utils/parseAnimationData';
-import { getAnimationDefinition, AnimationDefinition } from '@/lib/config/animation.config';
+import { AnimationType } from '@/lib/gsap/types/gsap.types';
+import { parseAnimationData } from '@/lib/gsap/utils/parseAnimationData';
+import { getAnimationDefinition, AnimationDefinition } from '@/lib/gsap/config/animation.config';
 
 gsap.registerPlugin(SplitText);
 
 /**
  * Параметры анимации для элементов
  */
-type AnimationParams = {
+type ElementAnimationParams = {
   duration: number;
   ease: string;
   delay: number;
@@ -21,9 +20,9 @@ type AnimationParams = {
 /**
  * Конфигурация анимации для одного элемента
  */
-type AnimationConfig = {
+type ElementAnimationConfig = {
   element: Element;
-  params: AnimationParams;
+  params: ElementAnimationParams;
   animationDef?: AnimationDefinition;
 };
 
@@ -33,49 +32,38 @@ type AnimationConfig = {
 type AddAnimationConfig = {
   element: Element;
   animationType: AnimationType;
-  params: AnimationParams;
+  params: ElementAnimationParams;
 };
 
 /**
- * Хук для анимации элементов с data-animate внутри контейнера.
- * Возвращает ref и созданный paused timeline.
+ * Функция для создания timeline с анимациями элементов в контейнере
+ * Создает timeline без ScrollTrigger для управления извне
  */
-export function useGsap({
-  selector = '[data-animate]',
-  dependencies = [],
-}: {
-  selector?: string;
-  dependencies?: React.DependencyList;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [timeline, setTimeline] = useState<gsap.core.Timeline | null>(null);
+export function createElementTimeline(container: HTMLElement, selector = '[data-animate]'): gsap.core.Timeline {
+  const elements = Array.from(container.querySelectorAll(selector));
+  
+  if (elements.length === 0) {
+    return gsap.timeline({ paused: true });
+  }
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const elements = Array.from(containerRef.current.querySelectorAll(selector));
-    const tl = gsap.timeline({ paused: true });
+  const tl = gsap.timeline({ paused: true });
 
-    elements.forEach((element) => {
-      const config = parseAnimationData(element);
-      if (!config) return;
-      const params = {
-        duration: config.duration ?? 1,
-        delay: config.delay ?? 0,
-        ease: config.ease ?? 'power1.out',
-      };
-      addAnimationToTimeline(tl, { element, animationType: config.animation, params });
-    });
+  elements.forEach((element) => {
+    const config = parseAnimationData(element);
+    if (!config) return;
+    
+    const params = {
+      duration: config.duration ?? 1,
+      delay: config.delay ?? 0,
+      ease: config.ease ?? 'power1.out',
+    };
+    
+    addAnimationToTimeline(tl, { element, animationType: config.animation, params });
+  });
 
-    setTimeline(tl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selector, ...(dependencies || [])]);
-
-  return { containerRef, timeline };
+  return tl;
 }
 
-/**
- * Добавляет анимацию для одного элемента в timeline по типу анимации.
- */
 /**
  * Добавляет анимацию для одного элемента в timeline по типу анимации
  * Выбирает подходящий метод анимации в зависимости от типа
@@ -100,10 +88,10 @@ function addAnimationToTimeline(timeline: gsap.core.Timeline, config: AddAnimati
  * Добавляет анимацию рисования SVG элементов
  * Анимирует stroke-dashoffset для эффекта рисования
  */
-function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
+function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: ElementAnimationConfig) {
   const { element, params } = config;
   const pathElements = element.querySelectorAll('path');
-  pathElements.forEach((pathElement) => {
+  pathElements.forEach((pathElement: Element) => {
     const pathLength = (pathElement as SVGPathElement).getTotalLength();
     timeline.set(pathElement, { strokeDasharray: pathLength, strokeDashoffset: pathLength }, 0);
     timeline.to(pathElement, {
@@ -119,7 +107,7 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: AnimationConf
  * Добавляет анимацию раскрытия текста
  * Разбивает текст на символы и анимирует их появление
  */
-function addTextRevealAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
+function addTextRevealAnimation(timeline: gsap.core.Timeline, config: ElementAnimationConfig) {
   const { element, params } = config;
   const split = new SplitText(element, { type: 'words,chars' });
   timeline.from(split.chars, {
@@ -136,7 +124,7 @@ function addTextRevealAnimation(timeline: gsap.core.Timeline, config: AnimationC
  * Добавляет базовую анимацию элемента
  * Применяет стандартную анимацию from/to с пользовательскими параметрами
  */
-function addBaseAnimation(timeline: gsap.core.Timeline, config: AnimationConfig) {
+function addBaseAnimation(timeline: gsap.core.Timeline, config: ElementAnimationConfig) {
   const { element, params, animationDef } = config;
   if (!animationDef) return;
   timeline.fromTo(element, animationDef.from, {

@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './HeroLetters.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 function Letter({ letter }: { letter: string }) {
   return (

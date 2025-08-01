@@ -1,24 +1,43 @@
 'use client';
 
+import React from 'react';
+import { useEffect, useRef } from 'react';
 import { useCardAnimation } from './hooks/useCardAnimation';
-import { AnimatedCardSectionProps } from '@/modules/AnimatedCardSection/types/animated-card-section.types';
+import { AnimatedCardSectionProps } from '@/modules/AnimatedCardSection/types/animated-card-section';
 import styles from './Section.module.scss';
-import { useRef } from 'react';
+
 
 export function AnimatedCardSection({
   id,
-  title,
   children,
   direction = 'vertical',
-}: AnimatedCardSectionProps) {
-  const contentTimelinesRef = useRef(new Map<number, gsap.core.Timeline>());
+}: Omit<AnimatedCardSectionProps, 'sectionIndex' | 'contentTimelinesRef'>) {
+  // Определяем индекс секции автоматически через context или DOM (упрощённо: через ref и effect)
+  const [sectionIndex, setSectionIndex] = React.useState<number | null>(null);
+  const localWrapperRef = useRef<HTMLLIElement>(null);
+
+  // Получаем ref из хука анимации
   const { wrapperRef } = useCardAnimation({
     direction,
-    contentTimelinesRef,
+    sectionIndex,
   });
 
+  useEffect(() => {
+    if (localWrapperRef.current && localWrapperRef.current.parentElement) {
+      const items = Array.from(localWrapperRef.current.parentElement.children);
+      setSectionIndex(items.indexOf(localWrapperRef.current));
+    }
+  }, []);
+
+  // Синхронизируем refs
+  useEffect(() => {
+    if (localWrapperRef.current && wrapperRef) {
+      (wrapperRef as React.MutableRefObject<HTMLLIElement | null>).current = localWrapperRef.current;
+    }
+  }, [wrapperRef]);
+
   return (
-    <li ref={wrapperRef} className={styles.portfolio__item} id={id}>
+    <li ref={localWrapperRef} className={styles.portfolio__item} id={id}>
       {children}
     </li>
   );

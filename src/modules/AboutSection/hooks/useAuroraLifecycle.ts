@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { AuroraSceneManager } from '@/modules/AboutSection/utils/AuroraSceneManager';
 import { AuroraState } from '../types/about.types';
 
@@ -13,7 +13,7 @@ interface UseAuroraLifecycleProps {
   handleTouchMove: (e: TouchEvent) => void;
   handleResize: () => void;
   initializeAnimation: () => void;
-  stopAnimation: () => void;
+  stopAnimation: (updateState?: boolean) => void;
   resumeAnimation: () => void;
   animate: () => void;
 }
@@ -49,12 +49,12 @@ const useEventListeners = ({
     const stableHandleMouseMove = (e: MouseEvent) => handleMouseMove(e);
     const stableHandleTouchMove = (e: TouchEvent) => handleTouchMove(e);
     const stableHandleResize = () => handleResize();
-    const stableStopAnimation = () => stopAnimation();
+    const stableStopAnimation = () => stopAnimation(false); // Не обновляем состояние в cleanup
 
-    container.addEventListener('mousemove', stableHandleMouseMove);
+    container.addEventListener('mousemove', stableHandleMouseMove, { passive: true });
     container.addEventListener('touchstart', stableHandleTouchMove, { passive: true });
     container.addEventListener('touchmove', stableHandleTouchMove, { passive: true });
-    window.addEventListener('resize', stableHandleResize);
+    window.addEventListener('resize', stableHandleResize, { passive: true });
 
     return () => {
       container.removeEventListener('mousemove', stableHandleMouseMove);
@@ -65,7 +65,7 @@ const useEventListeners = ({
       stableStopAnimation();
       sceneManager?.destroy();
     };
-  }, []); // Пустой массив зависимостей
+  }, [containerRef, handleMouseMove, handleTouchMove, handleResize, initializeAnimation, stopAnimation, sceneManagerRef]);
 };
 
 const useVisibilityHandlers = ({
@@ -81,16 +81,19 @@ const useVisibilityHandlers = ({
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('blur', stopAnimation);
-    window.addEventListener('focus', resumeAnimation);
+    const handleBlur = () => stopAnimation();
+    const handleFocus = () => resumeAnimation();
+
+    document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
+    window.addEventListener('blur', handleBlur, { passive: true });
+    window.addEventListener('focus', handleFocus, { passive: true });
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('blur', stopAnimation);
-      window.removeEventListener('focus', resumeAnimation);
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('focus', handleFocus);
     };
-  }, []); // Пустой массив зависимостей
+  }, [stopAnimation, resumeAnimation]);
 };
 
 const useAnimationLoop = ({
@@ -103,12 +106,13 @@ const useAnimationLoop = ({
       animate();
     }
 
+    const currentFrame = animationFrameRef.current;
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      if (currentFrame) {
+        cancelAnimationFrame(currentFrame);
       }
     };
-  }, [state.isRunning]); // Только состояние, не функции
+  }, [state.isRunning, animate, animationFrameRef]);
 };
 
 export const useAuroraLifecycle = ({

@@ -2,7 +2,7 @@
 
 import { SpriteIcon } from '@/lib/ui/SpriteIcon/SpriteIcon';
 import styles from './HeroContentRight.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 function HeroHeading() {
   const { containerRef } = useGsap({});

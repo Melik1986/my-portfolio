@@ -1,4 +1,4 @@
-import { AnimationType, AnimationConfig } from '@/types/gsap.types';
+import { AnimationType } from '@/lib/gsap/types/gsap.types';
 
 /**
  * Интерфейс для определения свойств анимации
@@ -90,7 +90,7 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
  */
 export function getAnimationDefinition(
   type: AnimationType,
-  customConfig?: Partial<AnimationConfig>,
+  customConfig?: Partial<AnimationDefinition>,
 ): AnimationDefinition {
   const baseDefinition = animationDefinitions[type];
   return {

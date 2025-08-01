@@ -1,6 +1,6 @@
 'use client';
 
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import styles from './SkillsAnimation.module.scss';
 
 export function SkillsAnimation() {

@@ -1,4 +1,4 @@
-import { AnimationType, AnimationConfig } from '@/types/gsap.types';
+import { AnimationType, AnimationConfig } from '@/lib/gsap/types/gsap.types';
 
 /**
  * Утилита для парсинга data-атрибутов анимации

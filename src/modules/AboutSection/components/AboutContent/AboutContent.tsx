@@ -2,7 +2,7 @@
 
 import { AboutAnimation } from '../index';
 import styles from './AboutContent.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 /**
  * Заголовок секции "Обо мне"

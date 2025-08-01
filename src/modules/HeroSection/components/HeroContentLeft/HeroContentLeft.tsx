@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import styles from './HeroContentLeft.module.scss';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {

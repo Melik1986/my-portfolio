@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationProps } from '@/types/navigation.types';
+import { NavigationProps } from '@/lib/types/navigation.types';
 import styles from './nav.module.scss';
 
 /**

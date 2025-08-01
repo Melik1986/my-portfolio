@@ -1,18 +1,27 @@
 'use client';
 
-import { useGsap } from '@/lib/hooks/useGsap';
-import { useSkillsCharts } from '../../hooks';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from './SkillsCharts.module.scss';
+import { useSkillsCharts } from '../../hooks';
 
-export function SkillsCharts() {
-  const { containerRef } = useGsap({});
-  const { initializeCharts, playAnimation } = useSkillsCharts();
+interface SkillsChartsProps {
+  // Props can be added here when needed
+  [key: string]: unknown;
+}
+
+export function SkillsCharts({}: SkillsChartsProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { initializeCharts } = useSkillsCharts();
+  const chartsInitializedRef = useRef(false);
+
 
   useEffect(() => {
-    initializeCharts();
-    playAnimation();
-  }, [initializeCharts, playAnimation]);
+    // Инициализируем диаграммы после монтирования
+    if (!chartsInitializedRef.current) {
+      initializeCharts();
+      chartsInitializedRef.current = true;
+    }
+  }, [initializeCharts]);
 
   return (
     <div ref={containerRef} className={styles['skills__charts']} data-animation="slide-right">

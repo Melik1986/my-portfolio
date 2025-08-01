@@ -1,6 +1,6 @@
 import React from 'react';
 import { SpriteIcon } from '@/lib/ui/SpriteIcon';
-import { LogoProps } from '@/types/logo.types';
+import { LogoProps } from '@/lib/types/logo.types';
 import styles from './logo.module.scss';
 
 /**

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpriteIconProps } from '@/types/sprite-icon.types';
+import { SpriteIconProps } from '@/lib/types/sprite-icon.types';
 
 /**
  * Компонент для отображения иконок из SVG спрайта

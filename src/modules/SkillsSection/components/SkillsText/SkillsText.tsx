@@ -1,4 +1,4 @@
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import './SkillsText.module.scss';
 
 export function SkillsText() {

@@ -1,21 +1,16 @@
 'use client';
 
-import { useGsap } from '@/lib/hooks/useGsap';
 import { HeroLetters, HeroAvatar } from './components/index';
 import { HeroContentLeft, HeroContentRight } from './components/index';
 import styles from './HeroSection.module.scss';
 import '@/styles/_visually-hidden.scss';
 
+
 export function HeroSection() {
-  const { containerRef } = useGsap({});
 
   return (
-    <div ref={containerRef} className={styles.hero} id="hero">
-      <h2
-        className={`${styles.hero__title} visually-hidden`}
-      >
-        Hi, I&apos;m
-      </h2>
+    <div  className={styles.hero} id="hero">
+      <h2 className={`${styles.hero__title} visually-hidden`}>Hi, I&apos;m</h2>
       <HeroLetters />
       <HeroAvatar />
       <div className={`${styles['hero__content']} ${styles['hero__content-left']}`}>

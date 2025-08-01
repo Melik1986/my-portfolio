@@ -1,7 +1,7 @@
 'use client';
 
 import { SkillsText, SkillsAnimation } from '../index';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import styles from './SkillsContent.module.scss';
 
 export function SkillsContent() {

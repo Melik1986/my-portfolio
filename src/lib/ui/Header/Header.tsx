@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 import { Logo } from '@/lib/ui/Logo/logo';
 import { Navigation } from '@/lib/ui/Navigation/Navigation';
 import { ContactButton } from '@/lib/ui/Button/ContactButton';

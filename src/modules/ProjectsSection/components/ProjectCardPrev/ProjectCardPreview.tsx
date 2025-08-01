@@ -20,7 +20,7 @@ export function ProjectCardPreview({ number, previewImage, title }: ProjectCardP
         alt={title}
         width={300}
         height={200}
-        loading="lazy"
+        priority={number === 1} // Приоритет только для первого изображения
       />
     </>
   );

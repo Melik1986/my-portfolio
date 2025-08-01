@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import styles from './HeroImage.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 export function HeroAvatar() {
   const { containerRef } = useGsap({});
@@ -16,7 +16,7 @@ export function HeroAvatar() {
         alt="Melik Musinian Avatar"
         width={200}
         height={200}
-        loading="eager"
+        priority
         data-animation="zoom-in"
         data-duration="0.6"
         data-ease="back.out(1.7)"

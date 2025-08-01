@@ -2,7 +2,6 @@
 @use '@/styles/_mixins.scss' as *;
 
 .hero {
-
   &__container-img {
     position: relative;
     display: flex;
@@ -14,7 +13,7 @@
 
   &__image {
     position: relative;
-    
+
     &--musinian {
       max-width: 220px;
       max-height: 80px;

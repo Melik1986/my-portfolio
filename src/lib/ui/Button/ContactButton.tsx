@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Btn.module.scss';
-import { ContactButtonProps } from '@/types/btn.types';
+import { ContactButtonProps } from '@/lib/types/btn.types';
 
 /**
  * SVG иконка для кнопки контакта

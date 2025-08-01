@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './AboutGallery.module.scss';
-import { useGsap } from '@/lib/hooks/useGsap';
+import { useGsap } from '@/lib/gsap/hooks/useGsap';
 
 /**
  * Массив изображений семьи для галереи
