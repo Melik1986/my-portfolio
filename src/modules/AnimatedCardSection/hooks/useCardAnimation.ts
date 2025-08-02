@@ -27,38 +27,60 @@ export const useCardAnimation = (
     const wrapper = wrapperRef.current;
     if (!wrapper || sectionIndex === null || sectionIndex === undefined) return;
 
-    const smoother = ScrollSmoother.get();
-    if (!smoother) {
-      console.warn(
-        'ScrollSmoother не инициализирован. Убедитесь, что useScrollSmoother вызван на уровне приложения.',
-      );
+    // Только первая секция (index 0) создает ScrollTrigger для всей колоды
+    if (sectionIndex !== 0) {
+      // Создаем timeline для элементов с data-animate для остальных секций
+      elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
       return;
     }
 
-    // В нашей архитектуре wrapper - это li элемент внутри ul с классом scroll-section
-    const section = wrapper;
+    // Функция для инициализации анимации (только для первой секции)
+    const initAnimation = () => {
+      const smoother = ScrollSmoother.get();
+      if (!smoother) {
+        return false; // ScrollSmoother еще не готов
+      }
 
-    // Ищем родительский ul (portfolio__wrapper) и получаем все li элементы
-    const parentWrapper = section.parentElement;
-    if (!parentWrapper || !parentWrapper.children.length) return;
-    const items = Array.from(parentWrapper.children) as HTMLElement[];
-    if (items.length === 0 || sectionIndex >= items.length) return;
+      // Ищем scroll-section, затем wrapper и все items
+      const scrollSection = document.querySelector('.scroll-section');
+      if (!scrollSection) return false;
+      
+      const wrapperElement = scrollSection.querySelector('.portfolio__wrapper') || scrollSection;
+      const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+      if (items.length === 0) return false;
 
-    // Создаем timeline для элементов с data-animate один раз
-    elementTimelineRef.current = createElementTimeline(section as HTMLElement);
+      // Создаем timeline для элементов с data-animate первой секции
+      elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
 
-    const timeline = initScroll(
-      section as HTMLElement,
-      items,
-      direction,
-      elementTimelineRef.current,
-    );
-    timelineRef.current = timeline;
+      const timeline = initScroll(
+        wrapperElement as HTMLElement, // trigger - scroll-section wrapper
+        items,
+        direction,
+        elementTimelineRef.current,
+      );
+      timelineRef.current = timeline;
+      return true;
+    };
 
+    // Пытаемся инициализировать сразу
+    if (initAnimation()) {
+      return;
+    }
+
+    // Если ScrollSmoother не готов, ждем и повторяем попытку
+    const checkInterval = setInterval(() => {
+      if (initAnimation()) {
+        clearInterval(checkInterval);
+      }
+    }, 100);
+
+    // Очистка при размонтировании
     return () => {
-      timeline.scrollTrigger?.kill();
-      timeline.kill();
-      // Очистка при размонтировании
+      clearInterval(checkInterval);
+      if (timelineRef.current) {
+        timelineRef.current.scrollTrigger?.kill();
+        timelineRef.current.kill();
+      }
       if (elementTimelineRef.current) {
         elementTimelineRef.current.kill();
       }
@@ -96,26 +118,31 @@ function initScroll(
     defaults: { ease: 'none' },
   });
 
-  items.forEach((_, index) => {
-    if (index === items.length - 1) return;
-    if (direction === 'horizontal') {
-      timeline.to(
-        items[index + 1],
-        {
-          xPercent: 0,
-        },
-        '<',
-      );
-    } else {
-      timeline.to(
-        items[index + 1],
-        {
-          yPercent: 0,
-        },
-        '<',
-      );
+  items.forEach((item, index) => {
+    // Масштабируем текущий элемент и добавляем border-radius
+    timeline.to(item, {
+      scale: 0.9,
+      borderRadius: '10px',
+    });
+
+    // Показываем следующий элемент (если он есть)
+    if (items[index + 1]) {
+      direction == 'horizontal'
+        ? timeline.to(
+            items[index + 1],
+            {
+              xPercent: 0,
+            },
+            '<',
+          )
+        : timeline.to(
+            items[index + 1],
+            {
+              yPercent: 0,
+            },
+            '<',
+          );
     }
   });
-
   return timeline;
 }

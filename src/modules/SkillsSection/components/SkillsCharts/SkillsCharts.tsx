@@ -35,12 +35,17 @@ export function SkillsCharts({}: SkillsChartsProps) {
 
   useEffect(() => {
     if (visible && !chartsInitializedRef.current) {
-      initializeCharts();
-      chartsInitializedRef.current = true;
-      // Инициализация анимации для chart-wrapper
-      if (containerRef.current) {
-        const wrappers = containerRef.current.querySelectorAll('.chart-wrapper');
-        wrappers.forEach((el) => createElementTimeline(el as HTMLElement));
+      // Проверяем, что оба элемента реально существуют в DOM
+      const devChart = document.getElementById('dev-skills-chart');
+      const designChart = document.getElementById('design-skills-chart');
+      if (devChart && designChart) {
+        initializeCharts();
+        chartsInitializedRef.current = true;
+        // Инициализация анимации для chart-wrapper
+        if (containerRef.current) {
+          const wrappers = containerRef.current.querySelectorAll('.chart-wrapper');
+          wrappers.forEach((el) => createElementTimeline(el as HTMLElement));
+        }
       }
     }
   }, [visible, initializeCharts]);

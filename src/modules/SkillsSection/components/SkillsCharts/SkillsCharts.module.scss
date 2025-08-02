@@ -12,6 +12,10 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
+  
+  // Оптимизация для touch устройств - решает проблему с non-passive event listeners
+  touch-action: pan-y;
+  will-change: transform;
 }
 
 .chart-wrapper {
@@ -30,6 +34,10 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  
+  // Оптимизация для touch устройств
+  touch-action: pan-y;
+  will-change: transform;
 }
 
 .dev-skills-chart,
@@ -40,11 +48,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  // Оптимизация для ECharts canvas
+  canvas {
+    touch-action: pan-y;
+    will-change: transform;
+    pointer-events: auto;
+  }
+  
+  // Отключение wheel событий для ECharts контейнеров
+  div[_echarts_instance_] {
+    touch-action: pan-y;
+    will-change: transform;
+  }
   background: transparent;
   font-family: 'Poppins', sans-serif;
   color: $color-white;
   font: $font-p-x-small;
   box-sizing: border-box;
+  
+  // Оптимизация для ECharts элементов
+  touch-action: pan-y;
+  will-change: transform;
 }
 
 .echarts-x-axis-label,

@@ -16,15 +16,26 @@ import { getDesignChartOptions } from '../config/designChartOptions';
 import { playAnimation, hideCharts, resetAnimation } from '../utils/animationUtils';
 import { resizeCharts } from '../utils/resizeUtils';
 
-echarts.use([
-  BarChart,
-  PieChart,
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  LegendComponent,
-  CanvasRenderer,
-]);
+// Флаг для отслеживания регистрации ECharts компонентов
+let echartsRegistered = false;
+
+/**
+ * Регистрирует ECharts компоненты только при первом использовании
+ */
+const registerEChartsComponents = () => {
+  if (!echartsRegistered) {
+    echarts.use([
+      BarChart,
+      PieChart,
+      TitleComponent,
+      TooltipComponent,
+      GridComponent,
+      LegendComponent,
+      CanvasRenderer,
+    ]);
+    echartsRegistered = true;
+  }
+};
 
 /**
  * Проверяет наличие и размеры DOM элементов
@@ -55,6 +66,9 @@ const createChartInstances = (
   devChartElement: HTMLElement,
   designChartElement: HTMLElement,
 ) => {
+  // Регистрируем ECharts компоненты только при первом использовании
+  registerEChartsComponents();
+  
   // Проверяем, не инициализированы ли уже графики
   if (devChartRef.current) {
     devChartRef.current.dispose();
@@ -63,8 +77,47 @@ const createChartInstances = (
     designChartRef.current.dispose();
   }
 
-  devChartRef.current = echarts.init(devChartElement);
-  designChartRef.current = echarts.init(designChartElement);
+  // Инициализация с отключением wheel событий для улучшения производительности
+  devChartRef.current = echarts.init(devChartElement, null, {
+    renderer: 'canvas',
+    useDirtyRect: false,
+    useCoarsePointer: false,
+    ssr: false,
+    width: 'auto',
+    height: 'auto'
+  });
+  
+  designChartRef.current = echarts.init(designChartElement, null, {
+    renderer: 'canvas',
+    useDirtyRect: false,
+    useCoarsePointer: false,
+    ssr: false,
+    width: 'auto',
+    height: 'auto'
+  });
+  
+  // Отключаем wheel события для предотвращения passive listener warnings
+  if (devChartRef.current) {
+    const zr = devChartRef.current.getZr();
+    zr.off('mousewheel');
+    zr.off('wheel');
+    // Отключаем обработчики событий на уровне DOM
+    const dom = devChartRef.current.getDom();
+    if (dom) {
+      dom.style.touchAction = 'pan-y';
+    }
+  }
+  
+  if (designChartRef.current) {
+    const zr = designChartRef.current.getZr();
+    zr.off('mousewheel');
+    zr.off('wheel');
+    // Отключаем обработчики событий на уровне DOM
+    const dom = designChartRef.current.getDom();
+    if (dom) {
+      dom.style.touchAction = 'pan-y';
+    }
+  }
 };
 
 /**

@@ -23,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Container>{children}</Container>
+        <main className="portfolio" id="smooth-wrapper">
+          <div className="portfolio__section-wrapper" id="smooth-content">
+            <Container>{children}</Container>
+          </div>
+        </main>
       </body>
     </html>
   );

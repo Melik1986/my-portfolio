@@ -28,6 +28,7 @@
     "@types/three": "^0.154.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
+    "default-passive-events": "^4.0.0",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.4.2",
     "eslint-config-prettier": "^10.1.8",
