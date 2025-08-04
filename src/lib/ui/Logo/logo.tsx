@@ -28,10 +28,6 @@ export function Logo({ className = '', iconClassName = '', ...rest }: LogoProps)
     <a
       href="#header"
       className={`${styles.logo__link} ${className}`.trim()}
-      data-animation="slide-left"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="0"
       {...rest}
     >
       <LogoIcon iconClassName={iconClassName} />

@@ -55,14 +55,15 @@ function HeroParagraphContent() {
       >
         and Web Design
       </span>
-      <SpriteIcon
-        id="brush"
-        className={styles['hero__brush']}
-        data-animation="svg-draw"
+      <span
+        className="hero__brush-container"
+        data-animation="fade-up"
         data-duration="1.0"
         data-ease="power2.out"
         data-delay="0.55"
-      />
+      >
+        <SpriteIcon id="brush" className="hero__brush" />
+      </span>
     </>
   );
 }

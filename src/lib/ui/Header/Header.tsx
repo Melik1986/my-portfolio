@@ -14,25 +14,43 @@ import styles from './header.module.scss';
  */
 export function Header() {
   const headerRef = useRef<HTMLElement>(null);
+  const elementTimelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     if (headerRef.current) {
-      createElementTimeline(headerRef.current);
+      elementTimelineRef.current = createElementTimeline(headerRef.current);
+      
+      // --- HERO AUTO PLAY ---
+      // Автозапуск анимации элементов Header после появления секции
+      if (elementTimelineRef.current) {
+        // Если секция всегда видима, можно запускать сразу с небольшой задержкой
+        setTimeout(() => {
+          elementTimelineRef.current?.play();
+        }, 300);
+        // Если нужна точная видимость, можно заменить на IntersectionObserver
+      }
+      // --- END HERO AUTO PLAY ---
     }
   }, []);
 
   return (
     <header ref={headerRef} className={styles.header} id="header">
-      <div
-        className={styles.header__content}
-        data-animation="slide-down"
-        data-duration="0.8"
-        data-ease="power2.out"
-        data-delay="0.1"
-      >
-        <Logo />
-        <Navigation />
-        <ContactButton />
+      <div className={styles.header__content}>
+        <Logo
+          data-animation="slide-left-scale"
+          data-duration="1.1"
+          data-ease="power3.out"
+        />
+        <Navigation
+          data-animation="slide-down-blur"
+          data-duration="1.1"
+          data-ease="power3.out"
+          data-delay="0.7"
+        />
+        <ContactButton 
+        data-animation="slide-right" 
+        data-duration="1.1" 
+        data-ease="power3.out" />
       </div>
     </header>
   );

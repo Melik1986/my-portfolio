@@ -41,7 +41,7 @@ type AddAnimationConfig = {
  */
 export function createElementTimeline(
   container: HTMLElement,
-  selector = '[data-animate]',
+  selector = '[data-animate], [data-animation]',
 ): gsap.core.Timeline {
   const elements = Array.from(container.querySelectorAll(selector));
 

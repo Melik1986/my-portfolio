@@ -70,6 +70,18 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
     duration: 0.6,
     ease: 'back.out(1.7)',
   },
+  'slide-left-scale': {
+    from: { x: -100, scale: 0.8, opacity: 0 },
+    to: { x: 0, scale: 1, opacity: 1 },
+    duration: 0.8,
+    ease: 'power3.out',
+  },
+  'slide-down-blur': {
+    from: { y: -50, opacity: 0, filter: 'blur(8px)' },
+    to: { y: 0, opacity: 1, filter: 'blur(0px)' },
+    duration: 0.8,
+    ease: 'power3.out',
+  },
   'svg-draw': {
     from: { strokeDashoffset: 'auto' }, // Будет вычислено динамически
     to: { strokeDashoffset: 0 },

@@ -9,7 +9,9 @@ export type AnimationType =
   | 'fade-up'
   | 'fade-left'
   | 'fade-right'
-  | 'scale-up';
+  | 'scale-up'
+  | 'slide-left-scale'
+  | 'slide-down-blur';
 
 export interface AnimationData {
   animation?: AnimationType;

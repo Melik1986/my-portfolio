@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <main className="portfolio" id="smooth-wrapper">
-          <div className="portfolio__section-wrapper" id="smooth-content">
+          <div className="portfolio__section" id="smooth-content">
             <Container>{children}</Container>
           </div>
         </main>

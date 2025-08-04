@@ -52,6 +52,17 @@ export const useCardAnimation = (
       // Создаем timeline для элементов с data-animate первой секции
       elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
 
+      // --- HERO AUTO PLAY ---
+      // Автозапуск анимации элементов Hero после появления секции
+      if (elementTimelineRef.current) {
+        // Если секция всегда видима, можно запускать сразу с небольшой задержкой
+        setTimeout(() => {
+          elementTimelineRef.current?.play();
+        }, 300);
+        // Если нужна точная видимость, можно заменить на IntersectionObserver
+      }
+      // --- END HERO AUTO PLAY ---
+
       const timeline = initScroll(
         wrapperElement as HTMLElement, // trigger - scroll-section wrapper
         items,

@@ -23,36 +23,47 @@ export default function Home() {
 
       <div className="portfolio__wrapper scroll-section">
         <ul className="portfolio__list">
-          <AnimatedCardSection id="hero-section" title="Hero" sectionIndex={0}>
+          <AnimatedCardSection
+            id="hero-section"
+            title="Hero"
+            sectionIndex={0}
+            direction="vertical"
+          >
             <HeroSection />
           </AnimatedCardSection>
 
-        <AnimatedCardSection id="about-section" title="About" sectionIndex={1}>
-          <AboutSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection 
+          id="about-section" 
+          title="About" 
+          sectionIndex={1}>
+            <AboutSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection id="skills-section" title="Skills" sectionIndex={2}>
-          <SkillsSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection 
+          id="skills-section" 
+          title="Skills" 
+          sectionIndex={2}>
+            <SkillsSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection
-          id="projects-section"
-          title="Projects"
-          direction="horizontal"
-          sectionIndex={3}
-        >
-          <ProjectsSection />
-        </AnimatedCardSection>
+          <AnimatedCardSection
+            id="projects-section"
+            title="Projects"
+            direction="horizontal"
+            sectionIndex={3}
+          >
+            <ProjectsSection />
+          </AnimatedCardSection>
 
-        <AnimatedCardSection
-          id="gallery-section"
-          title="Gallery"
-          direction="horizontal"
-          sectionIndex={4}
-        >
-          <GallerySection />
-        </AnimatedCardSection>
-      </ul>
+          <AnimatedCardSection
+            id="gallery-section"
+            title="Gallery"
+            direction="horizontal"
+            sectionIndex={4}
+          >
+            <GallerySection />
+          </AnimatedCardSection>
+        </ul>
       </div>
     </>
   );

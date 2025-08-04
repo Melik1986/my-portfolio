@@ -31,16 +31,13 @@ function NavigationItem({ href, label }: { href: string; label: string }) {
  * Компонент навигации с анимацией
  * Отображает список ссылок с GSAP анимацией
  */
-export function Navigation({ items = defaultItems, className = '' }: NavigationProps) {
+export function Navigation({
+  items = defaultItems,
+  className = '',
+  ...rest
+}: NavigationProps & React.HTMLAttributes<HTMLUListElement>) {
   return (
-    <ul
-      className={`${styles.nav__list} ${className}`.trim()}
-      data-animation="slide-down"
-      data-duration="0.6"
-      data-ease="power2.out"
-      data-delay="0.3"
-      data-stagger="0.1"
-    >
+    <ul className={`${styles.nav__list} ${className}`.trim()} {...rest}>
       {items.map(({ href, label }) => (
         <NavigationItem key={href} href={href} label={label} />
       ))}

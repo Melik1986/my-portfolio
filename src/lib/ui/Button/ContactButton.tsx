@@ -30,10 +30,6 @@ export function ContactButton({ className = '', iconClassName = '', ...rest }: C
     <button
       type="button"
       className={`${styles.btn} ${styles.header__btn} ${className}`.trim()}
-      data-animation="slide-right"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="0"
       aria-label="Contact me"
       data-target="#contact"
       {...rest}
