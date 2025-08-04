@@ -1,8 +1,6 @@
 'use client';
 
 import styles from './AboutGallery.module.scss';
-import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import Image from 'next/image';
 
 /**
@@ -27,17 +25,8 @@ const familyImages = [
  * Отображает вращающуюся карусель с семейными фото
  */
 export function AboutGallery() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
-    }
-  }, []);
-
   return (
     <div
-      ref={containerRef}
       className={styles['about__gallery']}
       data-animation="fade-up"
       data-duration="0.8"

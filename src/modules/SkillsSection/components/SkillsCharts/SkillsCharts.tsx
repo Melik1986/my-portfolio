@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './SkillsCharts.module.scss';
 import { useSkillsCharts } from '../../hooks';
 
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 
 interface SkillsChartsProps {
   // Props can be added here when needed
@@ -42,10 +41,6 @@ export function SkillsCharts({}: SkillsChartsProps) {
         initializeCharts();
         chartsInitializedRef.current = true;
         // Инициализация анимации для chart-wrapper
-        if (containerRef.current) {
-          const wrappers = containerRef.current.querySelectorAll('.chart-wrapper');
-          wrappers.forEach((el) => createElementTimeline(el as HTMLElement));
-        }
       }
     }
   }, [visible, initializeCharts]);

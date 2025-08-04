@@ -27,10 +27,22 @@ export const useCardAnimation = (
     const wrapper = wrapperRef.current;
     if (!wrapper || sectionIndex === null || sectionIndex === undefined) return;
 
-    // Только первая секция (index 0) создает ScrollTrigger для всей колоды
+    // Для всех секций создаем индивидуальный ScrollTrigger
     if (sectionIndex !== 0) {
-      // Создаем timeline для элементов с data-animate для остальных секций
+      // Создаем timeline для элементов с data-animate
       elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
+      
+      // Добавляем ScrollTrigger для запуска анимации при появлении секции
+      ScrollTrigger.create({
+        trigger: wrapper,
+        start: 'top 80%', // Запускаем когда верх секции достигает 80% высоты viewport
+        once: true, // Анимация проигрывается один раз
+        onEnter: () => {
+          elementTimelineRef.current?.play();
+        },
+        scroller: '#smooth-wrapper',
+      });
+      
       return;
     }
 

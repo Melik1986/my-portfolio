@@ -10,7 +10,7 @@ export function GallerySection() {
     useCarousel();
 
   return (
-    <div className={styles.gallery} id="gallery">
+    <section className={styles.gallery} id="gallery">
       <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
       <div className={styles.gallery__carousel}>
         <ul className={styles.gallery__list}>
@@ -50,6 +50,6 @@ export function GallerySection() {
         </div>
       </div>
       <div className={styles.gallery__timeRunning} ref={progressRef} />
-    </div>
+    </section>
   );
 }

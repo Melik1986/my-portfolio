@@ -1,22 +1,12 @@
 'use client';
 
 import { AboutAnimation } from '../index';
-import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+
 import styles from './AboutContent.module.scss';
 
 function AboutHeading() {
-  const containerRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
-    }
-  }, []);
-
   return (
     <h3
-      ref={containerRef}
       className={styles['about__heading']}
       data-animation="slide-left"
       data-duration="0.8"
@@ -29,17 +19,8 @@ function AboutHeading() {
 }
 
 function AboutText() {
-  const containerRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
-    }
-  }, []);
-
   return (
     <p
-      ref={containerRef}
       className={styles['about__text']}
       data-animation="text-reveal"
       data-duration="1.2"

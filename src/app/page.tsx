@@ -8,7 +8,6 @@ import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
 import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
-import { useGSAPDebugger } from '@/lib/gsap/hooks/useGSAPDebugger';
 
 /**
  * Главная страница портфолио
@@ -16,7 +15,6 @@ import { useGSAPDebugger } from '@/lib/gsap/hooks/useGSAPDebugger';
  */
 export default function Home() {
   useScrollSmoother(); // Гарантируем инициализацию ScrollSmoother до ScrollTrigger
-  useGSAPDebugger(true); // Включаем отладчик для анализа проблемы с наложением
   return (
     <>
       <Header />

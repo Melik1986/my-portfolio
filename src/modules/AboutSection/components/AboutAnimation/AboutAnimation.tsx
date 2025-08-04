@@ -10,14 +10,6 @@ import styles from './AboutAnimation.module.scss';
  */
 export function AboutAnimation() {
   const containerRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    if (containerRef.current) {
-      // Инициализация анимации для контейнера
-      import('@/lib/gsap/hooks/useGsap').then(({ createElementTimeline }) => {
-        createElementTimeline(containerRef.current!);
-      });
-    }
-  }, []);
   useAuroraAnimation(containerRef);
 
   return (

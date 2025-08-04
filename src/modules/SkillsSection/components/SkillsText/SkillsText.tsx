@@ -1,19 +1,8 @@
-import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import './SkillsText.module.scss';
 
 export function SkillsText() {
-  const containerRef = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
-    }
-  }, []);
-
   return (
     <p
-      ref={containerRef}
       className="skills__text"
       data-animation="text-reveal"
       data-duration="0.8"
