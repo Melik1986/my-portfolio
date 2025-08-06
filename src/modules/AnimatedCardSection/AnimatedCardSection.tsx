@@ -11,13 +11,25 @@ export function AnimatedCardSection({
   direction = 'vertical',
   sectionIndex,
 }: Omit<AnimatedCardSectionProps, 'contentTimelinesRef'>) {
+  console.log(`🎨 AnimatedCardSection rendering:`, {
+    id,
+    sectionIndex,
+    direction,
+    hasChildren: !!children,
+  });
+
   const { wrapperRef } = useCardAnimation({
     direction,
     sectionIndex,
   });
 
   return (
-    <li ref={wrapperRef} className={styles.portfolio__item} id={id}>
+    <li
+      ref={wrapperRef}
+      className={styles.portfolio__item}
+      id={id}
+      data-section-index={sectionIndex}
+    >
       {children}
     </li>
   );

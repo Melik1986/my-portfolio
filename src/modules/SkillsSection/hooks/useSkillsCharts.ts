@@ -68,7 +68,7 @@ const createChartInstances = (
 ) => {
   // Регистрируем ECharts компоненты только при первом использовании
   registerEChartsComponents();
-  
+
   // Проверяем, не инициализированы ли уже графики
   if (devChartRef.current) {
     devChartRef.current.dispose();
@@ -84,18 +84,18 @@ const createChartInstances = (
     useCoarsePointer: false,
     ssr: false,
     width: 'auto',
-    height: 'auto'
+    height: 'auto',
   });
-  
+
   designChartRef.current = echarts.init(designChartElement, null, {
     renderer: 'canvas',
     useDirtyRect: false,
     useCoarsePointer: false,
     ssr: false,
     width: 'auto',
-    height: 'auto'
+    height: 'auto',
   });
-  
+
   // Отключаем wheel события для предотвращения passive listener warnings
   if (devChartRef.current) {
     const zr = devChartRef.current.getZr();
@@ -107,7 +107,7 @@ const createChartInstances = (
       dom.style.touchAction = 'pan-y';
     }
   }
-  
+
   if (designChartRef.current) {
     const zr = designChartRef.current.getZr();
     zr.off('mousewheel');

@@ -14,7 +14,7 @@ export function AboutSection() {
         <AboutContent />
       </div>
       <div className={`${styles['about__content']} ${styles['about__content-right']}`}>
-        { <AboutGallery /> }
+        {<AboutGallery />}
       </div>
     </section>
   );

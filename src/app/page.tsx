@@ -21,26 +21,17 @@ export default function Home() {
 
       <div className="portfolio__wrapper scroll-section">
         <ul className="portfolio__list">
-          <AnimatedCardSection
-            id="hero-section"
-            title="Hero"
-            sectionIndex={0}
-            direction="vertical"
-          >
+          <AnimatedCardSection id="hero-section" title="Hero" sectionIndex={0} direction="vertical">
             <HeroSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection 
-          id="about-section" 
-          title="About" 
-          sectionIndex={1}>
+          <AnimatedCardSection id="about-section" title="About" sectionIndex={1}>
+            {console.log('Передача sectionIndex в AboutSection:', 1)}
             <AboutSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection 
-          id="skills-section" 
-          title="Skills" 
-          sectionIndex={2}>
+          <AnimatedCardSection id="skills-section" title="Skills" sectionIndex={2}>
+            {console.log('Передача sectionIndex в SkillsSection:', 2)}
             <SkillsSection />
           </AnimatedCardSection>
 

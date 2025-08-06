@@ -25,11 +25,7 @@ function LogoIcon({ iconClassName }: { iconClassName: string }) {
  */
 export function Logo({ className = '', iconClassName = '', ...rest }: LogoProps) {
   return (
-    <a
-      href="#header"
-      className={`${styles.logo__link} ${className}`.trim()}
-      {...rest}
-    >
+    <a href="#header" className={`${styles.logo__link} ${className}`.trim()} {...rest}>
       <LogoIcon iconClassName={iconClassName} />
     </a>
   );

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './SkillsCharts.module.scss';
 import { useSkillsCharts } from '../../hooks';
 
-
 interface SkillsChartsProps {
   // Props can be added here when needed
   [key: string]: unknown;
@@ -48,10 +47,22 @@ export function SkillsCharts({}: SkillsChartsProps) {
   return (
     <div ref={containerRef} className={styles['skills__charts']}>
       <div className={styles['skills-charts__container']}>
-        <div className={styles['chart-wrapper']} data-animation="slide-right">
+        <div
+          className={styles['chart-wrapper']}
+          data-animation="slide-right"
+          data-duration="1.2"
+          data-ease="power2.out"
+          data-delay="0.3"
+        >
           <div id="dev-skills-chart" className={styles['dev-skills-chart']} />
         </div>
-        <div className={styles['chart-wrapper']} data-animation="slide-left">
+        <div
+          className={styles['chart-wrapper']}
+          data-animation="slide-left"
+          data-duration="1.2"
+          data-ease="power2.out"
+          data-delay="0.3"
+        >
           <div id="design-skills-chart" className={styles['design-skills-chart']} />
         </div>
       </div>

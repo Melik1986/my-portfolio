@@ -56,13 +56,13 @@ function HeroParagraphContent() {
         and Web Design
       </span>
       <span
-        className={styles["hero__brush-container"]}
+        className={styles['hero__brush-container']}
         data-animation="fade-up"
         data-duration="1.0"
         data-ease="power2.out"
         data-delay="0.55"
       >
-        <SpriteIcon id="brush" className={styles["hero__brush"]} />
+        <SpriteIcon id="brush" className={styles['hero__brush']} />
       </span>
     </>
   );

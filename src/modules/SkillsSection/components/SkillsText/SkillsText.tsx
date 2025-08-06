@@ -1,9 +1,9 @@
-import './SkillsText.module.scss';
+import styles from './SkillsText.module.scss';
 
 export function SkillsText() {
   return (
     <p
-      className="skills__text"
+      className={styles.skills__text}
       data-animation="text-reveal"
       data-duration="0.8"
       data-ease="power2.out"

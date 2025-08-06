@@ -19,7 +19,7 @@ export function Header() {
   useEffect(() => {
     if (headerRef.current) {
       elementTimelineRef.current = createElementTimeline(headerRef.current);
-      
+
       // --- HERO AUTO PLAY ---
       // Автозапуск анимации элементов Header после появления секции
       if (elementTimelineRef.current) {
@@ -36,21 +36,14 @@ export function Header() {
   return (
     <header ref={headerRef} className={styles.header} id="header">
       <div className={styles.header__content}>
-        <Logo
-          data-animation="slide-left-scale"
-          data-duration="1.1"
-          data-ease="power3.out"
-        />
+        <Logo data-animation="slide-left-scale" data-duration="1.1" data-ease="power3.out" />
         <Navigation
           data-animation="slide-down-blur"
           data-duration="1.1"
           data-ease="power3.out"
           data-delay="0.7"
         />
-        <ContactButton 
-        data-animation="slide-right" 
-        data-duration="1.1" 
-        data-ease="power3.out" />
+        <ContactButton data-animation="slide-right" data-duration="1.1" data-ease="power3.out" />
       </div>
     </header>
   );
