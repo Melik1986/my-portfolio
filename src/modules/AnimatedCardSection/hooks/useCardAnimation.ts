@@ -42,35 +42,41 @@ export const useCardAnimation = (
 
     let observer: MutationObserver | null = null;
     let cleared = false;
-    
+
     const initAnimation = () => {
       const smoother = ScrollSmoother.get();
       if (!smoother) return false;
-      
+
       if (sectionIndex === 0) {
         // Hero section - статична, создаем основной timeline для всей колоды
         const scrollSection = document.querySelector('.scroll-section');
         if (!scrollSection) return false;
-        
-        const wrapperElement = scrollSection.querySelector('.portfolio__wrapper') || scrollSection;
+
+        const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') || scrollSection) as HTMLElement;
         const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
-        
+
         if (items.length === 0) return false;
-        
+
         // Создаем timeline для внутренних анимаций Hero
-        elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement, '[data-animate], [data-animation]');
-        
+        elementTimelineRef.current = createElementTimeline(
+          wrapper as HTMLElement,
+          '[data-animate], [data-animation]',
+        );
+
         // Запускаем внутренние анимации Hero сразу при загрузке
         elementTimelineRef.current?.play();
-        
+
         // Создаем основной timeline для переключения всех карт в колоде
         const timeline = initCardDeckScroll(wrapperElement, items);
         timelineRef.current = timeline;
         return true;
       } else {
         // Остальные секции - анимации запускаются по скроллу
-        elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement, '[data-animate], [data-animation]');
-        
+        elementTimelineRef.current = createElementTimeline(
+          wrapper as HTMLElement,
+          '[data-animate], [data-animation]',
+        );
+
         // Создаем ScrollTrigger для запуска анимаций по скроллу
         ScrollTrigger.create({
           trigger: wrapper,
@@ -116,23 +122,23 @@ export const useCardAnimation = (
     return () => {
       cleared = true;
       observer?.disconnect();
-      
+
       // Очистка для Hero-секции
       if (sectionIndex === 0 && timelineRef.current) {
         timelineRef.current.scrollTrigger?.kill();
         timelineRef.current.kill();
         timelineRef.current = null;
       }
-      
+
       // Очистка для обычных секций
       if (sectionIndex !== 0) {
-        ScrollTrigger.getAll().forEach(trigger => {
+        ScrollTrigger.getAll().forEach((trigger) => {
           if (trigger.trigger === wrapper) {
             trigger.kill();
           }
         });
       }
-      
+
       if (elementTimelineRef.current) {
         elementTimelineRef.current.kill();
         elementTimelineRef.current = null;
@@ -143,10 +149,7 @@ export const useCardAnimation = (
   return { wrapperRef };
 };
 
-function initCardDeckScroll(
-  section: HTMLElement,
-  items: HTMLElement[],
-): gsap.core.Timeline {
+function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): gsap.core.Timeline {
   // Инициализация начальных состояний для всей колоды карт
   // Hero (index 0) статична, остальные начинают снизу (yPercent: 100)
   // После SkillsSection (index 2) направление меняется на horizontal
@@ -181,7 +184,7 @@ function initCardDeckScroll(
   // Анимация переключения карт в колоде
   items.forEach((item, index) => {
     if (index === 0) return; // Hero статична, пропускаем
-    
+
     // Масштабируем предыдущий элемент
     if (index > 0) {
       timeline.to(items[index - 1], {
@@ -201,6 +204,6 @@ function initCardDeckScroll(
       '<',
     );
   });
-  
+
   return timeline;
 }

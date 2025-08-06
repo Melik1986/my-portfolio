@@ -12,7 +12,7 @@ export function AnimatedCardSection({
   sectionIndex,
 }: Omit<AnimatedCardSectionProps, 'contentTimelinesRef'>) {
   const [direction, setDirection] = useState<'horizontal' | 'vertical'>(initialDirection);
-  
+
   console.log(`🎨 AnimatedCardSection rendering:`, {
     id,
     sectionIndex,
