@@ -24,7 +24,6 @@ export function AnimatedCardSection({
   const { wrapperRef } = useCardAnimation({
     direction,
     sectionIndex,
-    onDirectionChange: setDirection,
   });
 
   return (
