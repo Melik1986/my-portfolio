@@ -6,18 +6,17 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { AnimationProps } from '@/lib/gsap/types/gsap.types';
 import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
-import { GSDevTools } from 'gsap/GSDevTools';
-
 gsap.registerPlugin(ScrollTrigger);
-gsap.registerPlugin(GSDevTools);
 
 /**
- * Хук для анимации переключения между секциями в колоде карт
- * Точная копия оригинального алгоритма: один timeline с ScrollTrigger на секцию
+ * Хук для анимации переключения между секциями в одной колоде карт
+ * Hero-секция статична, остальные собираются на неё
+ * Направление меняется после SkillsSection (index 2)
  */
 export const useCardAnimation = (
   props: AnimationProps & {
     sectionIndex?: number | null;
+    onDirectionChange?: (direction: 'horizontal' | 'vertical') => void;
   },
 ) => {
   const { direction = 'vertical', sectionIndex } = props;
@@ -41,134 +40,67 @@ export const useCardAnimation = (
       elementsWithAnimation: wrapper.querySelectorAll('[data-animation]').length,
     });
 
-    // Для всех секций создаем индивидуальный ScrollTrigger
-    if (sectionIndex !== 0) {
-      console.log(`🏗️ Creating timeline for section ${sectionIndex}:`, {
-        wrapper: wrapper.id || wrapper.className,
-        wrapperRect: wrapper.getBoundingClientRect(),
-      });
-      elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
-      console.log(`✅ Timeline created for section ${sectionIndex}:`, {
-        timeline: elementTimelineRef.current,
-        duration: elementTimelineRef.current?.duration(),
-        paused: elementTimelineRef.current?.paused(),
-        progress: elementTimelineRef.current?.progress(),
-      });
-
-      // Сохраняем инстанс ScrollTrigger для очистки
-      let scrollTriggerInstance: ScrollTrigger | null = null;
-      scrollTriggerInstance = ScrollTrigger.create({
-        trigger: wrapper,
-        start: sectionIndex === 1 ? 'top 30%' : sectionIndex === 2 ? 'top 40%' : 'top 20%', // Анимация запускается, когда верх секции достигает 80% высоты вьюпорта
-        end: 'bottom 80%', // Завершается, когда низ секции опускается до 20%
-        once: false,
-        onEnter: () => {
-          console.log(`🎯 ScrollTrigger onEnter - Section ${sectionIndex}:`, {
-            timeline: elementTimelineRef.current,
-            timelinePaused: elementTimelineRef.current?.paused(),
-            timelineProgress: elementTimelineRef.current?.progress(),
-            timelineDuration: elementTimelineRef.current?.duration(),
-            wrapper: wrapper.id || wrapper.className,
-          });
-          elementTimelineRef.current?.play();
-          console.log(`▶️ Timeline play() called - Section ${sectionIndex}:`, {
-            timelinePaused: elementTimelineRef.current?.paused(),
-            timelineProgress: elementTimelineRef.current?.progress(),
-          });
-        },
-        onEnterBack: () => {
-          console.log(`🔄 ScrollTrigger onEnterBack - Section ${sectionIndex}:`, {
-            timeline: elementTimelineRef.current,
-            timelinePaused: elementTimelineRef.current?.paused(),
-            timelineProgress: elementTimelineRef.current?.progress(),
-          });
-          elementTimelineRef.current?.play();
-        },
-        onLeave: () => {
-          console.log(`⬆️ ScrollTrigger onLeave - Section ${sectionIndex}:`, {
-            timeline: elementTimelineRef.current,
-            timelinePaused: elementTimelineRef.current?.paused(),
-            timelineProgress: elementTimelineRef.current?.progress(),
-          });
-          elementTimelineRef.current?.reverse();
-        },
-        onLeaveBack: () => {
-          console.log(`⬇️ ScrollTrigger onLeaveBack - Section ${sectionIndex}:`, {
-            timeline: elementTimelineRef.current,
-            timelinePaused: elementTimelineRef.current?.paused(),
-            timelineProgress: elementTimelineRef.current?.progress(),
-          });
-          // Сбрасываем timeline в начальное состояние и очищаем все стили
-          if (elementTimelineRef.current) {
-            elementTimelineRef.current.progress(0).pause();
-            // Очищаем все inline стили, установленные GSAP, чтобы элементы вернулись к исходному состоянию
-            const elements = wrapper?.querySelectorAll('[data-animate], [data-animation]');
-            elements?.forEach((element) => {
-              gsap.set(element, { clearProps: 'all' });
-            });
-          }
-        },
-        markers: true,
-        scroller: '#smooth-wrapper',
-        onRefresh: () => {
-          console.log(`🔄 ScrollTrigger onRefresh - Section ${sectionIndex}`);
-        },
-        onUpdate: (self) => {
-          console.log(`📊 ScrollTrigger onUpdate - Section ${sectionIndex}:`, {
-            progress: self.progress,
-            direction: self.direction,
-            isActive: self.isActive,
-          });
-        },
-      });
-
-      GSDevTools.create({ animation: elementTimelineRef.current });
-
-      console.log(`🎯 useCardAnimation setup completed for section ${sectionIndex}:`, {
-        hasScrollTrigger: !!scrollTriggerInstance,
-        hasTimeline: !!elementTimelineRef.current,
-        timelineDuration: elementTimelineRef.current?.duration(),
-        timelinePaused: elementTimelineRef.current?.paused(),
-      });
-
-      return () => {
-        console.log(`🧹 Cleaning up section ${sectionIndex}`);
-        if (scrollTriggerInstance) {
-          console.log(`🗑️ Killing ScrollTrigger for section ${sectionIndex}`);
-          scrollTriggerInstance.kill();
-        }
-        if (elementTimelineRef.current) {
-          console.log(`🗑️ Killing timeline for section ${sectionIndex}`);
-          elementTimelineRef.current.kill();
-        }
-      };
-    }
-
-    // --- HERO SECTION ---
     let observer: MutationObserver | null = null;
     let cleared = false;
+    
     const initAnimation = () => {
       const smoother = ScrollSmoother.get();
       if (!smoother) return false;
-      const scrollSection = document.querySelector('.scroll-section');
-      if (!scrollSection) return false;
-      const wrapperElement = scrollSection.querySelector('.portfolio__wrapper') || scrollSection;
-      const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
-      if (items.length === 0) return false;
-      elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement);
-      if (elementTimelineRef.current) {
-        setTimeout(() => {
-          elementTimelineRef.current?.play();
-        }, 300);
+      
+      if (sectionIndex === 0) {
+        // Hero section - статична, создаем основной timeline для всей колоды
+        const scrollSection = document.querySelector('.scroll-section');
+        if (!scrollSection) return false;
+        
+        const wrapperElement = scrollSection.querySelector('.portfolio__wrapper') || scrollSection;
+        const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+        
+        if (items.length === 0) return false;
+        
+        // Создаем timeline для внутренних анимаций Hero
+        elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement, '[data-animate], [data-animation]');
+        
+        // Запускаем внутренние анимации Hero сразу при загрузке
+        elementTimelineRef.current?.play();
+        
+        // Создаем основной timeline для переключения всех карт в колоде
+        const timeline = initCardDeckScroll(wrapperElement, items);
+        timelineRef.current = timeline;
+        return true;
+      } else {
+        // Остальные секции - анимации запускаются по скроллу
+        elementTimelineRef.current = createElementTimeline(wrapper as HTMLElement, '[data-animate], [data-animation]');
+        
+        // Создаем ScrollTrigger для запуска анимаций по скроллу
+        ScrollTrigger.create({
+          trigger: wrapper,
+          start: sectionIndex === 1 ? 'top 30%' : sectionIndex === 2 ? 'top 40%' : 'top 20%',
+          end: 'bottom 80%',
+          scroller: '#smooth-wrapper',
+          onEnter: () => {
+            console.log(`🎯 ScrollTrigger onEnter - Section ${sectionIndex}`);
+            elementTimelineRef.current?.play();
+          },
+          onEnterBack: () => {
+            console.log(`🔄 ScrollTrigger onEnterBack - Section ${sectionIndex}`);
+            elementTimelineRef.current?.play();
+          },
+          onLeave: () => {
+            console.log(`⬆️ ScrollTrigger onLeave - Section ${sectionIndex}`);
+            elementTimelineRef.current?.reverse();
+          },
+          onLeaveBack: () => {
+            console.log(`⬇️ ScrollTrigger onLeaveBack - Section ${sectionIndex}`);
+            elementTimelineRef.current?.progress(0).pause();
+            const elements = wrapper.querySelectorAll('[data-animate], [data-animation]');
+            elements?.forEach((element) => {
+              gsap.set(element, { clearProps: 'all' });
+            });
+          },
+          markers: true,
+        });
+        return true;
       }
-      const timeline = initScroll(
-        wrapperElement as HTMLElement,
-        items,
-        direction,
-        elementTimelineRef.current,
-      );
-      timelineRef.current = timeline;
-      return true;
     };
 
     if (!initAnimation()) {
@@ -184,12 +116,26 @@ export const useCardAnimation = (
     return () => {
       cleared = true;
       observer?.disconnect();
-      if (timelineRef.current) {
+      
+      // Очистка для Hero-секции
+      if (sectionIndex === 0 && timelineRef.current) {
         timelineRef.current.scrollTrigger?.kill();
         timelineRef.current.kill();
+        timelineRef.current = null;
       }
+      
+      // Очистка для обычных секций
+      if (sectionIndex !== 0) {
+        ScrollTrigger.getAll().forEach(trigger => {
+          if (trigger.trigger === wrapper) {
+            trigger.kill();
+          }
+        });
+      }
+      
       if (elementTimelineRef.current) {
         elementTimelineRef.current.kill();
+        elementTimelineRef.current = null;
       }
     };
   }, [direction, sectionIndex]);
@@ -197,65 +143,64 @@ export const useCardAnimation = (
   return { wrapperRef };
 };
 
-function initScroll(
+function initCardDeckScroll(
   section: HTMLElement,
   items: HTMLElement[],
-  direction: 'horizontal' | 'vertical',
-  elementTimeline?: gsap.core.Timeline | null,
 ): gsap.core.Timeline {
-  // Инициализация начальных состояний
-  const property = direction === 'horizontal' ? 'xPercent' : 'yPercent';
+  // Инициализация начальных состояний для всей колоды карт
+  // Hero (index 0) статична, остальные начинают снизу (yPercent: 100)
+  // После SkillsSection (index 2) направление меняется на horizontal
   items.forEach((item, index) => {
-    if (index !== 0) gsap.set(item, { [property]: 100 });
+    if (index === 0) {
+      // Hero статична и видима
+      gsap.set(item, { yPercent: 0, xPercent: 0, visibility: 'visible' });
+    } else if (index <= 2) {
+      // About, Skills - вертикальное направление, скрыты до активации
+      gsap.set(item, { yPercent: 100, xPercent: 0, visibility: 'hidden' });
+    } else {
+      // Projects, Gallery - горизонтальное направление, полностью скрыты
+      gsap.set(item, { yPercent: 0, xPercent: 100, visibility: 'hidden' });
+    }
   });
 
-  // Создание timeline с ScrollTrigger
+  // Создание timeline с ScrollTrigger для всей колоды
   const timeline = gsap.timeline({
     scrollTrigger: {
       trigger: section,
       pin: true,
       start: 'top top',
-      end: () => `+=${items.length * 100}%`,
+      end: () => `+=${(items.length - 1) * 100}%`, // -1 потому что Hero статична
       scrub: 1,
       invalidateOnRefresh: true,
       scroller: '#smooth-wrapper',
-      onEnter: () => {
-        console.log('onEnter for hero section');
-        elementTimeline?.play();
-      },
-      onLeave: () => {
-        console.log('onLeave for hero section');
-        elementTimeline?.reverse();
-      },
+      markers: true,
     },
     defaults: { ease: 'none' },
   });
 
+  // Анимация переключения карт в колоде
   items.forEach((item, index) => {
-    // Масштабируем текущий элемент и добавляем border-radius
-    timeline.to(item, {
-      scale: 0.9,
-      borderRadius: '10px',
-    });
-
-    // Показываем следующий элемент (если он есть)
-    if (items[index + 1]) {
-      direction == 'horizontal'
-        ? timeline.to(
-            items[index + 1],
-            {
-              xPercent: 0,
-            },
-            '<',
-          )
-        : timeline.to(
-            items[index + 1],
-            {
-              yPercent: 0,
-            },
-            '<',
-          );
+    if (index === 0) return; // Hero статична, пропускаем
+    
+    // Масштабируем предыдущий элемент
+    if (index > 0) {
+      timeline.to(items[index - 1], {
+        scale: 0.9,
+        borderRadius: '10px',
+      });
     }
+
+    // Показываем текущий элемент
+    const property = index <= 2 ? 'yPercent' : 'xPercent'; // Меняем направление после SkillsSection
+    timeline.to(
+      item,
+      {
+        [property]: 0,
+        visibility: 'visible', // Делаем карточку видимой при активации
+      },
+      '<',
+    );
   });
+  
   return timeline;
 }
