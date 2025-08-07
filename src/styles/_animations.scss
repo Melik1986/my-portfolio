@@ -54,7 +54,25 @@
 }
 
 [data-animation='text-reveal'] {
-  clip-path: inset(0 100% 0 0);
+  // Стили управляются через GSAP SplitText
+  display: block !important; // Принудительно делаем блочным для работы SplitText
+
+  .char {
+    display: inline;
+    will-change: transform, opacity;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  .word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .line {
+    display: block;
+    overflow: hidden;
+  }
 }
 
 // SVG элементы для анимации рисования

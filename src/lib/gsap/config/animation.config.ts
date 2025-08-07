@@ -89,8 +89,16 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
     ease: 'power2.out',
   },
   'text-reveal': {
-    from: { clipPath: 'inset(0 100% 0 0)' },
-    to: { clipPath: 'inset(0 0% 0 0)' },
+    from: {
+      opacity: 0,
+      y: 30,
+      rotationX: 90,
+    },
+    to: {
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
+    },
     duration: 0.8,
     ease: 'power2.out',
   },
@@ -105,8 +113,15 @@ export function getAnimationDefinition(
   customConfig?: Partial<AnimationDefinition>,
 ): AnimationDefinition {
   const baseDefinition = animationDefinitions[type];
+
+  if (!baseDefinition) {
+    return animationDefinitions['fade-up'];
+  }
+
   return {
     ...baseDefinition,
+    from: { ...baseDefinition.from, ...customConfig?.from },
+    to: { ...baseDefinition.to, ...customConfig?.to },
     duration: customConfig?.duration ?? baseDefinition.duration ?? 0.6,
     ease: customConfig?.ease ?? baseDefinition.ease ?? 'power2.out',
   };

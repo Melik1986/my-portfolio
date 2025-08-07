@@ -16,7 +16,10 @@ export function clearElementAnimations(wrapper: HTMLElement): void {
  * @param sectionIndex - индекс секции
  */
 export function getScrollTriggerSettings(sectionIndex: number) {
-  if (sectionIndex === 1) return { start: 'top 30%', end: 'bottom 80%' };
-  if (sectionIndex === 2) return { start: 'top 40%', end: 'bottom 80%' };
-  return { start: 'top 20%', end: 'bottom 80%' };
+  // Исправляем перекрывающиеся настройки ScrollTrigger
+  if (sectionIndex === 1) return { start: 'top 80%', end: 'bottom 20%' };
+  if (sectionIndex === 2) return { start: 'top 80%', end: 'bottom 20%' };
+  if (sectionIndex === 3) return { start: 'top 80%', end: 'bottom 20%' };
+  if (sectionIndex === 4) return { start: 'top 80%', end: 'bottom 20%' };
+  return { start: 'top 80%', end: 'bottom 20%' };
 }

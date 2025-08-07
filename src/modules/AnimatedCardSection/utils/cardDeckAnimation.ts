@@ -18,6 +18,7 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
   });
 
   const timeline = gsap.timeline({
+    id: 'card-deck-timeline',
     scrollTrigger: {
       trigger: section,
       pin: true,
@@ -26,7 +27,7 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
       scrub: 1,
       invalidateOnRefresh: true,
       scroller: '#smooth-wrapper',
-      markers: true,
+      markers: false,
     },
     defaults: { ease: 'none' },
   });
@@ -47,7 +48,7 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
         visibility: 'visible',
         duration: 0.5,
       },
-      '<'
+      '<',
     );
   });
 

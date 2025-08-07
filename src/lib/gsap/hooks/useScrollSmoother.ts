@@ -33,9 +33,7 @@ const checkElements = (
   const wrapperElement = document.querySelector(wrapper);
   const contentElement = document.querySelector(content);
   if (!wrapperElement || !contentElement) {
-    console.warn(
-      `ScrollSmoother: DOM elements not found. Wrapper: ${wrapper}, Content: ${content}`,
-    );
+    // ScrollSmoother: DOM elements not found
   }
   return { wrapperElement, contentElement };
 };
@@ -50,15 +48,16 @@ const createSmoother = (
       return existingSmoother;
     }
 
-    return ScrollSmoother.create({
+    const smoother = ScrollSmoother.create({
       wrapper: options.wrapperElement,
       content: options.contentElement,
       smooth: options.smooth,
       effects: options.effects,
       normalizeScroll: options.normalizeScroll,
     });
-  } catch (error) {
-    console.error('Failed to initialize ScrollSmoother:', error);
+
+    return smoother;
+  } catch {
     return null;
   }
 };
@@ -133,6 +132,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
           smootherRef,
           isInitializingRef,
         });
+      } else {
       }
     }, 50);
 

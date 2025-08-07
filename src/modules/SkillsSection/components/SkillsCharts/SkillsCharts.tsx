@@ -17,11 +17,7 @@ export function SkillsCharts({}: SkillsChartsProps) {
         <div className={styles['chart-wrapper']} {...chartWrapperProps}>
           <div id="dev-skills-chart" className={styles['dev-skills-chart']} />
         </div>
-        <div
-          className={styles['chart-wrapper']}
-          {...chartWrapperProps}
-          data-animation="slide-left"
-        >
+        <div className={styles['chart-wrapper']} {...chartWrapperProps} data-animation="slide-left">
           <div id="design-skills-chart" className={styles['design-skills-chart']} />
         </div>
       </div>

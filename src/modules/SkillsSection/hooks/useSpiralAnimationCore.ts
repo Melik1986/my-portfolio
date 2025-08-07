@@ -8,7 +8,7 @@ import { SpiralAnimator } from '../utils/spiralAnimator';
  * Интерфейс пропсов для основного хука спиральной анимации
  */
 interface UseSpiralAnimationCoreProps {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   animatorRef: React.RefObject<SpiralAnimator | null>;
   setState: (updater: (prev: SpiralState) => SpiralState) => void;
 }

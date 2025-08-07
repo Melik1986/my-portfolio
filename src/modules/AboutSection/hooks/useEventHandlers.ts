@@ -1,0 +1,93 @@
+import { useEffect, useCallback } from 'react';
+import type { PerspectiveCamera, WebGLRenderer } from 'three';
+
+interface EventHandlersParams {
+  containerRef: React.RefObject<HTMLDivElement>;
+  cameraRef: React.RefObject<PerspectiveCamera | null>;
+  rendererRef: React.RefObject<WebGLRenderer | null>;
+  mouseRef: React.RefObject<{ x: number; y: number }>;
+  startAnimation: () => void;
+  stopAnimation: () => void;
+  isInitialized: boolean;
+}
+
+const subscribeEvents = (
+  container: HTMLDivElement | null,
+  handleResize: () => void,
+  handlePointerMove: (clientX: number, clientY: number) => void,
+  startAnimation: () => void,
+  stopAnimation: () => void,
+) => {
+  const onMouseMove = (e: MouseEvent) => handlePointerMove(e.clientX, e.clientY);
+  const onTouchMove = (e: TouchEvent) => {
+    if (e.touches.length > 0) handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+  };
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      stopAnimation();
+    } else {
+      startAnimation();
+    }
+  };
+
+  window.addEventListener('resize', handleResize);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  container?.addEventListener('mousemove', onMouseMove);
+  container?.addEventListener('touchmove', onTouchMove, { passive: false });
+
+  return () => {
+    window.removeEventListener('resize', handleResize);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    container?.removeEventListener('mousemove', onMouseMove);
+    container?.removeEventListener('touchmove', onTouchMove);
+  };
+};
+
+/**
+ * Хук для управления всеми обработчиками событий.
+ * @param params - Параметры и коллбэки для обработки событий.
+ */
+export const useEventHandlers = ({
+  containerRef,
+  cameraRef,
+  rendererRef,
+  mouseRef,
+  startAnimation,
+  stopAnimation,
+  isInitialized,
+}: EventHandlersParams) => {
+  const handlePointerMove = useCallback(
+    (clientX: number, clientY: number) => {
+      const container = containerRef.current;
+      const mouse = mouseRef.current;
+      if (!container || !mouse) return;
+
+      const rect = container.getBoundingClientRect();
+      mouse.x = clientX - rect.left - container.offsetWidth / 2;
+      mouse.y = clientY - rect.top - container.offsetHeight / 2;
+    },
+    [containerRef, mouseRef],
+  );
+
+  const handleResize = useCallback(() => {
+    const container = containerRef.current;
+    const camera = cameraRef.current;
+    const renderer = rendererRef.current;
+    if (!container || !camera || !renderer) return;
+
+    camera.aspect = container.offsetWidth / container.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+  }, [containerRef, cameraRef, rendererRef]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    return subscribeEvents(
+      containerRef.current,
+      handleResize,
+      handlePointerMove,
+      startAnimation,
+      stopAnimation,
+    );
+  }, [isInitialized, handleResize, handlePointerMove, startAnimation, stopAnimation, containerRef]);
+};

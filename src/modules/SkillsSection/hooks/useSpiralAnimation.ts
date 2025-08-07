@@ -15,7 +15,7 @@ import { useSpiralVisibility } from './useSpiralVisibility';
  * @returns объект с состояниями и методами управления анимацией
  */
 export const useSpiralAnimation = (
-  containerRef: React.RefObject<HTMLElement>,
+  containerRef: React.RefObject<HTMLElement | null>,
   config: Partial<SpiralConfig> = {},
 ) => {
   const { state, setState, animatorRef, finalConfig } = useSpiralState(config);
@@ -39,18 +39,23 @@ export const useSpiralAnimation = (
     stopAnimation,
   });
 
-  /** Инициализация спиралей и запуск анимации */
+  /** Инициализация спиралей */
   useEffect(() => {
-    initializeSpirals().then(() => {
-      if (state.isInitialized) {
-        startAnimation();
-      }
-    });
+    if (!state.isInitialized) {
+      initializeSpirals();
+    }
+  }, [state.isInitialized, initializeSpirals]);
+
+  /** Запуск анимации после инициализации */
+  useEffect(() => {
+    if (state.isInitialized) {
+      startAnimation();
+    }
 
     return () => {
       stopAnimation();
     };
-  }, [state.isInitialized, initializeSpirals, startAnimation, stopAnimation]);
+  }, [state.isInitialized, startAnimation, stopAnimation]);
 
   return {
     isInitialized: state.isInitialized,

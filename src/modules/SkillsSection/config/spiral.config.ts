@@ -35,4 +35,4 @@ export const TECH_ICONS: IconData[] = [
  * Путь к SVG спрайту с технологическими иконками
  * Используется для загрузки иконок в спиральной анимации
  */
-export const SVG_SPRITE_PATH = '@pictures/icons/tech-icons.svg';
+export const SVG_SPRITE_PATH = 'icons/tech-icons.svg';

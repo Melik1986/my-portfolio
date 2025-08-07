@@ -1,11 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
+import { useSpiralAnimation } from '../../hooks/useSpiralAnimation';
 import styles from './SkillsAnimation.module.scss';
 
 export function SkillsAnimation() {
+  const spiralContainerRef = useRef<HTMLDivElement>(null);
+  useSpiralAnimation(spiralContainerRef);
   return (
     <div
+      ref={spiralContainerRef}
       className={styles['skills__animation']}
       data-animation="slide-left"
       data-duration="1.0"

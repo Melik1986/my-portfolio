@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useCallback } from 'react';
 import { SpiralConfig, SpiralState } from '../config/spiral.config';
 import { SpiralAnimator } from '../utils/spiralAnimator';
 import { DEFAULT_SPIRAL_CONFIG } from '../config/spiral.config';
@@ -12,11 +12,16 @@ import { DEFAULT_SPIRAL_CONFIG } from '../config/spiral.config';
  * @returns объект с состояниями и рефами
  */
 export const useSpiralState = (config: Partial<SpiralConfig> = {}) => {
-  const [state, setState] = useState<SpiralState>({
+  const [state, setStateInternal] = useState<SpiralState>({
     isInitialized: false,
     isAnimating: false,
     icons: [],
   });
+
+  /** Стабильная версия setState для предотвращения бесконечных циклов */
+  const setState = useCallback((updater: (prev: SpiralState) => SpiralState) => {
+    setStateInternal(updater);
+  }, []);
 
   /** Ссылка на аниматор спиралей */
   const animatorRef = useRef<SpiralAnimator | null>(null);

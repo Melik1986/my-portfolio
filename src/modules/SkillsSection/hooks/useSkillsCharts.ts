@@ -45,12 +45,12 @@ const validateChartElements = () => {
   const designChartElement = document.querySelector(SELECTORS.DESIGN_CHART) as HTMLElement | null;
 
   if (!devChartElement || !designChartElement) {
-    console.warn('Chart elements not found');
+    // Chart elements not found
     return null;
   }
 
   if (devChartElement.offsetHeight === 0 || designChartElement.offsetHeight === 0) {
-    console.warn('Chart containers have zero height');
+    // Chart containers have zero height
     return null;
   }
 

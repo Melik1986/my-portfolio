@@ -14,5 +14,6 @@
     font: $font-p;
     font-family: $font-family-roboto;
     will-change: transform;
+    display: block; // Для корректной работы SplitText
   }
 }

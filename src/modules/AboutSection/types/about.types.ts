@@ -26,6 +26,14 @@ export interface AuroraConfig {
   particleSize: number;
   cameraSpeed: number;
   waveSpeed: number;
+  cameraFov: number;
+  cameraNear: number;
+  cameraFar: number;
+  cameraZ: number;
+  cameraLerp: number;
+  waveFrequencyX: number;
+  waveFrequencyY: number;
+  waveAmplitude: number;
 }
 
 export interface MousePosition {

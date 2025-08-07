@@ -7,7 +7,15 @@ export const DEFAULT_AURORA_CONFIG: AuroraConfig = {
   particleColor: 0x1e90ff, // Electric blue
   particleSize: 2.5,
   cameraSpeed: 0.05,
+  cameraFov: 75,
+  cameraNear: 0.1,
+  cameraFar: 1000,
+  cameraZ: 1000,
+  cameraLerp: 0.1,
   waveSpeed: 0.1,
+  waveFrequencyX: 0.3,
+  waveFrequencyY: 0.5,
+  waveAmplitude: 50,
 };
 
 // Alternative color presets

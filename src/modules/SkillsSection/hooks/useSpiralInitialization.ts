@@ -10,7 +10,7 @@ import { SpiralAnimator } from '../utils/spiralAnimator';
  * Интерфейс пропсов для хука инициализации спиралей
  */
 interface UseSpiralInitializationProps {
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   finalConfig: SpiralConfig;
   animatorRef: React.RefObject<SpiralAnimator | null>;
   setState: (updater: (prev: SpiralState) => SpiralState) => void;
@@ -63,7 +63,7 @@ export const useSpiralInitialization = ({
         return true;
       }
     } catch (error) {
-      console.error('Failed to initialize spirals:', error);
+      // Failed to initialize spirals
     }
     return false;
   }, [containerRef, createIcons, finalConfig, animatorRef, setState]);

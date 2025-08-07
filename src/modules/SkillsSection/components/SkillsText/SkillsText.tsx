@@ -7,6 +7,7 @@ export function SkillsText() {
       data-animation="text-reveal"
       data-duration="0.8"
       data-ease="power2.out"
+      data-delay="0.4"
     >
       I&nbsp;bring together a&nbsp;solid technical foundation and a&nbsp;creative design approach,
       enabling me&nbsp;to&nbsp;build modern, high-performance websites that are both functional and

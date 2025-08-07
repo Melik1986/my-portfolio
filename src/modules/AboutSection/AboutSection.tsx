@@ -1,8 +1,8 @@
 'use client';
 
-import { AboutContent, AboutGallery } from './components/index';
-import styles from './About.module.scss';
+import { AboutContent } from './components/index';
 import { useRef } from 'react';
+import styles from './About.module.scss';
 
 export function AboutSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -13,9 +13,7 @@ export function AboutSection() {
       <div className={`${styles['about__content']} ${styles['about__content-left']}`}>
         <AboutContent />
       </div>
-      <div className={`${styles['about__content']} ${styles['about__content-right']}`}>
-        {<AboutGallery />}
-      </div>
+      <div className={`${styles['about__content']} ${styles['about__content-right']}`}></div>
     </section>
   );
 }

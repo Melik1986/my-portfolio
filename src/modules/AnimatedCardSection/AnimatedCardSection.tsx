@@ -11,13 +11,6 @@ export function AnimatedCardSection({
   direction = 'vertical',
   sectionIndex,
 }: Omit<AnimatedCardSectionProps, 'contentTimelinesRef'>) {
-  console.log(`🎨 AnimatedCardSection rendering:`, {
-    id,
-    sectionIndex,
-    direction,
-    hasChildren: !!children,
-  });
-
   const { wrapperRef } = useCardAnimation({
     direction,
     sectionIndex,
