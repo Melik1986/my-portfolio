@@ -36,14 +36,24 @@ export function Header() {
   return (
     <header ref={headerRef} className={styles.header} id="header">
       <div className={styles.header__content}>
-        <Logo data-animation="slide-left-scale" data-duration="1.1" data-ease="power3.out" />
+        <Logo
+          data-animation="slide-left-scale"
+          data-duration="1.1"
+          data-ease="power3.out"
+          data-delay="0"
+        />
         <Navigation
           data-animation="slide-down-blur"
           data-duration="1.1"
           data-ease="power3.out"
-          data-delay="0.7"
+          data-delay="0.3"
         />
-        <ContactButton data-animation="slide-right" data-duration="1.1" data-ease="power3.out" />
+        <ContactButton
+          data-animation="slide-right"
+          data-duration="1.1"
+          data-ease="power3.out"
+          data-delay="0"
+        />
       </div>
     </header>
   );
