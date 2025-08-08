@@ -23,11 +23,8 @@ export function Header() {
       // --- HERO AUTO PLAY ---
       // Автозапуск анимации элементов Header после появления секции
       if (elementTimelineRef.current) {
-        // Если секция всегда видима, можно запускать сразу с небольшой задержкой
-        setTimeout(() => {
-          elementTimelineRef.current?.play();
-        }, 300);
-        // Если нужна точная видимость, можно заменить на IntersectionObserver
+        // Запускаем анимацию сразу без задержки
+        elementTimelineRef.current.play();
       }
       // --- END HERO AUTO PLAY ---
     }
@@ -38,19 +35,19 @@ export function Header() {
       <div className={styles.header__content}>
         <Logo
           data-animation="slide-left-scale"
-          data-duration="1.1"
+          data-duration="0.8"
           data-ease="power3.out"
           data-delay="0"
         />
         <Navigation
           data-animation="slide-down-blur"
-          data-duration="1.1"
+          data-duration="0.5"
           data-ease="power3.out"
-          data-delay="0.3"
+          data-delay="0.8"
         />
         <ContactButton
           data-animation="slide-right"
-          data-duration="1.1"
+          data-duration="0.8"
           data-ease="power3.out"
           data-delay="0"
         />

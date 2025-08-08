@@ -130,6 +130,9 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: ElementAnimat
   const { element, params } = config;
   const pathElements = element.querySelectorAll('path');
 
+  // Если delay равен 0, используем "0" для одновременного старта
+  const position = params.delay === 0 ? "0" : `${params.delay}`;
+
   pathElements.forEach((pathElement: Element) => {
     const pathLength = (pathElement as SVGPathElement).getTotalLength();
     timeline.set(pathElement, {
@@ -144,7 +147,7 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: ElementAnimat
         duration: params.duration,
         ease: params.ease,
       },
-      `>=${params.delay}`,
+      position,
     );
   });
 }
@@ -166,6 +169,9 @@ function addTextRevealAnimation(timeline: gsap.core.Timeline, config: ElementAni
     mask: 'lines',
   });
   
+  // Если delay равен 0, используем "0" для одновременного старта
+  const position = params.delay === 0 ? "0" : `${params.delay}`;
+  
   // Добавляем анимацию в timeline с правильными параметрами
   timeline.from(
     splitText.lines,
@@ -176,7 +182,7 @@ function addTextRevealAnimation(timeline: gsap.core.Timeline, config: ElementAni
       stagger: 0.15,
       ease: params.ease,
     },
-    `>=${params.delay}`,
+    position,
   );
 }
 
@@ -189,14 +195,22 @@ function addBaseAnimation(timeline: gsap.core.Timeline, config: ElementAnimation
   const { element, params, animationDef } = config;
   if (!animationDef) return;
 
+  // Если delay равен 0, используем "0" для одновременного старта
+  // Иначе используем "${params.delay}" для абсолютного времени от начала таймлайна
+  const position = params.delay === 0 ? "0" : `${params.delay}`;
+
   timeline.fromTo(
     element,
-    animationDef.from,
+    {
+      ...animationDef.from,
+      visibility: 'hidden',
+    },
     {
       ...animationDef.to,
+      visibility: 'visible',
       duration: animationDef.duration,
       ease: animationDef.ease,
     },
-    `>=${params.delay}`,
+    position,
   );
 }

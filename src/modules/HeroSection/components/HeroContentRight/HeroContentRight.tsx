@@ -21,7 +21,7 @@ function HeroHeading() {
       data-animation="slide-right"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="0.25"
+      data-delay="2.1"
     >
       Frontend development
     </h2>
@@ -49,18 +49,18 @@ function HeroParagraphContent() {
     <>
       <span
         data-animation="slide-right"
-        data-duration="0.8"
-        data-ease="power2.out"
-        data-delay="0.45"
+      data-duration="0.8"
+      data-ease="power2.out"
+      data-delay="2.1"
       >
         and Web Design
       </span>
       <span
         className={styles['hero__brush-container']}
         data-animation="fade-up"
-        data-duration="0.8"
-        data-ease="power2.out"
-        data-delay="0.55"
+      data-duration="0.8"
+      data-ease="power2.out"
+      data-delay="2.1"
       >
         <SpriteIcon id="brush" className={styles['hero__brush']} />
       </span>
