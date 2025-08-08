@@ -1,4 +1,3 @@
-import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import { initCardDeckScroll } from './cardDeckAnimation';

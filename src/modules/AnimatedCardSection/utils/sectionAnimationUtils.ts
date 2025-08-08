@@ -21,5 +21,5 @@ export function getScrollTriggerSettings(sectionIndex: number) {
   if (sectionIndex === 2) return { start: 'top 80%', end: 'bottom 20%' };
   if (sectionIndex === 3) return { start: 'top 80%', end: 'bottom 20%' };
   if (sectionIndex === 4) return { start: 'top 80%', end: 'bottom 20%' };
-  return { start: 'top 80%', end: 'bottom 20%' };
+  return { start: 'top 80%', end: 'bottom 5%' };
 }
