@@ -62,6 +62,7 @@ export function AboutAnimation() {
       data-animation="fade-up"
       data-duration="0.8"
       data-ease="power2.out"
+      data-delay="0.6"
     >
       {/* Canvas будет добавлен сюда с помощью JavaScript */}
     </div>

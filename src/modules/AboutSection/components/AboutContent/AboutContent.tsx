@@ -11,7 +11,7 @@ function AboutHeading() {
       data-animation="slide-left"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="0.2"
+      data-delay="0"
     >
       About Me
     </h3>
@@ -25,7 +25,7 @@ function AboutText() {
       data-animation="text-reveal"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="0.4"
+      data-delay="0.3"
     >
       <AboutTextContent />
     </p>

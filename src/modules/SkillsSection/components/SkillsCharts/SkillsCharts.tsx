@@ -14,10 +14,24 @@ export function SkillsCharts({}: SkillsChartsProps) {
   return (
     <div ref={containerRef} className={styles['skills__charts']}>
       <div className={styles['skills-charts__container']}>
-        <div className={styles['chart-wrapper']} {...chartWrapperProps} data-animation="slide-left">
+        <div
+          className={styles['chart-wrapper']}
+          {...chartWrapperProps}
+          data-animation="slide-left"
+          data-duration="0.8"
+          data-ease="power2.out"
+          data-delay="0.1"
+        >
           <div id="dev-skills-chart" className={styles['dev-skills-chart']} />
         </div>
-        <div className={styles['chart-wrapper']} {...chartWrapperProps} data-animation="slide-right">
+        <div
+          className={styles['chart-wrapper']}
+          {...chartWrapperProps}
+          data-animation="slide-right"
+          data-duration="0.8"
+          data-ease="power2.out"
+          data-delay="0.1"
+        >
           <div id="design-skills-chart" className={styles['design-skills-chart']} />
         </div>
       </div>

@@ -11,7 +11,7 @@ export function SkillsContent() {
         data-animation="slide-left"
         data-duration="0.8"
         data-ease="power2.out"
-        data-delay="0.2"
+        data-delay="0"
       >
         Skills &amp;&nbsp;Expertise
       </h3>
