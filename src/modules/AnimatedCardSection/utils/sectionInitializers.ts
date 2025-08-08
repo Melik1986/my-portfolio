@@ -4,6 +4,18 @@ import { initCardDeckScroll } from './cardDeckAnimation';
 import { clearElementAnimations, getScrollTriggerSettings } from './sectionAnimationUtils';
 
 /**
+ * Определяет тип устройства на основе ширины экрана
+ */
+function getDeviceType(): 'mobile' | 'tablet' | 'desktop' {
+  if (typeof window === 'undefined') return 'desktop';
+  
+  const width = window.innerWidth;
+  if (width <= 767) return 'mobile';
+  if (width <= 1024) return 'tablet';
+  return 'desktop';
+}
+
+/**
  * Инициализация Hero-секции (index 0)
  */
 export function initHeroSection(wrapper: HTMLElement): gsap.core.Timeline | null {
@@ -26,7 +38,8 @@ export function initRegularSection(
   sectionIndex: number,
 ): gsap.core.Timeline | null {
   const elementTimeline = createElementTimeline(wrapper, '[data-animate], [data-animation]');
-  const { start, end } = getScrollTriggerSettings(sectionIndex);
+  const deviceType = getDeviceType();
+  const { start, end } = getScrollTriggerSettings(sectionIndex, deviceType);
   ScrollTrigger.create({
     trigger: wrapper,
     start,

@@ -13,3 +13,14 @@ export interface AnimatedCardSectionProps {
 export interface AnimatedCardChildProps {
   onTimelineReady?: (timeline: gsap.core.Timeline) => void;
 }
+
+// Общий интерфейс для типобезопасных настроек ScrollTrigger
+export interface ScrollTriggerSettings {
+  start: string;
+  end: string;
+  scrub?: boolean | number;
+  anticipatePin?: number;
+  refreshPriority?: number;
+  fastScrollEnd?: boolean;
+  trigger?: HTMLElement;
+}
