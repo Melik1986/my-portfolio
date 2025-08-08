@@ -81,25 +81,17 @@
 
 /* ===== SPIRAL ICON POSITIONING ===== */
 .icon {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2.8rem;
   transform-origin: center;
   transition: transform 0.1s linear;
-  max-width: 40px;
-  max-height: 40px;
   z-index: 10;
 }
 
 /* Стили для иконок в спирали */
-.spiral-container .tech-icon {
+.spiral :global(.tech-icon) {
   position: absolute;
   font-size: 24px;
   width: 40px;
   height: 40px;
-  color: #ffffff;
   transition: all 0.3s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   opacity: 1;
@@ -108,39 +100,39 @@
 
 /* ===== TECH COLORS ===== */
 /* Цвета для технологий через классы */
-.tech-icon--html5 {
+:global(.tech-icon--html5) {
   color: #e34f26;
 }
 
-.tech-icon--css3,
-.tech-icon--css3-alt {
+:global(.tech-icon--css3),
+:global(.tech-icon--css3-alt) {
   color: #1572b6;
 }
 
-.tech-icon--javascript,
-.tech-icon--js {
+:global(.tech-icon--javascript),
+:global(.tech-icon--js) {
   color: #f7df1e;
 }
 
-.tech-icon--react {
+:global(.tech-icon--react) {
   color: #61dafb;
 }
 
-.tech-icon--nodejs,
-.tech-icon--node {
+:global(.tech-icon--nodejs),
+:global(.tech-icon--node) {
   color: #339933;
 }
 
-.tech-icon--git,
-.tech-icon--git-alt {
+:global(.tech-icon--git),
+:global(.tech-icon--git-alt) {
   color: #f05032;
 }
 
-.tech-icon--github {
+:global(.tech-icon--github) {
   color: #181717;
 }
 
-.tech-icon--database {
+:global(.tech-icon--database) {
   color: #336791;
 }
 
@@ -197,7 +189,7 @@
 
 /* ===== ANIMATIONS & EFFECTS ===== */
 /* Hover эффекты */
-.tech-icon:hover {
+:global(.tech-icon:hover) {
   transform: scale(1.1);
   filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
 }
