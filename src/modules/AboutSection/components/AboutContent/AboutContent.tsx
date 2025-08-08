@@ -23,7 +23,7 @@ function AboutText() {
     <p
       className={styles['about__text']}
       data-animation="text-reveal"
-      data-duration="1.2"
+      data-duration="0.8"
       data-ease="power2.out"
       data-delay="0.4"
     >

@@ -38,7 +38,7 @@ export function useChartsVisibility() {
 
   const chartWrapperProps = {
     'data-animation': 'slide-right',
-    'data-duration': '1.2',
+    'data-duration': '0.8',
     'data-ease': 'power2.out',
     'data-delay': '0.3',
   };

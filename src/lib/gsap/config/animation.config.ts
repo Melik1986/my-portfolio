@@ -31,19 +31,19 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
   'slide-down': {
     from: { y: -50, opacity: 0 },
     to: { y: 0, opacity: 1 },
-    duration: 0.6,
+    duration: 0.8,
     ease: 'power2.out',
   },
   'slide-up': {
     from: { y: 50, opacity: 0 },
     to: { y: 0, opacity: 1 },
-    duration: 0.6,
+    duration: 0.8,
     ease: 'power2.out',
   },
   'fade-up': {
     from: { y: 30, opacity: 0 },
     to: { y: 0, opacity: 1 },
-    duration: 0.6,
+    duration: 0.8,
     ease: 'power2.out',
   },
   'fade-left': {
@@ -61,7 +61,7 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
   'zoom-in': {
     from: { scale: 0, opacity: 0 },
     to: { scale: 1, opacity: 1 },
-    duration: 0.6,
+    duration: 0.8,
     ease: 'back.out(1.7)',
   },
   'scale-up': {
@@ -97,7 +97,7 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
       opacity: 1,
       yPercent: 0,
     },
-    duration: 0.6,
+    duration: 0.8,
     ease: 'expo.out',
   },
 };

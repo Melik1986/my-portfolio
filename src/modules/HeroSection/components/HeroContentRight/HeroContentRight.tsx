@@ -49,7 +49,7 @@ function HeroParagraphContent() {
     <>
       <span
         data-animation="slide-right"
-        data-duration="0.9"
+        data-duration="0.8"
         data-ease="power2.out"
         data-delay="0.45"
       >
@@ -58,7 +58,7 @@ function HeroParagraphContent() {
       <span
         className={styles['hero__brush-container']}
         data-animation="fade-up"
-        data-duration="1.0"
+        data-duration="0.8"
         data-ease="power2.out"
         data-delay="0.55"
       >
