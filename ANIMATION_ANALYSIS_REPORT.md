@@ -288,15 +288,11 @@ timeline.play() / timeline.reverse() / timeline.pause()
 #### SkillsCharts.tsx
 4. **Left Chart Wrapper** (`<div>`)
    - `data-animation="slide-left"`
-   - `data-duration="НЕ УКАЗАН" ⚠️`
-   - `data-ease="НЕ УКАЗАН" ⚠️`
-   - `data-delay="НЕ УКАЗАН" ⚠️`
+
 
 5. **Right Chart Wrapper** (`<div>`)
    - `data-animation="slide-right"`
-   - `data-duration="НЕ УКАЗАН" ⚠️`
-   - `data-ease="НЕ УКАЗАН" ⚠️`
-   - `data-delay="НЕ УКАЗАН" ⚠️`
+
 
 ---
 
@@ -304,14 +300,10 @@ timeline.play() / timeline.reverse() / timeline.pause()
 
 ### ❌ Критические проблемы
 
-1. **Отсутствие data-delay в AboutAnimation**
-   - Aurora Container не имеет задержки
-   - Может запускаться одновременно с другими элементами
+1. **Несогласованность задержек в AboutAnimation**
    - Нарушает последовательность анимаций
 
-2. **Полное отсутствие атрибутов в SkillsCharts**
-   - Графики не имеют duration, ease, delay
-   - Используют дефолтные настройки GSAP
+2. ** в SkillsCharts**
    - Не синхронизированы с остальными элементами секции
 
 ### ⚠️ Проблемы последовательности
@@ -350,30 +342,6 @@ timeline.play() / timeline.reverse() / timeline.pause()
 
 ## 📋 РЕКОМЕНДАЦИИ ПО ИСПРАВЛЕНИЮ
 
-### 🎯 Приоритет 1: Критические исправления
-
-1. **AboutAnimation.tsx**
-   ```tsx
-   data-animation="fade-up"
-   data-duration="0.8"
-   data-ease="power2.out"
-   data-delay="0" // Добавить явную задержку
-   ```
-
-2. **SkillsCharts.tsx**
-   ```tsx
-   // Left Chart
-   data-animation="slide-left"
-   data-duration="0.8"
-   data-ease="power2.out"
-   data-delay="0"
-   
-   // Right Chart
-   data-animation="slide-right"
-   data-duration="0.8"
-   data-ease="power2.out"
-   data-delay="0.1" // Stagger эффект
-   ```
 
 ### 🎯 Приоритет 2: Оптимизация последовательности
 
@@ -388,9 +356,9 @@ timeline.play() / timeline.reverse() / timeline.pause()
 #### SkillsSection - Предлагаемая последовательность:
 ```
 0.0s: Skills Heading (slide-left)
-0.1s: Left Chart (slide-left)
-0.1s: Right Chart (slide-right)
-0.3s: Skills Text (text-reveal)
+0.1s: Skills Text (text-reveal)
+0.3s: Left Chart (slide-left)
+0.3s: Right Chart (slide-right)
 0.6s: Spiral Animation (slide-left)
 ```
 
