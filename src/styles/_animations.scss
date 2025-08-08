@@ -53,27 +53,13 @@
   filter: blur(8px);
 }
 
-[data-animation='text-reveal'] {
-  // Стили управляются через GSAP SplitText
-  display: block !important; // Принудительно делаем блочным для работы SplitText
-
-  .char {
-    display: inline;
-    will-change: transform, opacity;
-    opacity: 0;
-    transform: translateY(100%);
-  }
-
-  .word {
-    display: inline-block;
-    white-space: nowrap;
-  }
-
-  .line {
-    display: block;
-    overflow: hidden;
-  }
+.split {
+  opacity: 1;
 }
+.line {
+  display: block;
+}
+
 
 // SVG элементы для анимации рисования
 [data-animation='svg-draw'] {

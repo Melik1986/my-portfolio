@@ -91,16 +91,14 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
   'text-reveal': {
     from: {
       opacity: 0,
-      y: 30,
-      rotationX: 90,
+      yPercent: 100,
     },
     to: {
       opacity: 1,
-      y: 0,
-      rotationX: 0,
+      yPercent: 0,
     },
-    duration: 0.8,
-    ease: 'power2.out',
+    duration: 0.6,
+    ease: 'expo.out',
   },
 };
 

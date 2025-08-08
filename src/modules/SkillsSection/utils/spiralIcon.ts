@@ -27,6 +27,10 @@ export class SpiralIconFactory {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
 
     svg.classList.add('tech-icon', `tech-icon--${iconData.name}`, 'icon');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', '24');
+    svg.setAttribute('height', '24');
+    svg.setAttribute('fill', 'currentColor');
 
     return svg;
   }
@@ -38,7 +42,8 @@ export class SpiralIconFactory {
   private static createUseElement(iconId: string): SVGUseElement {
     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
 
-    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${iconId}`);
+    use.setAttribute('href', `/icons/tech-icons.svg#${iconId}`);
+    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `/icons/tech-icons.svg#${iconId}`);
 
     return use;
   }

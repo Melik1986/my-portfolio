@@ -10,10 +10,12 @@
   }
 
   &__text {
-    margin: 0;
-    font: $font-p;
+    margin: 0 0 20px;
     font-family: $font-family-roboto;
+    line-height: 1;
+    font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
+    letter-spacing: 0.05rem;
     will-change: transform;
-    display: block; // Для корректной работы SplitText
+    opacity: 0;
   }
 }

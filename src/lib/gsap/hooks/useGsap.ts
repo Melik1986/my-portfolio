@@ -151,95 +151,35 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: ElementAnimat
 
 /**
  * Добавляет анимацию reveal для текстовых элементов
- * Использует правильный синтаксис SplitText согласно документации GSAP
+ * Использует правильный синтаксис SplitText.create() согласно документации GSAP
  */
 function addTextRevealAnimation(timeline: gsap.core.Timeline, config: ElementAnimationConfig) {
-  const { element, params, animationDef } = config;
-
-  console.log('🔧 Starting SplitText for text-reveal:', {
-    element: element.tagName,
-    textContent: element.textContent?.substring(0, 50) + '...',
+  const { element, params } = config;
+  if (!element || !element.textContent?.trim()) return;
+  
+  gsap.set(element, { opacity: 1 });
+  
+  const splitText = SplitText.create(element, {
+    type: 'lines',
+    linesClass: 'line',
+    autoSplit: true,
+    mask: 'lines',
   });
-
-  // Проверяем наличие элемента и текстового содержимого
-  if (!element || !element.textContent?.trim()) {
-    console.warn('SplitText: элемент не найден или пустой');
-    return;
-  }
-
-  // Используем состояния из animationDefinitions
-  const fromState = animationDef?.from || { opacity: 0, y: 20 };
-  const toState = animationDef?.to || { opacity: 1, y: 0 };
-
-  try {
-    // Создаем SplitText с правильными опциями согласно документации
-    const split = new SplitText(element, {
-      type: 'chars,words,lines',
-      charsClass: 'char',
-      wordsClass: 'word',
-      linesClass: 'line',
-    });
-
-    console.log('✅ SplitText complete:', {
-      charsCount: split.chars?.length || 0,
-      wordsCount: split.words?.length || 0,
-      linesCount: split.lines?.length || 0,
-    });
-
-    // Проверяем успешность разбивки
-    if (!split.chars || split.chars.length === 0) {
-      console.warn('SplitText: разбивка не удалась');
-      split.revert();
-      return;
-    }
-
-    // Устанавливаем начальное состояние для всех символов
-    gsap.set(split.chars, fromState);
-
-    // Вычисляем адаптивный stagger на основе количества символов
-    const baseDuration = params.duration || animationDef?.duration || 1;
-    const maxStaggerDuration = 0.3; // Максимальная длительность stagger
-    const adaptiveStagger = Math.min(maxStaggerDuration / split.chars.length, 0.05);
-
-    console.log('📊 Adding text-reveal to timeline:', {
-      charsCount: split.chars.length,
-      duration: baseDuration,
-      adaptiveStagger,
-      delay: params.delay,
-    });
-
-    // Добавляем анимацию в timeline
-    timeline.to(
-      split.chars,
-      {
-        ...toState,
-        duration: baseDuration,
-        ease: params.ease || animationDef?.ease || 'power2.out',
-        stagger: {
-          amount: adaptiveStagger * split.chars.length,
-          from: 'start',
-        },
-      },
-      `>=${params.delay || 0}`,
-    );
-
-    console.log('✅ Text-reveal animation added to timeline');
-  } catch (error) {
-    console.error('SplitText ошибка:', error);
-
-    // В случае ошибки применяем обычную анимацию
-    timeline.fromTo(
-      element,
-      fromState,
-      {
-        ...toState,
-        duration: params.duration || animationDef?.duration || 1,
-        ease: params.ease || animationDef?.ease || 'power2.out',
-      },
-      `>=${params.delay || 0}`,
-    );
-  }
+  
+  // Добавляем анимацию в timeline с правильными параметрами
+  timeline.from(
+    splitText.lines,
+    {
+      duration: params.duration,
+      yPercent: 100,
+      opacity: 0,
+      stagger: 0.15,
+      ease: params.ease,
+    },
+    `>=${params.delay}`,
+  );
 }
+
 
 /**
  * Добавляет базовую анимацию элемента
