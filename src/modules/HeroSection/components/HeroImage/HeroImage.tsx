@@ -21,8 +21,8 @@ export function HeroAvatar() {
         id="avatar"
         src="/images/avatar.webp"
         alt="Melik Musinian Avatar"
-        width={200}
-        height={200}
+        width={500}
+        height={400}
         priority
         data-animation="zoom-in"
         data-duration="0.8"
