@@ -1,7 +1,7 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
 import { initCardDeckScroll } from './cardDeckAnimation';
-import { clearElementAnimations, getScrollTriggerSettings } from './sectionAnimationUtils';
+import { getScrollTriggerSettings } from './sectionAnimationUtils';
 
 /**
  * Инициализация Hero-секции (index 0)
