@@ -12,7 +12,7 @@
   border: none;
   display: block;
   margin: 0 0 0 auto;
-  font: $font-p-small;
+  font-size: clamp(1.2rem, 2vw, 14px);
   font-family: $font-family-leckerli;
   white-space: nowrap;
   will-change: transform;
@@ -56,12 +56,11 @@
 
   @include vp-1304 {
     width: 160px;
-    font-size: clamp(1.2rem, 2vw, 14px);
   }
 
   @media (min-width: 1920px) {
     width: 170px;
-    font-size: calc(1.2 * 14px);
+    font-size: clamp(1.2rem, 2vw, 14px);
     line-height: 1.5rem;
   }
 

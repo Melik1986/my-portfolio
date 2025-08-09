@@ -54,11 +54,19 @@
   filter: blur(8px);
 }
 
+// Контейнер для text-reveal должен обрезать содержимое во время анимации линий
+[data-animation='text-reveal'] {
+  overflow: hidden;
+}
+
 .split {
   opacity: 1;
 }
+
+// Стили для SplitText строк - обеспечивают правильное сокрытие/показ текста
 .line {
   display: block;
+  overflow: hidden; // На случай, если анимируется внутренний wrapper
 }
 
 

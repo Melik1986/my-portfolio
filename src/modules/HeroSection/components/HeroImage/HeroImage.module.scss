@@ -11,8 +11,27 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-end;
-    grid-area: img;
     z-index: 1;
+
+    @mixin vp-max($width) {
+      top: 80%;
+    }
+
+    @mixin vp-1440 {
+      top: 75%;
+    }
+
+    @mixin vp-1024{
+      top: 75%;
+    }
+
+    @mixin vp-768 {
+      top: 80%;
+    }
+
+    @mixin vp-360 {
+      top: 80%;
+    }
   }
 
   &__image {
