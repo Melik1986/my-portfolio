@@ -51,7 +51,7 @@ function HeroParagraphContent() {
         data-animation="slide-right"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="2.1"
+      data-delay="2.4"
       >
         and Web Design
       </span>
@@ -60,7 +60,7 @@ function HeroParagraphContent() {
         data-animation="fade-up"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="2.1"
+      data-delay="2.6"
       >
         <SpriteIcon id="brush" className={styles['hero__brush']} />
       </span>
