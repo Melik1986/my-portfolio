@@ -1,32 +1,26 @@
 import { gsap } from 'gsap';
 
 /**
- * Получает адаптивные настройки анимации в зависимости от устройства
+ * Создает анимацию для группы элементов
  */
-function getResponsiveSettings() {
-  return {
-    mobile: {
-      scrub: 0.5, // Более плавная прокрутка на мобильных
-      duration: 0.3, // Быстрее анимации
-      scale: 0.95, // Менее выраженный эффект масштабирования
-      borderRadius: '8px', // Меньший радиус
-      enableComplexAnimations: false, // Отключаем сложные эффекты
-    },
-    tablet: {
-      scrub: 0.8,
-      duration: 0.4,
-      scale: 0.92,
-      borderRadius: '9px',
-      enableComplexAnimations: true,
-    },
-    desktop: {
-      scrub: 1,
-      duration: 0.5,
+function createCardAnimation(timeline: gsap.core.Timeline, items: HTMLElement[]): void {
+  items.forEach((item, index) => {
+    if (index === 0) return;
+    
+    timeline.to(items[index - 1], {
       scale: 0.9,
-      borderRadius: '10px',
-      enableComplexAnimations: true,
-    },
-  };
+    });
+    
+    const property = index <= 2 ? 'yPercent' : 'xPercent';
+    timeline.to(
+      item,
+      {
+        [property]: 0,
+        visibility: 'visible',
+      },
+      '<',
+    );
+  });
 }
 
 /**
@@ -36,7 +30,6 @@ function getResponsiveSettings() {
  * @returns gsap.core.Timeline
  */
 export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): gsap.core.Timeline {
-  const settings = getResponsiveSettings();
   let timeline: gsap.core.Timeline;
 
   // Инициализация позиций карт
@@ -61,82 +54,19 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
         trigger: section,
         pin: true,
         start: 'top top',
-        end: () => `+=${(items.length - 1) * 80}%`, // Короче для мобильных
-        scrub: settings.mobile.scrub,
-        invalidateOnRefresh: true,
-        scroller: '#smooth-wrapper',
-        markers: false,
-        anticipatePin: 1, // Оптимизация для мобильных
-      },
-      defaults: { ease: 'power2.out' }, // Более мягкий easing
-    });
-
-    // Упрощенная анимация для мобильных
-    items.forEach((item, index) => {
-      if (index === 0) return;
-      
-      if (index > 0 && settings.mobile.enableComplexAnimations) {
-        timeline.to(items[index - 1], {
-          scale: settings.mobile.scale,
-          borderRadius: settings.mobile.borderRadius,
-        });
-      }
-      
-      const property = index <= 2 ? 'yPercent' : 'xPercent';
-      timeline.to(
-        item,
-        {
-          [property]: 0,
-          visibility: 'visible',
-          duration: settings.mobile.duration,
-        },
-        '<',
-      );
-    });
-  });
-
-  // Планшеты (768px - 1024px)
-  mm.add('(min-width: 768px) and (max-width: 1024px)', () => {
-    timeline = gsap.timeline({
-      id: 'card-deck-timeline-tablet',
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        start: 'top top',
-        end: () => `+=${(items.length - 1) * 90}%`,
-        scrub: settings.tablet.scrub,
+        end: () => `+=${(items.length - 1) * 80}%`,
+        scrub: 0.5,
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
       },
-      defaults: { ease: 'power1.out' },
     });
 
-    items.forEach((item, index) => {
-      if (index === 0) return;
-      
-      if (index > 0) {
-        timeline.to(items[index - 1], {
-          scale: settings.tablet.scale,
-          borderRadius: settings.tablet.borderRadius,
-        });
-      }
-      
-      const property = index <= 2 ? 'yPercent' : 'xPercent';
-      timeline.to(
-        item,
-        {
-          [property]: 0,
-          visibility: 'visible',
-          duration: settings.tablet.duration,
-        },
-        '<',
-      );
-    });
+    createCardAnimation(timeline, items);
   });
 
-  // Десктоп (больше 1024px)
-  mm.add('(min-width: 1025px)', () => {
+  // Планшеты и десктоп (768px и больше)
+  mm.add('(min-width: 768px)', () => {
     timeline = gsap.timeline({
       id: 'card-deck-timeline-desktop',
       scrollTrigger: {
@@ -144,36 +74,14 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
         pin: true,
         start: 'top top',
         end: () => `+=${(items.length - 1) * 100}%`,
-        scrub: settings.desktop.scrub,
+        scrub: 1,
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
       },
-      defaults: { ease: 'none' },
     });
 
-  // Полная анимация для десктопа
-    items.forEach((item, index) => {
-      if (index === 0) return;
-      
-      if (index > 0) {
-        timeline.to(items[index - 1], {
-          scale: settings.desktop.scale,
-          borderRadius: settings.desktop.borderRadius,
-        });
-      }
-      
-      const property = index <= 2 ? 'yPercent' : 'xPercent';
-      timeline.to(
-        item,
-        {
-          [property]: 0,
-          visibility: 'visible',
-          duration: settings.desktop.duration,
-        },
-        '<',
-      );
-    });
+    createCardAnimation(timeline, items);
   });
 
   return timeline!;
