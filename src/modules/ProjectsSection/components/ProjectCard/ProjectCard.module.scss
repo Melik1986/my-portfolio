@@ -8,7 +8,7 @@
   left: 50%;
   transform: translate(-50%, 0);
   transform-style: preserve-3d;
-  width: 80vw;
+  width: 900px;
   height: 530px;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
@@ -16,6 +16,26 @@
   border: 1px solid rgba(0, 0, 0, 1);
   -webkit-text-stroke: 1px #fff5;
   color: transparent;
+
+  @mixin vp-min($width) {
+    width: 900px;
+  }
+
+  @mixin vp-1440 {
+    width: 800px;
+  }
+
+  @mixin vp-1024 {
+    width: 700px;
+  }
+
+  @mixin vp-768 {
+    width: 600px;
+  }
+
+  @mixin vp-360 {
+    width: 100%;
+  }
 }
 
 .projects-card.fullscreen {

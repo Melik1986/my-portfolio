@@ -1,5 +1,5 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { initCardDeckScroll } from './cardDeckAnimation';
 import { getScrollTriggerSettings } from './sectionAnimationUtils';
 

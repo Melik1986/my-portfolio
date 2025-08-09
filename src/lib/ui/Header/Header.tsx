@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { Logo } from '@/lib/ui/Logo/logo';
 import { Navigation } from '@/lib/ui/Navigation/Navigation';
 import { ContactButton } from '@/lib/ui/Button/ContactButton';

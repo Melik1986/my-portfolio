@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { cleanupSplitTextInstances } from '@/lib/gsap/hooks/useGsap';
+import { cleanupSplitTextInstances } from '@/lib/gsap/hooks/useElementTimeline';
 
 import type { ScrollTriggerSettings } from '../types/animated-card-section';
 

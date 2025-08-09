@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroContentLeft.module.scss';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
@@ -34,9 +34,9 @@ export function HeroContentLeft() {
         ref={containerRef}
         className={styles['hero__container-img']}
         data-animation="slide-left"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="2.1"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="0.5"
       >
         <HeroImage id="melik" src="/images/melik.svg" alt="Melik" />
         <HeroImage id="musinian" src="/images/musinian.svg" alt="Musinian" />

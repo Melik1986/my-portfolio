@@ -2,7 +2,7 @@
 
 import { SpriteIcon } from '@/lib/ui/SpriteIcon/SpriteIcon';
 import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroContentRight.module.scss';
 
 function HeroHeading() {
@@ -21,7 +21,7 @@ function HeroHeading() {
       data-animation="slide-right"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="2.1"
+      data-delay="0.8"
     >
       Frontend development
     </h2>
@@ -49,18 +49,18 @@ function HeroParagraphContent() {
     <>
       <span
         data-animation="slide-right"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="2.4"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="1.0"
       >
         and Web Design
       </span>
       <span
         className={styles['hero__brush-container']}
         data-animation="fade-up"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="2.6"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="1.2"
       >
         <SpriteIcon id="brush" className={styles['hero__brush']} />
       </span>

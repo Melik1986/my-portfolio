@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRef, useEffect } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useGsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroImage.module.scss';
 
 export function HeroAvatar() {
@@ -27,7 +27,7 @@ export function HeroAvatar() {
         data-animation="zoom-in"
         data-duration="0.8"
         data-ease="back.out(1.7)"
-        data-delay="2.9"
+        data-delay="1.5"
       />
     </div>
   );
