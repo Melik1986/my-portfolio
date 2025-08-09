@@ -5,6 +5,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationProps } from '@/lib/gsap/types/gsap.types';
 import { initHeroSection, initRegularSection } from '../utils/sectionInitializers';
+import { clearElementAnimations } from '../utils/sectionAnimationUtils';
+
 gsap.registerPlugin(ScrollTrigger);
 
 /**
@@ -32,6 +34,8 @@ export const useCardAnimation = (
         ScrollTrigger.getAll().forEach((trigger) => {
           if (trigger.trigger === wrapper) trigger.kill();
         });
+        // Полная очистка анимаций и SplitText при размонтировании
+        clearElementAnimations(wrapper);
       }
     };
   }, [sectionIndex]);

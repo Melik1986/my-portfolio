@@ -1,12 +1,13 @@
 'use client';
 
 import { gsap } from 'gsap';
-import { SplitText } from 'gsap/SplitText';
-import { AnimationType } from '@/lib/gsap/types/gsap.types';
+import { SplitText as GsapSplitText } from 'gsap/SplitText';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import type { AnimationConfig, AnimationType, GlobalSplitTextStorage, SplitText as SplitTextInstance } from '../types/gsap.types';
 import { parseAnimationData } from '@/lib/gsap/utils/parseAnimationData';
 import { getAnimationDefinition, AnimationDefinition } from '@/lib/gsap/config/animation.config';
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(GsapSplitText, ScrollTrigger);
 
 /**
  * Параметры анимации для элементов
@@ -34,6 +35,28 @@ type AddAnimationConfig = {
   animationType: AnimationType;
   params: ElementAnimationParams;
 };
+
+/**
+ * Очищает SplitText экземпляры для указанного контейнера
+ * Должна вызываться при размонтировании компонента
+ */
+export function cleanupSplitTextInstances(container: HTMLElement): void {
+  const globalStorage = globalThis as GlobalSplitTextStorage;
+  if (!globalStorage.__splitTextInstances) return;
+
+  const instances = globalStorage.__splitTextInstances;
+  const textElements = container.querySelectorAll('[data-animation="text-reveal"]');
+  textElements.forEach((element) => {
+    const splitTextInstance = instances.get(element);
+    if (splitTextInstance) {
+      splitTextInstance.revert();
+      instances.delete(element);
+      
+      // Сбрасываем инлайн-стили, которые могли остаться от GSAP
+      gsap.set(element, { clearProps: 'all' });
+    }
+  });
+}
 
 /**
  * Функция для создания timeline с анимациями элементов в контейнере
@@ -71,15 +94,7 @@ export function createElementTimeline(
       ease: item.config!.ease ?? 'power1.out',
     };
 
-    // Логируем только text-reveal анимации
-    if (item.config!.animation === 'text-reveal') {
-      console.log('🎭 Text-reveal animation found:', {
-        element: item.element.tagName,
-        className: item.element.className,
-        textContent: item.element.textContent?.substring(0, 50) + '...',
-        params,
-      });
-    }
+    // Text-reveal анимации обрабатываются специальным образом
 
     addAnimationToTimeline(tl, {
       element: item.element,
@@ -109,12 +124,6 @@ function addAnimationToTimeline(timeline: gsap.core.Timeline, config: AddAnimati
     return;
   }
   if (animationType === 'text-reveal') {
-    console.log('📝 Processing text-reveal animation:', {
-      element: element.tagName,
-      className: element.className,
-      delay: params.delay,
-      duration: params.duration,
-    });
     addTextRevealAnimation(timeline, { element, params, animationDef });
     return;
   }
@@ -154,36 +163,47 @@ function addSvgDrawAnimation(timeline: gsap.core.Timeline, config: ElementAnimat
 
 /**
  * Добавляет анимацию reveal для текстовых элементов
- * Использует правильный синтаксис SplitText.create() согласно документации GSAP
+ * Использует SplitText.create() для совместимости с gsap.context
  */
 function addTextRevealAnimation(timeline: gsap.core.Timeline, config: ElementAnimationConfig) {
   const { element, params } = config;
   if (!element || !element.textContent?.trim()) return;
   
-  gsap.set(element, { opacity: 1 });
+  // Получаем или создаем SplitText для элемента, избегаем повторного сплита
+  const storage = ((globalThis as unknown) as GlobalSplitTextStorage).__splitTextInstances ??= new WeakMap<Element, SplitTextInstance>();
+  let splitText = storage.get(element);
+  if (!splitText) {
+    const gsapSplitText = new GsapSplitText(element, {
+      type: 'lines',
+      linesClass: 'line',
+    });
+    // Нормализуем тип для совместимости
+    splitText = gsapSplitText as SplitTextInstance;
+    storage.set(element, splitText);
+  }
   
-  const splitText = SplitText.create(element, {
-    type: 'lines',
-    linesClass: 'line',
-    autoSplit: true,
-    mask: 'lines',
-  });
+  // Показываем контейнер после создания SplitText
+  gsap.set(element, { opacity: 1, visibility: 'visible' });
   
-  // Если delay равен 0, используем "0" для одновременного старта
-  const position = params.delay === 0 ? "0" : `${params.delay}`;
+  const position = params.delay === 0 ? '0' : `${params.delay}`;
   
-  // Добавляем анимацию в timeline с правильными параметрами
-  timeline.from(
-    splitText.lines,
-    {
-      duration: params.duration,
-      yPercent: 100,
-      opacity: 0,
-      stagger: 0.15,
-      ease: params.ease,
-    },
-    position,
-  );
+  // Проверяем наличие lines перед использованием
+  if (splitText.lines && splitText.lines.length > 0) {
+    // Устанавливаем начальное состояние для lines
+    gsap.set(splitText.lines, { yPercent: 100, autoAlpha: 0 });
+    
+    timeline.to(
+      splitText.lines,
+      {
+        duration: params.duration,
+        yPercent: 0,
+        autoAlpha: 1,
+        stagger: 0.15,
+        ease: params.ease,
+      },
+      position,
+    );
+  }
 }
 
 
@@ -203,11 +223,11 @@ function addBaseAnimation(timeline: gsap.core.Timeline, config: ElementAnimation
     element,
     {
       ...animationDef.from,
-      visibility: 'hidden',
+      autoAlpha: 0,
     },
     {
       ...animationDef.to,
-      visibility: 'visible',
+      autoAlpha: 1,
       duration: animationDef.duration,
       ease: animationDef.ease,
     },

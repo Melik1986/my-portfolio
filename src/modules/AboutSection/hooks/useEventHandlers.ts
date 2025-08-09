@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import type { PerspectiveCamera, WebGLRenderer } from 'three';
 
 interface EventHandlersParams {
@@ -56,13 +56,23 @@ export const useEventHandlers = ({
   stopAnimation,
   isInitialized,
 }: EventHandlersParams) => {
+  // Кэшируем rect для оптимизации производительности
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const updateRect = useCallback(() => {
+    const container = containerRef.current;
+    if (container) {
+      rectRef.current = container.getBoundingClientRect();
+    }
+  }, [containerRef]);
+
   const handlePointerMove = useCallback(
     (clientX: number, clientY: number) => {
       const container = containerRef.current;
       const mouse = mouseRef.current;
-      if (!container || !mouse) return;
+      const rect = rectRef.current;
+      if (!container || !mouse || !rect) return;
 
-      const rect = container.getBoundingClientRect();
       mouse.x = clientX - rect.left - container.offsetWidth / 2;
       mouse.y = clientY - rect.top - container.offsetHeight / 2;
     },
@@ -75,6 +85,9 @@ export const useEventHandlers = ({
     const renderer = rendererRef.current;
     if (!container || !camera || !renderer) return;
 
+    // Обновляем кэшированный rect при изменении размера
+    updateRect();
+    
     camera.aspect = container.offsetWidth / container.offsetHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
@@ -82,6 +95,10 @@ export const useEventHandlers = ({
 
   useEffect(() => {
     if (!isInitialized) return;
+    
+    // Инициализируем rect при подписке на события
+    updateRect();
+    
     return subscribeEvents(
       containerRef.current,
       handleResize,
@@ -89,5 +106,5 @@ export const useEventHandlers = ({
       startAnimation,
       stopAnimation,
     );
-  }, [isInitialized, handleResize, handlePointerMove, startAnimation, stopAnimation, containerRef]);
+  }, [isInitialized, handleResize, handlePointerMove, startAnimation, stopAnimation, containerRef, updateRect]);
 };

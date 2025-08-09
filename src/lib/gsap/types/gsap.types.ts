@@ -36,3 +36,15 @@ export interface AnimationProps {
   onActivate?: () => void;
   onDeactivate?: () => void;
 }
+
+export interface GlobalSplitTextStorage {
+  __splitTextInstances?: WeakMap<Element, SplitText>;
+}
+
+// Тип для экземпляра SplitText из GSAP
+export interface SplitText {
+  lines?: Element[];
+  words?: Element[];
+  chars?: Element[];
+  revert(): void;
+}

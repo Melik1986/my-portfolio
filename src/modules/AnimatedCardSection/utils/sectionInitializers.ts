@@ -43,8 +43,7 @@ export function initRegularSection(
       elementTimeline?.reverse();
     },
     onLeaveBack: () => {
-      elementTimeline?.progress(0).pause();
-      clearElementAnimations(wrapper);
+      elementTimeline?.reverse();
     },
     markers: false,
   });
