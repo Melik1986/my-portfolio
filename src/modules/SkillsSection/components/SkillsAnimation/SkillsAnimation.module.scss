@@ -100,40 +100,42 @@
 
 /* ===== TECH COLORS ===== */
 /* Цвета для технологий через классы */
-:global(.tech-icon--html5) {
-  color: #e34f26;
-}
+.spiral {
+  :global(.tech-icon--html5) {
+    color: #e34f26;
+  }
 
-:global(.tech-icon--css3),
-:global(.tech-icon--css3-alt) {
-  color: #1572b6;
-}
+  :global(.tech-icon--css3),
+  :global(.tech-icon--css3-alt) {
+    color: #1572b6;
+  }
 
-:global(.tech-icon--javascript),
-:global(.tech-icon--js) {
-  color: #f7df1e;
-}
+  :global(.tech-icon--javascript),
+  :global(.tech-icon--js) {
+    color: #f7df1e;
+  }
 
-:global(.tech-icon--react) {
-  color: #61dafb;
-}
+  :global(.tech-icon--react) {
+    color: #61dafb;
+  }
 
-:global(.tech-icon--nodejs),
-:global(.tech-icon--node) {
-  color: #339933;
-}
+  :global(.tech-icon--nodejs),
+  :global(.tech-icon--node) {
+    color: #339933;
+  }
 
-:global(.tech-icon--git),
-:global(.tech-icon--git-alt) {
-  color: #f05032;
-}
+  :global(.tech-icon--git),
+  :global(.tech-icon--git-alt) {
+    color: #f05032;
+  }
 
-:global(.tech-icon--github) {
-  color: #181717;
-}
+  :global(.tech-icon--github) {
+    color: #181717;
+  }
 
-:global(.tech-icon--database) {
-  color: #336791;
+  :global(.tech-icon--database) {
+    color: #336791;
+  }
 }
 
 /* Брендовые цвета для иконок через nth-child (для совместимости) */
@@ -189,9 +191,11 @@
 
 /* ===== ANIMATIONS & EFFECTS ===== */
 /* Hover эффекты */
-:global(.tech-icon:hover) {
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+.spiral {
+  :global(.tech-icon:hover) {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+  }
 }
 
 .spiral i:hover {
@@ -201,8 +205,10 @@
 /* ===== RESPONSIVE DESIGN ===== */
 /* Темная тема */
 @media (prefers-color-scheme: dark) {
-  .tech-icon--github {
-    color: $color-accent;
+  .spiral {
+    :global(.tech-icon--github) {
+      color: $color-accent;
+    }
   }
 
   .spiral i:nth-child(10n + 7) {
