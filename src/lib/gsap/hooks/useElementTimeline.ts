@@ -356,7 +356,7 @@ function addTextRevealAnimation(
       duration: animationDef.duration || 0.8,
       stagger: params.stagger ?? 0.1,
       ease: animationDef.ease || 'expo.out',
-      onReverseComplete: function () {
+      onReverseComplete: () => {
         // При реверсе возвращаем элементы в скрытое состояние
         gsap.set(lineInners, {
           yPercent: 100,
