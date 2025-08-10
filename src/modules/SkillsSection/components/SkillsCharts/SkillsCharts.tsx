@@ -2,7 +2,6 @@
 
 import styles from './SkillsCharts.module.scss';
 import { useChartsVisibility } from '../../hooks/useChartsVisibility';
-import { useSkillsCharts } from '../../hooks/useSkillsCharts';
 
 interface SkillsChartsProps {
   // Props can be added here when needed
@@ -11,22 +10,6 @@ interface SkillsChartsProps {
 
 export function SkillsCharts({}: SkillsChartsProps) {
   const { containerRef, chartWrapperProps } = useChartsVisibility();
-  const { playAnimation, hideCharts, resetAnimation } = useSkillsCharts();
-
-  const handleTestAnimation = () => {
-    console.log('Testing animation manually...');
-    playAnimation();
-  };
-
-  const handleHideCharts = () => {
-    console.log('Hiding charts...');
-    hideCharts();
-  };
-
-  const handleResetAnimation = () => {
-    console.log('Resetting animation...');
-    resetAnimation();
-  };
 
   return (
     <div ref={containerRef} className={styles['skills__charts']}>
