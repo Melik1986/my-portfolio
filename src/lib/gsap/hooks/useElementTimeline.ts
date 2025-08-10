@@ -233,6 +233,38 @@ function addAnimationToTimeline(
 }
 
 /**
+ * Получает или создает SplitText экземпляр для элемента
+ */
+function getSplitTextInstance(element: HTMLElement): SplitTextInstance | null {
+  const storage = ((globalThis as unknown as GlobalSplitTextStorage).__splitTextInstances ??=
+    new WeakMap<Element, SplitTextInstance>());
+  let splitText = storage.get(element);
+  if (!splitText) {
+    const gsapSplitText = new GsapSplitText(element, {
+      type: 'lines',
+      linesClass: 'line',
+    });
+    splitText = gsapSplitText as SplitTextInstance;
+    storage.set(element, splitText);
+  }
+  return splitText;
+}
+
+/**
+ * Создает внутренние элементы для анимации text-reveal
+ */
+function createLineInners(lines: Element[]): HTMLElement[] {
+  return lines.map((line) => {
+    const inner = document.createElement('div');
+    inner.style.display = 'block';
+    inner.innerHTML = line.innerHTML;
+    line.innerHTML = '';
+    line.appendChild(inner);
+    return inner;
+  });
+}
+
+/**
  * Добавляет анимацию рисования SVG элементов
  * Анимирует stroke-dashoffset для эффекта рисования
  */
@@ -280,45 +312,60 @@ function addTextRevealAnimation(
   config: ElementAnimationConfig,
   positionOverride?: number | string,
 ) {
-  const { element, params } = config;
-  if (!element || !element.textContent?.trim()) return;
+  const { element, params, animationDef } = config;
+  if (!element || !element.textContent?.trim() || !animationDef) return;
 
-  const storage = ((globalThis as unknown as GlobalSplitTextStorage).__splitTextInstances ??=
-    new WeakMap<Element, SplitTextInstance>());
-  let splitText = storage.get(element);
-  if (!splitText) {
-    const gsapSplitText = new GsapSplitText(element, {
-      type: 'lines',
-      linesClass: 'line',
-    });
-    splitText = gsapSplitText as SplitTextInstance;
-    storage.set(element, splitText);
-  }
+  const splitText = getSplitTextInstance(element as HTMLElement);
+  if (!splitText?.lines?.length) return;
 
-  gsap.set(element, { opacity: 1, visibility: 'visible' });
+  // Убираем прямой set вне таймлайна, чтобы не терять видимость после clearProps
+  // gsap.set(element, { opacity: 1, visibility: 'visible' });
 
-  const position =
-    positionOverride !== undefined
-      ? positionOverride
-      : params.delay === 0
-        ? '0'
-        : `${params.delay}`;
+  const position = positionOverride ?? (params.delay === 0 ? '0' : `${params.delay}`);
 
-  if (splitText.lines && splitText.lines.length > 0) {
-    gsap.set(splitText.lines, { yPercent: 100, autoAlpha: 0 });
+  // Применяем overflow: hidden на строки для правильного эффекта маскирования
+  gsap.set(splitText.lines, { overflow: 'hidden' });
 
-    timeline.to(
-      splitText.lines,
-      {
-        duration: params.duration,
-        yPercent: 0,
-        autoAlpha: 1,
-        stagger: params.stagger ?? 0.15,
-        ease: params.ease,
+  const lineInners = createLineInners(splitText.lines);
+
+  // 0. Делаем контейнер видимым именно в рамках таймлайна
+  timeline.set(
+    element,
+    {
+      opacity: 1,
+      visibility: 'visible',
+    },
+    position,
+  );
+
+  // 1. Устанавливаем начальное состояние (скрытое)
+  timeline.set(
+    lineInners,
+    {
+      yPercent: 100,
+      opacity: 1,
+    },
+    position,
+  );
+
+  // 2. Добавляем основную анимацию появления
+  timeline.to(
+    lineInners,
+    {
+      yPercent: 0,
+      duration: animationDef.duration || 0.8,
+      stagger: params.stagger ?? 0.1,
+      ease: animationDef.ease || 'expo.out',
+      onReverseComplete: function () {
+        // При реверсе возвращаем элементы в скрытое состояние
+        gsap.set(lineInners, {
+          yPercent: 100,
+          opacity: 1,
+        });
       },
-      position,
-    );
-  }
+    },
+    position,
+  );
 }
 
 /**

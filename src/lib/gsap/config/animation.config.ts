@@ -9,6 +9,7 @@ export interface AnimationDefinition {
   to: gsap.TweenVars; // Конечное состояние
   duration?: number; // Длительность анимации (опционально)
   ease?: string; // Функция сглаживания (опционально)
+  containerStyles?: gsap.TweenVars; // CSS стили для контейнера (опционально)
 }
 
 /**
@@ -99,6 +100,9 @@ export const animationDefinitions: Record<AnimationType, AnimationDefinition> = 
     },
     duration: 0.8,
     ease: 'expo.out',
+    containerStyles: {
+      overflow: 'hidden',
+    },
   },
 };
 
@@ -122,5 +126,6 @@ export function getAnimationDefinition(
     to: { ...baseDefinition.to, ...customConfig?.to },
     duration: customConfig?.duration ?? baseDefinition.duration ?? 0.6,
     ease: customConfig?.ease ?? baseDefinition.ease ?? 'power2.out',
+    containerStyles: { ...baseDefinition.containerStyles, ...customConfig?.containerStyles },
   };
 }

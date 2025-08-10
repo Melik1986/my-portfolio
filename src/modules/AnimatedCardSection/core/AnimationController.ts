@@ -107,7 +107,23 @@ export class AnimationController {
     // Активируем новую карточку
     const currentController = this.sections.get(cardIndex);
     if (currentController && !currentController.isActive) {
-      currentController.timeline.progress(0).play();
+      // Проверяем наличие text-reveal элементов в секции
+      const hasTextReveal = currentController.wrapper.querySelector('[data-animation="text-reveal"]');
+      
+      if (hasTextReveal) {
+        // Для text-reveal анимаций делаем плавный переход
+        currentController.timeline.progress(0);
+        // Небольшая задержка позволяет увидеть реверс состояние
+        gsap.delayedCall(0.1, () => {
+          if (currentController.isActive) {
+            currentController.timeline.play();
+          }
+        });
+      } else {
+        // Для обычных анимаций используем стандартный подход
+        currentController.timeline.progress(0).play();
+      }
+      
       currentController.isActive = true;
     }
 
