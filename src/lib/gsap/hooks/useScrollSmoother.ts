@@ -95,6 +95,17 @@ const initScrollSmoother = ({
 
   if (smootherRef.current) {
     // Убираем лишнее логирование
+    // ИСПРАВЛЕНИЕ: Синхронизируем ScrollTrigger после инициализации ScrollSmoother
+    setTimeout(() => {
+      try {
+        const { ScrollTrigger } = require('gsap/ScrollTrigger');
+        if (ScrollTrigger && typeof ScrollTrigger.refresh === 'function') {
+          ScrollTrigger.refresh();
+        }
+      } catch (error) {
+        // ScrollTrigger может быть не зарегистрирован
+      }
+    }, 50);
   }
   isInitializingRef.current = false;
 };
@@ -146,8 +157,20 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const scrollTop = (value?: number) => smootherRef.current?.scrollTop(value) ?? 0;
 
   const kill = () => {
-    smootherRef.current?.kill();
-    smootherRef.current = null;
+    if (smootherRef.current) {
+      // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
+      try {
+        const { ScrollTrigger } = require('gsap/ScrollTrigger');
+        if (ScrollTrigger && typeof ScrollTrigger.getAll === 'function') {
+          ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
+        }
+      } catch (error) {
+        // ScrollTrigger может быть не зарегистрирован
+      }
+      
+      smootherRef.current.kill();
+      smootherRef.current = null;
+    }
   };
 
   return {

@@ -14,7 +14,8 @@ import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
  * Содержит все секции портфолио с анимированными картами
  */
 export default function Home() {
-  useScrollSmoother(); // Гарантируем инициализацию ScrollSmoother до ScrollTrigger
+  const { isReady } = useScrollSmoother(); // Гарантируем инициализацию ScrollSmoother до ScrollTrigger
+  
   return (
     <>
       <Header />

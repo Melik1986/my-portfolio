@@ -163,7 +163,8 @@ export const useSkillsCharts = () => {
 
   /** Инициализация графиков и обработка изменения размера окна */
   useEffect(() => {
-    initializeCharts();
+    // Убираем автоматическую инициализацию - она будет вызываться из useChartsVisibility
+    // initializeCharts();
 
     const handleResize = () => resizeCharts(devChartRef.current, designChartRef.current);
     window.addEventListener('resize', handleResize);
@@ -177,7 +178,7 @@ export const useSkillsCharts = () => {
       if (currentDevChart) currentDevChart.dispose();
       if (currentDesignChart) currentDesignChart.dispose();
     };
-  }, [initializeCharts]);
+  }, []); // Убираем зависимость от initializeCharts
 
   return {
     initializeCharts,
