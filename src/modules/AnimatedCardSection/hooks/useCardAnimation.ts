@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationProps } from '@/lib/gsap/types/gsap.types';
 import { initHeroSection, initRegularSection } from '../utils/sectionInitializers';
-import { clearElementAnimations } from '../utils/sectionAnimationUtils';
+import { clearElementAnimations, elementTimelineRegistry } from '../utils/sectionAnimationUtils';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -60,7 +60,10 @@ export const useCardAnimation = (
 
     return () => {
       timeline?.kill();
-      if (sectionIndex !== 0) {
+      if (sectionIndex === 0) {
+        // Очищаем master и реестр при размонтировании Hero
+        elementTimelineRegistry.clear();
+      } else {
         ScrollTrigger.getAll().forEach((trigger) => {
           if (trigger.trigger === wrapper) trigger.kill();
         });

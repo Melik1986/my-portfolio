@@ -175,6 +175,7 @@ export function createElementTimeline(
   container: HTMLElement,
   selector = '[data-animate], [data-animation]',
 ): gsap.core.Timeline {
+  // Ищем элементы только внутри переданного контейнера для изоляции анимаций
   const elements = Array.from(container.querySelectorAll(selector));
 
   if (elements.length === 0) {

@@ -4,6 +4,67 @@ import { cleanupSplitTextInstances } from '@/lib/gsap/hooks/useElementTimeline';
 import type { ScrollTriggerSettings } from '../types/animated-card-section';
 
 /**
+ * Глобальный реестр timeline'ов для синхронизации элементных анимаций
+ */
+class ElementTimelineRegistry {
+  private timelines = new Map<number, gsap.core.Timeline>();
+  private masterTimeline: gsap.core.Timeline | null = null;
+  private activeCardIndex = 0;
+
+  /**
+   * Регистрирует timeline элементов для секции
+   */
+  registerTimeline(sectionIndex: number, timeline: gsap.core.Timeline): void {
+    this.timelines.set(sectionIndex, timeline);
+  }
+
+  /**
+   * Устанавливает master timeline для синхронизации
+   */
+  setMasterTimeline(timeline: gsap.core.Timeline): void {
+    this.masterTimeline = timeline;
+  }
+
+  /**
+   * Обновляет активную карточку и запускает соответствующие анимации
+   */
+  updateActiveCard(cardIndex: number): void {
+    // Останавливаем анимацию предыдущей карточки
+    const prevTimeline = this.timelines.get(this.activeCardIndex);
+    if (prevTimeline) {
+      prevTimeline.reverse();
+    }
+
+    // Запускаем анимацию новой активной карточки
+    this.activeCardIndex = cardIndex;
+    const currentTimeline = this.timelines.get(cardIndex);
+    if (currentTimeline) {
+      currentTimeline.progress(0).play();
+    }
+  }
+
+  /**
+   * Очищает реестр
+   */
+  clear(): void {
+    this.timelines.forEach(timeline => timeline.kill());
+    this.timelines.clear();
+    this.masterTimeline = null;
+    this.activeCardIndex = 0;
+  }
+
+  /**
+   * Получает активную карточку
+   */
+  getActiveCardIndex(): number {
+    return this.activeCardIndex;
+  }
+}
+
+// Синглтон для глобального доступа
+export const elementTimelineRegistry = new ElementTimelineRegistry();
+
+/**
  * Очищает анимации для всех элементов внутри секции
  * @param wrapper - элемент секции
  */

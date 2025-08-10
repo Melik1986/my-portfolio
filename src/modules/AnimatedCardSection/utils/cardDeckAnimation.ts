@@ -1,12 +1,25 @@
 import { gsap } from 'gsap';
 
 /**
- * Создает анимацию для группы элементов
+ * Callback для синхронизации анимаций элементов с master timeline
  */
-function createCardAnimation(timeline: gsap.core.Timeline, items: HTMLElement[]): void {
+type ElementAnimationCallback = (cardIndex: number, progress: number) => void;
+
+/**
+ * Создает анимацию для группы элементов с поддержкой callback'ов
+ */
+function createCardAnimation(
+  timeline: gsap.core.Timeline,
+  items: HTMLElement[],
+  onProgressUpdate?: ElementAnimationCallback,
+): void {
   items.forEach((item, index) => {
     if (index === 0) return;
 
+    const startProgress = (index - 1) / (items.length - 1);
+    const endProgress = index / (items.length - 1);
+
+    // Ослабляем предыдущую карточку визуально
     timeline.to(items[index - 1], {
       scale: 0.9,
     });
@@ -17,6 +30,10 @@ function createCardAnimation(timeline: gsap.core.Timeline, items: HTMLElement[])
       {
         [property]: 0,
         visibility: 'visible',
+        // Вперёд: активируем текущую карточку
+        onStart: () => onProgressUpdate?.(index, endProgress),
+        // Назад: возвращаем активность предыдущей карточке
+        onReverseComplete: () => onProgressUpdate?.(index - 1, startProgress),
       },
       '<',
     );
@@ -27,9 +44,14 @@ function createCardAnimation(timeline: gsap.core.Timeline, items: HTMLElement[])
  * Инициализация анимации колоды карт (Hero + остальные секции)
  * @param section - элемент секции (обёртка)
  * @param items - массив элементов карт
+ * @param onCardActivate - callback для синхронизации с элементными анимациями
  * @returns gsap.core.Timeline
  */
-export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): gsap.core.Timeline {
+export function initCardDeckScroll(
+  section: HTMLElement,
+  items: HTMLElement[],
+  onCardActivate?: ElementAnimationCallback,
+): gsap.core.Timeline {
   let timeline: gsap.core.Timeline;
 
   // Инициализация позиций карт
@@ -62,7 +84,7 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
       },
     });
 
-    createCardAnimation(timeline, items);
+    createCardAnimation(timeline, items, onCardActivate);
   });
 
   // Планшеты и десктоп (768px и больше)
@@ -81,7 +103,7 @@ export function initCardDeckScroll(section: HTMLElement, items: HTMLElement[]): 
       },
     });
 
-    createCardAnimation(timeline, items);
+    createCardAnimation(timeline, items, onCardActivate);
   });
 
   return timeline!;
