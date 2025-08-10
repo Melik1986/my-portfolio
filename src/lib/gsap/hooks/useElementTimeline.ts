@@ -66,18 +66,16 @@ export function cleanupSplitTextInstances(container: HTMLElement): void {
 }
 
 // Функция для парсинга элементов
-const parseElements = (elements: Element[]) => {
+const parseElements = (elements: Element[], container: HTMLElement) => {
   return elements
     .map((element) => {
       const config = parseAnimationData(element);
-      const sectionContainer = element.closest(
-        '[data-section],[data-section-index]',
-      ) as HTMLElement | null;
+      // Используем переданный container как источник sectionId
+      // Это исправляет проблему с дублированием data-section-index
       const sectionId =
-        sectionContainer?.getAttribute('data-section') ||
-        sectionContainer?.getAttribute('data-section-index') ||
-        element.getAttribute('data-section') ||
-        element.getAttribute('data-section-index') ||
+        container.getAttribute('data-section') ||
+        container.getAttribute('data-section-index') ||
+        container.id ||
         'default';
       return {
         element,
@@ -186,7 +184,7 @@ export function createElementTimeline(
   const tl = gsap.timeline({ paused: true });
 
   // Парсим элементы и группируем по секциям
-  const parsedElements = parseElements(elements);
+  const parsedElements = parseElements(elements, container);
   const sections = groupBySections(parsedElements);
   const sortedSections = sortSections(sections);
 

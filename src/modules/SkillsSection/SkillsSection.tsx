@@ -12,7 +12,6 @@ export function SkillsSection() {
       ref={sectionRef}
       className={styles.skills}
       id="skills"
-      data-section-index="2"
       data-group-delay="4.5"
     >
       <h2 className={`${styles.skills__title} visually-hidden`}>Skills</h2>

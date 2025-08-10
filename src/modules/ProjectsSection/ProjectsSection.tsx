@@ -8,7 +8,6 @@ export function ProjectsSection() {
     <section
       className={styles['projects-catalog']}
       id="projects-catalog"
-      data-section-index="3"
       data-group-delay="6.0"
     >
       <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>
