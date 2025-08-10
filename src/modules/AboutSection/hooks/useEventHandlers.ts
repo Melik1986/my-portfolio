@@ -87,7 +87,7 @@ export const useEventHandlers = ({
 
     // Обновляем кэшированный rect при изменении размера
     updateRect();
-    
+
     camera.aspect = container.offsetWidth / container.offsetHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
@@ -95,10 +95,10 @@ export const useEventHandlers = ({
 
   useEffect(() => {
     if (!isInitialized) return;
-    
+
     // Инициализируем rect при подписке на события
     updateRect();
-    
+
     return subscribeEvents(
       containerRef.current,
       handleResize,
@@ -106,5 +106,13 @@ export const useEventHandlers = ({
       startAnimation,
       stopAnimation,
     );
-  }, [isInitialized, handleResize, handlePointerMove, startAnimation, stopAnimation, containerRef, updateRect]);
+  }, [
+    isInitialized,
+    handleResize,
+    handlePointerMove,
+    startAnimation,
+    stopAnimation,
+    containerRef,
+    updateRect,
+  ]);
 };

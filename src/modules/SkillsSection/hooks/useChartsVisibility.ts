@@ -39,7 +39,7 @@ export function useChartsVisibility() {
       if (devChart && designChart) {
         initializeCharts();
         chartsInitializedRef.current = true;
-        
+
         // Запускаем анимацию после инициализации
         setTimeout(() => {
           playAnimation();

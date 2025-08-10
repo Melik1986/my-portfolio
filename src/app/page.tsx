@@ -15,7 +15,7 @@ import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
  */
 export default function Home() {
   const { isReady } = useScrollSmoother(); // Гарантируем инициализацию ScrollSmoother до ScrollTrigger
-  
+
   return (
     <>
       <Header />

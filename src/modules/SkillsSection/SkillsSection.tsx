@@ -8,7 +8,13 @@ export function SkillsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section ref={sectionRef} className={styles.skills} id="skills" data-section-index="2" data-group-delay="4.5">
+    <section
+      ref={sectionRef}
+      className={styles.skills}
+      id="skills"
+      data-section-index="2"
+      data-group-delay="4.5"
+    >
       <h2 className={`${styles.skills__title} visually-hidden`}>Skills</h2>
       <div className={`${styles['skills__content']} ${styles['skills__content-left']}`}>
         <SkillsContent />

@@ -70,7 +70,6 @@
   overflow: hidden; // На случай, если анимируется внутренний wrapper
 }
 
-
 // SVG элементы для анимации рисования
 [data-animation='svg-draw'] {
   stroke-dasharray: 1000;

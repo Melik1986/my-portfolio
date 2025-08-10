@@ -19,15 +19,45 @@ export const useCardAnimation = (
 ) => {
   const { sectionIndex } = props;
   const wrapperRef = useRef<HTMLLIElement>(null);
+
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper || sectionIndex === null || sectionIndex === undefined) return;
+
+    // ✅ Проверяем готовность ScrollSmoother перед созданием ScrollTrigger
+    const checkScrollSmootherReady = async () => {
+      try {
+        // Используем динамический импорт вместо require()
+        const { ScrollSmoother } = await import('gsap/ScrollSmoother');
+        return ScrollSmoother.get() !== null;
+      } catch {
+        return false;
+      }
+    };
+
+    // Ждем готовности ScrollSmoother
+    const waitForScrollSmoother = async () => {
+      const isReady = await checkScrollSmootherReady();
+      if (isReady) {
+        initializeSection();
+      } else {
+        setTimeout(waitForScrollSmoother, 50);
+      }
+    };
+
     let timeline: gsap.core.Timeline | null = null;
-    if (sectionIndex === 0) {
-      timeline = initHeroSection(wrapper);
-    } else {
-      timeline = initRegularSection(wrapper, sectionIndex);
-    }
+
+    const initializeSection = () => {
+      if (sectionIndex === 0) {
+        timeline = initHeroSection(wrapper);
+      } else {
+        timeline = initRegularSection(wrapper, sectionIndex);
+      }
+    };
+
+    // Запускаем инициализацию
+    waitForScrollSmoother();
+
     return () => {
       timeline?.kill();
       if (sectionIndex !== 0) {
@@ -39,5 +69,6 @@ export const useCardAnimation = (
       }
     };
   }, [sectionIndex]);
+
   return { wrapperRef };
 };

@@ -10,7 +10,7 @@ import type { ScrollTriggerSettings } from '../types/animated-card-section';
 export function clearElementAnimations(wrapper: HTMLElement): void {
   // Очищаем SplitText экземпляры перед очисткой GSAP свойств
   cleanupSplitTextInstances(wrapper);
-  
+
   const elements = wrapper.querySelectorAll('[data-animate], [data-animation]');
   elements.forEach((element) => {
     gsap.set(element, { clearProps: 'all' });

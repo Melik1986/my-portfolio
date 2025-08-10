@@ -3,7 +3,11 @@
 import { gsap } from 'gsap';
 import { SplitText as GsapSplitText } from 'gsap/SplitText';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import type { AnimationType, GlobalSplitTextStorage, SplitText as SplitTextInstance } from '../types/gsap.types';
+import type {
+  AnimationType,
+  GlobalSplitTextStorage,
+  SplitText as SplitTextInstance,
+} from '../types/gsap.types';
 import { parseAnimationData } from '@/lib/gsap/utils/parseAnimationData';
 import { getAnimationDefinition, AnimationDefinition } from '@/lib/gsap/config/animation.config';
 
@@ -54,7 +58,7 @@ export function cleanupSplitTextInstances(container: HTMLElement): void {
     if (splitTextInstance) {
       splitTextInstance.revert();
       instances.delete(element);
-      
+
       // Сбрасываем инлайн-стили, которые могли остаться от GSAP
       gsap.set(element, { clearProps: 'all' });
     }
@@ -81,7 +85,9 @@ export function createElementTimeline(
   const parsedElements = elements
     .map((element) => {
       const config = parseAnimationData(element);
-      const sectionContainer = element.closest('[data-section],[data-section-index]') as HTMLElement | null;
+      const sectionContainer = element.closest(
+        '[data-section],[data-section-index]',
+      ) as HTMLElement | null;
       const sectionId =
         sectionContainer?.getAttribute('data-section') ||
         sectionContainer?.getAttribute('data-section-index') ||
@@ -110,8 +116,8 @@ export function createElementTimeline(
 
   // Сортируем секции по минимальному groupDelay в секции
   const sortedSections = Array.from(sections.entries()).sort(([, a], [, b]) => {
-    const minGroupDelayA = Math.min(...a.map(item => item.groupDelay));
-    const minGroupDelayB = Math.min(...b.map(item => item.groupDelay));
+    const minGroupDelayA = Math.min(...a.map((item) => item.groupDelay));
+    const minGroupDelayB = Math.min(...b.map((item) => item.groupDelay));
     return minGroupDelayA - minGroupDelayB;
   });
 
@@ -132,7 +138,7 @@ export function createElementTimeline(
 
     sortedGroups.forEach(([groupDelay, groupElements]) => {
       const groupStartTime = sectionStartTime + groupDelay;
-      
+
       // Сортируем элементы в группе по delay
       const sortedGroupElements = groupElements.sort((a, b) => a.delay - b.delay);
 
@@ -150,19 +156,23 @@ export function createElementTimeline(
         const staggerDelay = item.stagger > 0 ? index * item.stagger : 0;
         const elementPosition = groupStartTime + item.delay + staggerDelay;
 
-        addAnimationToTimeline(tl, {
-          element: item.element,
-          animationType: item.config!.animation,
-          params,
-        }, elementPosition);
+        addAnimationToTimeline(
+          tl,
+          {
+            element: item.element,
+            animationType: item.config!.animation,
+            params,
+          },
+          elementPosition,
+        );
       });
     });
 
     // Обновляем время начала следующей секции
-    const maxGroupDelay = Math.max(...sectionElements.map(item => item.groupDelay));
-    const maxElementTime = Math.max(...sectionElements.map(item => 
-      item.delay + (item.config?.duration ?? 1)
-    ));
+    const maxGroupDelay = Math.max(...sectionElements.map((item) => item.groupDelay));
+    const maxElementTime = Math.max(
+      ...sectionElements.map((item) => item.delay + (item.config?.duration ?? 1)),
+    );
     sectionStartTime += maxGroupDelay + maxElementTime;
   });
 
@@ -174,9 +184,9 @@ export function createElementTimeline(
  * Выбирает подходящий метод анимации в зависимости от типа
  */
 function addAnimationToTimeline(
-  timeline: gsap.core.Timeline, 
-  config: AddAnimationConfig, 
-  position?: number | string
+  timeline: gsap.core.Timeline,
+  config: AddAnimationConfig,
+  position?: number | string,
 ) {
   const { element, animationType, params } = config;
 
@@ -187,8 +197,8 @@ function addAnimationToTimeline(
   }
 
   // Если позиция не передана, используем стандартную логику
-  const timelinePosition = position !== undefined ? position : 
-    (params.delay === 0 ? "0" : `${params.delay}`);
+  const timelinePosition =
+    position !== undefined ? position : params.delay === 0 ? '0' : `${params.delay}`;
 
   if (animationType === 'svg-draw') {
     addSvgDrawAnimation(timeline, { element, params }, timelinePosition);
@@ -215,7 +225,12 @@ function addSvgDrawAnimation(
   const pathElements = element.querySelectorAll('path');
 
   // Если delay равен 0, используем "0" для одновременного старта
-  const position = positionOverride !== undefined ? positionOverride : (params.delay === 0 ? '0' : `${params.delay}`);
+  const position =
+    positionOverride !== undefined
+      ? positionOverride
+      : params.delay === 0
+        ? '0'
+        : `${params.delay}`;
 
   pathElements.forEach((pathElement: Element) => {
     const pathLength = (pathElement as SVGPathElement).getTotalLength();
@@ -248,7 +263,8 @@ function addTextRevealAnimation(
   const { element, params } = config;
   if (!element || !element.textContent?.trim()) return;
 
-  const storage = ((globalThis as unknown) as GlobalSplitTextStorage).__splitTextInstances ??= new WeakMap<Element, SplitTextInstance>();
+  const storage = ((globalThis as unknown as GlobalSplitTextStorage).__splitTextInstances ??=
+    new WeakMap<Element, SplitTextInstance>());
   let splitText = storage.get(element);
   if (!splitText) {
     const gsapSplitText = new GsapSplitText(element, {
@@ -261,7 +277,12 @@ function addTextRevealAnimation(
 
   gsap.set(element, { opacity: 1, visibility: 'visible' });
 
-  const position = positionOverride !== undefined ? positionOverride : (params.delay === 0 ? '0' : `${params.delay}`);
+  const position =
+    positionOverride !== undefined
+      ? positionOverride
+      : params.delay === 0
+        ? '0'
+        : `${params.delay}`;
 
   if (splitText.lines && splitText.lines.length > 0) {
     gsap.set(splitText.lines, { yPercent: 100, autoAlpha: 0 });
@@ -280,7 +301,6 @@ function addTextRevealAnimation(
   }
 }
 
-
 /**
  * Добавляет базовую анимацию элемента
  * Применяет стандартную анимацию from/to с пользовательскими параметрами
@@ -293,7 +313,12 @@ function addBaseAnimation(
   const { element, params, animationDef } = config;
   if (!animationDef) return;
 
-  const position = positionOverride !== undefined ? positionOverride : (params.delay === 0 ? '0' : `${params.delay}`);
+  const position =
+    positionOverride !== undefined
+      ? positionOverride
+      : params.delay === 0
+        ? '0'
+        : `${params.delay}`;
 
   timeline.fromTo(
     element,

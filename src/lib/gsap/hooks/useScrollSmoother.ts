@@ -21,6 +21,12 @@ interface UseScrollSmootherOptions {
   normalizeScroll?: boolean;
 }
 
+// Тип для ScrollTrigger
+interface ScrollTriggerInstance {
+  kill: () => void;
+  trigger: Element;
+}
+
 /**
  * Глобальный хук для управления ScrollSmoother
  * Создает единственный экземпляр на все приложение
@@ -32,9 +38,6 @@ const checkElements = (
 ): { wrapperElement: Element | null; contentElement: Element | null } => {
   const wrapperElement = document.querySelector(wrapper);
   const contentElement = document.querySelector(content);
-  if (!wrapperElement || !contentElement) {
-    // ScrollSmoother: DOM elements not found
-  }
   return { wrapperElement, contentElement };
 };
 
@@ -59,6 +62,24 @@ const createSmoother = (
     return smoother;
   } catch {
     return null;
+  }
+};
+
+// Функция для синхронизации ScrollTrigger
+const syncScrollTrigger = async (): Promise<void> => {
+  try {
+    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+    if (ScrollTrigger && typeof ScrollTrigger.refresh === 'function') {
+      // Обновляем все существующие ScrollTrigger для синхронизации с ScrollSmoother
+      ScrollTrigger.refresh();
+      
+      // Дополнительная проверка - убеждаемся, что все триггеры синхронизированы
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    }
+  } catch {
+    // ScrollTrigger может быть не зарегистрирован
   }
 };
 
@@ -94,18 +115,13 @@ const initScrollSmoother = ({
   });
 
   if (smootherRef.current) {
-    // Убираем лишнее логирование
-    // ИСПРАВЛЕНИЕ: Синхронизируем ScrollTrigger после инициализации ScrollSmoother
+    // ✅ ПРАВИЛЬНАЯ СИНХРОНИЗАЦИЯ для CardDeck эффекта
+    // 1. Сначала инициализируем ScrollSmoother
+    // 2. Затем обновляем ScrollTrigger для синхронизации с виртуальным скроллом
+    // 3. Используем больший timeout для полной инициализации
     setTimeout(() => {
-      try {
-        const { ScrollTrigger } = require('gsap/ScrollTrigger');
-        if (ScrollTrigger && typeof ScrollTrigger.refresh === 'function') {
-          ScrollTrigger.refresh();
-        }
-      } catch (error) {
-        // ScrollTrigger может быть не зарегистрирован
-      }
-    }, 50);
+      syncScrollTrigger();
+    }, 100);
   }
   isInitializingRef.current = false;
 };
@@ -114,6 +130,19 @@ const initScrollSmoother = ({
 const checkDOMReady = (wrapper: string, content: string) => {
   const elements = checkElements(wrapper, content);
   return elements.wrapperElement && elements.contentElement;
+};
+
+// Функция для очистки ScrollTrigger
+const cleanupScrollTrigger = async (): Promise<void> => {
+  try {
+    const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+    if (ScrollTrigger && typeof ScrollTrigger.getAll === 'function') {
+      const triggers = ScrollTrigger.getAll() as ScrollTriggerInstance[];
+      triggers.forEach((trigger) => trigger.kill());
+    }
+  } catch {
+    // ScrollTrigger может быть не зарегистрирован
+  }
 };
 
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
@@ -143,7 +172,6 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
           smootherRef,
           isInitializingRef,
         });
-      } else {
       }
     }, 50);
 
@@ -159,14 +187,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const kill = () => {
     if (smootherRef.current) {
       // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
-      try {
-        const { ScrollTrigger } = require('gsap/ScrollTrigger');
-        if (ScrollTrigger && typeof ScrollTrigger.getAll === 'function') {
-          ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
-        }
-      } catch (error) {
-        // ScrollTrigger может быть не зарегистрирован
-      }
+      cleanupScrollTrigger();
       
       smootherRef.current.kill();
       smootherRef.current = null;

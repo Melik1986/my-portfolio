@@ -6,11 +6,11 @@ import { gsap } from 'gsap';
 function createCardAnimation(timeline: gsap.core.Timeline, items: HTMLElement[]): void {
   items.forEach((item, index) => {
     if (index === 0) return;
-    
+
     timeline.to(items[index - 1], {
       scale: 0.9,
     });
-    
+
     const property = index <= 2 ? 'yPercent' : 'xPercent';
     timeline.to(
       item,

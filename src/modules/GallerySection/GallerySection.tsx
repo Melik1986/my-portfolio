@@ -12,7 +12,13 @@ export function GallerySection() {
   return (
     <section className={styles.gallery} id="gallery" data-section-index="4" data-group-delay="7.5">
       <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
-      <div className={styles.gallery__carousel} data-animation="fade-up" data-duration="0.8" data-ease="power2.out" data-delay="0">
+      <div
+        className={styles.gallery__carousel}
+        data-animation="fade-up"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="0"
+      >
         <ul className={styles.gallery__list}>
           {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
             <li
@@ -28,7 +34,13 @@ export function GallerySection() {
           ))}
         </ul>
       </div>
-      <div className={styles.gallery__arrows} data-animation="fade-up" data-duration="0.8" data-ease="power2.out" data-delay="0.3">
+      <div
+        className={styles.gallery__arrows}
+        data-animation="fade-up"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="0.3"
+      >
         <button className={styles.gallery__prev} onClick={prevSlide} title="Previous slide">
           <SpriteIcon
             id="arrow-left"
@@ -49,7 +61,14 @@ export function GallerySection() {
           {displayedIndex + 1}/{totalItems}
         </div>
       </div>
-      <div className={styles.gallery__timeRunning} ref={progressRef} data-animation="fade-up" data-duration="0.8" data-ease="power2.out" data-delay="0.6" />
+      <div
+        className={styles.gallery__timeRunning}
+        ref={progressRef}
+        data-animation="fade-up"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="0.6"
+      />
     </section>
   );
 }
