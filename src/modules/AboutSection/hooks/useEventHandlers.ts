@@ -66,47 +66,6 @@ const subscribeEvents = (config: EventConfig) => {
   };
 };
 
-// Функция для обработки движения указателя
-const createPointerMoveHandler = (
-  containerRef: React.RefObject<HTMLDivElement>,
-  mouseRef: React.RefObject<{ x: number; y: number }>,
-  rectRef: React.MutableRefObject<DOMRect | null>,
-) => {
-  return useCallback(
-    (clientX: number, clientY: number) => {
-      const container = containerRef.current;
-      const mouse = mouseRef.current;
-      const rect = rectRef.current;
-      if (!container || !mouse || !rect) return;
-
-      mouse.x = clientX - rect.left - container.offsetWidth / 2;
-      mouse.y = clientY - rect.top - container.offsetHeight / 2;
-    },
-    [containerRef, mouseRef],
-  );
-};
-
-// Функция для обработки изменения размера
-const createResizeHandler = (
-  containerRef: React.RefObject<HTMLDivElement>,
-  cameraRef: React.RefObject<PerspectiveCamera | null>,
-  rendererRef: React.RefObject<WebGLRenderer | null>,
-  updateRect: () => void,
-) => {
-  return useCallback(() => {
-    const container = containerRef.current;
-    const camera = cameraRef.current;
-    const renderer = rendererRef.current;
-    if (!container || !camera || !renderer) return;
-
-    updateRect();
-
-    camera.aspect = container.offsetWidth / container.offsetHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
-  }, [containerRef, cameraRef, rendererRef, updateRect]);
-};
-
 /**
  * Хук для управления всеми обработчиками событий.
  * @param params - Параметры и коллбэки для обработки событий.
@@ -129,8 +88,31 @@ export const useEventHandlers = ({
     }
   }, [containerRef]);
 
-  const handlePointerMove = createPointerMoveHandler(containerRef, mouseRef, rectRef);
-  const handleResize = createResizeHandler(containerRef, cameraRef, rendererRef, updateRect);
+  const handlePointerMove = useCallback(
+    (clientX: number, clientY: number) => {
+      const container = containerRef.current;
+      const mouse = mouseRef.current;
+      const rect = rectRef.current;
+      if (!container || !mouse || !rect) return;
+
+      mouse.x = clientX - rect.left - container.offsetWidth / 2;
+      mouse.y = clientY - rect.top - container.offsetHeight / 2;
+    },
+    [containerRef, mouseRef, rectRef]
+  );
+
+  const handleResize = useCallback(() => {
+    const container = containerRef.current;
+    const camera = cameraRef.current;
+    const renderer = rendererRef.current;
+    if (!container || !camera || !renderer) return;
+
+    updateRect();
+
+    camera.aspect = container.offsetWidth / container.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+  }, [containerRef, cameraRef, rendererRef, updateRect]);
 
   useEffect(() => {
     if (!isInitialized) return;

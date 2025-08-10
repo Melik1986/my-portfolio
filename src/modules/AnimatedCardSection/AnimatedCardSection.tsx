@@ -3,17 +3,16 @@
 import React from 'react';
 import { useCardAnimation } from './hooks/useCardAnimation';
 import { AnimatedCardSectionProps } from '@/modules/AnimatedCardSection/types/animated-card-section';
-import styles from './Section.module.scss';
+import styles from './AnimatedCardSection.module.scss';
 
 export function AnimatedCardSection({
   id,
   children,
-  direction = 'vertical',
   sectionIndex,
-}: Omit<AnimatedCardSectionProps, 'contentTimelinesRef'>) {
+}: AnimatedCardSectionProps) {
   const { wrapperRef } = useCardAnimation({
-    direction,
     sectionIndex,
+    isHeroSection: sectionIndex === 0,
   });
 
   return (

@@ -14,7 +14,11 @@ export const useDeckAnimation = (
 
     cards.forEach((card, i) => {
       if (!card.classList.contains('fullscreen') && positions[i]) {
-        animateToPosition(card as HTMLElement, positions[i]);
+        // При наведении карточки поднимаются еще выше
+        animateToPosition(card as HTMLElement, {
+          ...positions[i],
+          y: positions[i].y - 50, // Дополнительный подъем
+        });
       }
     });
   }, [animateToPosition, positions]);
@@ -23,12 +27,13 @@ export const useDeckAnimation = (
     isExpandedRef.current = false;
     const cards = document.querySelectorAll('.projects-card');
 
-    cards.forEach((card) => {
-      if (!card.classList.contains('fullscreen')) {
-        animateToPosition(card as HTMLElement, { x: 0, y: 0, zIndex: 0 });
+    cards.forEach((card, i) => {
+      if (!card.classList.contains('fullscreen') && positions[i]) {
+        // Возвращаем в базовое веерное положение, НЕ в центр
+        animateToPosition(card as HTMLElement, positions[i]);
       }
     });
-  }, [animateToPosition]);
+  }, [animateToPosition, positions]);
 
   return { expandDeck, collapseDeck, isExpanded: isExpandedRef };
 };

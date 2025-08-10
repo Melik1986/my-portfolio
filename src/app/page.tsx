@@ -22,7 +22,7 @@ export default function Home() {
 
       <div className="portfolio__wrapper scroll-section">
         <ul className="portfolio__list">
-          <AnimatedCardSection id="hero-section" title="Hero" sectionIndex={0} direction="vertical">
+          <AnimatedCardSection id="hero-section" title="Hero" sectionIndex={0}>
             <HeroSection />
           </AnimatedCardSection>
 
@@ -37,7 +37,6 @@ export default function Home() {
           <AnimatedCardSection
             id="projects-section"
             title="Projects"
-            direction="horizontal"
             sectionIndex={3}
           >
             <ProjectsSection />
@@ -46,7 +45,6 @@ export default function Home() {
           <AnimatedCardSection
             id="gallery-section"
             title="Gallery"
-            direction="horizontal"
             sectionIndex={4}
           >
             <GallerySection />

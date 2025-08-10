@@ -1,77 +1,54 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { AnimationProps } from '@/lib/gsap/types/gsap.types';
-import { initHeroSection, initRegularSection } from '../utils/sectionInitializers';
-import { clearElementAnimations, elementTimelineRegistry } from '../utils/sectionAnimationUtils';
+import { animationController } from '../core/AnimationController';
 
-gsap.registerPlugin(ScrollTrigger);
+interface UseCardAnimationProps {
+  sectionIndex: number;
+  isHeroSection?: boolean;
+}
 
 /**
- * Хук для анимации переключения между секциями в одной колоде карт
+ * Оптимизированный хук для управления анимациями карточек
  */
-export const useCardAnimation = (
-  props: AnimationProps & {
-    sectionIndex?: number | null;
-  },
-) => {
-  const { sectionIndex } = props;
+export const useCardAnimation = ({
+  sectionIndex,
+  isHeroSection = false,
+}: UseCardAnimationProps) => {
   const wrapperRef = useRef<HTMLLIElement>(null);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    if (!wrapper || sectionIndex === null || sectionIndex === undefined) return;
+    if (!wrapper || isInitializedRef.current) return;
 
-    // ✅ Проверяем готовность ScrollSmoother перед созданием ScrollTrigger
-    const checkScrollSmootherReady = async () => {
+    const initializeAnimation = () => {
       try {
-        // Используем динамический импорт вместо require()
-        const { ScrollSmoother } = await import('gsap/ScrollSmoother');
-        return ScrollSmoother.get() !== null;
-      } catch {
-        return false;
+        if (isHeroSection) {
+          animationController.initializeMaster();
+        }
+
+        animationController.registerSection(sectionIndex, wrapper);
+        
+        isInitializedRef.current = true;
+      } catch (error) {
+        console.warn('Animation initialization failed:', error);
       }
     };
 
-    // Ждем готовности ScrollSmoother
-    const waitForScrollSmoother = async () => {
-      const isReady = await checkScrollSmootherReady();
-      if (isReady) {
-        initializeSection();
-      } else {
-        setTimeout(waitForScrollSmoother, 50);
-      }
-    };
-
-    let timeline: gsap.core.Timeline | null = null;
-
-    const initializeSection = () => {
-      if (sectionIndex === 0) {
-        timeline = initHeroSection(wrapper);
-      } else {
-        timeline = initRegularSection(wrapper, sectionIndex);
-      }
-    };
-
-    // Запускаем инициализацию
-    waitForScrollSmoother();
+    requestAnimationFrame(initializeAnimation);
 
     return () => {
-      timeline?.kill();
-      if (sectionIndex === 0) {
-        // Очищаем master и реестр при размонтировании Hero
-        elementTimelineRegistry.clear();
-      } else {
-        ScrollTrigger.getAll().forEach((trigger) => {
-          if (trigger.trigger === wrapper) trigger.kill();
-        });
-        // Полная очистка анимаций и SplitText при размонтировании
-        clearElementAnimations(wrapper);
+      if (isInitializedRef.current) {
+        animationController.cleanupSection(sectionIndex);
+        isInitializedRef.current = false;
       }
     };
-  }, [sectionIndex]);
+  }, [sectionIndex, isHeroSection]);
 
-  return { wrapperRef };
+  return {
+    wrapperRef,
+    isReady: animationController.isReady(),
+    activeCardIndex: animationController.getActiveCardIndex(),
+  };
 };

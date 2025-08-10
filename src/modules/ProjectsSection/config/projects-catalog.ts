@@ -4,8 +4,8 @@ import { AnimationConfig, ProjectData } from '@/modules/ProjectsSection/types/pr
 
 export const ANIMATION_CONFIG: AnimationConfig = {
   zStep: -180,
-  yStep: -45,
-  xStep: -50,
+  yStep: -80,
+  xStep: -100,
   hoverLift: -120,
   fanDuration: 0.7,
   hoverDuration: 0.3,

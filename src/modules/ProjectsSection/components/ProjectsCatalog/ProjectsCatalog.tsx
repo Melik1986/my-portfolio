@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
 import { useDeckAnimation } from '../../hooks/useDeckAnimation';
@@ -14,6 +14,17 @@ export function ProjectsCatalog() {
   );
 
   const { expandDeck, collapseDeck, isExpanded } = useDeckAnimation(animateToPosition, positions);
+
+    // Инициализируем карточки в веерном положении при загрузке
+    useEffect(() => {
+      const cards = document.querySelectorAll('.projects-card');
+      cards.forEach((card, i) => {
+        if (positions[i]) {
+          // Устанавливаем начальное веерное положение
+          gsap.set(card as HTMLElement, positions[i]);
+        }
+      });
+    }, [positions]);
 
   const handleCardHover = useCallback(
     (index: number, isHovering: boolean) => {

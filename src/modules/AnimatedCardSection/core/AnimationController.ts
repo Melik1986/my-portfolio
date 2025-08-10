@@ -1,0 +1,165 @@
+'use client';
+
+import { gsap } from 'gsap';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
+import { initCardDeckScroll } from '../utils/cardDeckAnimation';
+
+/**
+ * Локальный helper: очищает анимационные стили дочерних элементов секции
+ * Используется при реверсе/очистке, чтобы вернуть элементы к исходному состоянию
+ */
+const clearElementAnimations = (wrapper: HTMLElement): void => {
+  const elements = wrapper.querySelectorAll<HTMLElement>('[data-animate], [data-animation]');
+  elements.forEach((el) => {
+    gsap.killTweensOf(el);
+    gsap.set(el, { clearProps: 'all' });
+  });
+};
+
+/**
+ * Интерфейс для управления анимациями секций
+ */
+interface SectionController {
+  timeline: gsap.core.Timeline;
+  wrapper: HTMLElement;
+  isActive: boolean;
+}
+
+/**
+ * Централизованный контроллер анимаций карточек
+ * Заменяет глобальный ElementTimelineRegistry с улучшенной архитектурой
+ */
+export class AnimationController {
+  private sections = new Map<number, SectionController>();
+  private masterTimeline: gsap.core.Timeline | null = null;
+  private activeCardIndex = 0;
+  private isInitialized = false;
+
+  /**
+   * Инициализация мастер-анимации (только для Hero секции)
+   */
+  initializeMaster(): gsap.core.Timeline | null {
+    if (this.isInitialized) return this.masterTimeline;
+
+    const scrollSection = document.querySelector('.scroll-section');
+    if (!scrollSection) return null;
+
+    const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
+      scrollSection) as HTMLElement;
+    const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+    
+    if (items.length === 0) return null;
+
+    // Создаём мастер timeline для колоды карт
+    this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
+      this.activateCard(cardIndex);
+    });
+
+    this.isInitialized = true;
+    return this.masterTimeline;
+  }
+
+  /**
+   * Регистрация секции с автоматическим созданием timeline
+   */
+  registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
+    // Проверяем, что секция ещё не зарегистрирована
+    if (this.sections.has(sectionIndex)) {
+      return this.sections.get(sectionIndex)!.timeline;
+    }
+
+    // Создаём timeline элементов для секции
+    const elementTimeline = createElementTimeline(wrapper, '[data-animate], [data-animation]');
+    
+    // Добавляем автоочистку при реверсе
+    elementTimeline.eventCallback('onReverseComplete', () => {
+      clearElementAnimations(wrapper);
+    });
+
+    // Сохраняем контроллер секции
+    const controller: SectionController = {
+      timeline: elementTimeline,
+      wrapper,
+      isActive: sectionIndex === 0, // Hero активна по умолчанию
+    };
+
+    this.sections.set(sectionIndex, controller);
+
+    // Если это Hero секция, активируем её немедленно
+    if (sectionIndex === 0) {
+      this.activateCard(0);
+    }
+
+    return elementTimeline;
+  }
+
+  /**
+   * Активация карточки с автоматическим управлением timeline
+   */
+  private activateCard(cardIndex: number): void {
+    // Деактивируем предыдущую карточку
+    const prevController = this.sections.get(this.activeCardIndex);
+    if (prevController && prevController.isActive) {
+      prevController.timeline.reverse();
+      prevController.isActive = false;
+    }
+
+    // Активируем новую карточку
+    const currentController = this.sections.get(cardIndex);
+    if (currentController && !currentController.isActive) {
+      currentController.timeline.progress(0).play();
+      currentController.isActive = true;
+    }
+
+    this.activeCardIndex = cardIndex;
+  }
+
+  /**
+   * Получить активную карточку
+   */
+  getActiveCardIndex(): number {
+    return this.activeCardIndex;
+  }
+
+  /**
+   * Полная очистка всех анимаций
+   */
+  cleanup(): void {
+    // Очищаем все секции
+    this.sections.forEach((controller) => {
+      controller.timeline.kill();
+      clearElementAnimations(controller.wrapper);
+    });
+
+    // Очищаем мастер timeline
+    this.masterTimeline?.kill();
+
+    // Сбрасываем состояние
+    this.sections.clear();
+    this.masterTimeline = null;
+    this.activeCardIndex = 0;
+    this.isInitialized = false;
+  }
+
+  /**
+   * Частичная очистка секции (для размонтирования отдельных компонентов)
+   */
+  cleanupSection(sectionIndex: number): void {
+    const controller = this.sections.get(sectionIndex);
+    if (controller) {
+      controller.timeline.kill();
+      clearElementAnimations(controller.wrapper);
+      this.sections.delete(sectionIndex);
+    }
+  }
+
+  /**
+   * Проверка инициализации
+   */
+  isReady(): boolean {
+    return this.isInitialized;
+  }
+}
+
+// Экспортируем singleton для использования в проекте
+export const animationController = new AnimationController();
