@@ -21,6 +21,7 @@ export function ProjectCardPreview({ number, previewImage, title }: ProjectCardP
         width={300}
         height={200}
         priority={number === 1} // Приоритет только для первого изображения
+        sizes="(max-width: 768px) 280px, 300px"
       />
     </>
   );

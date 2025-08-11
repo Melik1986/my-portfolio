@@ -20,6 +20,7 @@ export function ProjectCardFullscreen({ project }: ProjectCardFullscreenProps) {
         width={800}
         height={600}
         priority
+        sizes="(max-width: 1024px) 100vw, 800px"
       />
       <div className={styles['projects-card__content']}>
         <h3 className={styles['projects-card__title']}>{project.title}</h3>
