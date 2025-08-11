@@ -35,20 +35,20 @@ export function Header() {
       <div className={styles.header__content}>
         <Logo
           data-animation="slide-left-scale"
-          data-duration="0.8"
-          data-ease="power3.out"
+          data-duration="1.0"
+          data-ease="power2.out"
           data-delay="0"
         />
         <Navigation
           data-animation="slide-down-blur"
-          data-duration="0.5"
-          data-ease="power3.out"
-          data-delay="0.8"
+          data-duration="0.8"
+          data-ease="power2.out"
+          data-delay="0.3"
         />
         <ContactButton
           data-animation="slide-right"
-          data-duration="0.8"
-          data-ease="power3.out"
+          data-duration="1.0"
+          data-ease="power2.out"
           data-delay="0"
         />
       </div>

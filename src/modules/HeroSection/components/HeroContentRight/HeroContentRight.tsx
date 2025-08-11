@@ -19,9 +19,9 @@ function HeroHeading() {
       ref={containerRef}
       className={styles['hero__heading']}
       data-animation="slide-right"
-      data-duration="0.8"
+      data-duration="1.0"
       data-ease="power2.out"
-      data-delay="0.8"
+      data-delay="0.6"
     >
       Frontend development
     </h2>
@@ -51,7 +51,7 @@ function HeroParagraphContent() {
         data-animation="slide-right"
         data-duration="0.8"
         data-ease="power2.out"
-        data-delay="1.0"
+        data-delay="0.8"
       >
         and Web Design
       </span>
@@ -60,7 +60,7 @@ function HeroParagraphContent() {
         data-animation="fade-up"
         data-duration="0.8"
         data-ease="power2.out"
-        data-delay="1.2"
+        data-delay="1.0"
       >
         <SpriteIcon id="brush" className={styles['hero__brush']} />
       </span>

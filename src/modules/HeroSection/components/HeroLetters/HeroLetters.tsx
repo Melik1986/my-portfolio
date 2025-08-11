@@ -31,7 +31,7 @@ export function HeroLetters() {
       data-duration="0.8"
       data-ease="power2.out"
       data-delay="0"
-      data-stagger="0.1"
+      data-stagger="0.08"
     >
       {letters.map((letter, index) => (
         <Letter key={index} letter={letter} />

@@ -9,7 +9,7 @@ export function SkillsContent() {
       <h3
         className={styles['skills__heading']}
         data-animation="slide-left"
-        data-duration="0.8"
+        data-duration="1.0"
         data-ease="power2.out"
         data-delay="0"
       >

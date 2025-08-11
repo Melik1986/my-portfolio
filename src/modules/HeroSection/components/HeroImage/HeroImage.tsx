@@ -25,9 +25,9 @@ export function HeroAvatar() {
         height={400}
         priority
         data-animation="zoom-in"
-        data-duration="0.8"
+        data-duration="1.2"
         data-ease="back.out(1.7)"
-        data-delay="1.5"
+        data-delay="1.2"
       />
     </div>
   );

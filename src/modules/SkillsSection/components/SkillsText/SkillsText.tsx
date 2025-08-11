@@ -5,9 +5,9 @@ export function SkillsText() {
     <p
       className={styles.skills__text}
       data-animation="text-reveal"
-      data-duration="0.8"
+      data-duration="1.2"
       data-ease="power2.out"
-      data-delay="0.1"
+      data-delay="0.2"
     >
       I&nbsp;bring together a&nbsp;solid technical foundation and a&nbsp;creative design approach,
       enabling me&nbsp;to&nbsp;build modern, high-performance websites that are both functional and

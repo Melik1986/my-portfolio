@@ -1,31 +1,16 @@
 'use client';
 
 import { AboutAnimation } from '../index';
-
 import styles from './AboutContent.module.scss';
-
-function AboutHeading() {
-  return (
-    <h3
-      className={styles['about__heading']}
-      data-animation="slide-left"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="0"
-    >
-      About Me
-    </h3>
-  );
-}
 
 function AboutText() {
   return (
     <p
       className={styles['about__text']}
       data-animation="text-reveal"
-      data-duration="0.8"
+      data-duration="1.2"
       data-ease="power2.out"
-      data-delay="0.3"
+      data-delay="0.5"
     >
       <AboutTextContent />
     </p>
@@ -63,9 +48,22 @@ function AboutTextContent() {
 export function AboutContent() {
   return (
     <>
-      <AboutHeading />
+      <h3
+        className={styles['about__heading']}
+        data-animation="slide-left"
+        data-duration="1.0"
+        data-ease="power2.out"
+        data-delay="0"
+      >
+        About Me
+      </h3>
       <AboutText />
-      <AboutAnimation />
+      <AboutAnimation
+        data-animation="fade-up"
+        data-duration="0.8"
+        data-ease="power2.out"
+        data-delay="0.6"
+      />
     </>
   );
 }

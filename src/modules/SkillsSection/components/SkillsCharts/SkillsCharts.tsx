@@ -20,7 +20,7 @@ export function SkillsCharts({}: SkillsChartsProps) {
           data-animation="slide-left"
           data-duration="0.8"
           data-ease="power2.out"
-          data-delay="0.3"
+          data-delay="0.5"
         >
           <div id="dev-skills-chart" className={styles['dev-skills-chart']} />
         </div>
@@ -30,7 +30,7 @@ export function SkillsCharts({}: SkillsChartsProps) {
           data-animation="slide-right"
           data-duration="0.8"
           data-ease="power2.out"
-          data-delay="0.3"
+          data-delay="0.5"
         >
           <div id="design-skills-chart" className={styles['design-skills-chart']} />
         </div>

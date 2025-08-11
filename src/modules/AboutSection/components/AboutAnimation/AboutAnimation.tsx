@@ -55,15 +55,7 @@ export function AboutAnimation() {
   }, [isInitialized, startAnimation, stopAnimation]);
 
   return (
-    <div
-      ref={containerRef}
-      className={styles.about__animation}
-      id="aurora-container"
-      data-animation="fade-up"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="0.6"
-    >
+    <div ref={containerRef} className={styles.about__animation} id="aurora-container">
       {/* Canvas будет добавлен сюда с помощью JavaScript */}
     </div>
   );

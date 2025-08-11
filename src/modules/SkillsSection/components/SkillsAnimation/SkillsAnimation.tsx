@@ -45,9 +45,9 @@ export function SkillsAnimation() {
       ref={spiralContainerRef}
       className={styles['skills__animation']}
       data-animation="slide-left"
-      data-duration="0.8"
+      data-duration="1.0"
       data-ease="power2.out"
-      data-delay="0.6"
+      data-delay="0.7"
     >
       <div ref={spiral1Ref} className={styles['spiral']} data-spiral="1" />
       <div ref={spiral2Ref} className={styles['spiral']} data-spiral="2" />

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect } from 'react';
+import { gsap } from 'gsap';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
 import { useDeckAnimation } from '../../hooks/useDeckAnimation';
