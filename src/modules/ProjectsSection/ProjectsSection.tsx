@@ -3,9 +3,14 @@
 import { useEffect, useRef } from 'react';
 import { ProjectsCatalog } from '@/modules/ProjectsSection/components/index';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
+import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsSection.module.scss';
 
-export function ProjectsSection() {
+interface ProjectsSectionProps {
+  projects: ProjectData[];
+}
+
+export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export function ProjectsSection() {
         data-ease="power2.out"
         data-delay="0"
       >
-        <ProjectsCatalog />
+        <ProjectsCatalog projects={projects} />
       </div>
     </section>
   );

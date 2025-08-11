@@ -5,13 +5,18 @@ import { gsap } from 'gsap';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
 import { useDeckAnimation } from '../../hooks/useDeckAnimation';
-import { ANIMATION_CONFIG, PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
+import { ANIMATION_CONFIG } from '@/modules/ProjectsSection/config/projects-catalog';
+import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsCatalog.module.scss';
 
-export function ProjectsCatalog() {
+interface ProjectsCatalogProps {
+  projects: ProjectData[];
+}
+
+export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const { positions, animateToPosition, animateHover } = useCardAnimation(
     ANIMATION_CONFIG,
-    PROJECTS_DATA.length,
+    projects.length,
   );
 
   const { expandDeck, collapseDeck, isExpanded } = useDeckAnimation(animateToPosition, positions);
@@ -43,12 +48,12 @@ export function ProjectsCatalog() {
       onMouseEnter={expandDeck}
       onMouseLeave={collapseDeck}
     >
-      {PROJECTS_DATA.map((project, index) => (
+      {projects.map((project, index) => (
         <ProjectCard
           key={index}
           project={project}
           index={index}
-          totalCards={PROJECTS_DATA.length}
+          totalCards={projects.length}
           onHoverStart={() => handleCardHover(index, true)}
           onHoverEnd={() => handleCardHover(index, false)}
         />

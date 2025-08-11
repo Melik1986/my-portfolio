@@ -6,6 +6,7 @@ import { AboutSection } from '@/modules/AboutSection/AboutSection';
 import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
+import { PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
 
 /**
  * Главная страница портфолио
@@ -33,7 +34,7 @@ export default function Home() {
           </AnimatedCardSection>
 
           <AnimatedCardSection id="projects-section" title="Projects" sectionIndex={3}>
-            <ProjectsSection />
+            <ProjectsSection projects={PROJECTS_DATA} />
           </AnimatedCardSection>
 
           <AnimatedCardSection id="gallery-section" title="Gallery" sectionIndex={4}>
