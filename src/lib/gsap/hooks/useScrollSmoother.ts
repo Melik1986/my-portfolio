@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { gsap } from 'gsap';
 
@@ -89,6 +89,7 @@ interface InitParams {
   options: UseScrollSmootherOptions;
   smootherRef: React.RefObject<ScrollSmootherInstance | null>;
   isInitializingRef: React.RefObject<boolean>;
+  onReady?: () => void;
 }
 
 const initScrollSmoother = ({
@@ -97,6 +98,7 @@ const initScrollSmoother = ({
   options,
   smootherRef,
   isInitializingRef,
+  onReady,
 }: InitParams) => {
   if (smootherRef.current || isInitializingRef.current) return;
 
@@ -121,6 +123,8 @@ const initScrollSmoother = ({
     // 3. Используем больший timeout для полной инициализации
     setTimeout(() => {
       syncScrollTrigger();
+      // Уведомляем о готовности после полной инициализации
+      onReady?.();
     }, 100);
   }
   isInitializingRef.current = false;
@@ -148,6 +152,7 @@ const cleanupScrollTrigger = async (): Promise<void> => {
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const smootherRef = useRef<ScrollSmootherInstance | null>(null);
   const isInitializingRef = useRef(false);
+  const [isReady, setIsReady] = useState(false);
   const {
     wrapper = '#smooth-wrapper',
     content = '#smooth-content',
@@ -160,6 +165,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {
       smootherRef.current = existingSmoother;
+      setIsReady(true);
       return;
     }
 
@@ -171,6 +177,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
           options: { smooth, effects, normalizeScroll },
           smootherRef,
           isInitializingRef,
+          onReady: () => setIsReady(true),
         });
       }
     }, 50);
@@ -196,7 +203,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
 
   return {
     smoother: smootherRef.current,
-    isReady: !!smootherRef.current,
+    isReady,
     scrollTo,
     scrollTop,
     kill,

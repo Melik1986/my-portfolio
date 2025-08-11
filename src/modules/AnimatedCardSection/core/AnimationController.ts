@@ -1,8 +1,20 @@
 'use client';
 
 import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { initCardDeckScroll } from '../utils/cardDeckAnimation';
+
+// Регистрируем плагины
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+
+// Расширяем типы window для ScrollTrigger
+declare global {
+  interface Window {
+    ScrollTrigger: typeof ScrollTrigger;
+  }
+}
 
 /**
  * Локальный helper: очищает анимационные стили дочерних элементов секции
@@ -137,6 +149,77 @@ export class AnimationController {
    */
   getActiveCardIndex(): number {
     return this.activeCardIndex;
+  }
+
+  /**
+   * Программная навигация к карточке по индексу
+   */
+  navigateToCard(cardIndex: number): void {
+    if (!this.isInitialized || !this.masterTimeline) {
+      console.warn('AnimationController not initialized');
+      return;
+    }
+
+    if (!this.sections.has(cardIndex)) {
+      console.warn(`Card with index ${cardIndex} not found`);
+      return;
+    }
+
+    // Получаем ScrollTrigger из мастер timeline
+    const scrollTrigger = this.masterTimeline.scrollTrigger;
+    if (!scrollTrigger) {
+      console.warn('ScrollTrigger not found in master timeline');
+      return;
+    }
+
+    // Для первой карточки просто прокручиваем к началу секции
+    if (cardIndex === 0) {
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: {
+          y: scrollTrigger.start,
+          autoKill: false,
+        },
+        ease: 'power2.inOut',
+      });
+      return;
+    }
+    
+    // Для остальных карточек вычисляем позицию
+    const progress = cardIndex / Math.max(1, this.sections.size - 1);
+    
+    // Вычисляем позицию с учетом того, что end - это относительное значение
+    const startPos = scrollTrigger.start;
+    // end вычисляется как start + процент от viewport height
+    const viewportHeight = window.innerHeight;
+    const totalScrollDistance = (this.sections.size - 1) * viewportHeight;
+    const targetPosition = startPos + (totalScrollDistance * progress);
+    
+    // Используем gsap.to для плавной прокрутки к позиции
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: {
+        y: targetPosition,
+        autoKill: false,
+      },
+      ease: 'power2.inOut',
+    });
+  }
+
+  /**
+   * Получить индекс карточки по ID секции
+   */
+  getCardIndexBySectionId(sectionId: string): number {
+    // Маппинг ID секций к индексам карточек
+    const sectionMapping: Record<string, number> = {
+      'hero-section': 0,
+      'about-section': 1,
+      'skills-section': 2,
+      'projects-section': 3,
+      'gallery-section': 4,
+    };
+
+    return sectionMapping[sectionId] ?? -1;
   }
 
   /**

@@ -4,3 +4,10 @@ export interface ContactButtonProps extends React.ButtonHTMLAttributes<HTMLButto
   className?: string;
   iconClassName?: string;
 }
+
+export interface ScrollToTopButtonProps {
+  scrollTarget?: string;
+  className?: string;
+  'aria-label'?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}

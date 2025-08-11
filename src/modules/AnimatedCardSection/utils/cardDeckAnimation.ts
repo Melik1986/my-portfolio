@@ -29,11 +29,22 @@ function createCardAnimation(
       item,
       {
         [property]: 0,
-        visibility: 'visible',
+        opacity: 1,
+        zIndex: 10,
         // Вперёд: активируем текущую карточку
         onStart: () => onProgressUpdate?.(index, endProgress),
         // Назад: возвращаем активность предыдущей карточке
         onReverseComplete: () => onProgressUpdate?.(index - 1, startProgress),
+      },
+      '<',
+    );
+
+    // Скрываем предыдущую карточку
+    timeline.to(
+      items[index - 1],
+      {
+        opacity: 0.3,
+        zIndex: 1,
       },
       '<',
     );
@@ -57,11 +68,11 @@ export function initCardDeckScroll(
   // Инициализация позиций карт
   items.forEach((item, index) => {
     if (index === 0) {
-      gsap.set(item, { yPercent: 0, xPercent: 0, visibility: 'visible' });
+      gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
     } else if (index <= 2) {
-      gsap.set(item, { yPercent: 100, xPercent: 0, visibility: 'hidden' });
+      gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
     } else {
-      gsap.set(item, { yPercent: 0, xPercent: 100, visibility: 'hidden' });
+      gsap.set(item, { yPercent: 0, xPercent: 100, opacity: 0, zIndex: 1 });
     }
   });
 
