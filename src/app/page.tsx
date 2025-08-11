@@ -1,5 +1,4 @@
-'use client';
-
+// серверный компонент
 import { Header } from '@/lib/ui/Header/Header';
 import { AnimatedCardSection } from '@/modules/AnimatedCardSection/AnimatedCardSection';
 import { HeroSection } from '@/modules/HeroSection/HeroSection';
@@ -7,15 +6,14 @@ import { AboutSection } from '@/modules/AboutSection/AboutSection';
 import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
-import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
 
 /**
  * Главная страница портфолио
  * Содержит все секции портфолио с анимированными картами
  */
-export default function Home() {
-  useScrollSmoother();
+export const revalidate = 86400; // каждые 24 часа
 
+export default function Home() {
   return (
     <>
       <Header />

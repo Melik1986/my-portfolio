@@ -1,5 +1,3 @@
-'use client';
-
 import { AnimationConfig, ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 
 export const ANIMATION_CONFIG: AnimationConfig = {
