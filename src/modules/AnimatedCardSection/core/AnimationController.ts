@@ -184,17 +184,17 @@ export class AnimationController {
       });
       return;
     }
-    
+
     // Для остальных карточек вычисляем позицию
     const progress = cardIndex / Math.max(1, this.sections.size - 1);
-    
+
     // Вычисляем позицию с учетом того, что end - это относительное значение
     const startPos = scrollTrigger.start;
     // end вычисляется как start + процент от viewport height
     const viewportHeight = window.innerHeight;
     const totalScrollDistance = (this.sections.size - 1) * viewportHeight;
-    const targetPosition = startPos + (totalScrollDistance * progress);
-    
+    const targetPosition = startPos + totalScrollDistance * progress;
+
     // Используем gsap.to для плавной прокрутки к позиции
     gsap.to(window, {
       duration: 1,

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.scss';
 import Container from '../lib/ui/Container/Container';
+import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 
 /**
  * Метаданные для SEO оптимизации
@@ -27,6 +28,7 @@ export default function RootLayout({
           <div className="portfolio__section" id="smooth-content">
             <Container>{children}</Container>
           </div>
+          <AnchorButton />
         </main>
       </body>
     </html>

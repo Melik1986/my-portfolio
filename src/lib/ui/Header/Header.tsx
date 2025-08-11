@@ -4,6 +4,7 @@ import React from 'react';
 import { useRef, useEffect } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
+import type { ScrollSmootherInstance } from '@/lib/gsap/hooks/useScrollSmoother';
 import { animationController } from '@/modules/AnimatedCardSection/core/AnimationController';
 import { Logo } from '@/lib/ui/Logo/logo';
 import { Navigation } from '@/lib/ui/Navigation/Navigation';
@@ -11,8 +12,37 @@ import { ContactButton } from '@/lib/ui/Button/ContactButton';
 import styles from './header.module.scss';
 
 /**
+ * Навигация к секциям с использованием AnimationController
+ */
+const navigateToSection = (
+  sectionId: string,
+  isReady: boolean,
+  smoother: ScrollSmootherInstance | null,
+  scrollTo: ((target: string | number | Element, smooth?: boolean, position?: string) => void) | null
+) => {
+  const cardIndex = animationController.getCardIndexBySectionId(sectionId);
+
+  if (cardIndex !== -1 && animationController.isReady()) {
+    animationController.navigateToCard(cardIndex);
+    return;
+  }
+
+  const element = document.getElementById(sectionId);
+  if (!element) return;
+
+  if (isReady && smoother && scrollTo) {
+    try {
+      scrollTo(element, true, 'top top');
+    } catch {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  } else {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+/**
  * Компонент шапки сайта
- * Содержит логотип, навигацию и кнопку контакта
  */
 export function Header() {
   const headerRef = useRef<HTMLElement>(null);
@@ -22,59 +52,12 @@ export function Header() {
   useEffect(() => {
     if (headerRef.current) {
       elementTimelineRef.current = createElementTimeline(headerRef.current);
-
-      // --- HERO AUTO PLAY ---
-      // Автозапуск анимации элементов Header после появления секции
-      if (elementTimelineRef.current) {
-        // Запускаем анимацию сразу без задержки
-        elementTimelineRef.current.play();
-      }
-      // --- END HERO AUTO PLAY ---
+      elementTimelineRef.current?.play();
     }
   }, []);
 
-  /**
-   * Функция для навигации к секциям с использованием AnimationController
-   */
   const handleNavigate = (sectionId: string) => {
-    console.log('Navigation clicked for:', sectionId);
-    
-    // Получаем индекс карточки по ID секции
-    const cardIndex = animationController.getCardIndexBySectionId(sectionId);
-    
-    if (cardIndex === -1) {
-      console.warn(`Section '${sectionId}' not found in animation controller`);
-      
-      // Fallback к стандартной навигации
-      const element = document.getElementById(sectionId);
-      if (element) {
-        if (isReady && smoother && scrollTo) {
-          try {
-            scrollTo(element, true, 'top top');
-          } catch (error) {
-            console.error('ScrollSmoother navigation failed:', error);
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        } else {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-      return;
-    }
-
-    // Используем AnimationController для навигации к карточке
-    if (animationController.isReady()) {
-      console.log('Using AnimationController for navigation to card:', cardIndex);
-      animationController.navigateToCard(cardIndex);
-    } else {
-      console.warn('AnimationController not ready, falling back to standard navigation');
-      
-      // Fallback к стандартной навигации
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
+    navigateToSection(sectionId, isReady, smoother, scrollTo);
   };
 
   return (

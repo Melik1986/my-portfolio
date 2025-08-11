@@ -42,10 +42,10 @@ export class ParticleWaveController {
     this.camera = this.createCamera();
     this.renderer = this.createRenderer();
     this.clock = new Clock();
-    
+
     this.shaderModule = new ShaderAnimationModule(config);
     this.cameraController = new CameraController(this.camera, config);
-    
+
     this.state = {
       isInitialized: false,
       isAnimating: false,
@@ -62,14 +62,14 @@ export class ParticleWaveController {
     try {
       // Создаем геометрию частиц
       const geometry = this.createParticleGeometry();
-      
+
       // Создаем материал с шейдерами
       const material = this.shaderModule.createAnimatedMaterial();
-      
+
       // Создаем систему частиц
       this.particles = new Points(geometry, material);
       this.scene.add(this.particles);
-      
+
       this.state.isInitialized = true;
     } catch (error) {
       console.error('Ошибка инициализации анимации частиц:', error);
@@ -82,7 +82,7 @@ export class ParticleWaveController {
    */
   public startAnimation(): void {
     if (!this.state.isInitialized || this.state.isAnimating) return;
-    
+
     this.state.isAnimating = true;
     this.clock.start();
     this.animate();
@@ -93,10 +93,10 @@ export class ParticleWaveController {
    */
   public stopAnimation(): void {
     if (!this.state.isAnimating) return;
-    
+
     this.state.isAnimating = false;
     this.state.shouldUpdateCamera = false;
-    
+
     if (this.frameId !== null) {
       cancelAnimationFrame(this.frameId);
       this.frameId = null;
@@ -122,7 +122,7 @@ export class ParticleWaveController {
    */
   public handleResize(): void {
     const { offsetWidth: width, offsetHeight: height } = this.container;
-    
+
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
@@ -134,10 +134,10 @@ export class ParticleWaveController {
    */
   public dispose(): void {
     this.stopAnimation();
-    
+
     if (this.particles) {
       this.particles.geometry.dispose();
-      
+
       // Безопасное освобождение материала
       const material = this.particles.material;
       if (Array.isArray(material)) {
@@ -145,10 +145,10 @@ export class ParticleWaveController {
       } else {
         material.dispose();
       }
-      
+
       this.scene.remove(this.particles);
     }
-    
+
     this.renderer.dispose();
     this.container.removeChild(this.renderer.domElement);
   }
@@ -173,7 +173,6 @@ export class ParticleWaveController {
 
       // Рендерим сцену
       this.renderer.render(this.scene, this.camera);
-      
     } catch (error) {
       console.warn('Ошибка в цикле анимации:', error);
     }
@@ -186,14 +185,14 @@ export class ParticleWaveController {
    */
   private createCamera(): PerspectiveCamera {
     const { offsetWidth: width, offsetHeight: height } = this.container;
-    
+
     const camera = new PerspectiveCamera(
       this.config.cameraFov,
       width / height,
       this.config.cameraNear,
       this.config.cameraFar,
     );
-    
+
     camera.position.z = this.config.cameraZ;
     return camera;
   }
@@ -202,15 +201,15 @@ export class ParticleWaveController {
    * Создание рендерера
    */
   private createRenderer(): WebGLRenderer {
-    const renderer = new WebGLRenderer({ 
-      alpha: true, 
+    const renderer = new WebGLRenderer({
+      alpha: true,
       antialias: true,
       powerPreference: 'high-performance',
     });
-    
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
-    
+
     this.container.appendChild(renderer.domElement);
     return renderer;
   }
@@ -221,7 +220,7 @@ export class ParticleWaveController {
   private createParticleGeometry(): BufferGeometry {
     const { amountX, amountY, separation } = this.config;
     const positions = new Float32Array(amountX * amountY * 3);
-    
+
     let index = 0;
     for (let x = 0; x < amountX; x++) {
       for (let y = 0; y < amountY; y++) {
@@ -230,10 +229,10 @@ export class ParticleWaveController {
         positions[index++] = y * separation - (amountY * separation) / 2;
       }
     }
-    
+
     const geometry = new BufferGeometry();
     geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    
+
     return geometry;
   }
 }

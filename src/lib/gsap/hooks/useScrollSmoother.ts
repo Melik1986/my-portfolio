@@ -7,7 +7,7 @@ import { gsap } from 'gsap';
 // Регистрируем плагин
 gsap.registerPlugin(ScrollSmoother);
 
-interface ScrollSmootherInstance {
+export interface ScrollSmootherInstance {
   kill: () => void;
   scrollTop: (value?: number) => number;
   scrollTo: (target: number | string | Element, smooth?: boolean, position?: string) => void;

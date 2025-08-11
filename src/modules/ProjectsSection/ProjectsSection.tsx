@@ -15,10 +15,10 @@ export function ProjectsSection() {
   }, []);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className={styles['projects-catalog']} 
-      id="projects-catalog" 
+      className={styles['projects-catalog']}
+      id="projects-catalog"
       data-group-delay="5.5"
     >
       <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>

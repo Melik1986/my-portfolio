@@ -42,7 +42,7 @@ const useControllerInit = (containerRef: React.RefObject<HTMLDivElement | null>)
 const useEventHandlers = (controller: ParticleWaveController | null) => {
   return React.useCallback(() => {
     if (!controller) return null;
-    
+
     const onResize = () => controller.handleResize();
     const onMouseMove = (e: MouseEvent) => {
       controller.enableMouseTracking();
@@ -81,7 +81,7 @@ export function AboutAnimation() {
     if (!handlers) return;
 
     const { onResize, onMouseMove, onTouchMove, onVisibility } = handlers;
-    
+
     window.addEventListener('resize', onResize, { passive: true });
     container.addEventListener('mousemove', onMouseMove as EventListener, { passive: true });
     container.addEventListener('touchmove', onTouchMove as EventListener, { passive: true });

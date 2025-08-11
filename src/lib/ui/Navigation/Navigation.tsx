@@ -17,14 +17,14 @@ const defaultItems = [
  * Компонент элемента навигации
  * Рендерит отдельный пункт навигационного меню
  */
-function NavigationItem({ 
-  href, 
-  label, 
-  sectionId, 
-  onNavigate 
-}: { 
-  href: string; 
-  label: string; 
+function NavigationItem({
+  href,
+  label,
+  sectionId,
+  onNavigate,
+}: {
+  href: string;
+  label: string;
   sectionId: string;
   onNavigate?: (sectionId: string) => void;
 }) {
@@ -57,10 +57,10 @@ export function Navigation({
   return (
     <ul className={`${styles.nav__list} ${className}`.trim()} {...rest}>
       {items.map(({ href, label, sectionId }) => (
-        <NavigationItem 
-          key={href} 
-          href={href} 
-          label={label} 
+        <NavigationItem
+          key={href}
+          href={href}
+          label={label}
           sectionId={sectionId}
           onNavigate={onNavigate}
         />
