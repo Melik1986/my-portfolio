@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './HeroLetters.module.scss';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useDeferredValue, useMemo } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 
 function Letter({ letter }: { letter: string }) {
@@ -14,14 +14,15 @@ function Letter({ letter }: { letter: string }) {
 
 export function HeroLetters() {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  const letters = useMemo(() => ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'], []);
+  const deferredLetters = useDeferredValue(letters);
 
   useEffect(() => {
     if (containerRef.current) {
       createElementTimeline(containerRef.current);
     }
-  }, []);
-
-  const letters = ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'];
+  }, [deferredLetters]); // зависимость от deferred значения
 
   return (
     <div
@@ -33,7 +34,7 @@ export function HeroLetters() {
       data-delay="0"
       data-stagger="0.08"
     >
-      {letters.map((letter, index) => (
+      {deferredLetters.map((letter, index) => (
         <Letter key={index} letter={letter} />
       ))}
     </div>
