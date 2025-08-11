@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useTransition, startTransition } from 'react';
 import gsap from 'gsap';
 import { CAROUSEL_CONFIG } from '../config/carousel.config';
 
@@ -174,10 +174,13 @@ const useNextSlide = ({
 }) => {
   const nextSlide = useCallback(() => {
     if (isAnimating) return;
-    setIsAnimating(true);
-    stopAutoSlide();
-    const newIndex = currentIndex + 1;
-    handleSlideTransition(newIndex);
+    
+    startTransition(() => {
+      setIsAnimating(true);
+      stopAutoSlide();
+      const newIndex = currentIndex + 1;
+      handleSlideTransition(newIndex);
+    });
   }, [isAnimating, setIsAnimating, stopAutoSlide, currentIndex, handleSlideTransition]);
   return { nextSlide };
 };
@@ -200,10 +203,13 @@ const usePrevSlide = ({
 }) => {
   const prevSlide = useCallback(() => {
     if (isAnimating) return;
-    setIsAnimating(true);
-    stopAutoSlide();
-    const newIndex = currentIndex - 1;
-    handleSlideTransition(newIndex);
+    
+    startTransition(() => {
+      setIsAnimating(true);
+      stopAutoSlide();
+      const newIndex = currentIndex - 1;
+      handleSlideTransition(newIndex);
+    });
   }, [isAnimating, setIsAnimating, stopAutoSlide, currentIndex, handleSlideTransition]);
   return { prevSlide };
 };
