@@ -1,62 +1,99 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
-import { useAuroraAnimation } from '@/modules/AboutSection/hooks/useAuroraAnimation';
-import { useAnimationLoop } from '@/modules/AboutSection/hooks/useAnimationLoop';
-import { useEventHandlers } from '@/modules/AboutSection/hooks/useEventHandlers';
+import React, { useEffect, useRef } from 'react';
 import styles from './AboutAnimation.module.scss';
+import { ParticleWaveController } from '@/modules/AboutSection/core/ParticleWaveController';
+import { DEFAULT_AURORA_CONFIG } from '@/modules/AboutSection/config/aurora.config';
 
-/**
- * Компонент Aurora анимации
- * Создает контейнер для Three.js Aurora эффекта
- */
-export function AboutAnimation() {
-  const containerRef = React.useRef<HTMLDivElement>(null!);
-  const mouseRef = useRef({ x: 0, y: 0 });
-
-  // 1. Инициализация three.js
+// Хук для инициализации контроллера
+const useControllerInit = (containerRef: React.RefObject<HTMLDivElement | null>) => {
+  const controllerRef = useRef<ParticleWaveController | null>(null);
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const { sceneRef, cameraRef, rendererRef } = useAuroraAnimation(containerRef);
 
-  React.useEffect(() => {
-    if (sceneRef.current && cameraRef.current && rendererRef.current) {
-      setIsInitialized(true);
-    }
-  }, [sceneRef, cameraRef, rendererRef]);
-
-  // 2. Управление циклом анимации
-  const { startAnimation, stopAnimation } = useAnimationLoop({
-    sceneRef,
-    cameraRef,
-    rendererRef,
-    mouseRef,
-  });
-
-  // 3. Управление обработчиками событий
-  useEventHandlers({
-    containerRef,
-    cameraRef,
-    rendererRef,
-    mouseRef,
-    startAnimation,
-    stopAnimation,
-    isInitialized,
-  });
-
-  // Запуск и остановка анимации при монтировании/размонтировании
   useEffect(() => {
-    if (isInitialized) {
-      startAnimation();
-    }
+    const container = containerRef.current;
+    if (!container || controllerRef.current) return;
+
+    const controller = new ParticleWaveController(container, DEFAULT_AURORA_CONFIG);
+    controllerRef.current = controller;
+
+    let mounted = true;
+    controller
+      .initialize()
+      .then(() => {
+        if (!mounted) return;
+        controller.handleResize();
+        setIsInitialized(true);
+        controller.startAnimation();
+      })
+      .catch(() => void 0);
 
     return () => {
-      stopAnimation();
+      mounted = false;
+      controllerRef.current?.dispose();
+      controllerRef.current = null;
     };
-  }, [isInitialized, startAnimation, stopAnimation]);
+  }, [containerRef]);
 
-  return (
-    <div ref={containerRef} className={styles.about__animation} id="aurora-container">
-      {/* Canvas будет добавлен сюда с помощью JavaScript */}
-    </div>
-  );
+  return { controllerRef, isInitialized };
+};
+
+// Хук для создания обработчиков событий
+const useEventHandlers = (controller: ParticleWaveController | null) => {
+  return React.useCallback(() => {
+    if (!controller) return null;
+    
+    const onResize = () => controller.handleResize();
+    const onMouseMove = (e: MouseEvent) => {
+      controller.enableMouseTracking();
+      controller.updateMousePosition(e.offsetX, e.offsetY);
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 0) return;
+      const rect = (e.target as HTMLElement).getBoundingClientRect();
+      const t = e.touches[0];
+      controller.enableMouseTracking();
+      controller.updateMousePosition(t.clientX - rect.left, t.clientY - rect.top);
+    };
+    const onVisibility = () => {
+      if (document.hidden) controller.stopAnimation();
+      else controller.startAnimation();
+    };
+
+    return { onResize, onMouseMove, onTouchMove, onVisibility };
+  }, [controller]);
+};
+
+/**
+ * Компонент Aurora анимации на базе централизованного контроллера
+ */
+export function AboutAnimation() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { controllerRef, isInitialized } = useControllerInit(containerRef);
+  const createHandlers = useEventHandlers(controllerRef.current);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handlers = createHandlers();
+    if (!handlers) return;
+
+    const { onResize, onMouseMove, onTouchMove, onVisibility } = handlers;
+    
+    window.addEventListener('resize', onResize, { passive: true });
+    container.addEventListener('mousemove', onMouseMove as EventListener, { passive: true });
+    container.addEventListener('touchmove', onTouchMove as EventListener, { passive: true });
+    document.addEventListener('visibilitychange', onVisibility as EventListener);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      container.removeEventListener('mousemove', onMouseMove as EventListener);
+      container.removeEventListener('touchmove', onTouchMove as EventListener);
+      document.removeEventListener('visibilitychange', onVisibility as EventListener);
+    };
+  }, [isInitialized, createHandlers]);
+
+  return <div ref={containerRef} className={styles.about__animation} id="aurora-container" />;
 }

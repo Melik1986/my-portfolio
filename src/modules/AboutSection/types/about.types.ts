@@ -34,6 +34,18 @@ export interface AuroraConfig {
   waveFrequencyX: number;
   waveFrequencyY: number;
   waveAmplitude: number;
+  // Новые свойства для GPU-анимации
+  cameraEase: number;
+  cameraMaxOffset: number;
+  particles: {
+    color: string;
+    size: number;
+  };
+  wave: {
+    speed: number;
+    amplitude: number;
+    frequency: number;
+  };
 }
 
 export interface MousePosition {

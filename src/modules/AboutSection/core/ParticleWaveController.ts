@@ -1,0 +1,239 @@
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  BufferGeometry,
+  Float32BufferAttribute,
+  Points,
+  Clock,
+  Material,
+} from 'three';
+import type { AuroraConfig } from '@/modules/AboutSection/types/about.types';
+import { ShaderAnimationModule } from './ShaderAnimationModule';
+import { CameraController } from './CameraController';
+
+interface ControllerState {
+  isInitialized: boolean;
+  isAnimating: boolean;
+  shouldUpdateCamera: boolean;
+}
+
+/**
+ * Централизованный контроллер для управления анимацией микрочастиц.
+ * Отвечает за инициализацию, рендеринг и координацию всех подсистем.
+ */
+export class ParticleWaveController {
+  private readonly scene: Scene;
+  private readonly camera: PerspectiveCamera;
+  private readonly renderer: WebGLRenderer;
+  private readonly shaderModule: ShaderAnimationModule;
+  private readonly cameraController: CameraController;
+  private readonly clock: Clock;
+
+  private particles: Points | null = null;
+  private frameId: number | null = null;
+  private state: ControllerState;
+
+  constructor(
+    private readonly container: HTMLElement,
+    private readonly config: AuroraConfig,
+  ) {
+    this.scene = new Scene();
+    this.camera = this.createCamera();
+    this.renderer = this.createRenderer();
+    this.clock = new Clock();
+    
+    this.shaderModule = new ShaderAnimationModule(config);
+    this.cameraController = new CameraController(this.camera, config);
+    
+    this.state = {
+      isInitialized: false,
+      isAnimating: false,
+      shouldUpdateCamera: false,
+    };
+  }
+
+  /**
+   * Инициализация всех компонентов анимации
+   */
+  public async initialize(): Promise<void> {
+    if (this.state.isInitialized) return;
+
+    try {
+      // Создаем геометрию частиц
+      const geometry = this.createParticleGeometry();
+      
+      // Создаем материал с шейдерами
+      const material = this.shaderModule.createAnimatedMaterial();
+      
+      // Создаем систему частиц
+      this.particles = new Points(geometry, material);
+      this.scene.add(this.particles);
+      
+      this.state.isInitialized = true;
+    } catch (error) {
+      console.error('Ошибка инициализации анимации частиц:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Запуск анимации
+   */
+  public startAnimation(): void {
+    if (!this.state.isInitialized || this.state.isAnimating) return;
+    
+    this.state.isAnimating = true;
+    this.clock.start();
+    this.animate();
+  }
+
+  /**
+   * Остановка анимации
+   */
+  public stopAnimation(): void {
+    if (!this.state.isAnimating) return;
+    
+    this.state.isAnimating = false;
+    this.state.shouldUpdateCamera = false;
+    
+    if (this.frameId !== null) {
+      cancelAnimationFrame(this.frameId);
+      this.frameId = null;
+    }
+  }
+
+  /**
+   * Включение отслеживания мыши для камеры
+   */
+  public enableMouseTracking(): void {
+    this.state.shouldUpdateCamera = true;
+  }
+
+  /**
+   * Обновление позиции мыши
+   */
+  public updateMousePosition(x: number, y: number): void {
+    this.cameraController.updateMouseTarget(x, y);
+  }
+
+  /**
+   * Обработка изменения размера контейнера
+   */
+  public handleResize(): void {
+    const { offsetWidth: width, offsetHeight: height } = this.container;
+    
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+    this.cameraController.updateViewport(width, height);
+  }
+
+  /**
+   * Освобождение ресурсов
+   */
+  public dispose(): void {
+    this.stopAnimation();
+    
+    if (this.particles) {
+      this.particles.geometry.dispose();
+      
+      // Безопасное освобождение материала
+      const material = this.particles.material;
+      if (Array.isArray(material)) {
+        material.forEach((mat: Material) => mat.dispose());
+      } else {
+        material.dispose();
+      }
+      
+      this.scene.remove(this.particles);
+    }
+    
+    this.renderer.dispose();
+    this.container.removeChild(this.renderer.domElement);
+  }
+
+  /**
+   * Основной цикл анимации
+   */
+  private animate = (): void => {
+    if (!this.state.isAnimating) return;
+
+    try {
+      const deltaTime = this.clock.getDelta();
+      const elapsedTime = this.clock.getElapsedTime();
+
+      // Обновляем анимацию волн в шейдере
+      this.shaderModule.updateTime(elapsedTime);
+
+      // Обновляем камеру при необходимости
+      if (this.state.shouldUpdateCamera) {
+        this.cameraController.update(deltaTime);
+      }
+
+      // Рендерим сцену
+      this.renderer.render(this.scene, this.camera);
+      
+    } catch (error) {
+      console.warn('Ошибка в цикле анимации:', error);
+    }
+
+    this.frameId = requestAnimationFrame(this.animate);
+  };
+
+  /**
+   * Создание камеры с настройками из конфигурации
+   */
+  private createCamera(): PerspectiveCamera {
+    const { offsetWidth: width, offsetHeight: height } = this.container;
+    
+    const camera = new PerspectiveCamera(
+      this.config.cameraFov,
+      width / height,
+      this.config.cameraNear,
+      this.config.cameraFar,
+    );
+    
+    camera.position.z = this.config.cameraZ;
+    return camera;
+  }
+
+  /**
+   * Создание рендерера
+   */
+  private createRenderer(): WebGLRenderer {
+    const renderer = new WebGLRenderer({ 
+      alpha: true, 
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
+    
+    this.container.appendChild(renderer.domElement);
+    return renderer;
+  }
+
+  /**
+   * Создание геометрии частиц
+   */
+  private createParticleGeometry(): BufferGeometry {
+    const { amountX, amountY, separation } = this.config;
+    const positions = new Float32Array(amountX * amountY * 3);
+    
+    let index = 0;
+    for (let x = 0; x < amountX; x++) {
+      for (let y = 0; y < amountY; y++) {
+        positions[index++] = x * separation - (amountX * separation) / 2;
+        positions[index++] = 0;
+        positions[index++] = y * separation - (amountY * separation) / 2;
+      }
+    }
+    
+    const geometry = new BufferGeometry();
+    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    
+    return geometry;
+  }
+}

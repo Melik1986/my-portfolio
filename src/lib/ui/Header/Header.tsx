@@ -30,6 +30,19 @@ export function Header() {
     }
   }, []);
 
+  /**
+   * Функция для плавной прокрутки к секциям
+   */
+  const handleNavigate = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
     <header ref={headerRef} className={styles.header} id="header">
       <div className={styles.header__content}>
@@ -44,6 +57,7 @@ export function Header() {
           data-duration="0.8"
           data-ease="power2.out"
           data-delay="0.3"
+          onNavigate={handleNavigate}
         />
         <ContactButton
           data-animation="slide-right"

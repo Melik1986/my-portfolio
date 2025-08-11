@@ -16,6 +16,18 @@ export const DEFAULT_AURORA_CONFIG: AuroraConfig = {
   waveFrequencyX: 0.3,
   waveFrequencyY: 0.5,
   waveAmplitude: 50,
+  // Новые параметры для оптимизированной архитектуры
+  cameraEase: 0.08,
+  cameraMaxOffset: 200,
+  particles: {
+    color: '#1e90ff',
+    size: 2.5,
+  },
+  wave: {
+    speed: 2.0,
+    amplitude: 80,
+    frequency: 0.005,
+  },
 };
 
 // Alternative color presets
