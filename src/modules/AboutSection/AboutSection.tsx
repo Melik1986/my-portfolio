@@ -1,15 +1,9 @@
-'use client';
-
 import { AboutContent } from './components/index';
-import { useRef } from 'react';
 import styles from './About.module.scss';
 
 export function AboutSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
   return (
     <section
-      ref={sectionRef}
       className={styles.about}
       id="about"
       data-section-index="1"
