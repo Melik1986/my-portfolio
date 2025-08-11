@@ -1,5 +1,6 @@
 'use client';
 
+import { useDeferredValue, useMemo } from 'react';
 import { type GalleryItem } from './types/gallery';
 import { useCarousel } from './hooks/useCarousel';
 import { SpriteIcon } from '@/lib/ui/SpriteIcon';
@@ -7,7 +8,7 @@ import styles from './GallerySection.module.scss';
 
 // Компонент для списка галереи
 function GalleryList({ itemsToRender }: { itemsToRender: GalleryItem[] }) {
-  return (
+  const memoizedList = useMemo(() => (
     <ul className={styles.gallery__list}>
       {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
         <li
@@ -22,7 +23,9 @@ function GalleryList({ itemsToRender }: { itemsToRender: GalleryItem[] }) {
         </li>
       ))}
     </ul>
-  );
+  ), [itemsToRender]);
+
+  return memoizedList;
 }
 
 // Компонент для навигационных стрелок
@@ -71,6 +74,9 @@ function GalleryNavigation({
 export function GallerySection() {
   const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems } =
     useCarousel();
+  
+  // Добавить отложенное значение для itemsToRender
+  const deferredItemsToRender = useDeferredValue(itemsToRender);
 
   return (
     <section className={styles.gallery} id="gallery" data-group-delay="7.5">
@@ -82,7 +88,7 @@ export function GallerySection() {
         data-ease="power2.out"
         data-delay="0"
       >
-        <GalleryList itemsToRender={itemsToRender} />
+        <GalleryList itemsToRender={deferredItemsToRender} />
       </div>
       <GalleryNavigation
         prevSlide={prevSlide}
