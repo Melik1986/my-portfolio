@@ -48,7 +48,7 @@ const createTouchHandler = (handlePointerMove: (clientX: number, clientY: number
 // Подписка на события с меньшим количеством параметров
 const subscribeEvents = (config: EventConfig) => {
   const { container, handleResize, handlePointerMove, startAnimation, stopAnimation } = config;
-  
+
   const onMouseMove = createMouseHandler(handlePointerMove);
   const onTouchMove = createTouchHandler(handlePointerMove);
   const handleVisibilityChange = createVisibilityHandler(startAnimation, stopAnimation);
@@ -98,7 +98,7 @@ export const useEventHandlers = ({
       mouse.x = clientX - rect.left - container.offsetWidth / 2;
       mouse.y = clientY - rect.top - container.offsetHeight / 2;
     },
-    [containerRef, mouseRef, rectRef]
+    [containerRef, mouseRef, rectRef],
   );
 
   const handleResize = useCallback(() => {

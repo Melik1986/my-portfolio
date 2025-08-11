@@ -5,11 +5,7 @@ import styles from './ProjectsSection.module.scss';
 
 export function ProjectsSection() {
   return (
-    <section
-      className={styles['projects-catalog']}
-      id="projects-catalog"
-      data-group-delay="6.0"
-    >
+    <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="6.0">
       <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>
       <ProjectsCatalog
         data-animation="fade-up"

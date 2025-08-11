@@ -72,7 +72,7 @@ const syncScrollTrigger = async (): Promise<void> => {
     if (ScrollTrigger && typeof ScrollTrigger.refresh === 'function') {
       // Обновляем все существующие ScrollTrigger для синхронизации с ScrollSmoother
       ScrollTrigger.refresh();
-      
+
       // Дополнительная проверка - убеждаемся, что все триггеры синхронизированы
       setTimeout(() => {
         ScrollTrigger.refresh();
@@ -188,7 +188,7 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     if (smootherRef.current) {
       // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
       cleanupScrollTrigger();
-      
+
       smootherRef.current.kill();
       smootherRef.current = null;
     }

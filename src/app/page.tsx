@@ -34,19 +34,11 @@ export default function Home() {
             <SkillsSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection
-            id="projects-section"
-            title="Projects"
-            sectionIndex={3}
-          >
+          <AnimatedCardSection id="projects-section" title="Projects" sectionIndex={3}>
             <ProjectsSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection
-            id="gallery-section"
-            title="Gallery"
-            sectionIndex={4}
-          >
+          <AnimatedCardSection id="gallery-section" title="Gallery" sectionIndex={4}>
             <GallerySection />
           </AnimatedCardSection>
         </ul>

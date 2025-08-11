@@ -29,7 +29,7 @@ export const useCardAnimation = ({
         }
 
         animationController.registerSection(sectionIndex, wrapper);
-        
+
         isInitializedRef.current = true;
       } catch (error) {
         console.warn('Animation initialization failed:', error);

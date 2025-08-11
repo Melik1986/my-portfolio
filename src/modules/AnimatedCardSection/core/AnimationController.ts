@@ -47,7 +47,7 @@ export class AnimationController {
     const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
       scrollSection) as HTMLElement;
     const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
-    
+
     if (items.length === 0) return null;
 
     // Создаём мастер timeline для колоды карт
@@ -70,7 +70,7 @@ export class AnimationController {
 
     // Создаём timeline элементов для секции
     const elementTimeline = createElementTimeline(wrapper, '[data-animate], [data-animation]');
-    
+
     // Добавляем автоочистку при реверсе
     elementTimeline.eventCallback('onReverseComplete', () => {
       clearElementAnimations(wrapper);
@@ -108,8 +108,10 @@ export class AnimationController {
     const currentController = this.sections.get(cardIndex);
     if (currentController && !currentController.isActive) {
       // Проверяем наличие text-reveal элементов в секции
-      const hasTextReveal = currentController.wrapper.querySelector('[data-animation="text-reveal"]');
-      
+      const hasTextReveal = currentController.wrapper.querySelector(
+        '[data-animation="text-reveal"]',
+      );
+
       if (hasTextReveal) {
         // Для text-reveal анимаций делаем плавный переход
         currentController.timeline.progress(0);
@@ -123,7 +125,7 @@ export class AnimationController {
         // Для обычных анимаций используем стандартный подход
         currentController.timeline.progress(0).play();
       }
-      
+
       currentController.isActive = true;
     }
 
