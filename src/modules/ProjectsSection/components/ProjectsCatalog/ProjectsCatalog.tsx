@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useTransition, startTransition } from 'react';
 import { gsap } from 'gsap';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
@@ -14,6 +14,8 @@ interface ProjectsCatalogProps {
 }
 
 export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
+  const [isPending] = useTransition();
+  
   const { positions, animateToPosition, animateHover } = useCardAnimation(
     ANIMATION_CONFIG,
     projects.length,
@@ -34,17 +36,19 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
 
   const handleCardHover = useCallback(
     (index: number, isHovering: boolean) => {
-      const card = document.querySelector(`[data-index="${index}"]`);
-      if (card && isExpanded.current) {
-        animateHover(card as HTMLElement, isHovering);
-      }
+      startTransition(() => {
+        const card = document.querySelector(`[data-index="${index}"]`);
+        if (card && isExpanded.current) {
+          animateHover(card as HTMLElement, isHovering);
+        }
+      });
     },
-    [animateHover, isExpanded],
+    [animateHover, isExpanded, startTransition],
   );
 
   return (
     <div
-      className={styles['projects-catalog__container']}
+      className={`${styles['projects-catalog__container']} ${isPending ? styles['loading'] : ''}`}
       onMouseEnter={expandDeck}
       onMouseLeave={collapseDeck}
     >
