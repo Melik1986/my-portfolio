@@ -28,9 +28,7 @@ export default function RootLayout({
         <main className="portfolio" id="smooth-wrapper">
           <div className="portfolio__section" id="smooth-content">
             <Container>
-              <ScrollSmootherProvider>
-                {children}
-              </ScrollSmootherProvider>
+              <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
             </Container>
           </div>
           <AnchorButton />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useTransition, startTransition } from 'react';
+import { useCallback, startTransition } from 'react';
 import gsap from 'gsap';
 import { CAROUSEL_CONFIG } from '../config/carousel.config';
 
@@ -174,7 +174,7 @@ const useNextSlide = ({
 }) => {
   const nextSlide = useCallback(() => {
     if (isAnimating) return;
-    
+
     startTransition(() => {
       setIsAnimating(true);
       stopAutoSlide();
@@ -203,7 +203,7 @@ const usePrevSlide = ({
 }) => {
   const prevSlide = useCallback(() => {
     if (isAnimating) return;
-    
+
     startTransition(() => {
       setIsAnimating(true);
       stopAutoSlide();

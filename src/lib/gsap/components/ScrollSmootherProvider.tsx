@@ -9,6 +9,6 @@ interface ScrollSmootherProviderProps {
 
 export function ScrollSmootherProvider({ children }: ScrollSmootherProviderProps) {
   useScrollSmoother();
-  
+
   return <>{children}</>;
 }

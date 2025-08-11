@@ -8,22 +8,25 @@ import styles from './GallerySection.module.scss';
 
 // Компонент для списка галереи
 function GalleryList({ itemsToRender }: { itemsToRender: GalleryItem[] }) {
-  const memoizedList = useMemo(() => (
-    <ul className={styles.gallery__list}>
-      {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
-        <li
-          key={`${className}-${index}`}
-          className={`${styles.gallery__item} ${styles[`gallery__item--${className}`]}`}
-        >
-          <div className={styles.gallery__content}>
-            <div className={styles.gallery__title}>{title}</div>
-            <div className={styles.gallery__name}>{name}</div>
-            <div className={styles.gallery__des}>{description}</div>
-          </div>
-        </li>
-      ))}
-    </ul>
-  ), [itemsToRender]);
+  const memoizedList = useMemo(
+    () => (
+      <ul className={styles.gallery__list}>
+        {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
+          <li
+            key={`${className}-${index}`}
+            className={`${styles.gallery__item} ${styles[`gallery__item--${className}`]}`}
+          >
+            <div className={styles.gallery__content}>
+              <div className={styles.gallery__title}>{title}</div>
+              <div className={styles.gallery__name}>{name}</div>
+              <div className={styles.gallery__des}>{description}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    ),
+    [itemsToRender],
+  );
 
   return memoizedList;
 }
@@ -74,7 +77,7 @@ function GalleryNavigation({
 export function GallerySection() {
   const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems } =
     useCarousel();
-  
+
   // Добавить отложенное значение для itemsToRender
   const deferredItemsToRender = useDeferredValue(itemsToRender);
 

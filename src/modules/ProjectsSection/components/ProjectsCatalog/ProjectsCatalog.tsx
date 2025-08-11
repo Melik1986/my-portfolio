@@ -15,7 +15,7 @@ interface ProjectsCatalogProps {
 
 export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const [isPending] = useTransition();
-  
+
   const { positions, animateToPosition, animateHover } = useCardAnimation(
     ANIMATION_CONFIG,
     projects.length,
@@ -43,7 +43,7 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
         }
       });
     },
-    [animateHover, isExpanded, startTransition],
+    [animateHover, isExpanded],
   );
 
   return (

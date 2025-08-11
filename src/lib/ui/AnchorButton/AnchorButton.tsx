@@ -7,33 +7,27 @@ import styles from './AnchorBtn.module.scss';
 
 export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps>(
   (
-    {
-      scrollTarget,
-      className,
-      'aria-label': ariaLabel = 'Scroll to top',
-      onClick,
-      ...props
-    },
-    ref
+    { scrollTarget, className, 'aria-label': ariaLabel = 'Scroll to top', onClick, ...props },
+    ref,
   ) => {
     // ===== HANDLERS =====
     const scrollToTarget = useCallback(() => {
       if (scrollTarget) {
         const element = document.querySelector(scrollTarget);
-        
+
         if (element) {
           element.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'start',
           });
           return;
         }
       }
-      
+
       // Default: scroll to top
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }, [scrollTarget]);
 
@@ -43,7 +37,7 @@ export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps
         scrollToTarget();
         onClick?.(event);
       },
-      [scrollToTarget, onClick]
+      [scrollToTarget, onClick],
     );
 
     // ===== RENDER =====
@@ -56,13 +50,10 @@ export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps
         aria-label={ariaLabel}
         {...props}
       >
-        <Logo 
-          className={styles['anchor-button__icon']}
-          aria-hidden="true"
-        />
+        <Logo className={styles['anchor-button__icon']} aria-hidden="true" />
       </button>
     );
-  }
+  },
 );
 
 AnchorButton.displayName = 'AnchorButton';
@@ -75,10 +66,7 @@ export function ScrollToTopButtonExample() {
 
   return (
     <>
-      <AnchorButton 
-        scrollTarget="#header"
-        onClick={handleScrollClick}
-      />
+      <AnchorButton scrollTarget="#header" onClick={handleScrollClick} />
     </>
   );
 }

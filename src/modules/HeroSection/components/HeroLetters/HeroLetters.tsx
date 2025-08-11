@@ -14,7 +14,7 @@ function Letter({ letter }: { letter: string }) {
 
 export function HeroLetters() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   const letters = useMemo(() => ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'], []);
   const deferredLetters = useDeferredValue(letters);
 

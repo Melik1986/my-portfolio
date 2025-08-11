@@ -18,7 +18,9 @@ const navigateToSection = (
   sectionId: string,
   isReady: boolean,
   smoother: ScrollSmootherInstance | null,
-  scrollTo: ((target: string | number | Element, smooth?: boolean, position?: string) => void) | null
+  scrollTo:
+    | ((target: string | number | Element, smooth?: boolean, position?: string) => void)
+    | null,
 ) => {
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
 
