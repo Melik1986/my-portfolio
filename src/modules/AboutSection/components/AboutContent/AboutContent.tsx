@@ -1,7 +1,14 @@
 'use client';
 
-import { AboutAnimation } from '../index';
+import { lazy, Suspense } from 'react';
 import styles from './AboutContent.module.scss';
+
+// Ленивый импорт тяжёлой анимации
+const AboutAnimationLazy = lazy(() => 
+  import('../AboutAnimation/AboutAnimation').then(mod => ({ 
+    default: mod.AboutAnimation 
+  }))
+);
 
 /**
  * Содержимое текста "Обо мне"
@@ -59,7 +66,9 @@ export function AboutContent() {
         data-ease="power2.out"
         data-delay="0.6"
       >
-        <AboutAnimation />
+        <Suspense fallback={<div className={styles.animation__placeholder} />}>
+          <AboutAnimationLazy />
+        </Suspense>
       </div>
     </>
   );
