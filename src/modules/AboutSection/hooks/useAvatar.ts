@@ -64,6 +64,9 @@ export const useAvatar = () => {
         });
         scene.add(avatar);
 
+        // Сохраняем ссылку на аватар для масштабирования
+        refs.current.avatar = avatar;
+
         const groundGeometry = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 64);
         const groundMaterial = new THREE.MeshStandardMaterial({
           color: avatarConfig.pedestalColor,
@@ -72,6 +75,9 @@ export const useAvatar = () => {
         groundMesh.receiveShadow = true;
         groundMesh.position.y = -0.05;
         scene.add(groundMesh);
+
+        // Сохраняем ссылку на подиум для масштабирования
+        refs.current.groundMesh = groundMesh;
 
         const mixer = new THREE.AnimationMixer(avatar);
         refs.current.mixer = mixer;
@@ -86,16 +92,27 @@ export const useAvatar = () => {
 
         // Проверяем, что у нас есть хотя бы одна анимация
         if (!waveAction && !stumbleAction) {
-          console.warn('No animations found in the model');
           return;
         }
 
-        console.log('Animations loaded:', {
-          waveAction: !!waveAction,
-          stumbleAction: !!stumbleAction,
-          waveClip: waveClip?.name,
-          stumbleClip: stumbleClip?.name,
-        });
+        // Принудительно обновляем размеры после загрузки модели
+        updateSize();
+
+        // Устанавливаем начальный масштаб модели
+        if (refs.current.avatar && refs.current.groundMesh) {
+          const initialScale =
+            Math.min(refs.current.container!.clientWidth, refs.current.container!.clientHeight) /
+            800; // Используем тот же базовый размер
+          const clampedInitialScale = Math.max(0.3, Math.min(1.5, initialScale));
+
+          refs.current.avatar.scale.setScalar(clampedInitialScale);
+          refs.current.groundMesh.scale.setScalar(clampedInitialScale);
+        }
+
+        // Сигнализируем о загрузке модели
+        if (refs.current.container) {
+          refs.current.container.dispatchEvent(new CustomEvent('modelLoaded'));
+        }
 
         const raycaster = new THREE.Raycaster();
         refs.current.container?.addEventListener('mousedown', (event) => {
@@ -110,7 +127,6 @@ export const useAvatar = () => {
           if (intersects.length > 0) {
             // Проверяем, что у нас есть анимации для воспроизведения
             if (!waveAction && !stumbleAction) {
-              console.warn('No animations available');
               return;
             }
 
@@ -152,17 +168,80 @@ export const useAvatar = () => {
     };
     animate();
 
-    window.addEventListener('resize', () => {
-      camera.aspect = refs.current!.container!.clientWidth / refs.current!.container!.clientHeight;
+    // Функция для обновления размеров
+    const updateSize = () => {
+      if (!refs.current.container) return;
+
+      const width = refs.current.container.clientWidth;
+      const height = refs.current.container.clientHeight;
+
+      // Проверяем, что размеры изменились
+      if (width === 0 || height === 0) {
+        console.warn('Container has zero dimensions:', { width, height });
+        return;
+      }
+
+      // Обновляем камеру
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(refs.current!.container!.clientWidth, refs.current!.container!.clientHeight);
-    });
+
+      // Обновляем рендерер
+      renderer.setSize(width, height);
+
+      // Масштабируем модель в зависимости от размера контейнера
+      if (refs.current.avatar) {
+        // Базовый размер для масштабирования - уменьшаем для лучшего размещения
+        const baseSize = 800; // Увеличиваем базовый размер = уменьшаем модель
+
+        // Вычисляем масштаб на основе меньшей стороны контейнера
+        const scale = Math.min(width, height) / baseSize;
+
+        // Ограничиваем масштаб (не меньше 0.3, не больше 1.5)
+        const clampedScale = Math.max(0.3, Math.min(1.5, scale));
+
+        refs.current.avatar.scale.setScalar(clampedScale);
+
+        // Также масштабируем подиум
+        if (refs.current.groundMesh) {
+          refs.current.groundMesh.scale.setScalar(clampedScale);
+        }
+      }
+    };
+
+    // Отслеживаем изменения размера окна
+    window.addEventListener('resize', updateSize);
+
+    // Отслеживаем изменения размера контейнера
+    const resizeObserver = new ResizeObserver(updateSize);
+    if (refs.current.container) {
+      resizeObserver.observe(refs.current.container);
+    }
 
     refs.current.renderer = renderer;
     refs.current.camera = camera;
     refs.current.scene = scene;
     refs.current.clock = clock;
     refs.current.controls = controls;
+
+    // Очистка при размонтировании
+    return () => {
+      window.removeEventListener('resize', updateSize);
+      resizeObserver.disconnect();
+
+      // Очищаем Three.js ресурсы
+      if (renderer) {
+        renderer.dispose();
+        renderer.domElement.remove();
+      }
+
+      if (controls) {
+        controls.dispose();
+      }
+
+      if (refs.current.mixer) {
+        refs.current.mixer.stopAllAction();
+      }
+    };
   }, []);
 
   return refs;

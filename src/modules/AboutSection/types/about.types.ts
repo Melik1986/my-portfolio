@@ -89,6 +89,8 @@ export interface AvatarRefs {
   renderer?: THREE.WebGLRenderer;
   camera?: THREE.PerspectiveCamera;
   scene?: THREE.Scene;
+  avatar?: THREE.Group; // Добавляем ссылку на аватар
+  groundMesh?: THREE.Mesh; // Добавляем ссылку на подиум
   mixer?: THREE.AnimationMixer;
   clock?: THREE.Clock;
   controls?: { update: () => void; dispose?: () => void }; // OrbitControls with required methods
