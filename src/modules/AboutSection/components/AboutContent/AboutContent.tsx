@@ -4,10 +4,10 @@ import { lazy, Suspense } from 'react';
 import styles from './AboutContent.module.scss';
 
 // Ленивый импорт тяжёлой анимации
-const AboutAnimationLazy = lazy(() => 
-  import('../AboutAnimation/AboutAnimation').then(mod => ({ 
-    default: mod.AboutAnimation 
-  }))
+const AboutAnimationLazy = lazy(() =>
+  import('../AboutAnimation/AboutAnimation').then((mod) => ({
+    default: mod.AboutAnimation,
+  })),
 );
 
 /**

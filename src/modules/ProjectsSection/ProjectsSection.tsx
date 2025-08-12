@@ -1,31 +1,21 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
-import { ProjectsCatalog } from '@/modules/ProjectsSection/components/index';
-import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
+import { lazy, Suspense } from 'react';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsSection.module.scss';
+
+// Ленивый импорт тяжёлого каталога с GSAP анимациями
+const ProjectsCatalogLazy = lazy(() =>
+  import('@/modules/ProjectsSection/components/index').then((mod) => ({
+    default: mod.ProjectsCatalog,
+  })),
+);
 
 interface ProjectsSectionProps {
   projects: ProjectData[];
 }
 
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (sectionRef.current) {
-      createElementTimeline(sectionRef.current);
-    }
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      className={styles['projects-catalog']}
-      id="projects-catalog"
-      data-group-delay="5.5"
-    >
+    <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="5.5">
       <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>
       <div
         data-animation="fade-up"
@@ -34,7 +24,9 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         data-ease="power2.out"
         data-delay="0"
       >
-        <ProjectsCatalog projects={projects} />
+        <Suspense fallback={<div className="projects-loading">Loading projects...</div>}>
+          <ProjectsCatalogLazy projects={projects} />
+        </Suspense>
       </div>
     </section>
   );
