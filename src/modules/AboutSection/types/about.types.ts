@@ -63,3 +63,33 @@ export interface AuroraState {
   isInitialized: boolean;
   mousePosition: MousePosition;
 }
+
+export interface AvatarConfig {
+  modelPath: string;
+  pedestalColor: number;
+}
+
+export interface AvatarControls {
+  enableDamping: boolean;
+  enablePan: boolean;
+  enableZoom: boolean;
+  minDistance: number;
+  minPolarAngle: number;
+  maxPolarAngle: number;
+  target: THREE.Vector3;
+}
+
+export interface AvatarAnimationState {
+  isAnimationPlaying: boolean;
+  isStumbling: boolean;
+}
+
+export interface AvatarRefs {
+  container: HTMLDivElement | null;
+  renderer?: THREE.WebGLRenderer;
+  camera?: THREE.PerspectiveCamera;
+  scene?: THREE.Scene;
+  mixer?: THREE.AnimationMixer;
+  clock?: THREE.Clock;
+  controls?: { update: () => void; dispose?: () => void }; // OrbitControls with required methods
+}

@@ -1,4 +1,4 @@
-import { AboutContent } from './components/index';
+import { AboutContent, Avatar } from './components/index';
 import styles from './About.module.scss';
 
 export function AboutSection() {
@@ -8,7 +8,9 @@ export function AboutSection() {
       <div className={`${styles['about__content']} ${styles['about__content-left']}`}>
         <AboutContent />
       </div>
-      <div className={`${styles['about__content']} ${styles['about__content-right']}`}></div>
+      <div className={`${styles['about__content']} ${styles['about__content-right']}`}>
+        <Avatar />
+      </div>
     </section>
   );
 }
