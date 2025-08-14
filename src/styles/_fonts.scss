@@ -4,7 +4,7 @@
     url('/fonts/Chango-Regular.woff2') format('woff2'),
     url('/fonts/Chango-Regular.woff') format('woff');
   font-weight: 400;
-  font-style: regular;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -34,7 +34,7 @@
     url('/fonts/RobotoSerif.woff2') format('woff2'),
     url('/fonts/RobotoSerif.woff') format('woff');
   font-weight: 400;
-  font-style: regular;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -43,7 +43,7 @@
   src:
     url('/fonts/Poppins-Italic.woff2') format('woff2'),
     url('/fonts/Poppins-Italic.woff') format('woff');
-  font-weight: 700;
+  font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
@@ -53,7 +53,7 @@
   src:
     url('/fonts/Poppins-Regular.woff2') format('woff2'),
     url('/fonts/Poppins-Regular.woff') format('woff');
-  font-weight: 700;
+  font-weight: 400;
   font-style: regular;
   font-display: swap;
 }

@@ -8,6 +8,8 @@ import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
 import { PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
 
+
+
 /**
  * Главная страница портфолио
  * Содержит все секции портфолио с анимированными картами

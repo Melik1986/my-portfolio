@@ -15,6 +15,7 @@ function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
       width={100}
       height={100}
       loading="eager"
+      unoptimized={src.endsWith('.svg')}
     />
   );
 }

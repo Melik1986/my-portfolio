@@ -17,11 +17,11 @@ $color-white: #fff;
 $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
 // Typography
-$font-family-chango: 'Chango', Arial, sans-serif;
-$font-family-roboto: 'Roboto', Arial, sans-serif;
-$font-family-poppins: 'Poppins', Arial, sans-serif;
-$font-family-okinawa: 'Okinawa', Arial, sans-serif;
-$font-family-leckerli: 'Leckerli One', Arial, sans-serif;
+$font-family-chango: var(--font-chango), Arial, sans-serif;
+$font-family-roboto: var(--font-roboto), Arial, sans-serif;
+$font-family-poppins: var(--font-poppins), Arial, sans-serif;
+$font-family-okinawa: var(--font-okinawa), Arial, sans-serif;
+$font-family-leckerli: var(--font-leckerli), Arial, sans-serif;
 
 // Часто используемые font комбинации
 $font-h1: bold 48px/1.2 $font-family-chango;
