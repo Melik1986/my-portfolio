@@ -1,0 +1,55 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.about {
+  &__heading {
+    font-family: $font-family-chango;
+    font: $font-h2;
+    margin-bottom: 1rem;
+    will-change: transform;
+  }
+
+  &__text {
+    margin: 0 0 20px;
+    font-family: $font-family-roboto;
+    line-height: 1.2;
+    font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
+    letter-spacing: 0.05rem;
+    will-change: transform;
+    opacity: 0;
+  }
+}
+
+.animation {
+  &__placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(
+      135deg,
+      rgba(100, 255, 116, 0.1) 0%,
+      rgba(100, 255, 116, 0.05) 100%
+    );
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(100, 255, 116, 0.6);
+    font-size: 0.9rem;
+    font-family: $font-family-roboto;
+    animation: pulse 2s ease-in-out infinite;
+
+    &::before {
+      content: 'Loading animation...';
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

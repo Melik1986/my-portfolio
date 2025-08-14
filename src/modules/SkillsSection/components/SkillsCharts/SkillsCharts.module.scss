@@ -1,0 +1,130 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.skills__charts {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+
+.skills-charts__container {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  min-height: 500px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+
+  // Оптимизация для touch устройств - решает проблему с non-passive event listeners
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.chart-wrapper {
+  flex: 1 1;
+  min-height: 650px;
+  width: 50%;
+  height: 100%;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  // Оптимизация для touch устройств
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.dev-skills-chart,
+.design-skills-chart {
+  width: 100% !important;
+  height: 400px !important; /* Фиксированная высота для диаграмм */
+  min-height: 400px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  // Оптимизация для ECharts canvas
+  canvas {
+    touch-action: pan-y;
+    will-change: transform;
+    pointer-events: auto;
+  }
+
+  // Отключение wheel событий для ECharts контейнеров
+  div[_echarts_instance_] {
+    touch-action: pan-y;
+    will-change: transform;
+  }
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+  color: $color-white;
+  font: $font-p-x-small;
+  box-sizing: border-box;
+
+  // Оптимизация для ECharts элементов
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.echarts-x-axis-label,
+.echarts-y-axis-label {
+  font: $font-p-x-small;
+  color: $color-white;
+}
+
+.echarts-bar-series .echarts-bar {
+  fill: $color-accent;
+}
+
+.echarts-pie-series .echarts-pie {
+  border-radius: 8px;
+}
+
+@media (max-width: 900px) {
+  .skills-charts__container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .chart-wrapper {
+    flex-basis: auto;
+    min-height: 400px;
+    padding: 15px;
+  }
+  .dev-skills-chart,
+  .design-skills-chart {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-charts__container {
+    gap: 10px;
+  }
+  .chart-wrapper {
+    min-height: 300px;
+    min-width: 280px;
+    padding: 10px;
+  }
+  .dev-skills-chart,
+  .design-skills-chart {
+    min-height: 250px;
+    min-width: 250px;
+  }
+}

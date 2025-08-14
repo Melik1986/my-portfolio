@@ -1,0 +1,69 @@
+// --- Commonly used project variables ---
+$color-bg-white: #ffffff;
+$color-bg-dark: #292929;
+$color-bg-light: #f4f3f2;
+$color-accent: #29abe2;
+$color-accent-dark: #494a51;
+$color-accent-yellow: #e0b363;
+$color-text-main: #292929;
+$color-text-light: #fff;
+$color-text-grey: #999;
+$color-shadow: rgba(0, 0, 0, 0.25);
+$color-shadow-light: rgba(0, 0, 0, 0.08);
+$color-border: #d7cfcb;
+$color-white: #fff;
+
+// Градиенты (пример)
+$gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
+
+// Typography
+$font-family-chango: var(--font-chango), Arial, sans-serif;
+$font-family-roboto: var(--font-roboto), Arial, sans-serif;
+$font-family-poppins: var(--font-poppins), Arial, sans-serif;
+$font-family-okinawa: var(--font-okinawa), Arial, sans-serif;
+$font-family-leckerli: var(--font-leckerli), Arial, sans-serif;
+
+// Часто используемые font комбинации
+$font-h1: bold 48px/1.2 $font-family-chango;
+$font-h2: bold 32px/1.2 $font-family-chango;
+$font-h3: bold 24px/1.2 $font-family-chango;
+$font-h4: bold 20px/1.2 $font-family-chango;
+$font-h5: bold 16px/1.2 $font-family-chango;
+$font-h6: bold 14px/1.2 $font-family-chango;
+$font-p: normal 16px/1.5 $font-family-roboto;
+$font-p-small: normal 14px/1.4 $font-family-roboto;
+$font-p-x-small: normal 12px/1.3 $font-family-roboto;
+
+// Viewport
+$vp-desktop: 1304px;
+$vp-tablet: 1023px;
+$vp-mobile: 767px;
+
+// Transitions
+$transition-base: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast: all 0.3s ease;
+
+// Transforms
+$skew-card2: -15deg;
+$skewY-card: -15deg;
+$skewY-card2: 45deg;
+$scale-hover: 1.08;
+$rotate-card: 8deg;
+
+// Preloader
+$preloader-bg: $color-bg-dark;
+$preloader-progress-bg: rgba(255, 255, 255, 0.2);
+$preloader-bar-color: $color-accent;
+$progress-duration: 20s;
+
+// Carousel
+$carousel-left-position: 55%;
+$carousel-transition-time: 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+$carousel-shadow: rgba(0, 0, 0, 0.7);
+$carousel-overlay: rgba(33, 33, 33, 0.5);
+$carousel-accent-orange: #d36e10;
+$carousel-progress-bg: rgba(255, 255, 255, 0.5);
+$carousel-animation-ease: ease-in-out;
+$carousel-animation-duration: 0.5s;
+$carousel-animation-delay: 0.3s;
+$carousel-time-running: 7s;

@@ -1,0 +1,64 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.projects-card {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  transform-style: preserve-3d;
+  width: 900px;
+  height: 530px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  font: $font-h6;
+  border: 1px solid rgba(0, 0, 0, 1);
+  -webkit-text-stroke: 1px #fff5;
+  color: transparent;
+
+  @mixin vp-min($width) {
+    width: 900px;
+  }
+
+  @mixin vp-1440 {
+    width: 800px;
+  }
+
+  @mixin vp-1024 {
+    width: 700px;
+  }
+
+  @mixin vp-768 {
+    width: 600px;
+  }
+
+  @mixin vp-360 {
+    width: 100%;
+  }
+}
+
+.projects-card.fullscreen {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: $font-h6;
+
+  &:hover {
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
+}

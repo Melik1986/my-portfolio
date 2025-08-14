@@ -1,0 +1,19 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/mixins.scss' as *;
+
+.header {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+  will-change: transform;
+
+  &__content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,235 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.skills {
+  &__animation {
+    position: relative;
+    width: 100%;
+    height: 20%;
+    z-index: 22;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+  }
+}
+
+/* ===== SPIRAL CONTAINER ===== */
+.spiral {
+  position: relative;
+  max-width: 600px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: sans-serif;
+
+  @include vp-375 {
+    max-width: 300px;
+    .icon {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+    }
+    @include vp-mobile {
+      max-width: 400px;
+    }
+    @include vp-tablet {
+      max-width: 500px;
+    }
+    @include vp-desktop {
+      max-width: 600px;
+    }
+  }
+}
+
+/* ===== TECH ICONS BASE STYLES ===== */
+.tech-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
+  transition: all 0.3s ease;
+}
+
+/* Размеры иконок */
+.tech-icon--sm {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+.tech-icon--lg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.tech-icon--xl {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.tech-icon--2x {
+  width: 2em;
+  height: 2em;
+}
+
+.tech-icon--3x {
+  width: 3em;
+  height: 3em;
+}
+
+/* ===== SPIRAL ICON POSITIONING ===== */
+.icon {
+  transform-origin: center;
+  transition: transform 0.1s linear;
+  z-index: 10;
+}
+
+/* Стили для иконок в спирали */
+.spiral :global(.tech-icon) {
+  position: absolute;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ===== TECH COLORS ===== */
+/* Цвета для технологий через классы */
+.spiral {
+  :global(.tech-icon--html5) {
+    color: #e34f26;
+  }
+
+  :global(.tech-icon--css3),
+  :global(.tech-icon--css3-alt) {
+    color: #1572b6;
+  }
+
+  :global(.tech-icon--javascript),
+  :global(.tech-icon--js) {
+    color: #f7df1e;
+  }
+
+  :global(.tech-icon--react) {
+    color: #61dafb;
+  }
+
+  :global(.tech-icon--nodejs),
+  :global(.tech-icon--node) {
+    color: #339933;
+  }
+
+  :global(.tech-icon--git),
+  :global(.tech-icon--git-alt) {
+    color: #f05032;
+  }
+
+  :global(.tech-icon--github) {
+    color: #181717;
+  }
+
+  :global(.tech-icon--database) {
+    color: #336791;
+  }
+}
+
+/* Брендовые цвета для иконок через nth-child (для совместимости) */
+.spiral i:nth-child(10n + 1) {
+  --icon-color: #e34f26;
+  /* HTML5 */
+}
+
+.spiral i:nth-child(10n + 2) {
+  --icon-color: #1572b6;
+  /* CSS3 */
+}
+
+.spiral i:nth-child(10n + 3) {
+  --icon-color: #f7df1e;
+  /* JavaScript */
+}
+
+.spiral i:nth-child(10n + 4) {
+  --icon-color: #61dafb;
+  /* React */
+}
+
+.spiral i:nth-child(10n + 5) {
+  --icon-color: #339933;
+  /* Node.js */
+}
+
+.spiral i:nth-child(10n + 6) {
+  --icon-color: #f05032;
+  /* Git */
+}
+
+.spiral i:nth-child(10n + 7) {
+  --icon-color: #181717;
+  /* GitHub */
+}
+
+.spiral i:nth-child(10n + 8) {
+  --icon-color: #336791;
+  /* Database */
+}
+
+.spiral i:nth-child(10n + 9) {
+  --icon-color: #f5792a;
+  /* Blender */
+}
+
+.spiral i:nth-child(10n + 10) {
+  --icon-color: #dddcde;
+  /* Figma */
+}
+
+/* ===== ANIMATIONS & EFFECTS ===== */
+/* Hover эффекты */
+.spiral {
+  :global(.tech-icon:hover) {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px currentColor) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+  }
+}
+
+.spiral i:hover {
+  filter: drop-shadow(0px 0px 10px var(--icon-color, $color-bg-white));
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .spiral {
+    :global(.tech-icon--github) {
+      color: $color-accent;
+    }
+  }
+
+  .spiral i:nth-child(10n + 7) {
+    --icon-color: $color-accent;
+  }
+}
+
+/* Адаптивность */
+@include vp-mobile {
+  .spiral-container .tech-icon {
+    font-size: 20px;
+  }
+
+  .icon {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .spiral-container .tech-icon {
+    font-size: 16px;
+  }
+}

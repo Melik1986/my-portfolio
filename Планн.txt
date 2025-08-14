@@ -51,3 +51,85 @@ my-portfolio/  # Корень проекта
 ├── .eslintrc.json         # Линтер
 ├── .gitignore
 └── README.md
+
+Этап 3: Миграция компонентов
+3.1 Layout компоненты:
+
+- Header - навигация с анимациями
+- Preloader - с логотипами компаний
+- ScrollSmoother - smooth scroll wrapper
+3.2 Секции:
+
+- HeroSection - анимированные буквы + аватар
+- AboutSection - текст + семейная галерея
+- SkillsSection - диаграммы + спирали
+- ProjectsSection - каталог + карусель
+- ContactSection - форма обратной связи
+3.3 Анимационные компоненты:
+
+- LetterAnimation - анимация букв PORTFOLIO
+- SpiralAnimation - Three.js спирали
+- SkillsCharts - ECharts диаграммы
+- CarouselComponent - проектная карусель
+- BgAnimation - фоновые анимации Этап 4: Интеграция библиотек
+4.1 GSAP интеграция:
+
+- Создание useGSAP hook
+- Компонент GSAPProvider
+- Анимации с ScrollTrigger
+4.2 Three.js интеграция:
+
+- useThree hook для спиралей
+- Оптимизация рендеринга
+- Responsive 3D canvas
+4.3 ECharts интеграция:
+
+- useECharts hook
+- Responsive диаграммы
+- Темизация графиков Этап 5: Стили и адаптивность
+5.1 SCSS модули:
+
+- Конвертация BEM в CSS Modules
+
+Responsive дизайн:
+
+- Mobile-first подход
+- Breakpoints оптимизация
+- Touch interactions Этап 6: Оптимизация производительности
+6.1 Next.js оптимизации:
+
+- Image optimization с next/image
+- Font optimization с next/font
+- Dynamic imports для тяжелых компонентов
+- Code splitting по секциям
+6.2 Lazy loading:
+
+- Intersection Observer для анимаций
+- Conditional loading компонентов
+- Progressive enhancement Этап 7: SEO и метаданные
+- Настройка metadata API
+- Structured data для портфолио
+- Open Graph теги
+- Sitemap генерация Этап 8: Тестирование и деплой
+- Unit тесты с Jest
+- E2E тесты с Playwright
+- Performance тестирование
+- Vercel деплой с оптимизациями
+### 🛠 Технический стек Next.js
+Основные технологии:
+
+- Next.js 15 (App Router) React 19
+
+- TypeScript
+- Tailwind CSS + SCSS Modules
+- Framer Motion (замена части GSAP)
+- GSAP (для сложных анимаций)
+- Three.js + React Three Fiber
+- ECharts + React wrapper
+Дополнительные библиотеки:
+
+- next/image для оптимизации изображений
+- next/font для оптимизации шрифтов
+- react-intersection-observer для lazy loading
+- react-hook-form для форм
+- zod для валидации

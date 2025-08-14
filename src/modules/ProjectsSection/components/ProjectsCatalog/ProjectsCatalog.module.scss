@@ -1,0 +1,26 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.projects-catalog {
+  &__container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateY(20deg);
+    width: 300px;
+    height: 400px;
+    transform-style: preserve-3d;
+
+    &.loading {
+      // Добавляем плавный переход для всех анимаций
+      transition: all 0.2s ease-in-out;
+
+      // Можно добавить визуальную индикацию загрузки
+      // например, легкое затемнение или изменение прозрачности
+      opacity: 0.95;
+
+      // Или добавить курсор, указывающий на то, что происходят анимации
+      cursor: wait;
+    }
+  }
+}

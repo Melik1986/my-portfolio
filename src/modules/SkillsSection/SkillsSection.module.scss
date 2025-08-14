@@ -1,0 +1,38 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.skills {
+  color: $color-text-main;
+  justify-content: center;
+  align-items: flex-start;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+
+  &__title {
+    font-family: $font-family-leckerli;
+    font: $font-h2;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 3rem;
+    width: 50%;
+    height: 100%;
+  }
+
+  &__content-left {
+    position: relative;
+    z-index: 1;
+    background-color: $color-bg-white;
+  }
+
+  &__content-right {
+    background-color: $color-bg-dark;
+    justify-content: center;
+  }
+}

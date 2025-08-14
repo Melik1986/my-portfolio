@@ -1,0 +1,266 @@
+'use client';
+
+import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
+import { initCardDeckScroll } from '../utils/cardDeckAnimation';
+
+// Регистрируем плагины
+gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+
+// Расширяем типы window для ScrollTrigger
+declare global {
+  interface Window {
+    ScrollTrigger: typeof ScrollTrigger;
+  }
+}
+
+/**
+ * Локальный helper: очищает анимационные стили дочерних элементов секции
+ * Используется при реверсе/очистке, чтобы вернуть элементы к исходному состоянию
+ */
+const clearElementAnimations = (wrapper: HTMLElement): void => {
+  const elements = wrapper.querySelectorAll<HTMLElement>('[data-animate], [data-animation]');
+  elements.forEach((el) => {
+    gsap.killTweensOf(el);
+    gsap.set(el, { clearProps: 'all' });
+  });
+};
+
+/**
+ * Интерфейс для управления анимациями секций
+ */
+interface SectionController {
+  timeline: gsap.core.Timeline;
+  wrapper: HTMLElement;
+  isActive: boolean;
+}
+
+/**
+ * Централизованный контроллер анимаций карточек
+ * Заменяет глобальный ElementTimelineRegistry с улучшенной архитектурой
+ */
+export class AnimationController {
+  private sections = new Map<number, SectionController>();
+  private masterTimeline: gsap.core.Timeline | null = null;
+  private activeCardIndex = 0;
+  private isInitialized = false;
+
+  /**
+   * Инициализация мастер-анимации (только для Hero секции)
+   */
+  initializeMaster(): gsap.core.Timeline | null {
+    if (this.isInitialized) return this.masterTimeline;
+
+    const scrollSection = document.querySelector('.scroll-section');
+    if (!scrollSection) return null;
+
+    const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
+      scrollSection) as HTMLElement;
+    const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+
+    if (items.length === 0) return null;
+
+    // Создаём мастер timeline для колоды карт
+    this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
+      this.activateCard(cardIndex);
+    });
+
+    this.isInitialized = true;
+    return this.masterTimeline;
+  }
+
+  /**
+   * Регистрация секции с автоматическим созданием timeline
+   */
+  registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
+    // Проверяем, что секция ещё не зарегистрирована
+    if (this.sections.has(sectionIndex)) {
+      return this.sections.get(sectionIndex)!.timeline;
+    }
+
+    // Создаём timeline элементов для секции
+    const elementTimeline = createElementTimeline(wrapper, '[data-animate], [data-animation]');
+
+    // Добавляем автоочистку при реверсе
+    elementTimeline.eventCallback('onReverseComplete', () => {
+      clearElementAnimations(wrapper);
+    });
+
+    // Сохраняем контроллер секции
+    const controller: SectionController = {
+      timeline: elementTimeline,
+      wrapper,
+      isActive: sectionIndex === 0, // Hero активна по умолчанию
+    };
+
+    this.sections.set(sectionIndex, controller);
+
+    // Если это Hero секция, активируем её немедленно
+    if (sectionIndex === 0) {
+      this.activateCard(0);
+    }
+
+    return elementTimeline;
+  }
+
+  /**
+   * Активация карточки с автоматическим управлением timeline
+   */
+  private activateCard(cardIndex: number): void {
+    // Деактивируем предыдущую карточку
+    const prevController = this.sections.get(this.activeCardIndex);
+    if (prevController && prevController.isActive) {
+      prevController.timeline.reverse();
+      prevController.isActive = false;
+    }
+
+    // Активируем новую карточку
+    const currentController = this.sections.get(cardIndex);
+    if (currentController && !currentController.isActive) {
+      // Проверяем наличие text-reveal элементов в секции
+      const hasTextReveal = currentController.wrapper.querySelector(
+        '[data-animation="text-reveal"]',
+      );
+
+      if (hasTextReveal) {
+        // Для text-reveal анимаций делаем плавный переход
+        currentController.timeline.progress(0);
+        // Небольшая задержка позволяет увидеть реверс состояние
+        gsap.delayedCall(0.1, () => {
+          if (currentController.isActive) {
+            currentController.timeline.play();
+          }
+        });
+      } else {
+        // Для обычных анимаций используем стандартный подход
+        currentController.timeline.progress(0).play();
+      }
+
+      currentController.isActive = true;
+    }
+
+    this.activeCardIndex = cardIndex;
+  }
+
+  /**
+   * Получить активную карточку
+   */
+  getActiveCardIndex(): number {
+    return this.activeCardIndex;
+  }
+
+  /**
+   * Программная навигация к карточке по индексу
+   */
+  navigateToCard(cardIndex: number): void {
+    if (!this.isInitialized || !this.masterTimeline) {
+      console.warn('AnimationController not initialized');
+      return;
+    }
+
+    if (!this.sections.has(cardIndex)) {
+      console.warn(`Card with index ${cardIndex} not found`);
+      return;
+    }
+
+    // Получаем ScrollTrigger из мастер timeline
+    const scrollTrigger = this.masterTimeline.scrollTrigger;
+    if (!scrollTrigger) {
+      console.warn('ScrollTrigger not found in master timeline');
+      return;
+    }
+
+    // Для первой карточки просто прокручиваем к началу секции
+    if (cardIndex === 0) {
+      gsap.to(window, {
+        duration: 1,
+        scrollTo: {
+          y: scrollTrigger.start,
+          autoKill: false,
+        },
+        ease: 'power2.inOut',
+      });
+      return;
+    }
+
+    // Для остальных карточек вычисляем позицию
+    const progress = cardIndex / Math.max(1, this.sections.size - 1);
+
+    // Вычисляем позицию с учетом того, что end - это относительное значение
+    const startPos = scrollTrigger.start;
+    // end вычисляется как start + процент от viewport height
+    const viewportHeight = window.innerHeight;
+    const totalScrollDistance = (this.sections.size - 1) * viewportHeight;
+    const targetPosition = startPos + totalScrollDistance * progress;
+
+    // Используем gsap.to для плавной прокрутки к позиции
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: {
+        y: targetPosition,
+        autoKill: false,
+      },
+      ease: 'power2.inOut',
+    });
+  }
+
+  /**
+   * Получить индекс карточки по ID секции
+   */
+  getCardIndexBySectionId(sectionId: string): number {
+    // Маппинг ID секций к индексам карточек
+    const sectionMapping: Record<string, number> = {
+      'hero-section': 0,
+      'about-section': 1,
+      'skills-section': 2,
+      'projects-section': 3,
+      'gallery-section': 4,
+    };
+
+    return sectionMapping[sectionId] ?? -1;
+  }
+
+  /**
+   * Полная очистка всех анимаций
+   */
+  cleanup(): void {
+    // Очищаем все секции
+    this.sections.forEach((controller) => {
+      controller.timeline.kill();
+      clearElementAnimations(controller.wrapper);
+    });
+
+    // Очищаем мастер timeline
+    this.masterTimeline?.kill();
+
+    // Сбрасываем состояние
+    this.sections.clear();
+    this.masterTimeline = null;
+    this.activeCardIndex = 0;
+    this.isInitialized = false;
+  }
+
+  /**
+   * Частичная очистка секции (для размонтирования отдельных компонентов)
+   */
+  cleanupSection(sectionIndex: number): void {
+    const controller = this.sections.get(sectionIndex);
+    if (controller) {
+      controller.timeline.kill();
+      clearElementAnimations(controller.wrapper);
+      this.sections.delete(sectionIndex);
+    }
+  }
+
+  /**
+   * Проверка инициализации
+   */
+  isReady(): boolean {
+    return this.isInitialized;
+  }
+}
+
+// Экспортируем singleton для использования в проекте
+export const animationController = new AnimationController();

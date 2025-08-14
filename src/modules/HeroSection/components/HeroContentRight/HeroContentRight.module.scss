@@ -1,0 +1,59 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.hero {
+  &__heading {
+    font-family: $font-family-chango;
+    max-width: 600px;
+    height: auto;
+    margin: 0 0 10px 0;
+    padding: 0;
+    font: $font-h6;
+    letter-spacing: 0.1em;
+    z-index: 13;
+    color: #29abe2;
+    -webkit-text-stroke: 1px $color-white;
+    z-index: 2;
+
+    @include vp-1024 {
+      max-width: 400px;
+      font: $font-h5;
+      margin-left: 0;
+    }
+
+    @include vp-768 {
+      max-width: 300px;
+      font: $font-h6;
+    }
+
+    @include vp-360 {
+      max-width: 200px;
+      font: $font-p-small;
+    }
+  }
+
+  &__paragraph {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    margin-left: 40px;
+    z-index: 3;
+
+    span {
+      font-family: $font-family-okinawa;
+      font: $font-h6;
+      letter-spacing: 0.1em;
+      color: $color-accent;
+      transform: rotate3d(1, 1, 1, -5deg);
+      z-index: 4;
+    }
+  }
+
+  &__brush {
+    grid-row: 2/3;
+    width: 240px;
+    height: 35px;
+    margin-top: -10px;
+    z-index: 0;
+  }
+}

@@ -1,0 +1,14 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.skills {
+  &__text {
+    margin: 0 0 20px;
+    font-family: $font-family-roboto;
+    line-height: 1.2;
+    font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
+    letter-spacing: 0.05rem;
+    will-change: transform;
+    opacity: 0;
+  }
+}

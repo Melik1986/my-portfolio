@@ -1,0 +1,11 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.skills {
+  &__heading {
+    font-family: $font-family-chango;
+    font: $font-h2;
+    margin-bottom: 1rem;
+    will-change: transform;
+  }
+}

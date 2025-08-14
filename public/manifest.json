@@ -1,0 +1,21 @@
+{
+  "name": "My Portfolio",
+  "short_name": "Portfolio",
+  "description": "Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#292929",
+  "theme_color": "#29abe2",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

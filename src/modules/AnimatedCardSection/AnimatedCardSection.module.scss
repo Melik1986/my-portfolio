@@ -1,0 +1,32 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.portfolio {
+  &__section {
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__wrapper {
+    height: 100vh;
+  }
+
+  &__item {
+    height: 100%;
+    display: flex;
+    position: absolute;
+    inset: 0%;
+    border-radius: 4px;
+    box-shadow: rgb(149, 157, 165, 0.2) 0px 8px 24px;
+    overflow: hidden;
+  }
+
+  &__title {
+    font-size: $font-h6;
+    text-shadow: 0.04em 0.04rem 0 #81b5ab;
+
+    @media (max-width: 575.98px) {
+      font-size: $font-h6;
+    }
+  }
+}

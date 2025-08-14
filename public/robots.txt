@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://melikmusinian.com/sitemap.xml
+
+manifest: '/manifest.json',

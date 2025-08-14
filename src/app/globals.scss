@@ -1,7 +1,62 @@
-@import '../styles/global/_variables';
-@import '../styles/global/_mixins';
-@import '../styles/global/_normalize';
-@import '../styles/global/_reboot';
-@import '../styles/global/_fonts';
-@import '../styles/global/_container';
-@import '../styles/global/_visually-hidden';
+@use '../styles/_variables' as *;
+@use '../styles/_mixins' as *;
+@use '../styles/_normalize' as *;
+@use '../styles/_reboot' as *;
+@use '../styles/_fonts' as *;
+@use '../styles/_container' as *;
+@use '../styles/_visually-hidden' as *;
+@use '../styles/_animations' as *;
+
+/**
+ * Базовые стили для портфолио
+ * Определяет основную структуру и стили для всех секций
+ */
+.portfolio {
+  width: 100%;
+  min-height: 100vh;
+
+  /** Обертка для всех секций портфолио */
+  &__section {
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__wrapper {
+    height: 100vh;
+  }
+
+  &__list {
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    display: flex;
+    position: relative;
+    padding: 0.2rem;
+  }
+
+  &__item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    inset: 0%;
+    box-shadow: rgb(149, 157, 165, 0.2) 0px 8px 24px;
+    overflow: hidden;
+  }
+
+  &__title {
+    font-size: $font-h6;
+    text-shadow: 0.04em 0.04rem 0 #81b5ab;
+  }
+}
+
+// Глобальная оптимизация для всех ECharts элементов
+canvas[data-zr-dom-id] {
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+div[_echarts_instance_] {
+  touch-action: pan-y;
+  will-change: transform;
+}
