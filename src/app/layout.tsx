@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Chango, Roboto_Serif, Poppins, Leckerli_One } from 'next/font/google';
+import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.scss';
 import Container from '../lib/ui/Container/Container';

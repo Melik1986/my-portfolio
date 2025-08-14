@@ -31,7 +31,7 @@ export function Avatar() {
       }
       clearTimeout(fallbackTimer);
     };
-  }, [refs.current.container]);
+  }, [refs]);
 
   return (
     <div
