@@ -2,8 +2,9 @@
 // Скрывает элементы до инициализации GSAP анимаций
 
 // Элементы с data-animation атрибутами скрыты по умолчанию
+// GSAP управляет opacity через autoAlpha, поэтому убираем дублирование
 [data-animation] {
-  opacity: 0;
+  visibility: hidden; // Скрываем до инициализации GSAP
   will-change: transform, opacity;
 }
 
