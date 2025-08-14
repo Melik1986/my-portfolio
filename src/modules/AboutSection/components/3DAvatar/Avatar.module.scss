@@ -10,12 +10,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   // Адаптивность для разных размеров экрана
   @media (max-width: 768px) {
     min-height: 250px;
   }
-  
+
   @media (max-width: 480px) {
     min-height: 200px;
   }
@@ -34,13 +34,13 @@
   font-weight: 500;
   z-index: 10;
   white-space: nowrap;
-  
+
   // Адаптивность для мобильных устройств
   @media (max-width: 768px) {
     font-size: 14px;
     padding: 6px 12px;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 12px;
     padding: 4px 8px;
