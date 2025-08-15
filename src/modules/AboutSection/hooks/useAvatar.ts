@@ -1,44 +1,80 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { avatarConfig, avatarControls } from '../config/avatar3d.config';
-import { AvatarAnimationState, AvatarRefs } from '../types/about.types';
+import { AvatarRefs } from '../types/about.types';
 
-export const useAvatar = () => {
-  const refs = useRef<AvatarRefs>({ container: null });
-  const animationState = useRef<AvatarAnimationState>({
-    isAnimationPlaying: false,
-    isStumbling: false,
-  });
+// Строгая типизация для внутренней работы хука
+interface AvatarScene {
+  renderer: THREE.WebGLRenderer;
+  camera: THREE.PerspectiveCamera;
+  scene: THREE.Scene;
+  controls: OrbitControls;
+  clock: THREE.Clock;
+}
 
-  useEffect(() => {
-    if (!refs.current.container) return;
+interface AvatarAssets {
+  avatar: THREE.Group;
+  groundMesh: THREE.Mesh;
+  mixer: THREE.AnimationMixer;
+  waveAction: THREE.AnimationAction | null;
+  stumbleAction: THREE.AnimationAction | null;
+}
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+interface AvatarState {
+  isAnimationPlaying: boolean;
+  isStumbling: boolean;
+  isDisposed: boolean;
+}
+
+// Константы конфигурации
+const CONFIG = {
+  BASE_SIZE: 800,
+  MIN_SCALE: 0.3,
+  MAX_SCALE: 1.5,
+  CROSS_FADE_DURATION: 0.3,
+  STUMBLE_DURATION: 4000,
+  RECOVERY_DURATION: 1000,
+} as const;
+
+// Хук для создания Three.js сцены
+const useSceneSetup = () => {
+  const createRenderer = useCallback((container: HTMLElement): THREE.WebGLRenderer => {
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.setSize(refs.current.container.clientWidth, refs.current.container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    refs.current.container.appendChild(renderer.domElement);
 
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      refs.current.container.clientWidth / refs.current.container.clientHeight,
-      0.1,
-      1000,
-    );
-    camera.position.set(0.2, 0.5, 1);
+    container.appendChild(renderer.domElement);
+    return renderer;
+  }, []);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
-    Object.assign(controls, avatarControls);
-    controls.update();
+  const createCameraAndControls = useCallback(
+    (renderer: THREE.WebGLRenderer): { camera: THREE.PerspectiveCamera; controls: OrbitControls } => {
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+      camera.position.set(0.2, 0.5, 1);
 
-    const scene = new THREE.Scene();
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+      const controls = new OrbitControls(camera, renderer.domElement);
+      Object.assign(controls, avatarControls);
+      controls.update();
+
+      return { camera, controls };
+    },
+    [],
+  );
+
+  const setupLighting = useCallback((scene: THREE.Scene): void => {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
 
     const spotLight = new THREE.SpotLight(0xffffff, 20, 8, 1);
     spotLight.penumbra = 0.5;
@@ -48,201 +84,411 @@ export const useAvatar = () => {
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 2);
     keyLight.position.set(1, 1, 2);
-    keyLight.lookAt(new THREE.Vector3(0, 0, 0));
+    keyLight.lookAt(0, 0, 0);
     scene.add(keyLight);
+  }, []);
 
-    const loader = new GLTFLoader();
-    loader.load(
-      avatarConfig.modelPath,
-      (gltf) => {
-        const avatar = gltf.scene;
-        avatar.traverse((child: THREE.Object3D) => {
-          if ((child as THREE.Mesh).isMesh) {
-            (child as THREE.Mesh).castShadow = true;
-            (child as THREE.Mesh).receiveShadow = true;
-          }
-        });
-        scene.add(avatar);
+  return { createRenderer, createCameraAndControls, setupLighting };
+};
 
-        // Сохраняем ссылку на аватар для масштабирования
-        refs.current.avatar = avatar;
+// Хук для работы с 3D моделью
+const useModelLoader = () => {
+  const createGround = useCallback((): THREE.Mesh => {
+    const geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 64);
+    const material = new THREE.MeshStandardMaterial({
+      color: avatarConfig.pedestalColor,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
 
-        const groundGeometry = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 64);
-        const groundMaterial = new THREE.MeshStandardMaterial({
-          color: avatarConfig.pedestalColor,
-        });
-        const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-        groundMesh.receiveShadow = true;
-        groundMesh.position.y = -0.05;
-        scene.add(groundMesh);
+    mesh.receiveShadow = true;
+    mesh.position.y = -0.05;
 
-        // Сохраняем ссылку на подиум для масштабирования
-        refs.current.groundMesh = groundMesh;
+    return mesh;
+  }, []);
 
-        const mixer = new THREE.AnimationMixer(avatar);
-        refs.current.mixer = mixer;
+  const setupAnimations = useCallback(
+    (gltf: GLTF, mixer: THREE.AnimationMixer): {
+      waveAction: THREE.AnimationAction | null;
+      stumbleAction: THREE.AnimationAction | null;
+    } => {
+      const waveClip =
+        THREE.AnimationClip.findByName(gltf.animations, 'Waving') || gltf.animations[0];
+      const stumbleClip =
+        THREE.AnimationClip.findByName(gltf.animations, 'Stagger') || gltf.animations[1];
 
-        const waveClip =
-          THREE.AnimationClip.findByName(gltf.animations, 'Waving') || gltf.animations[0];
-        const stumbleClip =
-          THREE.AnimationClip.findByName(gltf.animations, 'Stagger') || gltf.animations[1];
+      return {
+        waveAction: waveClip ? mixer.clipAction(waveClip) : null,
+        stumbleAction: stumbleClip ? mixer.clipAction(stumbleClip) : null,
+      };
+    },
+    [],
+  );
 
-        const waveAction = waveClip ? mixer.clipAction(waveClip) : null;
-        const stumbleAction = stumbleClip ? mixer.clipAction(stumbleClip) : null;
+  const setupMeshProperties = useCallback((avatar: THREE.Group): void => {
+    avatar.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+      }
+    });
+  }, []);
 
-        // Проверяем, что у нас есть хотя бы одна анимация
-        if (!waveAction && !stumbleAction) {
-          return;
-        }
+  return { createGround, setupAnimations, setupMeshProperties };
+};
 
-        // Принудительно обновляем размеры после загрузки модели
-        updateSize();
+// Хук для анимационной логики
+const useAnimationControl = (
+  assetsRef: React.MutableRefObject<AvatarAssets | null>,
+  stateRef: React.MutableRefObject<AvatarState>,
+) => {
+  const executeStumbleSequence = useCallback((): void => {
+    const assets = assetsRef.current;
+    const state = stateRef.current;
 
-        // Устанавливаем начальный масштаб модели
-        if (refs.current.avatar && refs.current.groundMesh) {
-          const initialScale =
-            Math.min(refs.current.container!.clientWidth, refs.current.container!.clientHeight) /
-            800; // Используем тот же базовый размер
-          const clampedInitialScale = Math.max(0.3, Math.min(1.5, initialScale));
+    if (!assets?.waveAction || !assets?.stumbleAction || state.isDisposed) {
+      return;
+    }
 
-          refs.current.avatar.scale.setScalar(clampedInitialScale);
-          refs.current.groundMesh.scale.setScalar(clampedInitialScale);
-        }
+    state.isStumbling = true;
+    assets.stumbleAction.reset().play();
+    assets.waveAction.crossFadeTo(assets.stumbleAction, CONFIG.CROSS_FADE_DURATION, true);
 
-        // Сигнализируем о загрузке модели
-        if (refs.current.container) {
-          refs.current.container.dispatchEvent(new CustomEvent('modelLoaded'));
-        }
+    setTimeout(() => {
+      if (state.isDisposed || !assets.waveAction || !assets.stumbleAction) return;
 
-        const raycaster = new THREE.Raycaster();
-        refs.current.container?.addEventListener('mousedown', (event) => {
-          const coords = {
-            x: (event.offsetX / refs.current!.container!.clientWidth) * 2 - 1,
-            y: -(event.offsetY / refs.current!.container!.clientHeight) * 2 + 1,
-          };
+      assets.waveAction.reset().play();
+      assets.stumbleAction.crossFadeTo(assets.waveAction, 1, true);
 
-          raycaster.setFromCamera(new THREE.Vector2(coords.x, coords.y), camera);
-          const intersects = raycaster.intersectObjects(scene.children, true);
+      setTimeout(() => {
+        state.isStumbling = false;
+      }, CONFIG.RECOVERY_DURATION);
+    }, CONFIG.STUMBLE_DURATION);
+  }, [assetsRef, stateRef]);
 
-          if (intersects.length > 0) {
-            // Проверяем, что у нас есть анимации для воспроизведения
-            if (!waveAction && !stumbleAction) {
-              return;
-            }
+  const handleAvatarClick = useCallback((): void => {
+    const assets = assetsRef.current;
+    const state = stateRef.current;
 
-            if (animationState.current.isStumbling) return;
+    if (!assets?.waveAction || state.isStumbling || state.isDisposed) {
+      return;
+    }
 
-            if (!animationState.current.isAnimationPlaying) {
-              if (waveAction) {
-                waveAction.reset().play();
-                animationState.current.isAnimationPlaying = true;
-              }
-            } else {
-              if (stumbleAction && waveAction) {
-                animationState.current.isStumbling = true;
-                stumbleAction.reset().play();
-                waveAction.crossFadeTo(stumbleAction, 0.3, true);
+    if (!state.isAnimationPlaying) {
+      assets.waveAction.reset().play();
+      state.isAnimationPlaying = true;
+    } else if (assets.stumbleAction) {
+      executeStumbleSequence();
+    }
+  }, [executeStumbleSequence, assetsRef, stateRef]);
 
-                setTimeout(() => {
-                  if (waveAction && stumbleAction) {
-                    waveAction.reset().play();
-                    stumbleAction.crossFadeTo(waveAction, 1, true);
-                    setTimeout(() => (animationState.current.isStumbling = false), 1000);
-                  }
-                }, 4000);
-              }
-            }
-          }
-        });
-      },
-      undefined,
-      (error) => console.error('Error loading model:', error),
-    );
+  return { handleAvatarClick };
+};
 
-    const clock = new THREE.Clock();
-    const animate = () => {
-      requestAnimationFrame(animate);
-      refs.current.mixer?.update(clock.getDelta());
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
+// Хук для обработки размеров и масштабирования
+const useScaleManager = () => {
+  const calculateScale = useCallback((width: number, height: number): number => {
+    const scale = Math.min(width, height) / CONFIG.BASE_SIZE;
+    return Math.max(CONFIG.MIN_SCALE, Math.min(CONFIG.MAX_SCALE, scale));
+  }, []);
 
-    // Функция для обновления размеров
-    const updateSize = () => {
-      if (!refs.current.container) return;
+  const updateSize = useCallback(
+    (
+      container: HTMLElement,
+      scene: AvatarScene,
+      assets: AvatarAssets | null,
+      calculateScaleFn: (width: number, height: number) => number,
+    ): void => {
+      const { clientWidth: width, clientHeight: height } = container;
 
-      const width = refs.current.container.clientWidth;
-      const height = refs.current.container.clientHeight;
-
-      // Проверяем, что размеры изменились
       if (width === 0 || height === 0) {
         console.warn('Container has zero dimensions:', { width, height });
         return;
       }
 
-      // Обновляем камеру
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+      scene.camera.aspect = width / height;
+      scene.camera.updateProjectionMatrix();
+      scene.renderer.setSize(width, height);
 
-      // Обновляем рендерер
-      renderer.setSize(width, height);
-
-      // Масштабируем модель в зависимости от размера контейнера
-      if (refs.current.avatar) {
-        // Базовый размер для масштабирования - уменьшаем для лучшего размещения
-        const baseSize = 800; // Увеличиваем базовый размер = уменьшаем модель
-
-        // Вычисляем масштаб на основе меньшей стороны контейнера
-        const scale = Math.min(width, height) / baseSize;
-
-        // Ограничиваем масштаб (не меньше 0.3, не больше 1.5)
-        const clampedScale = Math.max(0.3, Math.min(1.5, scale));
-
-        refs.current.avatar.scale.setScalar(clampedScale);
-
-        // Также масштабируем подиум
-        if (refs.current.groundMesh) {
-          refs.current.groundMesh.scale.setScalar(clampedScale);
-        }
+      if (assets?.avatar) {
+        const scale = calculateScaleFn(width, height);
+        assets.avatar.scale.setScalar(scale);
+        assets.groundMesh.scale.setScalar(scale);
       }
-    };
+    },
+    [],
+  );
 
-    // Отслеживаем изменения размера окна
-    window.addEventListener('resize', updateSize);
+  return { calculateScale, updateSize };
+};
 
-    // Отслеживаем изменения размера контейнера
-    const resizeObserver = new ResizeObserver(updateSize);
-    if (refs.current.container) {
-      resizeObserver.observe(refs.current.container);
+// Хук для обработки событий мыши
+const useMouseHandler = (handleAvatarClick: () => void) => {
+  const handleMouseClick = useCallback(
+    (event: MouseEvent, container: HTMLElement, scene: AvatarScene): void => {
+      const rect = container.getBoundingClientRect();
+      const coords = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(coords, scene.camera);
+
+      const intersects = raycaster.intersectObjects(scene.scene.children, true);
+
+      if (intersects.length > 0) {
+        handleAvatarClick();
+      }
+    },
+    [handleAvatarClick],
+  );
+
+  return { handleMouseClick };
+};
+
+// Хук для обработки загрузки модели
+const useModelHandler = (
+  setupMeshProperties: (avatar: THREE.Group) => void,
+  createGround: () => THREE.Mesh,
+  setupAnimations: (gltf: GLTF, mixer: THREE.AnimationMixer) => {
+    waveAction: THREE.AnimationAction | null;
+    stumbleAction: THREE.AnimationAction | null;
+  },
+  calculateScale: (width: number, height: number) => number,
+  assetsRef: React.MutableRefObject<AvatarAssets | null>,
+  stateRef: React.MutableRefObject<AvatarState>,
+  refs: React.MutableRefObject<AvatarRefs>,
+) => {
+  const handleModelLoaded = useCallback(
+    (gltf: GLTF, scene: AvatarScene): void => {
+      if (stateRef.current.isDisposed) return;
+
+      const avatar = gltf.scene;
+      setupMeshProperties(avatar);
+
+      const groundMesh = createGround();
+      const mixer = new THREE.AnimationMixer(avatar);
+      const { waveAction, stumbleAction } = setupAnimations(gltf, mixer);
+
+      if (!waveAction && !stumbleAction) {
+        console.warn('No animations found in model');
+        return;
+      }
+
+      scene.scene.add(avatar, groundMesh);
+
+      assetsRef.current = {
+        avatar,
+        groundMesh,
+        mixer,
+        waveAction,
+        stumbleAction,
+      };
+
+      refs.current.avatar = avatar;
+      refs.current.groundMesh = groundMesh;
+      refs.current.mixer = mixer;
+
+      const container = refs.current.container!;
+      const scale = calculateScale(container.clientWidth, container.clientHeight);
+      avatar.scale.setScalar(scale);
+      groundMesh.scale.setScalar(scale);
+
+      container.dispatchEvent(new CustomEvent('modelLoaded'));
+    },
+    [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],
+  );
+
+  const loadModel = useCallback(
+    (scene: AvatarScene): void => {
+      const loader = new GLTFLoader();
+
+      loader.load(
+        avatarConfig.modelPath,
+        (gltf) => handleModelLoaded(gltf, scene),
+        undefined,
+        (error) => console.error('Error loading model:', error),
+      );
+    },
+    [handleModelLoaded],
+  );
+
+  return { loadModel };
+};
+
+// Хук для анимационного цикла
+const useAnimationLoop = (
+  sceneRef: React.MutableRefObject<AvatarScene | null>,
+  assetsRef: React.MutableRefObject<AvatarAssets | null>,
+  stateRef: React.MutableRefObject<AvatarState>,
+) => {
+  const animate = useCallback((): void => {
+    const scene = sceneRef.current;
+    const assets = assetsRef.current;
+    const state = stateRef.current;
+
+    if (state.isDisposed || !scene) return;
+
+    requestAnimationFrame(animate);
+
+    assets?.mixer.update(scene.clock.getDelta());
+    scene.controls.update();
+    scene.renderer.render(scene.scene, scene.camera);
+  }, [sceneRef, assetsRef, stateRef]);
+
+  return { animate };
+};
+
+// Хук для очистки ресурсов
+const useCleanup = (
+  stateRef: React.MutableRefObject<AvatarState>,
+  sceneRef: React.MutableRefObject<AvatarScene | null>,
+  assetsRef: React.MutableRefObject<AvatarAssets | null>,
+  refs: React.MutableRefObject<AvatarRefs>,
+  handleMouseClick: (event: MouseEvent, container: HTMLElement, scene: AvatarScene) => void,
+) => {
+  const cleanup = useCallback((): void => {
+    stateRef.current.isDisposed = true;
+
+    const scene = sceneRef.current;
+    const assets = assetsRef.current;
+    const container = refs.current.container;
+
+    if (container) {
+      container.removeEventListener('mousedown', (event: MouseEvent) =>
+        handleMouseClick(event, container, scene!),
+      );
     }
 
-    refs.current.renderer = renderer;
-    refs.current.camera = camera;
-    refs.current.scene = scene;
-    refs.current.clock = clock;
-    refs.current.controls = controls;
+    if (assets?.mixer) {
+      assets.mixer.stopAllAction();
+    }
 
-    // Очистка при размонтировании
-    return () => {
-      window.removeEventListener('resize', updateSize);
-      resizeObserver.disconnect();
+    if (scene) {
+      scene.renderer.dispose();
+      scene.renderer.domElement.remove();
+      scene.controls.dispose();
+    }
 
-      // Очищаем Three.js ресурсы
-      if (renderer) {
-        renderer.dispose();
-        renderer.domElement.remove();
-      }
+    if (assets?.groundMesh) {
+      assets.groundMesh.geometry.dispose();
+      (assets.groundMesh.material as THREE.Material).dispose();
+    }
 
-      if (controls) {
-        controls.dispose();
-      }
+    sceneRef.current = null;
+    assetsRef.current = null;
+  }, [stateRef, sceneRef, assetsRef, refs, handleMouseClick]);
 
-      if (refs.current.mixer) {
-        refs.current.mixer.stopAllAction();
-      }
-    };
-  }, []);
+  return { cleanup };
+};
+
+export const useAvatar = () => {
+  const refs = useRef<AvatarRefs>({ container: null });
+  const sceneRef = useRef<AvatarScene | null>(null);
+  const assetsRef = useRef<AvatarAssets | null>(null);
+  const stateRef = useRef<AvatarState>({
+    isAnimationPlaying: false,
+    isStumbling: false,
+    isDisposed: false,
+  });
+
+  const { createRenderer, createCameraAndControls, setupLighting } = useSceneSetup();
+  const { createGround, setupAnimations, setupMeshProperties } = useModelLoader();
+  const { handleAvatarClick } = useAnimationControl(assetsRef, stateRef);
+  const { calculateScale, updateSize } = useScaleManager();
+  const { handleMouseClick } = useMouseHandler(handleAvatarClick);
+  const { loadModel } = useModelHandler(
+    setupMeshProperties,
+    createGround,
+    setupAnimations,
+    calculateScale,
+    assetsRef,
+    stateRef,
+    refs,
+  );
+  const { animate } = useAnimationLoop(sceneRef, assetsRef, stateRef);
+  const { cleanup } = useCleanup(stateRef, sceneRef, assetsRef, refs, handleMouseClick);
+
+  // Обработка события мыши
+  const handleMouseClickWrapper = useCallback(
+    (event: MouseEvent): void => {
+      const container = refs.current.container;
+      const scene = sceneRef.current;
+
+      if (!container || !scene) return;
+
+      handleMouseClick(event, container, scene);
+    },
+    [handleMouseClick],
+  );
+
+  // Создание wrapper для updateSize
+  const handleResize = useCallback((): void => {
+    const container = refs.current.container;
+    const scene = sceneRef.current;
+    const assets = assetsRef.current;
+
+    if (!container || !scene) return;
+    updateSize(container, scene, assets, calculateScale);
+  }, [updateSize, calculateScale]);
+
+  // Основная инициализация
+  useEffect(() => {
+    const container = refs.current.container;
+    if (!container) return;
+
+    try {
+      const renderer = createRenderer(container);
+      const { camera, controls } = createCameraAndControls(renderer);
+      const scene = new THREE.Scene();
+      const clock = new THREE.Clock();
+
+      const sceneData: AvatarScene = {
+        renderer,
+        camera,
+        scene,
+        controls,
+        clock,
+      };
+
+      sceneRef.current = sceneData;
+
+      setupLighting(scene);
+      loadModel(sceneData);
+
+      container.addEventListener('mousedown', handleMouseClickWrapper);
+      window.addEventListener('resize', handleResize);
+
+      const resizeObserver = new ResizeObserver(handleResize);
+      resizeObserver.observe(container);
+
+      refs.current.renderer = renderer;
+      refs.current.camera = camera;
+      refs.current.scene = scene;
+      refs.current.clock = clock;
+      refs.current.controls = controls;
+
+      animate();
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        resizeObserver.disconnect();
+        cleanup();
+      };
+    } catch (error) {
+      console.error('Failed to initialize avatar:', error);
+    }
+  }, [
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    loadModel,
+    handleMouseClickWrapper,
+    handleResize,
+    animate,
+    cleanup,
+  ]);
 
   return refs;
 };
