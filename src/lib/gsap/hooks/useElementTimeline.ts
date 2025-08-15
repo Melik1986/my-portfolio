@@ -371,6 +371,7 @@ function addTextRevealAnimation(
 /**
  * Добавляет базовую анимацию элемента
  * Применяет стандартную анимацию from/to с пользовательскими параметрами
+ * Теперь GSAP полностью контролирует все свойства включая visibility
  */
 function addBaseAnimation(
   timeline: gsap.core.Timeline,
@@ -387,15 +388,24 @@ function addBaseAnimation(
         ? '0'
         : `${params.delay}`;
 
-  timeline.fromTo(
+  // Устанавливаем начальное состояние в timeline
+  timeline.set(
     element,
     {
       ...animationDef.from,
       autoAlpha: 0,
+      visibility: 'hidden', // Явно скрываем элемент
     },
+    position,
+  );
+
+  // Анимируем к конечному состоянию
+  timeline.to(
+    element,
     {
       ...animationDef.to,
       autoAlpha: 1,
+      visibility: 'visible', // Показываем элемент
       duration: animationDef.duration,
       ease: animationDef.ease,
     },
