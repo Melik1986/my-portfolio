@@ -8,7 +8,7 @@ export default function Error({
   reset: () => void;
 }) {
   console.error('Application error:', error);
-  
+
   return (
     <div className="error">
       <h2>Что-то пошло не так!</h2>

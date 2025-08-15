@@ -13,7 +13,7 @@ const chango = localFont({
       path: '../../public/fonts/Chango-Regular.woff2',
       weight: '400',
       style: 'normal',
-    }
+    },
   ],
   variable: '--font-chango',
   display: 'swap',
@@ -25,7 +25,7 @@ const okinawa = localFont({
       path: '../../public/fonts/Okinawa.woff2',
       weight: '400',
       style: 'normal',
-    }
+    },
   ],
   variable: '--font-okinawa',
   display: 'swap',
@@ -37,7 +37,7 @@ const leckerliOne = localFont({
       path: '../../public/fonts/LeckerliOne-Regular.woff2',
       weight: '400',
       style: 'normal',
-    }
+    },
   ],
   variable: '--font-leckerli',
   display: 'swap',
@@ -65,9 +65,10 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: {
     default: 'My Portfolio | Full-Stack Developer',
-    template: '%s | My Portfolio'
+    template: '%s | My Portfolio',
   },
-  description: 'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
+  description:
+    'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
   keywords: ['portfolio', 'web developer', 'React', 'Next.js', 'TypeScript', 'full-stack'],
   authors: [{ name: 'Melik Musinian' }],
   creator: 'Melik Musinian',
@@ -98,7 +99,8 @@ export const metadata: Metadata = {
     url: 'https://melikmusinian.com',
     siteName: 'My Portfolio',
     title: 'My Portfolio | Full-Stack Developer',
-    description: 'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
+    description:
+      'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
     images: [
       {
         url: '/images/og-image.jpg',
@@ -111,7 +113,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'My Portfolio | Full-Stack Developer',
-    description: 'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
+    description:
+      'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
     images: ['/images/og-image.jpg'],
     creator: '@melikmusinian',
   },
@@ -136,7 +139,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}>
+      <body
+        className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
+      >
         <main className="portfolio" id="smooth-wrapper">
           <div className="portfolio__section" id="smooth-content">
             <Container>

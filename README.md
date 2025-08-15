@@ -14,17 +14,20 @@ A modern, interactive portfolio website built with Next.js 15, TypeScript, and a
 ## 🛠️ Tech Stack
 
 ### Core Technologies
+
 - **Next.js 15** - React framework with App Router
 - **React 19** - Latest React with concurrent features
 - **TypeScript 5** - Type-safe development
 - **Sass/SCSS** - Advanced CSS preprocessing
 
 ### Animation & 3D
+
 - **GSAP 3** - Professional-grade animations
 - **Three.js** - 3D graphics and WebGL
 - **ECharts** - Interactive data visualization
 
 ### Development Tools
+
 - **ESLint** - Code quality and consistency
 - **Prettier** - Code formatting
 - **Turbopack** - Fast bundling and development
@@ -54,26 +57,31 @@ src/
 ## 🎯 Key Components
 
 ### HeroSection
+
 - Interactive 3D avatar with Three.js
 - Animated text and content
 - Responsive hero layout
 
 ### AboutSection
+
 - Personal information display
 - 3D avatar integration
 - Smooth content transitions
 
 ### SkillsSection
+
 - Interactive charts with ECharts
 - Skills visualization
 - Animated skill indicators
 
 ### ProjectsSection
+
 - Project catalog with lazy loading
 - Interactive project cards
 - GSAP-powered animations
 
 ### GallerySection
+
 - Carousel navigation
 - Smooth transitions
 - Responsive image handling
@@ -81,18 +89,21 @@ src/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm, yarn, pnpm, or bun
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd my-portfolio
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -102,6 +113,7 @@ src/
    ```
 
 3. **Run development server**
+
    ```bash
    npm run dev
    # or
@@ -124,6 +136,7 @@ src/
 ## 🎨 Design System
 
 ### Typography
+
 - **Chango** - Display font for headings
 - **Okinawa** - Decorative font
 - **Leckerli One** - Handwritten style
@@ -131,11 +144,13 @@ src/
 - **Poppins** - UI elements
 
 ### Color Scheme
+
 - Modern, professional palette
 - Consistent with brand identity
 - Accessible contrast ratios
 
 ### Animation Principles
+
 - Smooth, purposeful movements
 - Performance-optimized transitions
 - Progressive enhancement approach
@@ -143,17 +158,20 @@ src/
 ## 🔧 Configuration
 
 ### Next.js Configuration
+
 - Turbopack for fast development
 - Optimized package imports
 - Advanced CSS optimization
 - Web Vitals attribution
 
 ### GSAP Configuration
+
 - ScrollSmoother integration
 - Custom animation presets
 - Performance optimizations
 
 ### TypeScript Configuration
+
 - Strict mode enabled
 - Path aliases configured
 - Modern ES features
@@ -184,12 +202,14 @@ src/
 ## 📦 Build & Deployment
 
 ### Production Build
+
 ```bash
 npm run build
 npm run start
 ```
 
 ### Deployment Options
+
 - **Vercel**: Recommended for Next.js
 - **Netlify**: Static site generation
 - **Docker**: Containerized deployment
@@ -212,4 +232,4 @@ This project is private and proprietary.
 
 ---
 
-*Built with modern web technologies and best practices for optimal performance and user experience.*
+_Built with modern web technologies and best practices for optimal performance and user experience._
