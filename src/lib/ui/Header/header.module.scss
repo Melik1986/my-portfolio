@@ -16,4 +16,19 @@
     align-items: center;
     justify-content: center;
   }
+
+  &__logo {
+    will-change: transform;
+    opacity: 0;
+  }
+
+  &__navigation {
+    will-change: transform;
+    opacity: 0;
+  }
+
+  &__contact-button {
+    will-change: transform;
+    opacity: 0;
+  }
 }

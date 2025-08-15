@@ -66,12 +66,14 @@ export function Header() {
     <header ref={headerRef} className={styles.header} id="header">
       <div className={styles.header__content}>
         <Logo
+          className={styles['header__logo']}
           data-animation="slide-left-scale"
           data-duration="1.0"
           data-ease="power2.out"
           data-delay="0"
         />
         <Navigation
+          className={styles['header__navigation']}
           data-animation="slide-down-blur"
           data-duration="0.8"
           data-ease="power2.out"
@@ -79,6 +81,7 @@ export function Header() {
           onNavigate={handleNavigate}
         />
         <ContactButton
+          className={styles['header__contact-button']}
           data-animation="slide-right"
           data-duration="1.0"
           data-ease="power2.out"
