@@ -4,7 +4,8 @@
 // Элементы с data-animation атрибутами готовы к анимации
 // GSAP управляет всеми свойствами включая visibility и transform
 [data-animation] {
-  will-change: transform, opacity;
+  will-change: transform;
+  opacity: 0;
 }
 
 // Убираем CSS начальные состояния - GSAP будет управлять ими

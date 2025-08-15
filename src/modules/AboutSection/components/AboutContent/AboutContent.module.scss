@@ -7,6 +7,7 @@
     font: $font-h2;
     margin-bottom: 1rem;
     will-change: transform;
+    opacity: 0;
   }
 
   &__text {
@@ -18,28 +19,31 @@
     will-change: transform;
     opacity: 0;
   }
-}
 
-.animation {
-  &__placeholder {
-    width: 100%;
-    height: 200px;
-    background: linear-gradient(
-      135deg,
-      rgba(100, 255, 116, 0.1) 0%,
-      rgba(100, 255, 116, 0.05) 100%
-    );
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(100, 255, 116, 0.6);
-    font-size: 0.9rem;
-    font-family: $font-family-roboto;
-    animation: pulse 2s ease-in-out infinite;
+  &__animation {
+    will-change: transform;
+    opacity: 0;
 
-    &::before {
-      content: 'Loading animation...';
+    &__animation-placeholder {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(
+        135deg,
+        rgba(100, 255, 116, 0.1) 0%,
+        rgba(100, 255, 116, 0.05) 100%
+      );
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(100, 255, 116, 0.6);
+      font-size: 0.9rem;
+      font-family: $font-family-roboto;
+      animation: pulse 2s ease-in-out infinite;
+
+      &::before {
+        content: 'Loading animation...';
+      }
     }
   }
 }

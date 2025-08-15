@@ -14,6 +14,7 @@
     color: #29abe2;
     -webkit-text-stroke: 1px $color-white;
     z-index: 2;
+    opacity: 0;
 
     @include vp-1024 {
       max-width: 400px;
@@ -46,6 +47,7 @@
       color: $color-accent;
       transform: rotate3d(1, 1, 1, -5deg);
       z-index: 4;
+      opacity: 0;
     }
   }
 

@@ -36,6 +36,11 @@
       content: 'Loading projects...';
     }
   }
+
+  &__container {
+    will-change: transform;
+    opacity: 0;
+  }
 }
 
 @keyframes pulse {

@@ -9,6 +9,8 @@
     align-items: flex-start;
     justify-content: flex-end;
     z-index: 1;
+    will-change: transform;
+    opacity: 0;
   }
 
   &__image {

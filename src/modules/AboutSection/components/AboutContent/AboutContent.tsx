@@ -66,7 +66,7 @@ export function AboutContent() {
         data-ease="power2.out"
         data-delay="0.6"
       >
-        <Suspense fallback={<div className={styles.animation__placeholder} />}>
+        <Suspense fallback={<div className={styles['about__animation-placeholder']} />}>
           <AboutAnimationLazy />
         </Suspense>
       </div>

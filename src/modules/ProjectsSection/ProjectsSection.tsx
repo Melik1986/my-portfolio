@@ -18,6 +18,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
     <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="5.5">
       <h2 className={`${styles['projects__title']} visually-hidden`}>Projects Catalog</h2>
       <div
+        className={styles['projects__container']}
         data-animation="fade-up"
         data-duration="1.0"
         data-stagger="0.15"

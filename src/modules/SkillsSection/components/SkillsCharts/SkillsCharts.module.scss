@@ -48,6 +48,7 @@
   // Оптимизация для touch устройств
   touch-action: pan-y;
   will-change: transform;
+  opacity: 0;
 }
 
 .dev-skills-chart,

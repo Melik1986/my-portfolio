@@ -36,5 +36,7 @@
 
   &__image {
     position: relative;
+    will-change: transform;
+    opacity: 0;
   }
 }
