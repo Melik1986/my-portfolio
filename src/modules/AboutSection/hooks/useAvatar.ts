@@ -244,7 +244,36 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
     [handleAvatarClick],
   );
 
-  return { handleMouseClick };
+  const handleMouseMove = useCallback(
+    (event: MouseEvent, container: HTMLElement, scene: AvatarScene, assetsRef: React.MutableRefObject<AvatarAssets | null>): void => {
+      const rect = container.getBoundingClientRect();
+      const coords = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(coords, scene.camera);
+
+      const intersects = raycaster.intersectObjects(scene.scene.children, true);
+      
+      // Проверяем наведение именно на аватар (не на groundMesh)
+      const avatarIntersection = intersects.find(intersect => 
+        intersect.object !== assetsRef.current?.groundMesh
+      );
+
+      if (avatarIntersection) {
+        container.dispatchEvent(new CustomEvent('avatarHover', {
+          detail: { x: event.clientX, y: event.clientY }
+        }));
+      } else {
+        container.dispatchEvent(new CustomEvent('avatarLeave'));
+      }
+    },
+    [],
+  );
+
+  return { handleMouseClick, handleMouseMove };
 };
 
 // Хук для обработки загрузки модели
@@ -397,7 +426,7 @@ export const useAvatar = () => {
   const { createGround, setupAnimations, setupMeshProperties } = useModelLoader();
   const { handleAvatarClick } = useAnimationControl(assetsRef, stateRef);
   const { calculateScale, updateSize } = useScaleManager();
-  const { handleMouseClick } = useMouseHandler(handleAvatarClick);
+  const { handleMouseClick, handleMouseMove } = useMouseHandler(handleAvatarClick);
   const { loadModel } = useModelHandler(
     setupMeshProperties,
     createGround,
@@ -458,6 +487,7 @@ export const useAvatar = () => {
       loadModel(sceneData);
 
       container.addEventListener('mousedown', handleMouseClickWrapper);
+      container.addEventListener('mousemove', (event) => handleMouseMove(event, container, sceneData, assetsRef));
       window.addEventListener('resize', handleResize);
 
       const resizeObserver = new ResizeObserver(handleResize);
