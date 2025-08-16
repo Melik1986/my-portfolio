@@ -50,7 +50,7 @@ const createInitialLog = (baseURL: string): string[] => [
   '4. Проверка анимаций карточек в секции Projects',
   '',
   'Expected criteria:',
-  '- 0 cases where data-animate element in viewport fails to start animation',
+  '- 0 cases where data-animation element in viewport fails to start animation',
   '- Animation start difference between elements in same group ≤ 150ms',
   '- Repeat viewport entries always trigger animations',
   '',
@@ -106,10 +106,16 @@ const checkServerAvailability = async (
 
     const hasGSAP = await page.evaluate(() => {
       return new Promise<boolean>((resolve) => {
+        let attempts = 0;
+        const maxAttempts = 50; // 5 seconds timeout
+        
         const checkGSAP = () => {
           if (typeof window.gsap !== 'undefined') {
             resolve(true);
+          } else if (attempts >= maxAttempts) {
+            resolve(false);
           } else {
+            attempts++;
             setTimeout(checkGSAP, 100);
           }
         };
@@ -124,8 +130,8 @@ const checkServerAvailability = async (
     }
 
     const animationData = await page.evaluate((): AnimationData => {
-      const elements = document.querySelectorAll('[data-animate], [data-animation]');
-      const withAnimate = document.querySelectorAll('[data-animate]');
+      const elements = document.querySelectorAll('[data-animation]');
+    const withAnimate = document.querySelectorAll('[data-animation]');
       const withAnimation = document.querySelectorAll('[data-animation]');
 
       return {
@@ -136,7 +142,7 @@ const checkServerAvailability = async (
           const htmlEl = el as HTMLElement;
           return {
             tag: htmlEl.tagName,
-            type: htmlEl.getAttribute('data-animate') || htmlEl.getAttribute('data-animation') || 'unknown',
+            type: htmlEl.getAttribute('data-animation') || 'unknown',
             className: htmlEl.className || 'no-class',
             visible: htmlEl.offsetParent !== null,
           };
@@ -158,7 +164,7 @@ const logAnimationData = (
   logPath: string,
 ): void => {
   console.log(`📊 Found ${animationData.total} elements with animations:`);
-  console.log(`   - ${animationData.withAnimate} with data-animate`);
+  console.log(`   - ${animationData.withAnimate} with data-animation`);
   console.log(`   - ${animationData.withAnimation} with data-animation`);
   const visibleCount = animationData.elements?.filter((el) => el.visible).length || 0;
   console.log(`   - ${visibleCount} visible elements`);
@@ -184,7 +190,7 @@ const logAnimationData = (
   }
 
   if (animationData.total === 0) {
-    console.warn('⚠️  No elements with data-animate attributes found');
+    console.warn('⚠️  No elements with data-animation attributes found');
   } else {
     console.log('🔍 Detailed elements info:', animationData.elements.slice(0, 5));
   }

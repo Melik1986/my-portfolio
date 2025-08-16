@@ -29,7 +29,7 @@ export class AnimationLogger {
   logAnimationStart(element: Element, sectionId: string, testScenario: string): void {
     const timestamp = performance.now() - this.startTime;
     const dataAttribute =
-      element.getAttribute('data-animation') || element.getAttribute('data-animate') || 'unknown';
+      element.getAttribute('data-animation') || 'unknown';
     const elementId = element.id || element.className || 'unnamed-element';
     const duration = element.getAttribute('data-duration');
     const delay = element.getAttribute('data-delay');

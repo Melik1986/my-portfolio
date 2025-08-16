@@ -14,31 +14,12 @@ export interface AnimationElement {
 }
 
 /**
- * Находит все элементы с data-animate или data-animation атрибутами
+ * Находит все элементы с data-animation атрибутами
  */
 export async function findAnimatedElements(page: Page): Promise<AnimationElement[]> {
   const elements: AnimationElement[] = [];
 
-  // Ищем элементы с data-animate
-  const animateElements = page.locator('[data-animate]');
-  const animateCount = await animateElements.count();
 
-  for (let i = 0; i < animateCount; i++) {
-    const element = animateElements.nth(i);
-    const dataAttribute = (await element.getAttribute('data-animate')) || 'unknown';
-    const elementId =
-      (await element.getAttribute('id')) ||
-      (await element.getAttribute('class')) ||
-      `animate-element-${i}`;
-    const sectionId = await getSectionId(element);
-
-    elements.push({
-      element,
-      dataAttribute,
-      sectionId,
-      elementId,
-    });
-  }
 
   // Ищем элементы с data-animation
   const animationElements = page.locator('[data-animation]');
@@ -156,10 +137,23 @@ export async function checkAnimationStarted(
     el.addEventListener('transitionstart', onStart, { once: true });
     el.addEventListener('animationstart', onStart, { once: true });
 
-    if (changed()) return true;
+    // Проверяем GSAP анимации
+    const checkGSAP = () => {
+      // @ts-ignore
+      if (typeof window.gsap !== 'undefined') {
+        // @ts-ignore
+        const gsapTimelines = window.gsap.globalTimeline.getChildren();
+        return gsapTimelines.some((tl: any) => {
+          return tl.isActive() && tl.targets().includes(el);
+        });
+      }
+      return false;
+    };
+
+    if (changed() || checkGSAP()) return true;
 
     const observer = new MutationObserver(() => {
-      if (changed()) {
+      if (changed() || checkGSAP()) {
         started = true;
         observer.disconnect();
       }
@@ -168,7 +162,7 @@ export async function checkAnimationStarted(
 
     return new Promise<boolean>((resolve) => {
       const tick = () => {
-        if (started || changed()) {
+        if (started || changed() || checkGSAP()) {
           observer.disconnect();
           resolve(true);
           return;
@@ -176,6 +170,88 @@ export async function checkAnimationStarted(
         if (performance.now() - start > maxWait) {
           observer.disconnect();
           resolve(false);
+          return;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }, timeout);
+}
+
+/**
+ * Ждет начала анимации элемента
+ */
+export async function waitForAnimationToStart(
+  element: Locator,
+  timeout: number = 3000,
+): Promise<void> {
+  await element.evaluate((el, maxWait) => {
+    if (!el) return Promise.resolve();
+
+    const start = performance.now();
+    const init = getComputedStyle(el);
+
+    const changed = () => {
+      const cs = getComputedStyle(el);
+      return (
+        cs.opacity !== init.opacity ||
+        cs.transform !== init.transform ||
+        cs.filter !== init.filter ||
+        cs.clipPath !== init.clipPath ||
+        (el as HTMLElement).style.cssText !== ''
+      );
+    };
+
+    // Проверяем GSAP анимации
+    const checkGSAP = () => {
+      // @ts-ignore
+      if (typeof window.gsap !== 'undefined') {
+        // @ts-ignore
+        const gsapTimelines = window.gsap.globalTimeline.getChildren();
+        return gsapTimelines.some((tl: any) => {
+          return tl.isActive() && tl.targets().includes(el);
+        });
+      }
+      return false;
+    };
+
+    if (changed() || checkGSAP()) return Promise.resolve();
+
+    return new Promise<void>((resolve) => {
+      let resolved = false;
+
+      const onStart = () => {
+        if (!resolved) {
+          resolved = true;
+          resolve();
+        }
+      };
+
+      el.addEventListener('transitionstart', onStart, { once: true });
+      el.addEventListener('animationstart', onStart, { once: true });
+
+      const observer = new MutationObserver(() => {
+        if ((changed() || checkGSAP()) && !resolved) {
+          resolved = true;
+          observer.disconnect();
+          resolve();
+        }
+      });
+      observer.observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+
+      const tick = () => {
+        if (resolved) return;
+        if (changed() || checkGSAP()) {
+          resolved = true;
+          observer.disconnect();
+          resolve();
+          return;
+        }
+        if (performance.now() - start > maxWait) {
+          resolved = true;
+          observer.disconnect();
+          resolve();
           return;
         }
         requestAnimationFrame(tick);
@@ -251,24 +327,7 @@ export async function findAnimatedElementsInSection(
   const section = page.locator(sectionSelector);
   const elements: AnimationElement[] = [];
 
-  // Ищем элементы с data-animate в секции
-  const animateElements = section.locator('[data-animate]');
-  const animateCount = await animateElements.count();
 
-  for (let i = 0; i < animateCount; i++) {
-    const element = animateElements.nth(i);
-    const dataAttribute = (await element.getAttribute('data-animate')) || 'unknown';
-    const elementId =
-      (await element.getAttribute('id')) || (await element.getAttribute('class')) || `animate-${i}`;
-    const sectionId = await getSectionId(element);
-
-    elements.push({
-      element,
-      dataAttribute,
-      sectionId,
-      elementId,
-    });
-  }
 
   // Ищем элементы с data-animation в секции
   const animationElements = section.locator('[data-animation]');

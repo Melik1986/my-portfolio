@@ -173,7 +173,7 @@ const processSection = (
  */
 export function createElementTimeline(
   container: HTMLElement,
-  selector = '[data-animate], [data-animation]',
+  selector = '[data-animation]',
 ): gsap.core.Timeline {
   // Ищем элементы только внутри переданного контейнера для изоляции анимаций
   const elements = Array.from(container.querySelectorAll(selector));

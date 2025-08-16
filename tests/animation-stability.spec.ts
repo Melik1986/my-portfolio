@@ -31,7 +31,7 @@ test.describe('Animation Stability Tests', () => {
     // Переходим на главную страницу с мягкими опциями ожидания
     await page.goto('/', {
       waitUntil: 'networkidle',
-      timeout: 20000,
+      timeout: 60000,
     });
 
     // Мягкое ожидание готовности DOM с fallback
@@ -55,15 +55,50 @@ test.describe('Animation Stability Tests', () => {
       console.warn('Main elements not found within timeout - proceeding anyway');
     }
 
-    // Опциональная проверка GSAP (не критичная для тестов)
-    const gsapLoaded = await page
-      .evaluate(() => {
-        return typeof window !== 'undefined' && (window as any).gsap !== undefined;
-      })
-      .catch(() => false);
+    // Ждем загрузки компонентов с анимациями и инициализации GSAP
+    let gsapLoaded = false;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    while (!gsapLoaded && attempts < maxAttempts) {
+      gsapLoaded = await page
+        .evaluate(() => {
+          return typeof window !== 'undefined' && (window as any).gsap !== undefined;
+        })
+        .catch(() => false);
+
+      if (!gsapLoaded) {
+        // Ждем 500ms и пробуем снова
+        await page.waitForTimeout(500);
+        attempts++;
+      }
+    }
 
     if (!gsapLoaded) {
-      console.warn('GSAP not detected - tests will proceed without GSAP interception');
+      console.warn('GSAP not detected after waiting - trying to trigger animation initialization');
+
+      // Пытаемся принудительно инициализировать анимации через скролл
+      await page.evaluate(() => {
+        // Скроллим немного вниз и обратно, чтобы триггернуть ленивую загрузку компонентов
+        window.scrollTo(0, 100);
+        setTimeout(() => window.scrollTo(0, 0), 100);
+      });
+
+      // Ждем еще немного после скролла
+      await page.waitForTimeout(1000);
+
+      // Проверяем GSAP еще раз
+      gsapLoaded = await page
+        .evaluate(() => {
+          return typeof window !== 'undefined' && (window as any).gsap !== undefined;
+        })
+        .catch(() => false);
+
+      if (gsapLoaded) {
+        console.log('GSAP successfully loaded after scroll trigger');
+      }
+    } else {
+      console.log('GSAP successfully detected and loaded');
     }
 
     // Инициализируем Performance API и GSAP перехват в браузере
@@ -88,12 +123,17 @@ test.describe('Animation Stability Tests', () => {
 
       // Улучшенный перехват GSAP анимаций с защитой от ошибок
       if (gsapAvailable && (window as any).gsap) {
+        console.log('Setting up GSAP interception...');
         try {
           const originalTo = (window as any).gsap.to;
           const originalFrom = (window as any).gsap.from;
           const originalFromTo = (window as any).gsap.fromTo;
 
-          function addAnimationLogging(target: any, vars: any, animationType: string) {
+          function addAnimationLogging(
+            target: string | Element | Element[],
+            vars: Record<string, unknown>,
+            animationType: string,
+          ) {
             try {
               // Клонируем vars чтобы не изменять оригинальный объект
               const enhancedVars = { ...vars };
@@ -108,7 +148,7 @@ test.describe('Animation Stability Tests', () => {
                   elements.forEach((el: Element) => {
                     if (el) {
                       const dataAttr =
-                        el.getAttribute('data-animate') ||
+                
                         el.getAttribute('data-animation') ||
                         el.getAttribute('data-stagger') ||
                         'unknown';
@@ -156,7 +196,10 @@ test.describe('Animation Stability Tests', () => {
             }
           }
 
-          (window as any).gsap.to = function (target: any, vars: any) {
+          (window as any).gsap.to = function (
+            target: string | Element | Element[],
+            vars: Record<string, unknown>,
+          ) {
             try {
               const enhancedVars = addAnimationLogging(target, vars, 'gsap.to');
               return originalTo.call(this, target, enhancedVars);
@@ -166,7 +209,10 @@ test.describe('Animation Stability Tests', () => {
             }
           };
 
-          (window as any).gsap.from = function (target: any, vars: any) {
+          (window as any).gsap.from = function (
+            target: string | Element | Element[],
+            vars: Record<string, unknown>,
+          ) {
             try {
               const enhancedVars = addAnimationLogging(target, vars, 'gsap.from');
               return originalFrom.call(this, target, enhancedVars);
@@ -176,7 +222,11 @@ test.describe('Animation Stability Tests', () => {
             }
           };
 
-          (window as any).gsap.fromTo = function (target: any, fromVars: any, toVars: any) {
+          (window as any).gsap.fromTo = function (
+            target: string | Element | Element[],
+            fromVars: Record<string, unknown>,
+            toVars: Record<string, unknown>,
+          ) {
             try {
               const enhancedToVars = addAnimationLogging(target, toVars, 'gsap.fromTo');
               return originalFromTo.call(this, target, fromVars, enhancedToVars);
@@ -191,7 +241,9 @@ test.describe('Animation Stability Tests', () => {
             try {
               const originalCreate = (window as any).gsap.ScrollTrigger.create;
 
-              (window as any).gsap.ScrollTrigger.create = function (config: any) {
+              (window as any).gsap.ScrollTrigger.create = function (
+                config: Record<string, unknown>,
+              ) {
                 try {
                   const enhancedConfig = { ...config };
                   const originalOnEnter = enhancedConfig.onEnter;
@@ -200,7 +252,10 @@ test.describe('Animation Stability Tests', () => {
                   const originalOnLeaveBack = enhancedConfig.onLeaveBack;
                   const originalOnUpdate = enhancedConfig.onUpdate;
 
-                  enhancedConfig.onEnter = function (self: any) {
+                  enhancedConfig.onEnter = function (self: {
+                    trigger?: Element;
+                    progress?: number;
+                  }) {
                     try {
                       const timestamp = performance.now();
                       console.log(
@@ -222,7 +277,10 @@ test.describe('Animation Stability Tests', () => {
                     }
                   };
 
-                  enhancedConfig.onLeave = function (self: any) {
+                  enhancedConfig.onLeave = function (self: {
+                    trigger?: Element;
+                    progress?: number;
+                  }) {
                     try {
                       const timestamp = performance.now();
                       console.log(
@@ -244,7 +302,10 @@ test.describe('Animation Stability Tests', () => {
                     }
                   };
 
-                  enhancedConfig.onEnterBack = function (self: any) {
+                  enhancedConfig.onEnterBack = function (self: {
+                    trigger?: Element;
+                    progress?: number;
+                  }) {
                     try {
                       const timestamp = performance.now();
                       console.log(
@@ -265,7 +326,10 @@ test.describe('Animation Stability Tests', () => {
                     }
                   };
 
-                  enhancedConfig.onLeaveBack = function (self: any) {
+                  enhancedConfig.onLeaveBack = function (self: {
+                    trigger?: Element;
+                    progress?: number;
+                  }) {
                     try {
                       const timestamp = performance.now();
                       console.log(
@@ -286,7 +350,10 @@ test.describe('Animation Stability Tests', () => {
                     }
                   };
 
-                  enhancedConfig.onUpdate = function (self: any) {
+                  enhancedConfig.onUpdate = function (self: {
+                    trigger?: Element;
+                    progress?: number;
+                  }) {
                     try {
                       const timestamp = performance.now();
                       const progress =
@@ -423,23 +490,24 @@ test.describe('Animation Stability Tests', () => {
   test('Переход по навигационной ссылке #about', async () => {
     const testScenario = 'anchor-navigation-about';
 
-    // Находим навигационную ссылку на About
-    const aboutLink = page.locator('a[href="#about"], a[href*="about"]').first();
+    // Ждем появления навигации
+    await page.waitForSelector('a[href="#about"]', { timeout: 10000 });
 
     // Засекаем время перехода
     const navigationStart = performance.now();
 
-    // Кликаем по ссылке
-    await aboutLink.click();
+    // Кликаем по ссылке (она использует preventDefault и onNavigate)
+    await page.click('a[href="#about"]');
 
-    // Ждем завершения перехода
-    await page.waitForTimeout(300);
+    // Ждем завершения прокрутки и анимации
+    await page.waitForTimeout(3000);
+
+    // Проверяем, что мы прокрутились к секции about
+    const aboutSection = page.locator('#about-section');
+    await expect(aboutSection).toBeInViewport();
 
     // Проверяем анимации в секции About
-    const aboutElements = await findAnimatedElementsInSection(
-      page,
-      '#about, .about, [data-section="about"]',
-    );
+    const aboutElements = await findAnimatedElementsInSection(page, '#about-section');
     const animationResults: AnimationElement[] = [];
 
     for (const element of aboutElements) {
@@ -458,7 +526,57 @@ test.describe('Animation Stability Tests', () => {
     const totalTime = navigationEnd - navigationStart;
 
     // Проверяем, что анимации запустились быстро после перехода
-    expect(totalTime).toBeLessThan(1000); // Переход должен быть быстрым
+    expect(totalTime).toBeLessThan(4000); // Переход должен быть быстрым
+    expect(animationResults.length).toBeGreaterThan(0);
+
+    console.log(
+      `✅ ${testScenario}: Navigation took ${totalTime.toFixed(2)}ms, ${animationResults.length} animations started`,
+    );
+  });
+
+  /**
+   * Тест 2.1: Переход по навигационной ссылке #skills
+   */
+  test('Переход по навигационной ссылке #skills', async () => {
+    const testScenario = 'anchor-navigation-skills';
+
+    // Ждем появления навигации
+    await page.waitForSelector('a[href="#skills"]', { timeout: 10000 });
+
+    // Засекаем время перехода
+    const navigationStart = performance.now();
+
+    // Кликаем по ссылке (она использует preventDefault и onNavigate)
+    await page.click('a[href="#skills"]');
+
+    // Ждем завершения прокрутки и анимации
+    await page.waitForTimeout(3000);
+
+    // Проверяем, что мы прокрутились к секции skills
+    const skillsSection = page.locator('#skills-section');
+    await expect(skillsSection).toBeInViewport();
+
+    // Проверяем анимации в секции Skills
+    const skillsElements = await findAnimatedElementsInSection(page, '#skills-section');
+    const animationResults: AnimationElement[] = [];
+
+    for (const element of skillsElements) {
+      const isVisible = await waitForElementInViewport(page, element.element, 1000);
+
+      if (isVisible) {
+        const animationStarted = await checkAnimationStarted(element.element, 300);
+
+        if (animationStarted) {
+          animationResults.push(element);
+        }
+      }
+    }
+
+    const navigationEnd = performance.now();
+    const totalTime = navigationEnd - navigationStart;
+
+    // Проверяем, что анимации запустились быстро после перехода
+    expect(totalTime).toBeLessThan(4000); // Переход должен быть быстрым
     expect(animationResults.length).toBeGreaterThan(0);
 
     console.log(

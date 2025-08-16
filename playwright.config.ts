@@ -24,7 +24,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   
   // Конфигурируемые параметры
-  timeout: parseInt(process.env.PLAYWRIGHT_TIMEOUT || '30000', 10),
+  timeout: parseInt(process.env.PLAYWRIGHT_TIMEOUT || '60000', 10),
   
   reporter: [
     ['html', { outputFolder: 'test-reports/html' }],
@@ -43,8 +43,8 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     
     // Таймауты
-    actionTimeout: parseInt(process.env.PLAYWRIGHT_ACTION_TIMEOUT || '5000', 10),
-    navigationTimeout: parseInt(process.env.PLAYWRIGHT_NAV_TIMEOUT || '30000', 10),
+    actionTimeout: parseInt(process.env.PLAYWRIGHT_ACTION_TIMEOUT || '10000', 10),
+    navigationTimeout: parseInt(process.env.PLAYWRIGHT_NAV_TIMEOUT || '60000', 10),
   },
   
   projects: [

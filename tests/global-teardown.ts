@@ -167,7 +167,7 @@ function generateSummaryReport(reports: any[]) {
     }
   });
 
-  // 2. Проверяем, что все элементы с data-animate запустили анимацию
+  // 2. Проверяем, что все элементы с data-animation запустили анимацию
   if (allAnimations.length === 0) {
     criticalIssues.push('No animations were detected during testing');
   }
