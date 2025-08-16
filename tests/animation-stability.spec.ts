@@ -137,18 +137,17 @@ test.describe('Animation Stability Tests', () => {
             try {
               // Клонируем vars чтобы не изменять оригинальный объект
               const enhancedVars = { ...vars };
-              const originalOnStart = enhancedVars.onStart;
+              const originalOnStart = enhancedVars.onStart as (() => void) | undefined;
 
               enhancedVars.onStart = function () {
                 try {
                   const timestamp = performance.now();
                   const elements =
-                    typeof target === 'string' ? document.querySelectorAll(target) : [target];
+                    typeof target === 'string' ? Array.from(document.querySelectorAll(target)) : Array.isArray(target) ? target : [target];
 
-                  elements.forEach((el: Element) => {
+                  elements.forEach((el) => {
                     if (el) {
                       const dataAttr =
-                
                         el.getAttribute('data-animation') ||
                         el.getAttribute('data-stagger') ||
                         'unknown';
@@ -173,13 +172,13 @@ test.describe('Animation Stability Tests', () => {
                   });
 
                   // Вызываем оригинальный onStart если он был
-                  if (originalOnStart) {
+                  if (originalOnStart && typeof originalOnStart === 'function') {
                     originalOnStart.call(this);
                   }
                 } catch (onStartError) {
                   console.warn('GSAP onStart logging failed:', onStartError);
                   // Всё равно вызываем оригинальный onStart
-                  if (originalOnStart) {
+                  if (originalOnStart && typeof originalOnStart === 'function') {
                     try {
                       originalOnStart.call(this);
                     } catch (originalError) {
@@ -246,11 +245,11 @@ test.describe('Animation Stability Tests', () => {
               ) {
                 try {
                   const enhancedConfig = { ...config };
-                  const originalOnEnter = enhancedConfig.onEnter;
-                  const originalOnLeave = enhancedConfig.onLeave;
-                  const originalOnEnterBack = enhancedConfig.onEnterBack;
-                  const originalOnLeaveBack = enhancedConfig.onLeaveBack;
-                  const originalOnUpdate = enhancedConfig.onUpdate;
+                  const originalOnEnter = enhancedConfig.onEnter as ((self: any) => void) | undefined;
+                  const originalOnLeave = enhancedConfig.onLeave as ((self: any) => void) | undefined;
+                  const originalOnEnterBack = enhancedConfig.onEnterBack as ((self: any) => void) | undefined;
+                  const originalOnLeaveBack = enhancedConfig.onLeaveBack as ((self: any) => void) | undefined;
+                  const originalOnUpdate = enhancedConfig.onUpdate as ((self: any) => void) | undefined;
 
                   enhancedConfig.onEnter = function (self: {
                     trigger?: Element;

@@ -1,0 +1,352 @@
+/**
+ * Fallback CSS анимации для случаев, когда GSAP недоступен
+ * Активируются через класс .gsap-fallback на html элементе
+ */
+
+// Базовые переменные для fallback анимаций
+:root {
+  --fallback-duration-fast: 0.3s;
+  --fallback-duration-normal: 0.6s;
+  --fallback-duration-slow: 1s;
+  --fallback-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --fallback-ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --fallback-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+// Fallback анимации активируются только когда GSAP недоступен
+.gsap-fallback {
+  
+  // Базовые состояния для элементов с data-animation
+  [data-animation] {
+    transition: all var(--fallback-duration-normal) var(--fallback-ease-out);
+    
+    // Начальное скрытое состояние
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    // Анимированное состояние
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Специфичные fallback анимации для разных типов
+  [data-animation="fade-in"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: none;
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  
+  [data-animation="slide-up"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  [data-animation="slide-down"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  [data-animation="slide-left"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  [data-animation="slide-right"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  [data-animation="scale-in"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  [data-animation="scale-out"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: scale(1.2);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  [data-animation="rotate-in"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: rotate(-10deg) scale(0.9);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+  }
+  
+  // Fallback для stagger анимаций
+  [data-animation*="stagger"] {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+      
+      // Имитация stagger через CSS delays
+      &:nth-child(1) { transition-delay: 0ms; }
+      &:nth-child(2) { transition-delay: 100ms; }
+      &:nth-child(3) { transition-delay: 200ms; }
+      &:nth-child(4) { transition-delay: 300ms; }
+      &:nth-child(5) { transition-delay: 400ms; }
+      &:nth-child(6) { transition-delay: 500ms; }
+      &:nth-child(7) { transition-delay: 600ms; }
+      &:nth-child(8) { transition-delay: 700ms; }
+      &:nth-child(9) { transition-delay: 800ms; }
+      &:nth-child(10) { transition-delay: 900ms; }
+    }
+  }
+  
+  // Fallback для текстовых анимаций (SplitText)
+  [data-animation*="text"] {
+    &:not(.animated) {
+      opacity: 0;
+    }
+    
+    &.animated {
+      opacity: 1;
+      
+      // Простая анимация появления текста
+      animation: fallback-text-reveal var(--fallback-duration-slow) var(--fallback-ease-out) forwards;
+    }
+  }
+  
+  // Fallback для карточек проектов
+  .project-card {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: all var(--fallback-duration-normal) var(--fallback-ease-out);
+    }
+  }
+  
+  // Fallback для навигации
+  .header {
+    &:not(.animated) {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all var(--fallback-duration-fast) var(--fallback-ease-out);
+    }
+  }
+  
+  // Fallback для секций
+  .section {
+    &:not(.animated) {
+      opacity: 0;
+    }
+    
+    &.animated {
+      opacity: 1;
+      transition: opacity var(--fallback-duration-normal) var(--fallback-ease-out);
+    }
+  }
+  
+  // Fallback для кнопок и интерактивных элементов
+  .btn, button {
+    transition: all var(--fallback-duration-fast) var(--fallback-ease);
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+  
+  // Fallback для модальных окон
+  .modal {
+    &:not(.animated) {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      transition: all var(--fallback-duration-fast) var(--fallback-ease-out);
+    }
+  }
+  
+  // Fallback для загрузочных состояний
+  .loading {
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #333;
+      border-radius: 50%;
+      animation: fallback-spin 1s linear infinite;
+    }
+  }
+}
+
+// Keyframes для fallback анимаций
+@keyframes fallback-text-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fallback-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fallback-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fallback-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -10px, 0);
+  }
+  70% {
+    transform: translate3d(0, -5px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+// Утилитарные классы для fallback режима
+.gsap-fallback {
+  .animate-pulse {
+    animation: fallback-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-bounce {
+    animation: fallback-bounce 1s infinite;
+  }
+  
+  .animate-spin {
+    animation: fallback-spin 1s linear infinite;
+  }
+  
+  // Классы для управления видимостью
+  .fade-in {
+    opacity: 1 !important;
+    transition: opacity var(--fallback-duration-normal) var(--fallback-ease-out);
+  }
+  
+  .fade-out {
+    opacity: 0 !important;
+    transition: opacity var(--fallback-duration-normal) var(--fallback-ease-out);
+  }
+  
+  .slide-in {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+    transition: all var(--fallback-duration-normal) var(--fallback-ease-out);
+  }
+  
+  .slide-out {
+    transform: translateY(-20px) !important;
+    opacity: 0 !important;
+    transition: all var(--fallback-duration-normal) var(--fallback-ease-out);
+  }
+}
+
+// Медиа-запросы для адаптивности fallback анимаций
+@media (prefers-reduced-motion: reduce) {
+  .gsap-fallback * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Темная тема для fallback анимаций
+@media (prefers-color-scheme: dark) {
+  .gsap-fallback {
+    .loading::after {
+      border-color: #444;
+      border-top-color: #fff;
+    }
+  }
+}

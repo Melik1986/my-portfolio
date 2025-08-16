@@ -1,13 +1,12 @@
 'use client';
 
 import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { initCardDeckScroll } from '../utils/cardDeckAnimation';
+import { gsapInitializer, isGSAPReady } from '@/lib/gsap/core/GSAPInitializer';
 
-// Регистрируем плагины
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+// Регистрация плагинов будет происходить через GSAPInitializer
 
 // Расширяем типы window для ScrollTrigger
 declare global {
@@ -32,7 +31,7 @@ const clearElementAnimations = (wrapper: HTMLElement): void => {
  * Интерфейс для управления анимациями секций
  */
 interface SectionController {
-  timeline: gsap.core.Timeline;
+  timeline: Omit<gsap.core.Timeline, 'then'>;
   wrapper: HTMLElement;
   isActive: boolean;
 }
@@ -46,57 +45,109 @@ export class AnimationController {
   private masterTimeline: gsap.core.Timeline | null = null;
   private activeCardIndex = 0;
   private isInitialized = false;
+  private fallbackActive = false;
 
   /**
    * Инициализация мастер-анимации (только для Hero секции)
    */
-  initializeMaster(): gsap.core.Timeline | null {
+  async initializeMaster(): Promise<gsap.core.Timeline | null> {
     if (this.isInitialized) return this.masterTimeline;
 
-    const scrollSection = document.querySelector('.scroll-section');
-    if (!scrollSection) return null;
+    try {
+      // Инициализируем GSAP с улучшенными настройками
+      const initResult = await gsapInitializer.initialize({
+        timeout: 15000,
+        retryAttempts: 3,
+        enableFallback: true
+      });
 
-    const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
-      scrollSection) as HTMLElement;
-    const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+      if (initResult.fallbackActive || !initResult.gsapAvailable) {
+        console.warn('🔄 GSAP недоступен, используем CSS fallback анимации');
+        this.fallbackActive = true;
+        this.activateFallbackMode();
+        this.isInitialized = true;
+        return null;
+      }
 
-    if (items.length === 0) return null;
+      const scrollSection = document.querySelector('.scroll-section');
+      if (!scrollSection) return null;
 
-    // Создаём мастер timeline для колоды карт
-    this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
-      this.activateCard(cardIndex);
-    });
+      const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
+        scrollSection) as HTMLElement;
+      const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
 
-    this.isInitialized = true;
-    return this.masterTimeline;
+      if (items.length === 0) return null;
+
+      // Создаём мастер timeline для колоды карт
+      this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
+        this.activateCard(cardIndex);
+      });
+
+      this.isInitialized = true;
+      return this.masterTimeline;
+    } catch (error) {
+      console.error('❌ Ошибка инициализации master timeline, используем fallback:', error);
+      this.fallbackActive = true;
+      this.activateFallbackMode();
+      this.isInitialized = true;
+      return null;
+    }
   }
 
   /**
    * Регистрация секции с автоматическим созданием timeline
    */
-  registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
+  async registerSection(sectionIndex: number, wrapper: HTMLElement): Promise<gsap.core.Timeline | null> {
     // Проверяем, что секция ещё не зарегистрирована
     if (this.sections.has(sectionIndex)) {
       return this.sections.get(sectionIndex)!.timeline;
     }
 
-    // Создаём timeline элементов для секции
-    const elementTimeline = createElementTimeline(wrapper, '[data-animation]');
+    try {
+      if (this.fallbackActive) {
+        return this.registerSectionFallback(sectionIndex, wrapper);
+      }
 
-    // Добавляем автоочистку при реверсе
-    elementTimeline.eventCallback('onReverseComplete', () => {
-      clearElementAnimations(wrapper);
-    });
+      return await this.registerSectionWithGSAP(sectionIndex, wrapper);
+    } catch (error) {
+      console.error(`❌ Ошибка регистрации секции ${sectionIndex}, используем fallback:`, error);
+      this.activateFallbackForSection(wrapper);
+      return this.createFallbackController(sectionIndex, wrapper);
+    }
+  }
 
-    // Сохраняем контроллер секции
+  /**
+   * Регистрация секции в fallback режиме
+   */
+  private registerSectionFallback(sectionIndex: number, wrapper: HTMLElement): null {
+    console.log(`🔄 Регистрация секции ${sectionIndex} в fallback режиме`);
+    this.activateFallbackForSection(wrapper);
+    
     const controller: SectionController = {
-      timeline: elementTimeline,
+      timeline: gsap.timeline() as Omit<gsap.core.Timeline, 'then'>, // Пустой timeline для совместимости
       wrapper,
-      isActive: sectionIndex === 0, // Hero активна по умолчанию
+      isActive: sectionIndex === 0,
     };
-
+    
     this.sections.set(sectionIndex, controller);
+    return null;
+  }
 
+  /**
+   * Регистрация секции с GSAP анимациями
+   */
+  private async registerSectionWithGSAP(sectionIndex: number, wrapper: HTMLElement): Promise<gsap.core.Timeline | null> {
+    const elementTimeline = await createElementTimeline(wrapper, '[data-animation]');
+
+    if (!elementTimeline) {
+      console.warn(`Fallback активирован для секции ${sectionIndex}`);
+      this.activateFallbackForSection(wrapper);
+      return this.createFallbackController(sectionIndex, wrapper);
+    }
+
+    this.setupTimelineCallbacks(elementTimeline, wrapper);
+    this.createAndStoreSectionController(sectionIndex, wrapper, elementTimeline);
+    
     // Если это Hero секция, активируем её немедленно
     if (sectionIndex === 0) {
       this.activateCard(0);
@@ -106,9 +157,55 @@ export class AnimationController {
   }
 
   /**
+   * Создание fallback контроллера
+   */
+  private createFallbackController(sectionIndex: number, wrapper: HTMLElement): null {
+    const controller: SectionController = {
+      timeline: gsap.timeline() as Omit<gsap.core.Timeline, 'then'>,
+      wrapper,
+      isActive: sectionIndex === 0,
+    };
+    
+    this.sections.set(sectionIndex, controller);
+    return null;
+  }
+
+  /**
+   * Настройка колбэков для timeline
+   */
+  private setupTimelineCallbacks(timeline: Omit<gsap.core.Timeline, 'then'>, wrapper: HTMLElement): void {
+    timeline.eventCallback('onReverseComplete', () => {
+      clearElementAnimations(wrapper);
+    });
+  }
+
+  /**
+/**
+   * Создание и сохранение контроллера секции
+   */
+  private createAndStoreSectionController(
+    sectionIndex: number,
+    wrapper: HTMLElement,
+    timeline: Omit<gsap.core.Timeline, 'then'>,
+  ): void {
+    const controller: SectionController = {
+      timeline,
+      wrapper,
+      isActive: sectionIndex === 0, // Hero активна по умолчанию
+    };
+
+    this.sections.set(sectionIndex, controller);
+  }
+
+  /**
    * Активация карточки с автоматическим управлением timeline
    */
   private activateCard(cardIndex: number): void {
+    if (this.fallbackActive) {
+      this.activateFallbackCard(cardIndex);
+      return;
+    }
+
     // Деактивируем предыдущую карточку
     const prevController = this.sections.get(this.activeCardIndex);
     if (prevController && prevController.isActive) {
@@ -155,13 +252,18 @@ export class AnimationController {
    * Программная навигация к карточке по индексу
    */
   navigateToCard(cardIndex: number): void {
-    if (!this.isInitialized || !this.masterTimeline) {
+    if (!this.isInitialized) {
       console.warn('AnimationController not initialized');
       return;
     }
 
     if (!this.sections.has(cardIndex)) {
       console.warn(`Card with index ${cardIndex} not found`);
+      return;
+    }
+
+    if (this.fallbackActive || !isGSAPReady() || !this.masterTimeline) {
+      this.activateCard(cardIndex);
       return;
     }
 
@@ -255,10 +357,186 @@ export class AnimationController {
   }
 
   /**
+   * Активирует fallback режим для всех анимаций
+   */
+  private activateFallbackMode(): void {
+    document.documentElement.classList.add('gsap-fallback');
+    console.log('🔄 Активирован fallback режим анимаций');
+  }
+
+  /**
+   * Активирует fallback анимации для конкретной секции
+   */
+  private activateFallbackForSection(wrapper: HTMLElement): void {
+    wrapper.classList.add('fallback-animations');
+    const elements = wrapper.querySelectorAll('[data-animation]');
+    elements.forEach(el => {
+      el.classList.add('animate-fallback');
+    });
+  }
+
+  /**
+   * Активирует карточку в fallback режиме
+   */
+  private activateFallbackCard(cardIndex: number): void {
+    // Деактивируем все секции
+    this.sections.forEach((controller, index) => {
+      if (controller.isActive && index !== cardIndex) {
+        controller.wrapper.classList.remove('active');
+        controller.isActive = false;
+      }
+    });
+
+    // Активируем целевую секцию
+    const targetController = this.sections.get(cardIndex);
+    if (targetController && !targetController.isActive) {
+      targetController.wrapper.classList.add('active');
+      targetController.isActive = true;
+      this.activeCardIndex = cardIndex;
+    }
+  }
+
+  /**
    * Проверка инициализации
    */
   isReady(): boolean {
     return this.isInitialized;
+  }
+
+  /**
+   * Проверка fallback режима
+   */
+  isFallbackActive(): boolean {
+    return this.fallbackActive;
+  }
+
+  /**
+   * Воспроизведение анимации
+   */
+  play(): void {
+    if (this.fallbackActive) {
+      this.triggerFallbackAnimations();
+      return;
+    }
+
+    if (this.masterTimeline) {
+      this.masterTimeline.play();
+    }
+  }
+
+  /**
+   * Пауза анимации
+   */
+  pause(): void {
+    if (this.fallbackActive) {
+      return; // CSS анимации не поддерживают паузу
+    }
+
+    if (this.masterTimeline) {
+      this.masterTimeline.pause();
+    }
+  }
+
+  /**
+   * Перезапуск анимации
+   */
+  restart(): void {
+    if (this.fallbackActive) {
+      this.resetFallbackAnimations();
+      setTimeout(() => this.triggerFallbackAnimations(), 50);
+      return;
+    }
+
+    if (this.masterTimeline) {
+      this.masterTimeline.restart();
+    }
+  }
+
+  /**
+   * Реверс анимации
+   */
+  reverse(): void {
+    if (this.fallbackActive) {
+      this.resetFallbackAnimations();
+      return;
+    }
+
+    if (this.masterTimeline) {
+      this.masterTimeline.reverse();
+    }
+  }
+
+  /**
+   * Настройка ScrollTrigger
+   */
+  setupScrollTrigger(config: ScrollTrigger.Vars): void {
+    if (this.fallbackActive || !isGSAPReady()) {
+      console.warn('ScrollTrigger недоступен в fallback режиме');
+      return;
+    }
+
+    if (this.masterTimeline && window.ScrollTrigger) {
+      window.ScrollTrigger.create({
+        ...config,
+        animation: this.masterTimeline
+      });
+    }
+  }
+
+  /**
+   * Запуск fallback анимаций
+   */
+  private triggerFallbackAnimations(): void {
+    this.sections.forEach((controller) => {
+      if (controller.isActive) {
+        const elements = controller.wrapper.querySelectorAll('[data-animation]');
+        elements.forEach((el, index) => {
+          setTimeout(() => {
+            el.classList.add('animate-fallback');
+          }, index * 100);
+        });
+      }
+    });
+  }
+
+  /**
+   * Сброс fallback анимаций
+   */
+  private resetFallbackAnimations(): void {
+    this.sections.forEach((controller) => {
+      const elements = controller.wrapper.querySelectorAll('[data-animation]');
+      elements.forEach(el => {
+        el.classList.remove('animate-fallback');
+      });
+    });
+  }
+
+  /**
+   * Уничтожение контроллера
+   */
+  destroy(): void {
+    if (this.fallbackActive) {
+      this.resetFallbackAnimations();
+      document.documentElement.classList.remove('gsap-fallback');
+    } else {
+      if (this.masterTimeline) {
+        this.masterTimeline.kill();
+      }
+
+      this.sections.forEach((controller) => {
+        controller.timeline.kill();
+        clearElementAnimations(controller.wrapper);
+      });
+
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      }
+    }
+
+    this.sections.clear();
+    this.masterTimeline = null;
+    this.isInitialized = false;
+    this.fallbackActive = false;
   }
 }
 

@@ -48,14 +48,18 @@ const navigateToSection = (
  */
 export function Header() {
   const headerRef = useRef<HTMLElement>(null);
-  const elementTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const elementTimelineRef = useRef<Omit<gsap.core.Timeline, 'then'> | null>(null);
   const { scrollTo, isReady, smoother } = useScrollSmoother();
 
   useEffect(() => {
-    if (headerRef.current) {
-      elementTimelineRef.current = createElementTimeline(headerRef.current);
-      elementTimelineRef.current?.play();
-    }
+    const initializeAnimation = async () => {
+      if (headerRef.current) {
+        elementTimelineRef.current = await createElementTimeline(headerRef.current);
+        elementTimelineRef.current?.play();
+      }
+    };
+    
+    initializeAnimation();
   }, []);
 
   const handleNavigate = (sectionId: string) => {
