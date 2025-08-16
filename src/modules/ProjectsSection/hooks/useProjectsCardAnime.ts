@@ -8,6 +8,10 @@ export const useCardAnimation = (config: AnimationConfig, totalCards: number) =>
 
   const animateToPosition = useCallback(
     (element: HTMLElement, position: Partial<CardPosition>) => {
+      // Проверяем, что карточка НЕ в полноэкранном режиме
+      const isFullscreen = element.getAttribute('data-fullscreen') === 'true';
+      if (isFullscreen) return;
+      
       gsap.to(element, {
         duration: config.fanDuration,
         ...position,
@@ -19,6 +23,10 @@ export const useCardAnimation = (config: AnimationConfig, totalCards: number) =>
 
   const animateHover = useCallback(
     (element: HTMLElement, lifted: boolean) => {
+      // Проверяем, что карточка НЕ в полноэкранном режиме
+      const isFullscreen = element.getAttribute('data-fullscreen') === 'true';
+      if (isFullscreen) return;
+      
       const currentPosition = getCurrentPosition(element, positions);
       gsap.to(element, {
         duration: config.hoverDuration,

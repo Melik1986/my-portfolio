@@ -33,14 +33,36 @@ function getAnimationConfig(): AnimationConfig {
 function usePositionAnimation(
   cardRef: React.RefObject<HTMLDivElement | null>,
   options: { index: number; cardNumber: number; totalCards: number },
+  isFullscreen: boolean,
 ) {
   const config = getAnimationConfig();
   const { positions } = useCardAnimation(config, options.totalCards);
 
   useEffect(() => {
-    if (cardRef.current) {
+    if (!cardRef.current) return;
+    
+    if (isFullscreen) {
+      // Полностью сбрасываем все GSAP трансформации для полноэкранного режима
+      gsap.set(cardRef.current, {
+        clearProps: "all",
+        x: 0,
+        y: 0,
+        z: 0,
+        scale: 1,
+        rotation: 0,
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        skewX: 0,
+        skewY: 0,
+        filter: 'none',
+        zIndex: 9999,
+      });
+    } else {
+      // Применяем позицию только если карточка НЕ в полноэкранном режиме
       const effectiveIndex = options.totalCards - 1 - options.index;
       const pos = positions[effectiveIndex] || { x: 0, y: 0, zIndex: 0, filter: '' };
+      
       gsap.set(cardRef.current, {
         x: pos.x,
         y: pos.y,
@@ -49,33 +71,21 @@ function usePositionAnimation(
         zIndex: options.cardNumber,
       });
     }
-  }, [cardRef, options, positions]);
-}
-
-function useTransitionAnimation(cardRef: React.RefObject<HTMLDivElement | null>) {
-  const animateTransition = () => {
-    if (cardRef.current) {
-      gsap.set(cardRef.current, { opacity: 0 });
-      setTimeout(() => {
-        gsap.set(cardRef.current, { opacity: 1 });
-      }, 100);
-    }
-  };
-
-  return { animateTransition };
+  }, [cardRef, options, positions, isFullscreen]);
 }
 
 function useProjectCardAnimation(
   cardRef: React.RefObject<HTMLDivElement | null>,
   options: { index: number; cardNumber: number; totalCards: number },
+  isFullscreen: boolean,
 ) {
-  usePositionAnimation(cardRef, options);
-  return useTransitionAnimation(cardRef);
+  usePositionAnimation(cardRef, options, isFullscreen);
+  return { animateTransition: () => {} };
 }
 
-function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber: number) {
+function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber: number, onClose?: () => void) {
   return isFullscreen ? (
-    <ProjectCardFullscreen project={project} />
+    <ProjectCardFullscreen project={project} onClose={onClose} />
   ) : (
     <ProjectCardPreview
       number={cardNumber}
@@ -91,23 +101,42 @@ export function ProjectCard(props: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const cardNumber = totalCards - index;
 
-  const { animateTransition } = useProjectCardAnimation(cardRef, { index, cardNumber, totalCards });
+  const { animateTransition } = useProjectCardAnimation(cardRef, { index, cardNumber, totalCards }, isFullscreen);
 
   const handleClick = useCallback(() => {
     setIsFullscreen((prev) => !prev);
-    animateTransition();
-  }, [animateTransition]);
+  }, []);
 
-  const content = getCardContent(isFullscreen, project, cardNumber);
+  // Обработка клавиши Escape для выхода из полноэкранного режима
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isFullscreen) {
+        handleClick();
+      }
+    };
+
+    if (isFullscreen) {
+      // Блокируем прокрутку страницы
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = 'unset';
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }
+  }, [isFullscreen, handleClick]);
+
+  const content = getCardContent(isFullscreen, project, cardNumber, () => handleClick());
 
   return (
     <div
       ref={cardRef}
       className={`${styles['projects-card']} ${isFullscreen ? styles['fullscreen'] : ''}`}
       data-index={index}
+      data-fullscreen={isFullscreen}
       onClick={handleClick}
-      onMouseEnter={onHoverStart}
-      onMouseLeave={onHoverEnd}
+      onMouseEnter={isFullscreen ? undefined : onHoverStart}
+      onMouseLeave={isFullscreen ? undefined : onHoverEnd}
     >
       {content}
     </div>

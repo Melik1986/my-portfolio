@@ -27,7 +27,9 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   useEffect(() => {
     const cards = document.querySelectorAll('.projects-card');
     cards.forEach((card, i) => {
-      if (positions[i]) {
+      // Проверяем, что карточка НЕ в полноэкранном режиме
+      const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
+      if (positions[i] && !isFullscreen) {
         // Устанавливаем начальное веерное положение
         gsap.set(card as HTMLElement, positions[i]);
       }
@@ -39,7 +41,11 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
       startTransition(() => {
         const card = document.querySelector(`[data-index="${index}"]`);
         if (card && isExpanded.current) {
-          animateHover(card as HTMLElement, isHovering);
+          // Проверяем, что карточка НЕ в полноэкранном режиме
+          const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
+          if (!isFullscreen) {
+            animateHover(card as HTMLElement, isHovering);
+          }
         }
       });
     },

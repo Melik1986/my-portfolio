@@ -16,6 +16,9 @@
   border: 1px solid rgba(0, 0, 0, 1);
   -webkit-text-stroke: 1px #fff5;
   color: transparent;
+  
+  // Плавные переходы для всех свойств
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
   @mixin vp-min($width) {
     width: 900px;
@@ -38,27 +41,61 @@
   }
 }
 
+// Стили для полноэкранного режима
 .projects-card.fullscreen {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 100% !important;
   max-width: 100%;
   max-height: 100%;
   margin: 0;
   padding: 0;
-  z-index: 1000;
+  z-index: 9999 !important;
   border-radius: 0;
-  transition: all 0.3s ease;
   display: flex;
   justify-content: center;
   align-items: center;
   font: $font-h6;
-
+  
+  // Сбрасываем все 3D эффекты
+  transform-style: flat !important;
+  perspective: none !important;
+  
+  // Убираем все эффекты для чистого полноэкранного вида
+  filter: none !important;
+  -webkit-text-stroke: none !important;
+  color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  // Отключаем все GSAP трансформации
+  transform: none !important;
+  
+  // Убираем все hover эффекты
   &:hover {
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  // Дополнительные стили для полноэкранного режима
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.9);
+  
+  // Анимация появления
+  animation: fullscreenFadeIn 0.3s ease-out;
+}
+
+// Анимация появления полноэкранного режима
+@keyframes fullscreenFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

@@ -5,7 +5,7 @@ import { AnimationType, AnimationConfig } from '@/lib/gsap/types/gsap.types';
  * Извлекает настройки анимации из DOM элемента
  */
 export function parseAnimationData(element: Element): AnimationConfig | null {
-  const animation = element.getAttribute('data-animation') || element.getAttribute('data-animate');
+  const animation = element.getAttribute('data-animation');
   if (!animation) return null;
 
   const duration = element.getAttribute('data-duration');

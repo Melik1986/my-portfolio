@@ -13,7 +13,7 @@
   overflow: hidden;
   position: relative;
 
-  // Глобальные стили для состояния загрузки (так как fallback находится вне модуля)
+  // Глобальные стили для состояния загрузки
   :global(.projects-loading) {
     width: 100%;
     height: 400px;

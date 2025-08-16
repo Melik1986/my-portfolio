@@ -8,9 +8,10 @@ import styles from './ProjectCardFull.module.scss';
 
 interface ProjectCardFullscreenProps {
   project: ProjectData;
+  onClose?: () => void;
 }
 
-export function ProjectCardFullscreen({ project }: ProjectCardFullscreenProps) {
+export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscreenProps) {
   return (
     <>
       <Image
@@ -36,6 +37,15 @@ export function ProjectCardFullscreen({ project }: ProjectCardFullscreenProps) {
           Repositories
         </Link>
       </div>
+      {onClose && (
+        <button
+          className={styles['projects-card__close']}
+          onClick={onClose}
+          aria-label="Close fullscreen view"
+        >
+          ✕
+        </button>
+      )}
     </>
   );
 }

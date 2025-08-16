@@ -13,7 +13,9 @@ export const useDeckAnimation = (
     const cards = document.querySelectorAll('.projects-card');
 
     cards.forEach((card, i) => {
-      if (!card.classList.contains('fullscreen') && positions[i]) {
+      // Проверяем, что карточка НЕ в полноэкранном режиме
+      const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
+      if (!isFullscreen && positions[i]) {
         // При наведении карточки поднимаются еще выше
         animateToPosition(card as HTMLElement, {
           ...positions[i],
@@ -28,7 +30,9 @@ export const useDeckAnimation = (
     const cards = document.querySelectorAll('.projects-card');
 
     cards.forEach((card, i) => {
-      if (!card.classList.contains('fullscreen') && positions[i]) {
+      // Проверяем, что карточка НЕ в полноэкранном режиме
+      const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
+      if (!isFullscreen && positions[i]) {
         // Возвращаем в базовое веерное положение, НЕ в центр
         animateToPosition(card as HTMLElement, positions[i]);
       }

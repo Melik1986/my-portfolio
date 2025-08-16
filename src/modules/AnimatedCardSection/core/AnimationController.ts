@@ -21,7 +21,7 @@ declare global {
  * Используется при реверсе/очистке, чтобы вернуть элементы к исходному состоянию
  */
 const clearElementAnimations = (wrapper: HTMLElement): void => {
-  const elements = wrapper.querySelectorAll<HTMLElement>('[data-animate], [data-animation]');
+  const elements = wrapper.querySelectorAll<HTMLElement>('[data-animation]');
   elements.forEach((el) => {
     gsap.killTweensOf(el);
     gsap.set(el, { clearProps: 'all' });
@@ -81,7 +81,7 @@ export class AnimationController {
     }
 
     // Создаём timeline элементов для секции
-    const elementTimeline = createElementTimeline(wrapper, '[data-animate], [data-animation]');
+    const elementTimeline = createElementTimeline(wrapper, '[data-animation]');
 
     // Добавляем автоочистку при реверсе
     elementTimeline.eventCallback('onReverseComplete', () => {
