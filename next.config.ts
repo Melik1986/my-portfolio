@@ -35,15 +35,15 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/webp', 'image/avif'],
     // Добавить для внешних изображений (если появятся)
-    // domains: ['example.com'],
-    // remotePatterns: [
-    //   {
-    //     protocol: 'https',
-    //     hostname: 'example.com',
-    //     port: '',
-    //     pathname: '/images/**',
-    //   },
-    // ],
+    domains: ['example.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        port: '',
+        pathname: '/images/**',
+      },
+    ],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

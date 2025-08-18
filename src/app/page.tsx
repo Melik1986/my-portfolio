@@ -6,6 +6,7 @@ import { AboutSection } from '@/modules/AboutSection/AboutSection';
 import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
 import { GallerySection } from '@/modules/GallerySection/GallerySection';
+import { AiContentSection } from '@/modules/AiContentSection/AiContentSection';
 import { PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
 
 /**
@@ -39,6 +40,10 @@ export default function Home() {
 
           <AnimatedCardSection id="gallery-section" title="Gallery" sectionIndex={4}>
             <GallerySection />
+          </AnimatedCardSection>
+
+          <AnimatedCardSection id="ai-content-section" title="Ai Content" sectionIndex={5}>
+            <AiContentSection />
           </AnimatedCardSection>
         </ul>
       </div>

@@ -212,11 +212,12 @@ export class AnimationController {
   getCardIndexBySectionId(sectionId: string): number {
     // Маппинг ID секций к индексам карточек
     const sectionMapping: Record<string, number> = {
-      'hero-section': 0,
-      'about-section': 1,
-      'skills-section': 2,
-      'projects-section': 3,
-      'gallery-section': 4,
+      'hero-section': 0,// Вертикальный скролл
+      'about-section': 1,// Вертикальный скролл
+      'skills-section': 2,// Вертикальный скролл
+      'projects-section': 3,// Горизонтальный скролл
+      'gallery-section': 4,// Горизонтальный скролл
+      'ai-content-section': 5,// Горизонтальный скролл
     };
 
     return sectionMapping[sectionId] ?? -1;
