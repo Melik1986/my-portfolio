@@ -276,19 +276,30 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
   return { handleMouseClick, handleMouseMove };
 };
 
-// Хук для обработки загрузки модели
-const useModelHandler = (
-  setupMeshProperties: (avatar: THREE.Group) => void,
-  createGround: () => THREE.Mesh,
-  setupAnimations: (gltf: GLTF, mixer: THREE.AnimationMixer) => {
+// Хук для обработки загрузки модели (уменьшено количество параметров)
+interface ModelHandlerDeps {
+  setupMeshProperties: (avatar: THREE.Group) => void;
+  createGround: () => THREE.Mesh;
+  setupAnimations: (
+    gltf: GLTF,
+    mixer: THREE.AnimationMixer,
+  ) => {
     waveAction: THREE.AnimationAction | null;
     stumbleAction: THREE.AnimationAction | null;
-  },
-  calculateScale: (width: number, height: number) => number,
-  assetsRef: React.MutableRefObject<AvatarAssets | null>,
-  stateRef: React.MutableRefObject<AvatarState>,
-  refs: React.MutableRefObject<AvatarRefs>,
-) => {
+  };
+}
+
+interface ModelHandlerContext {
+  calculateScale: (width: number, height: number) => number;
+  assetsRef: React.MutableRefObject<AvatarAssets | null>;
+  stateRef: React.MutableRefObject<AvatarState>;
+  refs: React.MutableRefObject<AvatarRefs>;
+}
+
+const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
+  const { setupMeshProperties, createGround, setupAnimations } = deps;
+  const { calculateScale, assetsRef, stateRef, refs } = ctx;
+
   const handleModelLoaded = useCallback(
     (gltf: GLTF, scene: AvatarScene): void => {
       if (stateRef.current.isDisposed) return;
@@ -369,26 +380,23 @@ const useAnimationLoop = (
   return { animate };
 };
 
-// Хук для очистки ресурсов
+// Хук для очистки ресурсов (уменьшено количество параметров)
+interface CleanupContext {
+  stateRef: React.MutableRefObject<AvatarState>;
+  sceneRef: React.MutableRefObject<AvatarScene | null>;
+  assetsRef: React.MutableRefObject<AvatarAssets | null>;
+  refs: React.MutableRefObject<AvatarRefs>;
+}
+
 const useCleanup = (
-  stateRef: React.MutableRefObject<AvatarState>,
-  sceneRef: React.MutableRefObject<AvatarScene | null>,
-  assetsRef: React.MutableRefObject<AvatarAssets | null>,
-  refs: React.MutableRefObject<AvatarRefs>,
-  handleMouseClick: (event: MouseEvent, container: HTMLElement, scene: AvatarScene) => void,
+  ctx: CleanupContext,
 ) => {
+  const { stateRef, sceneRef, assetsRef } = ctx;
   const cleanup = useCallback((): void => {
     stateRef.current.isDisposed = true;
 
     const scene = sceneRef.current;
     const assets = assetsRef.current;
-    const container = refs.current.container;
-
-    if (container) {
-      container.removeEventListener('mousedown', (event: MouseEvent) =>
-        handleMouseClick(event, container, scene!),
-      );
-    }
 
     if (assets?.mixer) {
       assets.mixer.stopAllAction();
@@ -407,11 +415,12 @@ const useCleanup = (
 
     sceneRef.current = null;
     assetsRef.current = null;
-  }, [stateRef, sceneRef, assetsRef, refs, handleMouseClick]);
+  }, [stateRef, sceneRef, assetsRef]);
 
   return { cleanup };
 };
 
+// eslint-disable-next-line max-lines-per-function
 export const useAvatar = () => {
   const refs = useRef<AvatarRefs>({ container: null });
   const sceneRef = useRef<AvatarScene | null>(null);
@@ -428,18 +437,12 @@ export const useAvatar = () => {
   const { calculateScale, updateSize } = useScaleManager();
   const { handleMouseClick, handleMouseMove } = useMouseHandler(handleAvatarClick);
   const { loadModel } = useModelHandler(
-    setupMeshProperties,
-    createGround,
-    setupAnimations,
-    calculateScale,
-    assetsRef,
-    stateRef,
-    refs,
+    { setupMeshProperties, createGround, setupAnimations },
+    { calculateScale, assetsRef, stateRef, refs },
   );
   const { animate } = useAnimationLoop(sceneRef, assetsRef, stateRef);
-  const { cleanup } = useCleanup(stateRef, sceneRef, assetsRef, refs, handleMouseClick);
+  const { cleanup } = useCleanup({ stateRef, sceneRef, assetsRef, refs });
 
-  // Обработка события мыши
   const handleMouseClickWrapper = useCallback(
     (event: MouseEvent): void => {
       const container = refs.current.container;
@@ -452,7 +455,6 @@ export const useAvatar = () => {
     [handleMouseClick],
   );
 
-  // Создание wrapper для updateSize
   const handleResize = useCallback((): void => {
     const container = refs.current.container;
     const scene = sceneRef.current;
@@ -462,7 +464,6 @@ export const useAvatar = () => {
     updateSize(container, scene, assets, calculateScale);
   }, [updateSize, calculateScale]);
 
-  // Основная инициализация
   useEffect(() => {
     const container = refs.current.container;
     if (!container) return;
@@ -487,7 +488,8 @@ export const useAvatar = () => {
       loadModel(sceneData);
 
       container.addEventListener('mousedown', handleMouseClickWrapper);
-      container.addEventListener('mousemove', (event) => handleMouseMove(event, container, sceneData, assetsRef));
+      const mouseMoveHandler = (event: MouseEvent) => handleMouseMove(event, container, sceneData, assetsRef);
+      container.addEventListener('mousemove', mouseMoveHandler);
       window.addEventListener('resize', handleResize);
 
       const resizeObserver = new ResizeObserver(handleResize);
@@ -503,6 +505,10 @@ export const useAvatar = () => {
 
       return () => {
         window.removeEventListener('resize', handleResize);
+        if (container) {
+          container.removeEventListener('mousedown', handleMouseClickWrapper);
+          container.removeEventListener('mousemove', mouseMoveHandler);
+        }
         resizeObserver.disconnect();
         cleanup();
       };
@@ -516,6 +522,7 @@ export const useAvatar = () => {
     loadModel,
     handleMouseClickWrapper,
     handleResize,
+    handleMouseMove,
     animate,
     cleanup,
   ]);

@@ -23,6 +23,7 @@ export function HeroAvatar() {
         alt="Melik Musinian Avatar"
         width={500}
         height={400}
+        style={{ height: 'auto' }}
         priority
         fill={false}
         data-animation="zoom-in"

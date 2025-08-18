@@ -149,18 +149,20 @@ const cleanupScrollTrigger = async (): Promise<void> => {
   }
 };
 
-export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
-  const smootherRef = useRef<ScrollSmootherInstance | null>(null);
-  const isInitializingRef = useRef(false);
-  const [isReady, setIsReady] = useState(false);
-  const {
-    wrapper = '#smooth-wrapper',
-    content = '#smooth-content',
-    smooth = 1.5,
-    effects = true,
-    normalizeScroll = true,
-  } = options;
+// Вынос инициализации в отдельный хук, чтобы уменьшить размер основного хука
+type SmootherInitConfig = {
+  wrapper: string;
+  content: string;
+  smooth: number;
+  effects: boolean;
+  normalizeScroll: boolean;
+  smootherRef: React.MutableRefObject<ScrollSmootherInstance | null>;
+  isInitializingRef: React.MutableRefObject<boolean>;
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
+const useSmootherInitialization = (config: SmootherInitConfig) => {
+  const { wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady } = config;
   useEffect(() => {
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {
@@ -183,7 +185,31 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [wrapper, content, smooth, effects, normalizeScroll]);
+  }, [wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady]);
+};
+
+export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
+  const smootherRef = useRef<ScrollSmootherInstance | null>(null);
+  const isInitializingRef = useRef(false);
+  const [isReady, setIsReady] = useState(false);
+  const {
+    wrapper = '#smooth-wrapper',
+    content = '#smooth-content',
+    smooth = 1.5,
+    effects = true,
+    normalizeScroll = true,
+  } = options;
+
+  useSmootherInitialization({
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  });
 
   const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
     smootherRef.current?.scrollTo(target, smooth, position);
