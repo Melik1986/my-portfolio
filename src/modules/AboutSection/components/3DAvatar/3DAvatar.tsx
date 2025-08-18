@@ -2,25 +2,22 @@
 
 import React from 'react';
 import { useAvatar } from '../../hooks/useAvatar';
+import type { AvatarRefs } from '../../types/about.types';
 import styles from './Avatar.module.scss';
 
-export function Avatar() {
-  const refs = useAvatar();
+function useAvatarModelLoading(refs: React.MutableRefObject<AvatarRefs>) {
   const [isLoading, setIsLoading] = React.useState(true);
 
-  // Скрываем загрузку после загрузки модели
   React.useEffect(() => {
     const handleModelLoaded = () => {
       setIsLoading(false);
     };
 
-    // Слушаем событие загрузки модели
     const container = refs.current.container;
     if (container) {
       container.addEventListener('modelLoaded', handleModelLoaded);
     }
 
-    // Fallback: скрываем через 3 секунды если модель не загрузилась
     const fallbackTimer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -32,6 +29,13 @@ export function Avatar() {
       clearTimeout(fallbackTimer);
     };
   }, [refs]);
+
+  return isLoading;
+}
+
+export function Avatar() {
+  const refs = useAvatar();
+  const isLoading = useAvatarModelLoading(refs);
 
   return (
     <div
