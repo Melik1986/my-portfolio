@@ -224,6 +224,7 @@ export const useAvatar = () => {
     refs.current.controls = controls;
 
     // Очистка при размонтировании
+    const current = refs.current;
     return () => {
       window.removeEventListener('resize', updateSize);
       resizeObserver.disconnect();
@@ -238,8 +239,9 @@ export const useAvatar = () => {
         controls.dispose();
       }
 
-      if (refs.current.mixer) {
-        refs.current.mixer.stopAllAction();
+      const mixerRef = current.mixer;
+      if (mixerRef) {
+        mixerRef.stopAllAction();
       }
     };
   }, []);

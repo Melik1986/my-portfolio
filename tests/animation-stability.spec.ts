@@ -21,7 +21,7 @@ import { join } from 'path';
 test.describe('Animation Stability Tests', () => {
   let page: Page;
   let testStartTime: number;
-  let animationLogs: AnimationLogEntry[] = [];
+  const animationLogs: AnimationLogEntry[] = [];
 
   test.beforeEach(async ({ page: testPage }) => {
     page = testPage;

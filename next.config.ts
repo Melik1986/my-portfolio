@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import bundleAnalyzer from '@next/bundle-analyzer';
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -19,16 +20,6 @@ const nextConfig: NextConfig = {
       '@': './src',
     },
   },
-  ...(process.env.ANALYZE === 'true' && {
-    webpack: (config) => {
-      config.plugins.push(
-        new (require('@next/bundle-analyzer')())({
-          enabled: true,
-        }),
-      );
-      return config;
-    },
-  }),
   sassOptions: {
     includePaths: ['./src/styles'],
   },
@@ -58,4 +49,6 @@ const nextConfig: NextConfig = {
   generateEtags: true,
 };
 
-export default nextConfig;
+const withBundleAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
+
+export default withBundleAnalyzer(nextConfig);

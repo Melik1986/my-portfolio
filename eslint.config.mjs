@@ -37,6 +37,14 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    files: ['tests/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'max-lines-per-function': 'off',
+      'func-names': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;
