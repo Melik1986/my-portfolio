@@ -7,6 +7,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { avatarConfig, avatarControls } from '../config/avatar3d.config';
 import { AvatarAnimationState, AvatarRefs } from '../types/about.types';
 
+/* eslint-disable max-lines-per-function */
 export const useAvatar = () => {
   const refs = useRef<AvatarRefs>({ container: null });
   const animationState = useRef<AvatarAnimationState>({
@@ -248,3 +249,4 @@ export const useAvatar = () => {
 
   return refs;
 };
+/* eslint-enable max-lines-per-function */

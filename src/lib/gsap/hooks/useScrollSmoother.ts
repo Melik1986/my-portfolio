@@ -149,6 +149,7 @@ const cleanupScrollTrigger = async (): Promise<void> => {
   }
 };
 
+/* eslint-disable max-lines-per-function */
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const smootherRef = useRef<ScrollSmootherInstance | null>(null);
   const isInitializingRef = useRef(false);
@@ -209,3 +210,4 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     kill,
   };
 };
+/* eslint-enable max-lines-per-function */

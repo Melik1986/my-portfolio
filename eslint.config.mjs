@@ -13,7 +13,7 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      'max-lines-per-function': ['warn', { max: 200, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
       'max-depth': ['warn', 4],
       'max-params': ['warn', 4],
       'id-length': ['warn', { min: 1, exceptions: ['x', 'y', 'i', 'e', 'z'] }],
