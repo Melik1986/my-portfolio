@@ -92,6 +92,7 @@ export function initCardDeckScroll(
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
+        onKill: () => mm.revert(),
       },
     });
 
@@ -111,6 +112,7 @@ export function initCardDeckScroll(
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
+        onKill: () => mm.revert(),
       },
     });
 
