@@ -87,7 +87,7 @@ export function initCardDeckScroll(
         trigger: section,
         pin: true,
         start: 'top top',
-        end: () => `+=${(items.length - 1) * 80}%`,
+        end: () => `+=${(items.length - 1) * 100}%`,
         scrub: 0.5,
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',

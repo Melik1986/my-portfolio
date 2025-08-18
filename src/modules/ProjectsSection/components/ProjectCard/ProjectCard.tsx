@@ -80,7 +80,6 @@ function useProjectCardAnimation(
   isFullscreen: boolean,
 ) {
   usePositionAnimation(cardRef, options, isFullscreen);
-  return { animateTransition: () => {} };
 }
 
 function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber: number, onClose?: () => void) {
@@ -101,7 +100,7 @@ export function ProjectCard(props: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const cardNumber = totalCards - index;
 
-  const { animateTransition } = useProjectCardAnimation(cardRef, { index, cardNumber, totalCards }, isFullscreen);
+  useProjectCardAnimation(cardRef, { index, cardNumber, totalCards }, isFullscreen);
 
   const handleClick = useCallback(() => {
     setIsFullscreen((prev) => !prev);
