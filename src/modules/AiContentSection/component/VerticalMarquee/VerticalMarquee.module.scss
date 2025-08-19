@@ -1,0 +1,82 @@
+@use '@/styles/_variables.scss' as *;
+
+.ai-content__horizontal {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.ai-content__horizontal-vertical {
+  min-height: 600px;
+  max-width: 260px;
+}
+
+.ai-content__cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0), 70%, $color-bg-white),
+    linear-gradient(180deg, $color-bg-white, rgba(255,255,255,0) 30%);
+}
+
+.ai-content__track {
+  display: flex;
+  position: absolute;
+  will-change: transform;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  backface-visibility: hidden;
+}
+
+.ai-content__track-vertical {
+  flex-direction: column;
+  animation: ai-content-marquee-vertical 20s linear infinite;
+}
+
+.ai-content__vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+  gap: 20px;
+}
+
+.ai-content__picture {
+  flex: 0 0 auto;
+  width: auto;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.ai-content__picture-main {
+  position: relative;
+  z-index: 5;
+}
+
+.ai-content__image {
+  width: 210px;
+  height: 280px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+@keyframes ai-content-marquee-vertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(calc(-1 * var(--single-set-height, 50%))); }
+}
+
+

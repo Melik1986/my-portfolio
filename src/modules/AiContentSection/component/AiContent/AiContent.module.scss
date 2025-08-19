@@ -1,0 +1,21 @@
+@use '@/styles/_variables.scss' as *;
+
+.ai-content__content {
+  width: 41%;
+  position: relative;
+}
+
+.ai-content__content-title {
+  font-family: $font-family-chango;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.ai-content__content-paragraph {
+  font-size: 16px;
+  font-family: $font-family-roboto;
+}
+
+.ai-content__content-small {}
+
+

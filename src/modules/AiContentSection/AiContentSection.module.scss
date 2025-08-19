@@ -1,0 +1,56 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.ai-content {
+  font-family: $font-family-roboto;
+  background-color: $color-bg-white;
+  color: $color-text-main;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  &__title {
+    @include visually-hidden;
+  }
+
+  &__container {
+    position: relative;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    z-index: 10;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  &__container-vertical {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__content {
+    width: 41%;
+    position: relative;
+  }
+
+  &__content-title {
+    font-family: $font-family-chango;
+    font-size: 40px;
+    line-height: 1.2;
+  }
+
+  &__content-paragraph {
+    font-size: 16px;
+    font-family: $font-family-roboto;
+  }
+}
+

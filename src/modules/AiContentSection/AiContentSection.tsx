@@ -3,40 +3,34 @@
 import React from 'react';
 import { AiContentProps } from './types/AiContent.types';
 import { HorizontalMarquee, VerticalMarqueeGroup, ContentSection } from './component';
-import styles from './styles/AiContentSection.module.css';
+import styles from './AiContentSection.module.scss';
 
-export function AiContentSection({ 
-  horizontalTexts = [], 
-  verticalIcons = [], 
-  subtitle = '', 
-  title = '', 
-  description = '', 
-  className = '' 
+export function AiContentSection({
+  horizontalTexts = [],
+  verticalColumns = [],
+  verticalIcons = [],
+  subtitle = '',
+  title = '',
+  description = '',
+  className = ''
 }: AiContentProps) {
 
   return (
-    <section className={`${styles.AiContentSection} ${className}`} id="ai-content-section">
-      <h2 className={`${styles.AiContentSection__title} visually-hidden`}>{title}</h2>
-      <div className={styles.spacer100}></div>
+    <section className={`${styles['ai-content']} ${className}`} id="ai-content-section">
+      <h2 className={`${styles['ai-content__title']} visually-hidden`}>{title || 'AI Content'}</h2>
 
       {/* Horizontal Marquee 1 */}
       <HorizontalMarquee texts={horizontalTexts} />
 
-      <div className={styles.spacer100}></div>
-
-      {/* Horizontal Marquee 2 */}
-      <HorizontalMarquee texts={horizontalTexts} trackClassName={styles.marqueeTrackAlt} />
-
-      <div className={styles.spacer100}></div>
+      {/* Horizontal Marquee 2 (обратное направление) */}
+      <HorizontalMarquee texts={horizontalTexts} alternate />
 
       {/* Vertical Section */}
-      <div className={styles.containerVertical}>
-        <div className={styles.flexHorizontal}>
-          <VerticalMarqueeGroup icons={verticalIcons} />
-
-          <div className={styles.spacer100}></div>
-
-          {/* Content */}
+      <div className={`${styles['ai-content__container']} ${styles['ai-content__container-vertical']}`}>
+        <div className={styles['ai-content__wrapper']}>
+          <div className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-flex']}`}>
+            <VerticalMarqueeGroup columns={verticalColumns.length ? verticalColumns : [verticalIcons, verticalIcons, verticalIcons]} />
+          </div>
           <ContentSection subtitle={subtitle} title={title} description={description} />
         </div>
       </div>
