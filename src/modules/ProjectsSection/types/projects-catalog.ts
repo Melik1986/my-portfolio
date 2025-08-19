@@ -10,6 +10,7 @@ export interface ProjectData {
 export interface CardPosition {
   x: number;
   y: number;
+  z: number;
   zIndex: number;
   filter: string;
 }

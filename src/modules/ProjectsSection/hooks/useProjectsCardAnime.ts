@@ -31,8 +31,9 @@ export const useCardAnimation = (config: AnimationConfig, totalCards: number) =>
       gsap.to(element, {
         duration: config.hoverDuration,
         y: currentPosition.y + (lifted ? config.hoverLift : 0),
+        z: currentPosition.z + (lifted ? Math.abs(config.zStep) * 0.6 : 0),
         boxShadow: lifted ? config.hoverShadow : config.cardShadow,
-        zIndex: Number(element.dataset.index) * config.zStep,
+        zIndex: lifted ? 10000 : currentPosition.zIndex,
       });
     },
     [config, positions],
@@ -45,12 +46,13 @@ function calculatePositions(count: number, config: AnimationConfig): CardPositio
   return Array.from({ length: count }, (_, i) => ({
     x: i * config.xStep,
     y: i * config.yStep,
-    zIndex: i * config.zStep,
+    z: i * config.zStep,
+    zIndex: i, // Базовая иерархия перекрытия по порядку
     filter: `hue-rotate(${i * 30}deg)`,
   }));
 }
 
 function getCurrentPosition(element: HTMLElement, positions: CardPosition[]): CardPosition {
   const index = Number(element.dataset.index) || 0;
-  return positions[index] || { x: 0, y: 0, zIndex: 0, filter: '' };
+  return positions[index] || { x: 0, y: 0, z: 0, zIndex: 0, filter: '' };
 }

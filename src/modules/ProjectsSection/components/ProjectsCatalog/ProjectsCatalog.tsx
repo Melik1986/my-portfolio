@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useCallback, useEffect, useTransition, startTransition } from 'react';
-import { gsap } from 'gsap';
+import React, { useCallback, useState, useTransition } from 'react';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
-import { useCardAnimation } from '../../hooks/useProjectsCardAnime';
-import { useDeckAnimation } from '../../hooks/useDeckAnimation';
-import { ANIMATION_CONFIG } from '@/modules/ProjectsSection/config/projects-catalog';
+import { useProjectsAnimation } from '../../hooks/useProjectsAnimation';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsCatalog.module.scss';
 
@@ -15,48 +12,39 @@ interface ProjectsCatalogProps {
 
 export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const [isPending] = useTransition();
+  const [activeFullscreenIndex, setActiveFullscreenIndex] = useState<number | null>(null);
+  
+  const animation = useProjectsAnimation(projects.length);
 
-  const { positions, animateToPosition, animateHover } = useCardAnimation(
-    ANIMATION_CONFIG,
-    projects.length,
-  );
+  // Обработчики событий
+  const handleContainerMouseEnter = useCallback(() => {
+    animation.expandFan();
+  }, [animation]);
 
-  const { expandDeck, collapseDeck, isExpanded } = useDeckAnimation(animateToPosition, positions);
+  const handleContainerMouseLeave = useCallback(() => {
+    animation.collapseFan();
+  }, [animation]);
 
-  // Инициализируем карточки в веерном положении при загрузке
-  useEffect(() => {
-    const cards = document.querySelectorAll('.projects-card');
-    cards.forEach((card, i) => {
-      // Проверяем, что карточка НЕ в полноэкранном режиме
-      const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
-      if (positions[i] && !isFullscreen) {
-        // Устанавливаем начальное веерное положение
-        gsap.set(card as HTMLElement, positions[i]);
-      }
-    });
-  }, [positions]);
+  const handleCardHover = useCallback((index: number, isHovering: boolean) => {
+    animation.hoverCard(index, isHovering);
+  }, [animation]);
 
-  const handleCardHover = useCallback(
-    (index: number, isHovering: boolean) => {
-      startTransition(() => {
-        const card = document.querySelector(`[data-index="${index}"]`);
-        if (card && isExpanded.current) {
-          // Проверяем, что карточка НЕ в полноэкранном режиме
-          const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
-          if (!isFullscreen) {
-            animateHover(card as HTMLElement, isHovering);
-          }
-        }
-      });
-    },
-    [animateHover, isExpanded],
-  );
+  const handleToggleFullscreen = useCallback((index: number, isFullscreen: boolean) => {
+    if (isFullscreen) {
+      setActiveFullscreenIndex(index);
+      animation.setFullscreen(index);
+    } else {
+      setActiveFullscreenIndex(null);
+      animation.setFullscreen(null);
+    }
+  }, [animation]);
 
   return (
     <div
-      className={`${styles['projects-catalog__container']} ${isPending ? styles['loading'] : ''}`}
-      onMouseEnter={expandDeck}
-      onMouseLeave={collapseDeck}
+      className={`${styles['projects-catalog__container']} ${isPending ? styles['loading'] : ''} ${activeFullscreenIndex !== null ? styles['projects-catalog__container--fullscreen'] : ''}`}
+      onMouseEnter={handleContainerMouseEnter}
+      onMouseLeave={handleContainerMouseLeave}
+      style={activeFullscreenIndex !== null ? { transform: 'none' } : undefined}
     >
       {projects.map((project, index) => (
         <ProjectCard
@@ -64,8 +52,12 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
           project={project}
           index={index}
           totalCards={projects.length}
+          isFullscreen={activeFullscreenIndex === index}
+          onToggleFullscreen={(next) => handleToggleFullscreen(index, next)}
           onHoverStart={() => handleCardHover(index, true)}
           onHoverEnd={() => handleCardHover(index, false)}
+          onMount={(element) => animation.registerCard(element, index)}
+          onUnmount={() => animation.unregisterCard(index)}
         />
       ))}
     </div>

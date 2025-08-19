@@ -16,10 +16,11 @@ export const useDeckAnimation = (
       // Проверяем, что карточка НЕ в полноэкранном режиме
       const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
       if (!isFullscreen && positions[i]) {
-        // При наведении карточки поднимаются еще выше
+        // При наведении карточки поднимаются еще выше и немного вперед по Z
         animateToPosition(card as HTMLElement, {
           ...positions[i],
           y: positions[i].y - 50, // Дополнительный подъем
+          z: positions[i].z + Math.abs(positions[i].z) * 0.1,
         });
       }
     });
@@ -33,8 +34,8 @@ export const useDeckAnimation = (
       // Проверяем, что карточка НЕ в полноэкранном режиме
       const isFullscreen = card.getAttribute('data-fullscreen') === 'true';
       if (!isFullscreen && positions[i]) {
-        // Возвращаем в базовое веерное положение, НЕ в центр
-        animateToPosition(card as HTMLElement, positions[i]);
+        // Возвращаем в исходную стопку (в центр)
+        animateToPosition(card as HTMLElement, { x: 0, y: 0, z: 0, zIndex: i, filter: '' });
       }
     });
   }, [animateToPosition, positions]);

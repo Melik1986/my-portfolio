@@ -1,12 +1,12 @@
 import { AnimationConfig, ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 
 export const ANIMATION_CONFIG: AnimationConfig = {
-  zStep: -180,
-  yStep: -80,
-  xStep: -100,
-  hoverLift: -120,
-  fanDuration: 0.7,
-  hoverDuration: 0.3,
+  zStep: -60,
+  yStep: 80, // Больше вверх - эффект ступенек
+  xStep: -40, // Минимальное смещение влево
+  hoverLift: -80, // Увеличил подъем при наведении
+  fanDuration: 0.3,
+  hoverDuration: 0.15,
   hoverShadow: '0 0 50px #64ff74, inset 0 0 120px #64ff74',
   cardShadow: '0 8px 32px rgba(0,0,0,0.2)',
 };
