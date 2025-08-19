@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './AiContent/AiContent.module.scss';
+import styles from './AiContent.module.scss';
 
 interface ContentSectionProps {
   subtitle: string;

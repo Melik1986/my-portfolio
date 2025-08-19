@@ -58,7 +58,16 @@ export class AnimationController {
 
     const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
       scrollSection) as HTMLElement;
-    const items = Array.from(wrapperElement.querySelectorAll('li')) as HTMLElement[];
+
+    // Выбираем только прямых детей списка секций, чтобы не захватить внутренние li
+    const directCardNodes = wrapperElement.querySelectorAll(
+      ':scope > ul.portfolio__list > li',
+    );
+    const items = Array.from(
+      (directCardNodes && directCardNodes.length
+        ? directCardNodes
+        : wrapperElement.querySelectorAll('li')) as NodeListOf<HTMLElement>,
+    );
 
     if (items.length === 0) return null;
 

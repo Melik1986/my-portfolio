@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import styles from './VerticalMarquee/VerticalMarquee.module.scss';
+import styles from './VerticalMarquee.module.scss';
 
 interface VerticalMarqueeProps {
   images: string[];

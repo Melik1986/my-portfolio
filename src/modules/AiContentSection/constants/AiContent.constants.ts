@@ -31,3 +31,28 @@ export const AI_CONTENT_CONSTANTS: AiContentSectionConstantsType = {
     '🚀'
   ]
 };
+
+// Дополнительные значения по умолчанию для вертикальных колонок постеров (совместимо с public/)
+export const DEFAULT_VERTICAL_COLUMNS: string[][] = [
+  [
+    '/images/poster/poster-1.webp',
+    '/images/poster/poster-1.webp',
+    '/images/poster/poster-1.webp',
+    '/images/poster/poster-4.webp',
+    '/images/poster/poster-5.webp',
+  ],
+  [
+    '/images/poster/poster-6.webp',
+    '/images/poster/poster-6.webp',
+    '/images/poster/poster-6.webp',
+    '/images/poster/poster-9.webp',
+    '/images/poster/poster-10.webp',
+  ],
+  [
+    '/images/poster/poster-11.webp',
+    '/images/poster/poster-12.webp',
+    '/images/poster/poster-12.webp',
+    '/images/poster/poster-12.webp',
+    '/images/poster/poster-12.webp',
+  ],
+];

@@ -1,0 +1,10 @@
+/* VerticalMarqueeGroup component styles - specific overrides if needed */
+
+.ai-content__horizontal-flex {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}

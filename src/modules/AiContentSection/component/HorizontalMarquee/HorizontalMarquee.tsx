@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './HorizontalMarquee/HorizontalMarquee.module.scss';
+import styles from './HorizontalMarquee.module.scss';
 
 interface HorizontalMarqueeProps {
   texts: string[];
