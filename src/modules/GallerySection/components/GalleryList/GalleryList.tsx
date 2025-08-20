@@ -14,7 +14,7 @@ export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
         {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
           <li
             key={`${className}-${index}`}
-            className={`${styles.gallery__item} ${styles[`gallery__item--${className}`]}`}
+            className={`${styles.gallery__item} ${styles['gallery__item--' + className]}`}
           >
             <div className={styles.gallery__content}>
               <div className={styles.gallery__title} data-item={index + 1}>{title}</div>

@@ -7,6 +7,13 @@
   overflow: hidden;
   position: relative;
 
+  &__carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: block;
+  }
+
   &__list {
     list-style: none;
     display: block;
@@ -23,12 +30,28 @@
     left: calc(#{$carousel-left-position} + 3%);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 25px 50px $carousel-shadow;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     background-position: center;
     background-size: cover;
     z-index: 100;
     transform: translate(0, 0px);
     transition: all $carousel-transition-time;
+    perspective: 1000px;
+
+    // Hover эффект для маленьких элементов (исключая первые два)
+    &:not(:nth-child(1)):not(:nth-child(2)) {
+      transition: all 0.5s ease-in-out;
+
+      &:hover {
+        background-size: 330%; // Увеличение фонового изображения как лупа
+        background-position: center;
+
+        .gallery__content {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+      }
+    }
 
     &::after {
       content: '';
@@ -120,77 +143,67 @@
 
     // Фоновые изображения для каждого слайда
     &--sunrise {
-      @include retina-bg(
-        'https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=400',
         'https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=800'
       );
     }
 
     &--rocky {
-      @include retina-bg(
-        'https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=400',
         'https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=800'
       );
     }
 
     &--forest {
-      @include retina-bg(
-        'https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=400',
         'https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=800'
       );
     }
 
     &--meadow {
-      @include retina-bg(
-        'https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=400',
         'https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=800'
       );
     }
 
     &--lake {
-      @include retina-bg(
-        'https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=400',
         'https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=800'
       );
     }
 
     &--clouds {
-      @include retina-bg(
-        'https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=400',
         'https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=800'
       );
     }
 
     &--riverbank {
-      @include retina-bg(
-        'https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=400',
         'https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=800'
       );
     }
 
     &--ridges {
-      @include retina-bg(
-        'https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=400',
         'https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=800'
       );
     }
 
     &--cliffs {
-      @include retina-bg(
-        'https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=400',
         'https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=800'
       );
     }
 
     &--valley {
-      @include retina-bg(
-        'https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=400',
+      @include retina-bg('https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=400',
         'https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=800'
       );
     }
   }
 
-  &__content {
+  &__content.gallery__content {
     position: absolute;
     text-align: left;
     color: $color-text-light;
@@ -200,7 +213,12 @@
     transform: translateY(-100%);
     width: 100%;
     padding: 10px;
-    transition: all $carousel-transition-time;
+    transition: all 0.6s ease-in-out;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 -5px 10px rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.1));
+    transform: translateZ(20px); // Enhanced depth effect
 
     .gallery__title {
       text-transform: uppercase;
@@ -209,6 +227,7 @@
       margin-bottom: 10px;
       transition: all $carousel-transition-time;
       position: relative;
+      text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, .1), 0 0 5px rgba(0, 0, 0, .1), 0 1px 3px rgba(0, 0, 0, .3), 0 3px 5px rgba(0, 0, 0, .2), 0 5px 10px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .2), 0 20px 20px rgba(0, 0, 0, .15);
 
       &::before {
         content: '';
@@ -244,8 +263,8 @@
   &__des {
     font: $font-p;
     transition: all $carousel-transition-time;
-    opacity: 0;
-    display: none;
+    opacity: 1;
+    display: block;
   }
 
   /* next prev arrows */
@@ -294,13 +313,12 @@
     margin-left: auto;
     letter-spacing: 5px;
     opacity: 0;
-    animation: animate $carousel-animation-duration $carousel-animation-ease
-      $carousel-animation-delay 1 forwards;
+    animation: animate $carousel-animation-duration $carousel-animation-ease $carousel-animation-delay 1 forwards;
   }
 
   /* time running */
   &__timeRunning {
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     width: 0%;
     height: 4px;
@@ -344,6 +362,7 @@
   from {
     width: 0%;
   }
+
   to {
     width: 100%;
   }
