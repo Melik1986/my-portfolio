@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true next build",
-    "test": "playwright test",
+    "test": "jest --runInBand",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug"
   },
@@ -30,8 +30,12 @@
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.4.2",
     "@playwright/test": "^1.54.2",
+    "@swc/jest": "^0.2.39",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^16.3.0",
     "@types/echarts": "^5.0.0",
     "@types/gsap": "^3.0.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -43,8 +47,21 @@
     "eslint-config-next": "^15.4.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.6.2",
     "sass": "^1.89.2",
     "typescript": "^5"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom",
+    "transform": {
+      "^.+\\.(t|j)sx?$": ["@swc/jest"]
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "\\.(css|scss|sass)$": "identity-obj-proxy"
+    }
   }
 }

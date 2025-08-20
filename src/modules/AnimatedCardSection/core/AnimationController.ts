@@ -17,8 +17,8 @@ ensureGSAPRegistered();
 const clearElementAnimations = (wrapper: HTMLElement): void => {
   const elements = wrapper.querySelectorAll<HTMLElement>('[data-animation]');
   elements.forEach((el) => {
-    gsap.killTweensOf(el);
-    gsap.set(el, { clearProps: 'all' });
+    // Не убиваем твины внутри timeline, чтобы повторный запуск не ломался
+    gsap.set(el, { clearProps: 'x,y,opacity,autoAlpha,visibility,scale,rotate,filter' });
   });
 };
 
@@ -129,7 +129,7 @@ export class AnimationController {
 
       if (hasTextReveal) {
         // Для text-reveal анимаций делаем плавный переход
-        currentController.timeline.progress(0);
+        currentController.timeline.invalidate().progress(0);
         // Небольшая задержка позволяет увидеть реверс состояние
         gsap.delayedCall(0.1, () => {
           if (currentController.isActive) {
@@ -138,7 +138,7 @@ export class AnimationController {
         });
       } else {
         // Для обычных анимаций используем стандартный подход
-        currentController.timeline.progress(0).play();
+        currentController.timeline.invalidate().progress(0).play();
       }
 
       currentController.isActive = true;
