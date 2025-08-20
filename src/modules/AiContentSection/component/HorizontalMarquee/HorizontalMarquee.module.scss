@@ -67,4 +67,23 @@
 	to { transform: translateX(0); }
 }
 
+/* Accessibility and control: pause on hover/focus and optional is-paused */
+.ai-content__horizontal:hover .ai-content__track-horizontal,
+.ai-content__horizontal:focus-within .ai-content__track-horizontal,
+.ai-content__horizontal:hover .ai-content__track-alt,
+.ai-content__horizontal:focus-within .ai-content__track-alt,
+.ai-content__horizontal.is-paused .ai-content__track-horizontal,
+.ai-content__horizontal.is-paused .ai-content__track-alt {
+	animation-play-state: paused;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+	.ai-content__track-horizontal,
+	.ai-content__track-alt {
+		animation: none !important;
+		transform: none !important;
+	}
+}
+
 

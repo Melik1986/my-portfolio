@@ -184,15 +184,6 @@
   }
 }
 
-@keyframes ai-content-marquee-horizontal {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-1 * var(--single-set-width, 50%))); }
-}
-
-@keyframes ai-content-marquee-horizontal-alt {
-  from { transform: translateX(calc(-1 * var(--single-set-width, 50%))); }
-  to { transform: translateX(0); }
-}
 
 @keyframes ai-content-marquee-vertical {
   0% { transform: translateY(0); }

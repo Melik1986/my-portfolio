@@ -79,4 +79,19 @@
 	100% { transform: translateY(calc(-1 * var(--single-set-height, 50%))); }
 }
 
+/* Accessibility and control: pause on hover/focus and optional is-paused */
+.ai-content__horizontal:hover .ai-content__track-vertical,
+.ai-content__horizontal:focus-within .ai-content__track-vertical,
+.ai-content__horizontal.is-paused .ai-content__track-vertical {
+	animation-play-state: paused;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+	.ai-content__track-vertical {
+		animation: none !important;
+		transform: none !important;
+	}
+}
+
 
