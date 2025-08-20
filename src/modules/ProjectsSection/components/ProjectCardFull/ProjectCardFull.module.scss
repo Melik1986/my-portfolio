@@ -26,11 +26,15 @@
     left: 10px;
     width: 40%;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: flex-start;
+    display: block; // root GlassCard wrapper
+    // Arrange inner GlassCard content vertically with spacing
+    :global(.glass-card__content) {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 20px;
+    }
 
     &__title {
       padding: 0;
