@@ -37,7 +37,10 @@ export function HorizontalMarquee({
   const originalCount = texts.length;
 
   return (
-    <div ref={containerRef} className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-center']} ${className}`}>
+    <div
+      ref={containerRef}
+      className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-center']} ${className}`}
+    >
       <ul ref={trackRef} className={trackClassName}>
         {loopTexts.map((text, index) => {
           const isClone = index >= originalCount;

@@ -6,14 +6,22 @@ import styles from './GallerySection.module.scss';
 import { GalleryList, GalleryNavigation } from './components';
 
 export function GallerySection() {
-  const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems, carouselRef, listRef } =
-    useCarousel();
+  const {
+    itemsToRender,
+    prevSlide,
+    nextSlide,
+    displayedIndex,
+    progressRef,
+    totalItems,
+    carouselRef,
+    listRef,
+  } = useCarousel();
 
   const deferredItemsToRender = useDeferredValue(itemsToRender);
 
   return (
     <section ref={carouselRef} className={styles.gallery} id="gallery" data-group-delay="7.5">
-      <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
+      <h2 className="visually-hidden">My Portfolio</h2>
       <div
         className={styles.gallery__carousel}
         data-animation="fade-up"

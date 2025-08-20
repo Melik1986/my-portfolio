@@ -92,11 +92,7 @@ function AvatarContainer({
   );
 }
 
-function AvatarTooltip({
-  isVisible,
-}: {
-  isVisible: boolean;
-}) {
+function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
   if (!isVisible) return null;
   return (
     <div className={`${styles.tooltip} ${styles['tooltip--visible']}`}>
@@ -123,7 +119,13 @@ export function Avatar() {
 
   return (
     <>
-      <AvatarContainer onContainerRef={(el) => { setContainerEl(el); refs.current.container = el; }} isLoading={isLoading} />
+      <AvatarContainer
+        onContainerRef={(el) => {
+          setContainerEl(el);
+          refs.current.container = el;
+        }}
+        isLoading={isLoading}
+      />
       <AvatarTooltip isVisible={tooltipState.isVisible} />
     </>
   );

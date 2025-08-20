@@ -1,4 +1,4 @@
-export type GalleryClassName = 
+export type GalleryClassName =
   | 'sunrise'
   | 'rocky'
   | 'forest'

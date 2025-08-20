@@ -46,7 +46,8 @@
   margin-left: auto;
   letter-spacing: 5px;
   opacity: 0;
-  animation: animate $carousel-animation-duration $carousel-animation-ease $carousel-animation-delay 1 forwards;
+  animation: animate $carousel-animation-duration $carousel-animation-ease $carousel-animation-delay
+    1 forwards;
 }
 
 @keyframes animate {

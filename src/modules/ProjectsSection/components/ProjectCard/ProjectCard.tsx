@@ -6,8 +6,6 @@ import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import { ProjectCardPreview } from '@/modules/ProjectsSection/components/index';
 import { ProjectCardFullscreen } from '@/modules/ProjectsSection/components/index';
 
-
-
 import styles from './ProjectCard.module.scss';
 
 interface ProjectCardProps {
@@ -22,11 +20,14 @@ interface ProjectCardProps {
   onUnmount?: () => void;
 }
 
-
-
 // Убираем все GSAP анимации из ProjectCard - управление только через ProjectsCatalog
 
-function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber: number, onClose?: () => void) {
+function getCardContent(
+  isFullscreen: boolean,
+  project: ProjectData,
+  cardNumber: number,
+  onClose?: () => void,
+) {
   return isFullscreen ? (
     <ProjectCardFullscreen project={project} onClose={onClose} />
   ) : (
@@ -40,7 +41,16 @@ function getCardContent(isFullscreen: boolean, project: ProjectData, cardNumber:
 
 // eslint-disable-next-line max-lines-per-function
 export function ProjectCard(props: ProjectCardProps) {
-  const { project, index, onHoverStart, onHoverEnd, isFullscreen: isFullscreenProp, onToggleFullscreen, onMount, onUnmount } = props;
+  const {
+    project,
+    index,
+    onHoverStart,
+    onHoverEnd,
+    isFullscreen: isFullscreenProp,
+    onToggleFullscreen,
+    onMount,
+    onUnmount,
+  } = props;
   const [isFullscreenLocal, setIsFullscreenLocal] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const cardNumber = index + 1; // Правильная нумерация: первая карточка = 1

@@ -26,5 +26,3 @@ export function ensureGSAPRegistered(): void {
     // Безопасно игнорируем, если плагины недоступны в текущем окружении
   }
 }
-
-

@@ -19,19 +19,22 @@ export function useProjectsAnimation(totalCards: number) {
   const stateRef = useRef<AnimationState>('stacked');
 
   // Регистрация карточки
-  const registerCard = useCallback((element: HTMLElement, index: number) => {
-    cardsRef.current.set(index, { element, index });
-    
-    // Устанавливаем начальную позицию в стопке - только GSAP свойства
-    gsap.set(element, {
-      x: 0,
-      y: 0,
-      z: 0,
-      zIndex: totalCards - index,
-      filter: '',
-      force3D: true,
-    });
-  }, [totalCards]);
+  const registerCard = useCallback(
+    (element: HTMLElement, index: number) => {
+      cardsRef.current.set(index, { element, index });
+
+      // Устанавливаем начальную позицию в стопке - только GSAP свойства
+      gsap.set(element, {
+        x: 0,
+        y: 0,
+        z: 0,
+        zIndex: totalCards - index,
+        filter: '',
+        force3D: true,
+      });
+    },
+    [totalCards],
+  );
 
   // Отмена регистрации карточки
   const unregisterCard = useCallback((index: number) => {
@@ -49,7 +52,7 @@ export function useProjectsAnimation(totalCards: number) {
 
     // Убиваем главный timeline если существует
     mainTimelineRef.current?.kill();
-    
+
     // Создаем новый timeline для последовательной анимации
     const tl = gsap.timeline();
     mainTimelineRef.current = tl;
@@ -64,12 +67,16 @@ export function useProjectsAnimation(totalCards: number) {
         filter: `hue-rotate(${index * 30}deg)`,
       };
 
-      tl.to(cardRef.element, {
-        duration: ANIMATION_CONFIG.fanDuration,
-        ...position,
-        ease: 'power2.out',
-        force3D: true,
-      }, index * 0.05); // Stagger delay
+      tl.to(
+        cardRef.element,
+        {
+          duration: ANIMATION_CONFIG.fanDuration,
+          ...position,
+          ease: 'power2.out',
+          force3D: true,
+        },
+        index * 0.05,
+      ); // Stagger delay
     });
   }, []);
 
@@ -80,36 +87,40 @@ export function useProjectsAnimation(totalCards: number) {
 
     // Убиваем главный timeline
     mainTimelineRef.current?.kill();
-    
+
     // Создаем timeline для сбора в обратном порядке
     const tl = gsap.timeline();
     mainTimelineRef.current = tl;
 
     const cards = Array.from(cardsRef.current.values()).reverse();
     cards.forEach((cardRef, reverseIndex) => {
-      tl.to(cardRef.element, {
-        duration: 0.25,
-        x: 0,
-        y: 0,
-        z: 0,
-        zIndex: totalCards - cardRef.index,
-        filter: '',
-        ease: 'power2.out',
-        force3D: true,
-      }, reverseIndex * 0.03);
+      tl.to(
+        cardRef.element,
+        {
+          duration: 0.25,
+          x: 0,
+          y: 0,
+          z: 0,
+          zIndex: totalCards - cardRef.index,
+          filter: '',
+          ease: 'power2.out',
+          force3D: true,
+        },
+        reverseIndex * 0.03,
+      );
     });
   }, [totalCards]);
 
   // Hover эффект для отдельной карточки
   const hoverCard = useCallback((index: number, isHovering: boolean) => {
     if (stateRef.current !== 'expanded') return;
-    
+
     const cardRef = cardsRef.current.get(index);
     if (!cardRef) return;
 
     // Убиваем индивидуальный tween карточки
     cardRef.tween?.kill();
-    
+
     const position = {
       x: index * ANIMATION_CONFIG.xStep,
       y: -index * Math.abs(ANIMATION_CONFIG.yStep), // Вверх = отрицательное Y
@@ -136,7 +147,7 @@ export function useProjectsAnimation(totalCards: number) {
       // Не трогаем позиционирование - CSS fullscreen класс все сделает
     } else {
       stateRef.current = 'stacked';
-      
+
       // НЕ сбрасываем все карточки - просто меняем состояние
       // Карточки остаются в своих текущих позициях до следующего взаимодействия
     }

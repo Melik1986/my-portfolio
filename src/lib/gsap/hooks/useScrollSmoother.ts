@@ -162,7 +162,16 @@ type SmootherInitConfig = {
 };
 
 const useSmootherInitialization = (config: SmootherInitConfig) => {
-  const { wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady } = config;
+  const {
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  } = config;
   useEffect(() => {
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {
@@ -185,7 +194,16 @@ const useSmootherInitialization = (config: SmootherInitConfig) => {
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady]);
+  }, [
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  ]);
 };
 
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {

@@ -8,7 +8,7 @@ type ComputeFn<T extends HTMLElement> = (el: T) => number | null;
 export function useCssVarOnResize<T extends HTMLElement>(
   ref: RefObject<T | null>,
   varName: string,
-  compute: ComputeFn<T>
+  compute: ComputeFn<T>,
 ): void {
   useEffect(() => {
     const el = ref.current;
@@ -27,7 +27,8 @@ export function useCssVarOnResize<T extends HTMLElement>(
     let detach: (() => void) | undefined;
 
     // Безопасно получаем объект окна для текущего документа
-    const win: Window | null = el.ownerDocument?.defaultView ?? (typeof window !== 'undefined' ? window : null);
+    const win: Window | null =
+      el.ownerDocument?.defaultView ?? (typeof window !== 'undefined' ? window : null);
 
     if (win && 'ResizeObserver' in win && win.ResizeObserver) {
       ro = new (win.ResizeObserver as typeof ResizeObserver)(() => setVar());

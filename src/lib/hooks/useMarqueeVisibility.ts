@@ -13,7 +13,7 @@ export function useMarqueeVisibility<T extends HTMLElement>(ref: RefObject<T | n
         if (!entry) return;
         el.classList.toggle('is-paused', !entry.isIntersecting);
       },
-      { root: null, threshold: 0.1 }
+      { root: null, threshold: 0.1 },
     );
 
     observer.observe(el);

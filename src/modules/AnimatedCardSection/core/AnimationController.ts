@@ -54,9 +54,7 @@ export class AnimationController {
       scrollSection) as HTMLElement;
 
     // Выбираем только прямых детей списка секций, чтобы не захватить внутренние li
-    const directCardNodes = wrapperElement.querySelectorAll(
-      ':scope > ul.portfolio__list > li',
-    );
+    const directCardNodes = wrapperElement.querySelectorAll(':scope > ul.portfolio__list > li');
     const items = Array.from(
       (directCardNodes && directCardNodes.length
         ? directCardNodes
@@ -213,12 +211,12 @@ export class AnimationController {
   getCardIndexBySectionId(sectionId: string): number {
     // Маппинг ID секций к индексам карточек
     const sectionMapping: Record<string, number> = {
-      'hero-section': 0,// Вертикальный скролл
-      'about-section': 1,// Вертикальный скролл
-      'skills-section': 2,// Вертикальный скролл
-      'projects-section': 3,// Горизонтальный скролл
-      'gallery-section': 4,// Горизонтальный скролл
-      'ai-content-section': 5,// Горизонтальный скролл
+      'hero-section': 0, // Вертикальный скролл
+      'about-section': 1, // Вертикальный скролл
+      'skills-section': 2, // Вертикальный скролл
+      'projects-section': 3, // Горизонтальный скролл
+      'gallery-section': 4, // Горизонтальный скролл
+      'ai-content-section': 5, // Горизонтальный скролл
     };
 
     return sectionMapping[sectionId] ?? -1;

@@ -13,7 +13,8 @@ import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
 
 ensureGSAPRegistered();
 
-const IS_DEBUG = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ANIM_DEBUG === '1';
+const IS_DEBUG =
+  process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ANIM_DEBUG === '1';
 
 // Diagnostics storage: expected vs started/completed counters per section/groupDelay
 const animDiagnostics = new Map<string, { expected: number; started: number; completed: number }>();
@@ -104,9 +105,8 @@ const createGroupsByDelay = (sectionElements: ReturnType<typeof parseElements>) 
   return groups;
 };
 
-const sortGroupsByDelay = (
-  groups: Map<number, ReturnType<typeof parseElements>>,
-) => Array.from(groups.entries()).sort(([a], [b]) => a - b);
+const sortGroupsByDelay = (groups: Map<number, ReturnType<typeof parseElements>>) =>
+  Array.from(groups.entries()).sort(([a], [b]) => a - b);
 
 const setGroupExpectedDiagnostics = (
   groupElements: ReturnType<typeof parseElements>,
@@ -144,9 +144,7 @@ const addGroupAnimations = (
   });
 };
 
-const computeSectionDuration = (
-  groups: Map<number, ReturnType<typeof parseElements>>,
-) => {
+const computeSectionDuration = (groups: Map<number, ReturnType<typeof parseElements>>) => {
   let sectionDuration = 0;
   groups.forEach((groupElems, groupDelay) => {
     const maxDelay = Math.max(...groupElems.map((it) => it.delay));
@@ -240,7 +238,8 @@ function addAnimationToTimeline(
     return;
   }
 
-  const timelinePosition = position !== undefined ? position : params.delay === 0 ? '0' : `${params.delay}`;
+  const timelinePosition =
+    position !== undefined ? position : params.delay === 0 ? '0' : `${params.delay}`;
 
   if (animationType === 'svg-draw') {
     addSvgDrawAnimation(timeline, { element, params }, timelinePosition);
@@ -324,7 +323,12 @@ function addSvgDrawAnimation(
 ) {
   const { element, params } = config;
   const pathElements = element.querySelectorAll('path');
-  const position = positionOverride !== undefined ? positionOverride : params.delay === 0 ? '0' : `${params.delay}`;
+  const position =
+    positionOverride !== undefined
+      ? positionOverride
+      : params.delay === 0
+        ? '0'
+        : `${params.delay}`;
 
   pathElements.forEach((pathElement: Element) => {
     const pathLength = (pathElement as SVGPathElement).getTotalLength();
@@ -423,4 +427,3 @@ function addBaseAnimation(
     position,
   );
 }
-

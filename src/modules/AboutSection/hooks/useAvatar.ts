@@ -59,7 +59,9 @@ const useSceneSetup = () => {
   }, []);
 
   const createCameraAndControls = useCallback(
-    (renderer: THREE.WebGLRenderer): { camera: THREE.PerspectiveCamera; controls: OrbitControls } => {
+    (
+      renderer: THREE.WebGLRenderer,
+    ): { camera: THREE.PerspectiveCamera; controls: OrbitControls } => {
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
       camera.position.set(0.2, 0.5, 1);
 
@@ -107,7 +109,10 @@ const useModelLoader = () => {
   }, []);
 
   const setupAnimations = useCallback(
-    (gltf: GLTF, mixer: THREE.AnimationMixer): {
+    (
+      gltf: GLTF,
+      mixer: THREE.AnimationMixer,
+    ): {
       waveAction: THREE.AnimationAction | null;
       stumbleAction: THREE.AnimationAction | null;
     } => {
@@ -245,7 +250,12 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
   );
 
   const handleMouseMove = useCallback(
-    (event: MouseEvent, container: HTMLElement, scene: AvatarScene, assetsRef: React.MutableRefObject<AvatarAssets | null>): void => {
+    (
+      event: MouseEvent,
+      container: HTMLElement,
+      scene: AvatarScene,
+      assetsRef: React.MutableRefObject<AvatarAssets | null>,
+    ): void => {
       const rect = container.getBoundingClientRect();
       const coords = new THREE.Vector2(
         ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -256,16 +266,18 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
       raycaster.setFromCamera(coords, scene.camera);
 
       const intersects = raycaster.intersectObjects(scene.scene.children, true);
-      
+
       // Проверяем наведение именно на аватар (не на groundMesh)
-      const avatarIntersection = intersects.find(intersect => 
-        intersect.object !== assetsRef.current?.groundMesh
+      const avatarIntersection = intersects.find(
+        (intersect) => intersect.object !== assetsRef.current?.groundMesh,
       );
 
       if (avatarIntersection) {
-        container.dispatchEvent(new CustomEvent('avatarHover', {
-          detail: { x: event.clientX, y: event.clientY }
-        }));
+        container.dispatchEvent(
+          new CustomEvent('avatarHover', {
+            detail: { x: event.clientX, y: event.clientY },
+          }),
+        );
       } else {
         container.dispatchEvent(new CustomEvent('avatarLeave'));
       }
@@ -388,9 +400,7 @@ interface CleanupContext {
   refs: React.MutableRefObject<AvatarRefs>;
 }
 
-const useCleanup = (
-  ctx: CleanupContext,
-) => {
+const useCleanup = (ctx: CleanupContext) => {
   const { stateRef, sceneRef, assetsRef } = ctx;
   const cleanup = useCallback((): void => {
     stateRef.current.isDisposed = true;
@@ -488,7 +498,8 @@ export const useAvatar = () => {
       loadModel(sceneData);
 
       container.addEventListener('mousedown', handleMouseClickWrapper);
-      const mouseMoveHandler = (event: MouseEvent) => handleMouseMove(event, container, sceneData, assetsRef);
+      const mouseMoveHandler = (event: MouseEvent) =>
+        handleMouseMove(event, container, sceneData, assetsRef);
       container.addEventListener('mousemove', mouseMoveHandler);
       window.addEventListener('resize', handleResize);
 

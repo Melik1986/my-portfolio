@@ -1,0 +1,94 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.ai-content__horizontal {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.ai-content__horizontal-center {
+  height: 60px;
+  background-color: $color-bg-dark;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.ai-content__track {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  will-change: transform;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  backface-visibility: hidden;
+}
+
+.ai-content__track-horizontal {
+  position: static;
+  gap: 30px;
+  animation: ai-content-marquee-horizontal 40s linear infinite;
+}
+
+.ai-content__track-alt {
+  position: static;
+  gap: 30px;
+  animation: ai-content-marquee-horizontal-alt 40s linear infinite;
+  animation-delay: -20s;
+}
+
+.ai-content__text {
+  margin-right: 8vw;
+  flex: 0 0 auto;
+  color: $color-white;
+  text-transform: uppercase;
+  word-spacing: 0.5em;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes ai-content-marquee-horizontal {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-1 * var(--single-set-width, 50%)));
+  }
+}
+
+@keyframes ai-content-marquee-horizontal-alt {
+  from {
+    transform: translateX(calc(-1 * var(--single-set-width, 50%)));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Accessibility and control: pause on hover/focus and optional is-paused */
+.ai-content__horizontal:hover .ai-content__track-horizontal,
+.ai-content__horizontal:focus-within .ai-content__track-horizontal,
+.ai-content__horizontal:hover .ai-content__track-alt,
+.ai-content__horizontal:focus-within .ai-content__track-alt,
+.ai-content__horizontal.is-paused .ai-content__track-horizontal,
+.ai-content__horizontal.is-paused .ai-content__track-alt {
+  animation-play-state: paused;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .ai-content__track-horizontal,
+  .ai-content__track-alt {
+    animation: none !important;
+    transform: none !important;
+  }
+}

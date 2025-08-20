@@ -2,8 +2,8 @@
 import React, { useRef, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './VerticalMarquee.module.scss';
-import { useMarqueeVisibility } from '../../hooks/useMarqueeVisibility';
-import { useCssVarOnResize } from '../../hooks/useCssVarOnResize';
+import { useMarqueeVisibility } from '../../../../lib/hooks/useMarqueeVisibility';
+import { useCssVarOnResize } from '../../../../lib/hooks/useCssVarOnResize';
 
 interface VerticalMarqueeProps {
   images: string[];
@@ -34,9 +34,15 @@ export function VerticalMarquee({
   const originalCount = images.length;
 
   return (
-    <div ref={containerRef} className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-vertical']} ${className}`}>
+    <div
+      ref={containerRef}
+      className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-vertical']} ${className}`}
+    >
       <div className={styles['ai-content__cover']}></div>
-      <div ref={trackRef} className={`${styles['ai-content__track']} ${styles['ai-content__track-vertical']}`}>
+      <div
+        ref={trackRef}
+        className={`${styles['ai-content__track']} ${styles['ai-content__track-vertical']}`}
+      >
         <div className={styles['ai-content__vertical']}>
           {loopImages.map((src, index) => {
             const isClone = index >= originalCount;

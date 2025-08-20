@@ -41,7 +41,9 @@
     // Уменьшаем тень и размер заголовка для маленьких карточек
     .gallery-item__title {
       font: $font-p-small;
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.25),
+        0 2px 4px rgba(0, 0, 0, 0.15);
     }
   }
 
@@ -143,61 +145,71 @@
 
   // Фоновые изображения для каждого слайда
   &--sunrise {
-    @include retina-bg('https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=400',
       'https://images.pexels.com/photos/552785/pexels-photo-552785.jpeg?w=800'
     );
   }
 
   &--rocky {
-    @include retina-bg('https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=400',
       'https://images.pexels.com/photos/17804524/pexels-photo-17804524.jpeg?w=800'
     );
   }
 
   &--forest {
-    @include retina-bg('https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=400',
       'https://images.pexels.com/photos/6439041/pexels-photo-6439041.jpeg?w=800'
     );
   }
 
   &--meadow {
-    @include retina-bg('https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=400',
       'https://images.pexels.com/photos/2832061/pexels-photo-2832061.jpeg?w=800'
     );
   }
 
   &--lake {
-    @include retina-bg('https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=400',
       'https://images.pexels.com/photos/552784/pexels-photo-552784.jpeg?w=800'
     );
   }
 
   &--clouds {
-    @include retina-bg('https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=400',
       'https://images.pexels.com/photos/18536296/pexels-photo-18536296.jpeg?w=800'
     );
   }
 
   &--riverbank {
-    @include retina-bg('https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=400',
       'https://images.pexels.com/photos/7616134/pexels-photo-7616134.jpeg?w=800'
     );
   }
 
   &--ridges {
-    @include retina-bg('https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=400',
       'https://images.pexels.com/photos/20641721/pexels-photo-20641721.jpeg?w=800'
     );
   }
 
   &--cliffs {
-    @include retina-bg('https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=400',
       'https://images.pexels.com/photos/17977245/pexels-photo-17977245.jpeg?w=800'
     );
   }
 
   &--valley {
-    @include retina-bg('https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=400',
+    @include retina-bg(
+      'https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=400',
       'https://images.pexels.com/photos/2073873/pexels-photo-2073873.jpeg?w=800'
     );
   }
@@ -215,7 +227,9 @@
   padding: 10px;
   transition: all 0.6s ease-in-out;
   transform-style: preserve-3d;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 -5px 10px rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 -5px 10px rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.1));
   transform: translateY(0);
@@ -232,7 +246,19 @@
   margin-bottom: 10px;
   transition: all $carousel-transition-time;
   position: relative;
-  text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, .1), 0 0 5px rgba(0, 0, 0, .1), 0 1px 3px rgba(0, 0, 0, .3), 0 3px 5px rgba(0, 0, 0, .2), 0 5px 10px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .2), 0 20px 20px rgba(0, 0, 0, .15);
+  text-shadow:
+    0 1px 0 #ccc,
+    0 2px 0 #c9c9c9,
+    0 3px 0 #bbb,
+    0 4px 0 #b9b9b9,
+    0 5px 0 #aaa,
+    0 6px 1px rgba(0, 0, 0, 0.1),
+    0 0 5px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 3px 5px rgba(0, 0, 0, 0.2),
+    0 5px 10px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.2),
+    0 20px 20px rgba(0, 0, 0, 0.15);
 
   &::before {
     content: '';

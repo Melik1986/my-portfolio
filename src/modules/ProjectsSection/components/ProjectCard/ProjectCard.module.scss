@@ -16,7 +16,7 @@
   border: 1px solid rgba(0, 0, 0, 1);
   -webkit-text-stroke: 1px #fff5;
   color: transparent;
-  
+
   // Плавные переходы для всех свойств
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -60,18 +60,18 @@
   justify-content: center;
   align-items: center;
   font: $font-h6;
-  
+
   // Сбрасываем все 3D эффекты
   transform-style: flat !important;
   perspective: none !important;
-  
+
   // Убираем все эффекты для чистого полноэкранного вида
   filter: none !important;
   -webkit-text-stroke: none !important;
   color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  
+
   // Бекграунд, чтобы карточка занимала вьюпорт и была видна
   background: rgba(0, 0, 0, 0.9);
 }
@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   // Сбрасываем все трансформации для карточки внутри оверлея
   .projects-card {
     position: relative !important;
@@ -104,7 +104,8 @@
 }
 
 // Экспортируемый класс для CSS Modules, чтобы можно было добавить styles['fullscreen']
-.fullscreen {}
+.fullscreen {
+}
 
 // Анимация появления полноэкранного режима
 @keyframes fullscreenFadeIn {

@@ -1,31 +1,29 @@
 @use '@/styles/_variables.scss' as *;
 
 .ai-content__content {
-	width: 41%;
-	position: relative;
+  width: 41%;
+  position: relative;
 }
 
 .ai-content__content-subtitle {
-	font-size: 14px;
-	letter-spacing: 1px;
-	color: $color-text-main;
-	margin-bottom: 8px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: $color-text-main;
+  margin-bottom: 8px;
 }
 
 .ai-content__content-title {
-	font-family: $font-family-chango;
-	font-size: 40px;
-	line-height: 1.2;
+  font-family: $font-family-chango;
+  font-size: 40px;
+  line-height: 1.2;
 }
 
 .ai-content__content-paragraph {
-	font-size: 16px;
-	font-family: $font-family-roboto;
+  font-size: 16px;
+  font-family: $font-family-roboto;
 }
 
 .ai-content__content-small {
-	width: 41%;
-	position: relative;
+  width: 41%;
+  position: relative;
 }
-
-

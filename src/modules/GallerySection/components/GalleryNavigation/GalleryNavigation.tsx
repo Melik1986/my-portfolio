@@ -9,7 +9,12 @@ interface GalleryNavigationProps {
   totalItems: number;
 }
 
-export function GalleryNavigation({ prevSlide, nextSlide, displayedIndex, totalItems }: GalleryNavigationProps) {
+export function GalleryNavigation({
+  prevSlide,
+  nextSlide,
+  displayedIndex,
+  totalItems,
+}: GalleryNavigationProps) {
   return (
     <div
       className={styles['gallery-arrows']}
@@ -18,18 +23,22 @@ export function GalleryNavigation({ prevSlide, nextSlide, displayedIndex, totalI
       data-ease="power2.out"
       data-delay="0.3"
     >
-      <button className={styles['gallery-arrows__button']} onClick={prevSlide} title="Previous slide">
+      <button
+        className={styles['gallery-arrows__button']}
+        onClick={prevSlide}
+        title="Previous slide"
+      >
         <SpriteIcon
           id="icon-arrow-left"
           className={styles['gallery-arrows__icon']}
-          sprite="/images/icons/tech-icons.svg"
+          sprite="/icons/tech-icons.svg"
         />
       </button>
       <button className={styles['gallery-arrows__button']} onClick={nextSlide} title="Next slide">
         <SpriteIcon
           id="icon-arrow-right"
           className={styles['gallery-arrows__icon']}
-          sprite="/images/icons/tech-icons.svg"
+          sprite="/icons/tech-icons.svg"
         />
       </button>
       <div className={styles['gallery-arrows__slide-number']}>
