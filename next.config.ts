@@ -34,8 +34,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/webp', 'image/avif'],
-    // Добавить для внешних изображений (если появятся)
-    domains: ['example.com'],
+    // Конфигурация для внешних изображений
     remotePatterns: [
       {
         protocol: 'https',
