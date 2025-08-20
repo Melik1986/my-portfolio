@@ -37,6 +37,12 @@
         animation: change-bg 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       }
     }
+
+    // Уменьшаем тень и размер заголовка для маленьких карточек
+    .gallery-item__title {
+      font: $font-p-x-small;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    }
   }
 
   &::after {
