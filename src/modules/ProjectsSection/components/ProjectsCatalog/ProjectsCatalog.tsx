@@ -1,4 +1,5 @@
- 'use client';
+'use client';
+
 import React, { useMemo, useState, useTransition } from 'react';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useProjectsAnimation } from '../../hooks/useProjectsAnimation';

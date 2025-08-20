@@ -26,42 +26,38 @@
     left: 10px;
     width: 40%;
     z-index: 2;
-    display: block; // root GlassCard wrapper
-    // Arrange inner GlassCard content vertically with spacing
-    :global(.glass-card__content) {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: flex-start;
-      padding: 20px;
-    }
+    display: block;
+  }
 
-    &__title {
-      padding: 0;
-      font: $font-h6;
-      margin-bottom: 10px;
-      color: $color-white;
-      -webkit-text-stroke: none;
-    }
+  // Стили для заголовка
+  &__title {
+    padding: 0;
+    font: $font-h6;
+    margin: 0 0 10px 0;
+    color: $color-white;
+    -webkit-text-stroke: none;
+  }
 
-    &__text {
-      padding: 0;
-      font: $font-h6;
-      color: $color-white;
-      -webkit-text-stroke: none;
-    }
+  // Стили для текста
+  &__text {
+    padding: 0;
+    font: $font-h6;
+    color: $color-white;
+    -webkit-text-stroke: none;
+    margin: 0 0 10px 0;
+  }
 
-    &__link {
-      font: $font-h6;
-      text-decoration: none;
-      color: $color-white;
-      border-bottom: 1px solid $color-white;
-      transition: all 0.3s ease;
+  // Стили для ссылки
+  &__link {
+    font: $font-h6;
+    text-decoration: none;
+    color: $color-white;
+    border-bottom: 1px solid $color-white;
+    transition: all 0.3s ease;
 
-      &:hover {
-        color: $color-accent;
-        border-bottom: 1px solid $color-accent;
-      }
+    &:hover {
+      color: $color-accent;
+      border-bottom: 1px solid $color-accent;
     }
   }
 

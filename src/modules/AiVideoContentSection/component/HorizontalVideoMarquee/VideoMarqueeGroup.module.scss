@@ -1,0 +1,10 @@
+/* VideoMarqueeGroup local overrides for layout */
+
+.ai-content__horizontal-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}

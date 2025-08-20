@@ -1,283 +1,47 @@
-# Техническое задание: AiVideoContentSection
+# Техническое задание (уточнено): AiVideoContentSection
 
-## 📋 Обзор проекта
+Цель: создать секцию <mcfile name="AiVideoContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiVideoContentSection\AiVideoContentSection.tsx"></mcfile>, которая ИДЕНТИЧНА по разметке и расположению элементов существующей секции <mcfile name="AiContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\AiContentSection.tsx"></mcfile>, но в центральном блоке три вертикальные дорожки с изображениями заменяются на три горизонтальные дорожки с ВИДЕО (каждое 400x180). Все общие компоненты/стили остаются без изменений.
 
-**Цель**: Создать новую секцию `AiVideoContentSection` для портфолио, которая будет демонстрировать видео-контент с анимированными бегущими строками (marquee), аналогично существующей `AiContentSection`, но с видео вместо изображения VerticalMarquee.
+Ключевые принципы (строго)
+- Не изменяем и переиспользуем готовую горизонтальную бегущую строку: <mcfile name="HorizontalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.tsx"></mcfile> и её стили <mcfile name="HorizontalMarquee.module.scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.module.scss"></mcfile>.
+- Горизонтальные бегущие строки сверху остаются ТЕКСТОМ: мы НЕ заменяем текст на видео и НЕ меняем API/разметку компонента <mcfile name="HorizontalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.tsx"></mcfile>.
+- Разметка секции, порядок и расположение элементов сохраняются как в <mcfile name="AiContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\AiContentSection.tsx"></mcfile>: два верхних HorizontalMarquee и центральный контейнер с блоком <mcsymbol name="ContentSection" filename="AiContent.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\component\AiContent\AiContent.tsx" startline="1" type="function"></mcsymbol>.
+- Меняем ТОЛЬКО раскладку контейнера с классом ai-content__horizontal-flex (в центральной части): вместо «трёх вертикальных колонок» отображаем «три горизонтальные дорожки» с видео.
+- Не дублируем анимации/классы: используем те же классы треков и keyframes из <mcfile name="HorizontalMarquee.module.scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.module.scss"></mcfile> (ai-content__track, ai-content__track-horizontal, ai-content__track-alt и пр.).
+- Переиспользуем существующие хуки без изменений: <mcfile name="useCssVarOnResize.ts" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\hooks\useCssVarOnResize.ts"></mcfile> и <mcfile name="useMarqueeVisibility.ts" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\hooks\useMarqueeVisibility.ts"></mcfile>.
 
-## 🎯 Основные требования
+Что именно меняется в центральном блоке
+- Контейнер с классом ai-content__horizontal-flex (<mcfile name="VerticalMarqueeGroup.module.scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\component\VerticalMarqueeGroup\VerticalMarqueeGroup.module.scss"></mcfile>) в новой секции локально переопределяется так, чтобы располагать ТРИ ГОРИЗОНТАЛЬНЫЕ дорожки ОДНА ПОД ДРУГОЙ (flex-direction: column; gap как в исходной секции).
+- Вместо <mcsymbol name="VerticalMarqueeGroup" filename="VerticalMarqueeGroup.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\component\VerticalMarqueeGroup\VerticalMarqueeGroup.tsx" startline="1" type="function"></mcsymbol> (который выводит три вертикальные колонны из <mcsymbol name="VerticalMarquee" filename="VerticalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\component\VerticalMarquee\VerticalMarquee.tsx" startline="1" type="function"></mcsymbol>) рендерим локальный компонент группы из трёх горизонтальных рядов видео.
 
-### Функциональные требования
-1. **Видео-контент**: Отображение видео в горизонтальных трех бегущих дорожках как в  VerticalMarquee но горизонтально 
-2. **Анимации**: Плавные, бесшовные анимации прокрутки видео полностю копирует анимацию из VerticalMarquee
+Минимальные новые локальные компоненты (только в AiVideoContentSection)
+scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.module.scss"></mcfile>:
+     - Контейнер: ai-content__horizontal (можно дополнительно добавить ai-content__horizontal-center при необходимости выравнивания).
+     - Трек: ai-content__track + ai-content__track-horizontal (или ai-content__track-alt для обратного направления).
+   - Контент элементов — <video> с размерами строго width: 400px; height: 180px; атрибуты: muted, loop, playsInline, preload="metadata"; при необходимости автостарт — muted autoPlay.
+   - Дублирует список источников видео (items * 2) для бесшовной прокрутки.
+   - Вычисляет --single-set-width через <mcsymbol name="useCssVarOnResize" filename="useCssVarOnResize.ts" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\hooks\useCssVarOnResize.ts" startline="1" type="function"></mcsymbol> (по аналогии с <mcfile name="HorizontalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.tsx"></mcfile>).
+   - Управляет паузой анимации (добавление/снятие класса is-paused на контейнере) через <mcsymbol name="useMarqueeVisibility" filename="useMarqueeVisibility.ts" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\hooks\useMarqueeVisibility.ts" startline="1" type="function"></mcsymbol>.
 
-3. **Адаптивность**: Корректная работа на всех устройствах
-4. **Производительность**: Оптимизированная загрузка и воспроизведение видео
-5. **Доступность**: Поддержка `prefers-reduced-motion`
+1) VideoMarqueeGroup — обёртка из 3 рядов внутри того же контейнера ai-content__horizontal-flex:
+   - Локальный SCSS-модуль в AiVideoContentSection с классом ai-content__horizontal-flex, где flex-direction: column; сохраняем отступы между рядами.
+   - Рендерит три экземпляра VideoMarqueeRow; второй ряд можно прокручивать в обратном направлении (alternate) для визуального контраста — используя класс ai-content__track-alt.
 
-### Технические требования
-1. **TypeScript**: Строгая типизация всех компонентов
-2. **Модульность**: Переиспользуемые компоненты
-3. **BEM**: Методология именования CSS классов
-4. **SCSS Modules**: Изолированные стили
-5. **Next.js**: Совместимость с SSR/SSG
+Важно: никаких правок в общих файлах
+- Не меняем <mcfile name="HorizontalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.tsx"></mcfile> и его стили.
+- Не меняем существующие вертикальные компоненты в модуле AiContentSection.
+- Все изменения исключительно внутри модуля <mcfile name="AiVideoContentSection" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiVideoContentSection"></mcfile>.
 
-## 🏗️ Архитектура проекта
+Данные и типы
+- Проп секции: videoRows: string[][] (три массива ссылок на видео). Можно добавить дефолтные демо-данные локально в constants модуля секции.
 
-### Структура директорий
-```
-src/modules/AiVideoContentSection/
-├── component/
-│   ├── HorizontalVideoMarquee/     #
-│   │   ├── HorizontalVideoMarquee.tsx
-│   │   ├── HorizontalVideoMarquee.module.scss
-│   │   └── index.ts
-│   ├── VerticalVideoMarquee/       # 🔄 В планах
-│   │   ├── VerticalVideoMarquee.tsx
-│   │   ├── VerticalVideoMarquee.module.scss
-│   │   └── index.ts
-│   ├── VerticalVideoMarqueeGroup/  # 🔄 В планах
-│   │   ├── VerticalVideoMarqueeGroup.tsx
-│   │   ├── VerticalVideoMarqueeGroup.module.scss
-│   │   └── index.ts
-│   ├── VideoContent/               # 🔄 В планах
-│   │   ├── VideoContent.tsx
-│   │   ├── VideoContent.module.scss
-│   │   └── index.ts
-│   └── index.ts                    # Экспорт всех компонентов
-├── constants/
-│   └── AiVideoContent.constants.ts #
-├── hooks/
-│   └── useVideoMarqueeAnimation.ts # 🔄 В планах
-├── types/
-│   └── AiVideoContent.types.ts     # 
-└── AiVideoContentSection.tsx       # 
-```
+Пошаговый план работ
+1) Создать <mcfile name="AiVideoContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiVideoContentSection\AiVideoContentSection.tsx"></mcfile> на базе разметки <mcfile name="AiContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\AiContentSection.tsx"></mcfile>:
+   - Сверху оставить два <mcsymbol name="HorizontalMarquee" filename="HorizontalMarquee.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.tsx" startline="1" type="function"></mcsymbol> (второй — с alternate).
+   - В центральном контейнере заменить VerticalMarqueeGroup на локальный VideoMarqueeGroup (без изменения окружающей разметки/классов).
+2) Реализовать VideoMarqueeRow с переиспользованием стилей <mcfile name="HorizontalMarquee.module.scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.module.scss"></mcfile> и хуков.
+3) Реализовать VideoMarqueeGroup, локально переопределив только ai-content__horizontal-flex (column) в SCSS.
+4) Подключить демо-данные videoRows, проверить бесшовность и размеры 400x180.
 
-## 🔧 Детальный план реализации
-
-### Этап 1: Базовые компоненты 
-
-#### 1.1 Типы данных
-- ✅ `VideoItem` - интерфейс для видео элемента
-- ✅ `VideoContentSectionProps` - пропсы основного компонента
-- ✅ `VideoMarqueeProps` - пропсы для marquee компонентов
-
-#### 1.2 Константы
-- ✅ `VIDEO_ITEMS` - массив видео для демонстрации
-- ✅ Конфигурация анимаций
-
-#### 1.3 HorizontalVideoMarquee
-- ✅ Компонент
-- ✅ Стили 
-- ✅ Базовая анимация реализована
-
-### Этап 2: Вертикальные компоненты (🔄 Текущий этап)
-
-#### 2.1 VerticalVideoMarquee
-**Задача**: Создать компонент для вертикальной прокрутки видео
-
-**Особенности**:
-- Вертикальная анимация (transform: translateY)
-- Поддержка направления (вверх/вниз)
-- Адаптация под высоту контейнера
-
-**Файлы**:
-- `VerticalVideoMarquee.tsx`
-- `VerticalVideoMarquee.module.scss`
-- `index.ts`
-
-#### 2.2 VerticalVideoMarqueeGroup
-**Задача**: Группировка нескольких вертикальных marquee
-
-**Особенности**:
-- Управление несколькими колонками
-- Разные скорости анимации
-- Responsive поведение
-
-### Этап 3: Основной контент компонент (🔄 Планируется)
-
-#### 3.1 VideoContent
-**Задача**: Центральный компонент с текстом и видео-marquee
-
-**Структура**:
-```tsx
-<div className="video-content">
-  <div className="video-content__marquee-group">
-    <VerticalVideoMarqueeGroup />
-  </div>
-  <div className="video-content__center">
-    <h2>Заголовок секции</h2>
-    <p>Описание</p>
-  </div>
-  <div className="video-content__horizontal">
-    <HorizontalVideoMarquee />
-  </div>
-</div>
-```
-
-### Этап 4: Хуки и утилиты (🔄 Планируется)
-
-#### 4.1 useVideoMarqueeAnimation
-**Задача**: Управление анимациями видео-marquee
-
-**Функциональность**:
-- Пауза/воспроизведение анимации
-- Обработка видимости элемента
-- Управление состоянием hover/focus
-
-#### 4.2 useVideoIntersection
-**Задача**: Оптимизация загрузки видео
-
-**Функциональность**:
-- Lazy loading видео
-- Пауза видео вне viewport
-- Управление autoplay
-
-### Этап 5: Стили и анимации (🔄 Текущий приоритет)
-
-#### 5.1 Keyframes для видео
-```scss
-@keyframes video-marquee-horizontal {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes video-marquee-vertical {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
-}
-```
-
-#### 5.2 Responsive поведение
-- Mobile: упрощенная анимация
-- Tablet: средняя сложность
-- Desktop: полная анимация
-
-#### 5.3 Accessibility
-- `prefers-reduced-motion: reduce`
-- Keyboard navigation
-- Screen reader support
-
-### Этап 6: Интеграция (🔄 Финальный этап)
-
-#### 6.1 Подключение к главной странице
-```tsx
-// app/page.tsx
-import { AiVideoContentSection } from '@/modules/AiVideoContentSection'
-
-export default function HomePage() {
-  return (
-    <>
-      <AiContentSection />
-      <AiVideoContentSection />  {/* Новая секция */}
-      {/* Остальные секции */}
-    </>
-  )
-}
-```
-
-#### 6.2 Оптимизация производительности
-- Lazy loading компонентов
-- Video preloading стратегии
-- Bundle size анализ
-
-## 🎨 Дизайн-система
-
-### Цветовая схема
-- Наследование от существующей темы
-- Поддержка dark/light режимов
-- Акцентные цвета для видео элементов
-
-### Типографика
-- Заголовки: существующие стили
-- Описания: адаптация под видео-контент
-- Подписи к видео: новые стили
-
-### Spacing и Layout
-- Grid система: 12 колонок
-- Breakpoints: mobile, tablet, desktop
-- Отступы: 8px базовая единица
-
-## 🔍 Тестирование
-
-### Unit тесты
-- Компоненты рендеринг
-- Хуки логика
-- Утилиты функции
-
-### Integration тесты
-- Анимации работоспособность
-- Responsive поведение
-- Accessibility compliance
-
-### Performance тесты
-- Video loading времена
-- Animation smoothness
-- Memory usage
-
-## 📱 Кроссбраузерная совместимость
-
-### Поддерживаемые браузеры
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-### Fallbacks
-- CSS Grid → Flexbox
-- CSS Custom Properties → SCSS переменные
-- Intersection Observer → Scroll events
-
-## 🚀 План развертывания
-
-### Этапы внедрения
-1. **Alpha**: Базовые компоненты
-2. **Beta**: Полная функциональность
-3. **RC**: Оптимизация и тесты
-4. **Production**: Финальная версия
-
-### Критерии готовности
-- ✅ Все компоненты созданы
-- ✅ Тесты покрытие >80%
-- ✅ Performance audit пройден
-- ✅ Accessibility audit пройден
-- ✅ Cross-browser тестирование
-
-## 📊 Метрики успеха
-
-### Технические метрики
-- Время загрузки секции: <2s
-- FPS анимаций: 60fps
-- Bundle size увеличение: <50kb
-- Lighthouse score: >90
-
-### UX метрики
-- Время взаимодействия: <100ms
-- Плавность анимаций: без дерганий
-- Адаптивность: все breakpoints
-
-## 🔄 Текущий статус
-
-### Выполнено ✅
-- [x] Структура типов
-- [x] Константы и конфигурация
-- [x] HorizontalVideoMarquee компонент
-- [x] Базовые стили для горизонтальной анимации
-- [x] Основной AiVideoContentSection компонент
-
-### В процессе 🔄
-- [ ] VerticalVideoMarquee компонент
-- [ ] VerticalVideoMarqueeGroup компонент
-- [ ] VideoContent центральный компонент
-- [ ] useVideoMarqueeAnimation хук
-
-### Планируется 📋
-- [ ] Полные стили для всех анимаций
-- [ ] Оптимизация производительности
-- [ ] Кроссбраузерное тестирование
-- [ ] Интеграция в главную страницу
-- [ ] Финальная полировка
-
----
-
-**Примечание**: Этот план является живым документом и может корректироваться в процессе разработки на основе обратной связи и технических требований.
+Тестирование/поведение
+- Проверить: 1) бесшовность горизонтальной прокрутки каждого ряда; 2) паузу по невидимости/hover/focus (класс is-paused уже обрабатывается правилами в <mcfile name="HorizontalMarquee.module.scss" path="d:\Project\Portfolio_next.js\my-portfolio\src\lib\ui\HorizontalMarquee\HorizontalMarquee.module.scss"></mcfile>); 3) размеры видео 400x180; 4) отсутствие влияния на текущую <mcfile name="AiContentSection.tsx" path="d:\Project\Portfolio_next.js\my-portfolio\src\modules\AiContentSection\AiContentSection.tsx"></mcfile>.
