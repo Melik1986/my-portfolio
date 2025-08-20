@@ -9,6 +9,9 @@
   position: relative;
   overflow: hidden;
   padding: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 
   &__title {
     position: absolute;
@@ -20,6 +23,12 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  &__marquee-container {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
   }
 
   &__horizontal {
