@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import gsap from 'gsap';
 import { CAROUSEL_CONFIG } from '../config/carousel.config';
 
 /**
@@ -59,10 +58,8 @@ export const useCarouselEffects = ({
     };
   }, [carouselRef, startAutoSlide, stopAutoSlide]);
 
-  /** Позиционирование списка при изменении индекса */
-  useEffect(() => {
-    if (listRef.current) {
-      gsap.set(listRef.current, { xPercent: -100 * currentIndex });
-    }
-  }, [currentIndex, listRef]);
+  /** DOM-реордеринг сам поддерживает нужную раскладку — позиционирование через SCSS (:nth-child) */
+  /** текущий индекс сохраняем для UI/счётчиков */
+  void currentIndex;
+  void listRef;
 };

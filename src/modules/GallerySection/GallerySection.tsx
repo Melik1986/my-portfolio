@@ -1,88 +1,18 @@
 'use client';
 
-import { useDeferredValue, useMemo } from 'react';
-import { type GalleryItem } from './types/gallery';
+import { useDeferredValue } from 'react';
 import { useCarousel } from './hooks/useCarousel';
-import { SpriteIcon } from '@/lib/ui/SpriteIcon';
 import styles from './GallerySection.module.scss';
-
-// Компонент для списка галереи
-function GalleryList({ itemsToRender }: { itemsToRender: GalleryItem[] }) {
-  const memoizedList = useMemo(
-    () => (
-      <ul className={styles.gallery__list}>
-        {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
-          <li
-            key={`${className}-${index}`}
-            className={`${styles.gallery__item} ${styles[`gallery__item--${className}`]}`}
-          >
-            <div className={styles.gallery__content}>
-              <div className={styles.gallery__title}>{title}</div>
-              <div className={styles.gallery__name}>{name}</div>
-              <div className={styles.gallery__des}>{description}</div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    ),
-    [itemsToRender],
-  );
-
-  return memoizedList;
-}
-
-// Компонент для навигационных стрелок
-function GalleryNavigation({
-  prevSlide,
-  nextSlide,
-  displayedIndex,
-  totalItems,
-}: {
-  prevSlide: () => void;
-  nextSlide: () => void;
-  displayedIndex: number;
-  totalItems: number;
-}) {
-  return (
-    <div
-      className={styles.gallery__arrows}
-      data-animation="fade-up"
-      data-duration="0.8"
-      data-ease="power2.out"
-      data-delay="0.3"
-    >
-      <button className={styles.gallery__prev} onClick={prevSlide} title="Previous slide">
-        <SpriteIcon
-          id="arrow-left"
-          name="icon-arrow-left"
-          className={styles.gallery__arrowIcon}
-          sprite="/images/icons/tech-icons.svg"
-        />
-      </button>
-      <button className={styles.gallery__next} onClick={nextSlide} title="Next slide">
-        <SpriteIcon
-          id="arrow-right"
-          name="icon-arrow-right"
-          className={styles.gallery__arrowIcon}
-          sprite="/images/icons/tech-icons.svg"
-        />
-      </button>
-      <div className={styles.gallery__slideNumber}>
-        {displayedIndex + 1}/{totalItems}
-      </div>
-    </div>
-  );
-}
+import { GalleryList, GalleryNavigation } from './components';
 
 export function GallerySection() {
-  const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems } =
+  const { itemsToRender, prevSlide, nextSlide, displayedIndex, progressRef, totalItems, carouselRef, listRef } =
     useCarousel();
 
-  // Добавить отложенное значение для itemsToRender
   const deferredItemsToRender = useDeferredValue(itemsToRender);
 
   return (
-    <section className={styles.gallery} id="gallery" data-group-delay="7.5">
+    <section ref={carouselRef} className={styles.gallery} id="gallery" data-group-delay="7.5">
       <h2 className={`${styles.gallery__title} visually-hidden`}>My Portfolio</h2>
       <div
         className={styles.gallery__carousel}
@@ -91,7 +21,7 @@ export function GallerySection() {
         data-ease="power2.out"
         data-delay="0"
       >
-        <GalleryList itemsToRender={deferredItemsToRender} />
+        <GalleryList itemsToRender={deferredItemsToRender} listRef={listRef} />
       </div>
       <GalleryNavigation
         prevSlide={prevSlide}

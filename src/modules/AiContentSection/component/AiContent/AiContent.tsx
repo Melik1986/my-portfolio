@@ -16,6 +16,7 @@ export function ContentSection({
 }: ContentSectionProps) {
   return (
     <div className={`${styles['ai-content__content']} ${styles['ai-content__content-small']} ${className}`}>
+      {subtitle && <div className={styles['ai-content__content-subtitle']}>{subtitle}</div>}
       <h2 className={styles['ai-content__content-title']}>{title}</h2>
       <p className={styles['ai-content__content-paragraph']}>{description}</p>
     </div>

@@ -31,7 +31,8 @@ export const useCarouselAutoPlay = ({
   const stopAutoSlide = useCallback(() => {
     if (timerRef.current) timerRef.current.kill();
     timerRef.current = null;
-  }, [timerRef]);
+    if (progressRef.current) gsap.set(progressRef.current, { width: 0 });
+  }, [timerRef, progressRef]);
 
   /**
    * Запускает автопрокрутку карусели
@@ -45,9 +46,7 @@ export const useCarouselAutoPlay = ({
       duration: CAROUSEL_CONFIG.progress.duration,
       ease: CAROUSEL_CONFIG.progress.ease,
       onComplete: () => {
-        if (nextSlideRef.current) {
-          nextSlideRef.current();
-        }
+        if (nextSlideRef.current) nextSlideRef.current();
       },
     });
   }, [progressRef, timerRef, nextSlideRef, stopAutoSlide]);

@@ -2,7 +2,6 @@
 
 import { gsap } from 'gsap';
 import { SplitText as GsapSplitText } from 'gsap/SplitText';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import type {
   AnimationType,
   GlobalSplitTextStorage,
@@ -10,8 +9,9 @@ import type {
 } from '../types/gsap.types';
 import { parseAnimationData } from '@/lib/gsap/utils/parseAnimationData';
 import { getAnimationDefinition, AnimationDefinition } from '@/lib/gsap/config/animation.config';
+import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
 
-gsap.registerPlugin(GsapSplitText, ScrollTrigger);
+ensureGSAPRegistered();
 
 /**
  * Параметры анимации для элементов

@@ -1,4 +1,7 @@
 import { gsap } from 'gsap';
+import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
+
+ensureGSAPRegistered();
 
 /**
  * Callback для синхронизации анимаций элементов с master timeline

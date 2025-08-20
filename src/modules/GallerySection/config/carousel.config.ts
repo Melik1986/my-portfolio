@@ -6,7 +6,10 @@ export const CAROUSEL_CONFIG = {
   /** Интервал автопрокрутки в миллисекундах */
   autoSlideInterval: 3500,
 
-  /** Настройки анимации перехода между слайдами */
+  /** Длительность переходной анимации (CSS классы next/prev) в мс */
+  transitionDurationMs: 1500,
+
+  /** Настройки анимации перехода между слайдами (не используются в DOM-реордеринге, оставлены для совместимости) */
   animation: {
     duration: 0.5,
     ease: 'power1.out',
@@ -14,7 +17,7 @@ export const CAROUSEL_CONFIG = {
 
   /** Настройки IntersectionObserver для автозапуска при видимости */
   intersection: {
-    threshold: 0.1,
+    threshold: 0.3,
   },
 
   /** Настройки прогресс-бара автопрокрутки */

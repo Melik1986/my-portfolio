@@ -1,20 +1,14 @@
 'use client';
 
 import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { initCardDeckScroll } from '../utils/cardDeckAnimation';
+import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
 
-// Регистрируем плагины
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
+// Централизованная регистрация GSAP плагинов
+ensureGSAPRegistered();
 
-// Расширяем типы window для ScrollTrigger
-declare global {
-  interface Window {
-    ScrollTrigger: typeof ScrollTrigger;
-  }
-}
+// Расширение window теперь выполняется внутри ensureGSAPRegistered
 
 /**
  * Локальный helper: очищает анимационные стили дочерних элементов секции
