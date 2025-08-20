@@ -58,6 +58,7 @@
     transform: translate(0, 0px);
     width: 100%;
     height: 100%;
+    padding: 60px;
   }
 
   &:nth-child(3) {
@@ -86,12 +87,12 @@
 
   &:nth-child(1) .gallery-item__content,
   &:nth-child(2) .gallery-item__content {
-    top: 20px;
-    left: 20px;
+    top: 0;
+    left: 0;
     bottom: auto;
     width: auto;
     max-width: 60%;
-    padding: 10px 12px;
+    padding: 0;
     transform: none;
     justify-content: flex-start;
     align-items: flex-start;
@@ -238,15 +239,7 @@
   }
 
   &::after {
-    content: attr(data-item);
-    border-radius: 50%;
-    color: $color-white;
-    font: $font-p-x-small;
-    position: absolute;
-    top: -20px;
-    left: 0px;
-    z-index: 2;
-    font-weight: 400;
+    content: none;
   }
 }
 
