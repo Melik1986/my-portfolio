@@ -14,8 +14,14 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const [isPending] = useTransition();
   const [activeFullscreenIndex, setActiveFullscreenIndex] = useState<number | null>(null);
   const animation = useProjectsAnimation(projects.length);
-  const mountHandlers = useMemo(() => projects.map((_, i) => (el: HTMLElement) => animation.registerCard(el, i)), [animation, projects]);
-  const unmountHandlers = useMemo(() => projects.map((_, i) => () => animation.unregisterCard(i)), [animation, projects]);
+  const mountHandlers = useMemo(
+    () => projects.map((_, i) => (el: HTMLElement) => animation.registerCard(el, i)),
+    [animation, projects],
+  );
+  const unmountHandlers = useMemo(
+    () => projects.map((_, i) => () => animation.unregisterCard(i)),
+    [animation, projects],
+  );
 
   return (
     <div

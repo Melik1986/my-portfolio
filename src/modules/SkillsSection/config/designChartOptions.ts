@@ -1,4 +1,4 @@
-import { SKILLS_DATA, RESPONSIVE_BREAKPOINTS } from './skillsCharts.config';
+import { SKILLS_DATA, RESPONSIVE_BREAKPOINTS, COLOR_PALETTE } from './skillsCharts.config';
 import { TOOLTIP_STYLE } from './chartStyles';
 import { CallbackDataParams } from 'echarts/types/dist/shared';
 
@@ -24,7 +24,7 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
     /** Конфигурация легенды диаграммы */
     legend: {
       orient: 'horizontal',
-      bottom: '5%',
+      bottom: '0%',
       left: 'center',
       textStyle: { color: '#FFFFFF', fontSize: legendFontSize },
       data: SKILLS_DATA.design.map((item) => item.name),
@@ -35,12 +35,19 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
         name: 'Design Skills',
         type: 'pie',
         radius: [0, radius],
-        center: ['50%', '50%'],
+        center: ['50%', '35%'],
         roseType: 'area',
         itemStyle: { borderRadius: 8 },
         label: { show: false },
         labelLine: { show: false },
-        data: SKILLS_DATA.design.map((item) => ({ value: 0, name: item.name })),
+        data: SKILLS_DATA.design.map((item, index) => ({ 
+          value: 0, 
+          name: item.name,
+          itemStyle: {
+            color: index % 2 === 0 ? COLOR_PALETTE.primary : COLOR_PALETTE.secondary
+          }
+        })),
+        color: ['#29abe2', '#f9f9f7', '#494a51', '#29abe2', '#d7cfcb', '#3668b1'],
         animationType: 'expansion',
         animationDuration: 1200,
         animationDelay: (idx: number) => idx * 150,

@@ -27,11 +27,11 @@
   }
 
   &__content-left {
-    background-color: $color-bg-white;
+    background-color: $color-bg-white-light;
     gap: 40px;
   }
 
   &__content-right {
-    background-color: $color-bg-dark;
+    background-color: $color-bg-dark-light;
   }
 }

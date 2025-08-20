@@ -1,3 +1,5 @@
+@use '@/styles/_variables.scss' as *;
+
 * {
   padding: 0;
   margin: 0;
@@ -5,8 +7,6 @@
 }
 
 body {
-  // background-color: #eeeeee;
-  // background-color: #DDDCDE;
   background: linear-gradient(
     90deg,
     rgba(125, 205, 240, 1) 0%,
@@ -22,6 +22,37 @@ body {
   transition:
     color 0.3s,
     background-color 0.3s;
+}
+
+// Глобальные стили скроллбара для всех элементов
+* {
+  // WebKit scrollbar styles (Safari, Chrome)
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $color-white;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-accent;
+    border-radius: 4px;
+
+    &:hover {
+      background: darken($color-accent, 10%);
+    }
+  }
+}
+
+// Firefox scrollbar styles (только для Firefox)
+@supports (scrollbar-color: auto) {
+  * {
+    scrollbar-color: $color-accent $color-white;
+    scrollbar-width: thin;
+  }
 }
 
 main {

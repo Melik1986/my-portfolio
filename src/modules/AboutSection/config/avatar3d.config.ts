@@ -5,7 +5,7 @@ import { AvatarConfig, AvatarControls } from '../types/about.types';
 
 export const avatarConfig: AvatarConfig = {
   modelPath: '/model/avatar.glb',
-  pedestalColor: 0x00b7eb,
+  pedestalColor: 0x29abe2,
 };
 
 export const avatarControls: AvatarControls = {

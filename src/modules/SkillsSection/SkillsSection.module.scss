@@ -28,11 +28,11 @@
   &__content-left {
     position: relative;
     z-index: 1;
-    background-color: $color-bg-white;
+    background-color: $color-bg-white-light;
   }
 
   &__content-right {
-    background-color: $color-bg-dark;
+    background-color: $color-bg-dark-light;
     justify-content: center;
   }
 }

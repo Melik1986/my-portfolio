@@ -27,12 +27,12 @@
   }
 
   &__content-left {
-    background-color: $color-bg-white;
+    background-color: $color-bg-white-light;
     height: 100%;
   }
 
   &__content-right {
-    background-color: $color-bg-dark;
+    background-color: $color-bg-dark-light;
     height: 100%;
     justify-content: stretch;
   }

@@ -1,9 +1,20 @@
-import { AI_CONTENT_CONSTANTS } from "../../AiContentSection/constants/AiContent.constants";
-
-export const VIDEO_CONTENT_CONSTANTS = {
-  DEFAULT_HORIZONTAL_TEXTS: AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
-  DEFAULT_TITLE: AI_CONTENT_CONSTANTS.DEFAULT_TITLE,
-  DEFAULT_DESCRIPTION: AI_CONTENT_CONSTANTS.DEFAULT_DESCRIPTION,
-} as const;
-
-export const DEFAULT_VIDEO_ROWS: string[][] = [[], [], []];
+export const DEFAULT_VIDEO_ROWS: string[][] = [
+  [
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+  ],
+  [
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+  ],
+  [
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4',
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
+  ],
+];

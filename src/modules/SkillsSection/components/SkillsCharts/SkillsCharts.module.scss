@@ -57,8 +57,9 @@
   height: 400px !important; /* Фиксированная высота для диаграмм */
   min-height: 400px !important;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
 
   // Оптимизация для ECharts canvas
@@ -66,6 +67,7 @@
     touch-action: pan-y;
     will-change: transform;
     pointer-events: auto;
+    margin-bottom: 20px; /* Отступ от легенды */
   }
 
   // Отключение wheel событий для ECharts контейнеров

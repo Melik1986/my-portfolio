@@ -27,10 +27,14 @@
   align-items: center;
   justify-content: center;
 
-  &:hover {
+  &:hover,
+  &:focus {
     border: 2px solid $color-white;
     color: $color-white;
     background-color: transparent;
+  }
+  &:hover .gallery-arrows__icon {
+    color: $color-accent;
   }
 }
 
