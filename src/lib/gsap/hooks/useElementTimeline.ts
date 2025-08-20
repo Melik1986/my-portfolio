@@ -13,9 +13,11 @@ import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
 
 ensureGSAPRegistered();
 
-/**
- * Параметры анимации для элементов
- */
+const IS_DEBUG = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ANIM_DEBUG === '1';
+
+// Diagnostics storage: expected vs started/completed counters per section/groupDelay
+const __animDiag = new Map<string, { expected: number; started: number; completed: number }>();
+
 type ElementAnimationParams = {
   duration: number;
   ease: string;
@@ -25,28 +27,18 @@ type ElementAnimationParams = {
   sectionId?: string;
 };
 
-/**
- * Конфигурация анимации для одного элемента
- */
 type ElementAnimationConfig = {
   element: Element;
   params: ElementAnimationParams;
   animationDef?: AnimationDefinition;
 };
 
-/**
- * Конфигурация для добавления анимации в timeline
- */
 type AddAnimationConfig = {
   element: Element;
   animationType: AnimationType;
   params: ElementAnimationParams;
 };
 
-/**
- * Очищает SplitText экземпляры для указанного контейнера
- * Должна вызываться при размонтировании компонента
- */
 export function cleanupSplitTextInstances(container: HTMLElement): void {
   const globalStorage = globalThis as GlobalSplitTextStorage;
   if (!globalStorage.__splitTextInstances) return;
@@ -58,20 +50,15 @@ export function cleanupSplitTextInstances(container: HTMLElement): void {
     if (splitTextInstance) {
       splitTextInstance.revert();
       instances.delete(element);
-
-      // Сбрасываем инлайн-стили, которые могли остаться от GSAP
       gsap.set(element, { clearProps: 'all' });
     }
   });
 }
 
-// Функция для парсинга элементов
 const parseElements = (elements: Element[], container: HTMLElement) => {
   return elements
     .map((element) => {
       const config = parseAnimationData(element);
-      // Используем переданный container как источник sectionId
-      // Это исправляет проблему с дублированием data-section-index
       const sectionId =
         container.getAttribute('data-section') ||
         container.getAttribute('data-section-index') ||
@@ -89,7 +76,6 @@ const parseElements = (elements: Element[], container: HTMLElement) => {
     .filter((item) => item.config);
 };
 
-// Функция для группировки по секциям
 const groupBySections = (parsedElements: ReturnType<typeof parseElements>) => {
   const sections = new Map<string, typeof parsedElements>();
   parsedElements.forEach((item) => {
@@ -101,7 +87,6 @@ const groupBySections = (parsedElements: ReturnType<typeof parseElements>) => {
   return sections;
 };
 
-// Функция для сортировки секций
 const sortSections = (sections: Map<string, ReturnType<typeof parseElements>>) => {
   return Array.from(sections.entries()).sort(([, a], [, b]) => {
     const minGroupDelayA = Math.min(...a.map((item) => item.groupDelay));
@@ -110,13 +95,11 @@ const sortSections = (sections: Map<string, ReturnType<typeof parseElements>>) =
   });
 };
 
-// Функция для обработки одной секции
 const processSection = (
   timeline: gsap.core.Timeline,
   sectionElements: ReturnType<typeof parseElements>,
   sectionStartTime: number,
 ) => {
-  // В каждой секции группируем по groupDelay
   const groups = new Map<number, typeof sectionElements>();
   sectionElements.forEach((item) => {
     if (!groups.has(item.groupDelay)) {
@@ -125,25 +108,26 @@ const processSection = (
     groups.get(item.groupDelay)!.push(item);
   });
 
-  // Сортируем группы по groupDelay
   const sortedGroups = Array.from(groups.entries()).sort(([a], [b]) => a - b);
 
   sortedGroups.forEach(([groupDelay, groupElements]) => {
     const groupStartTime = sectionStartTime + groupDelay;
-
-    // Сортируем элементы в группе по delay
     const sortedGroupElements = groupElements.sort((a, b) => a.delay - b.delay);
 
+    // overwrite expected for this render pass; don't accumulate across cycles
+    const diagKey = `${sortedGroupElements[0]?.sectionId ?? 'default'}::${groupDelay}`;
+    __animDiag.set(diagKey, { expected: sortedGroupElements.length, started: 0, completed: 0 });
+
     sortedGroupElements.forEach((item, index) => {
-      const params = {
+      const params: ElementAnimationParams = {
         duration: item.config!.duration ?? 1,
         delay: item.delay,
         ease: item.config!.ease ?? 'power1.out',
         stagger: item.stagger,
         groupDelay: item.groupDelay,
+        sectionId: item.sectionId,
       };
 
-      // Определяем позицию в timeline с учетом stagger
       const staggerDelay = item.stagger > 0 ? index * item.stagger : 0;
       const elementPosition = groupStartTime + item.delay + staggerDelay;
 
@@ -159,23 +143,23 @@ const processSection = (
     });
   });
 
-  // Возвращаем время для следующей секции
-  const maxGroupDelay = Math.max(...sectionElements.map((item) => item.groupDelay));
-  const maxElementTime = Math.max(
-    ...sectionElements.map((item) => item.delay + (item.config?.duration ?? 1)),
-  );
-  return maxGroupDelay + maxElementTime;
+  // Duration accounting for max stagger in groups, so last staggered item fits in timeline
+  let sectionDuration = 0;
+  groups.forEach((groupElems, groupDelay) => {
+    const maxDelay = Math.max(...groupElems.map((it) => it.delay));
+    const maxDuration = Math.max(...groupElems.map((it) => it.config?.duration ?? 1));
+    const maxStagger = Math.max(...groupElems.map((it) => it.stagger ?? 0));
+    const count = groupElems.length;
+    const groupEnd = groupDelay + maxDelay + maxDuration + maxStagger * Math.max(0, count - 1);
+    if (groupEnd > sectionDuration) sectionDuration = groupEnd;
+  });
+  return sectionDuration;
 };
 
-/**
- * Функция для создания timeline с анимациями элементов в контейнере
- * Создает timeline без ScrollTrigger для управления извне
- */
 export function createElementTimeline(
   container: HTMLElement,
   selector = '[data-animation]',
 ): gsap.core.Timeline {
-  // Ищем элементы только внутри переданного контейнера для изоляции анимаций
   const elements = Array.from(container.querySelectorAll(selector));
 
   if (elements.length === 0) {
@@ -183,42 +167,66 @@ export function createElementTimeline(
   }
 
   const tl = gsap.timeline({ paused: true });
-
-  // Парсим элементы и группируем по секциям
   const parsedElements = parseElements(elements, container);
   const sections = groupBySections(parsedElements);
   const sortedSections = sortSections(sections);
 
   let sectionStartTime = 0;
-
   sortedSections.forEach(([, sectionElements]) => {
     const sectionDuration = processSection(tl, sectionElements, sectionStartTime);
     sectionStartTime += sectionDuration;
   });
 
+  // At the end of this container timeline, summarize diagnostics for its sectionId
+  const sectionId =
+    container.getAttribute('data-section') ||
+    container.getAttribute('data-section-index') ||
+    container.id ||
+    'default';
+  tl.eventCallback('onComplete', () => {
+    if (IS_DEBUG) {
+      requestAnimationFrame(() => {
+        let anyWarn = false;
+        __animDiag.forEach((val, key) => {
+          const [sec] = key.split('::');
+          if (sec !== String(sectionId)) return;
+          // if any completed, consider group OK for this cycle
+          if (val.completed > 0) return;
+          if (val.started < val.expected) {
+            anyWarn = true;
+            // eslint-disable-next-line no-console
+            console.warn(
+              `[ANIM][WARN] group not fully started sec=${sec} started=${val.started}/${val.expected}`,
+            );
+          }
+        });
+        if (!anyWarn) {
+          // eslint-disable-next-line no-console
+          console.log(`[ANIM][OK] sec=${sectionId} all groups started`);
+        }
+        // cleanup keys for this section
+        Array.from(__animDiag.keys()).forEach((key) => {
+          if (key.startsWith(`${sectionId}::`)) __animDiag.delete(key);
+        });
+      });
+    }
+  });
+
   return tl;
 }
 
-/**
- * Добавляет анимацию для одного элемента в timeline по типу анимации
- * Выбирает подходящий метод анимации в зависимости от типа
- */
 function addAnimationToTimeline(
   timeline: gsap.core.Timeline,
   config: AddAnimationConfig,
   position?: number | string,
 ) {
   const { element, animationType, params } = config;
-
   const animationDef = getAnimationDefinition(animationType, params);
-
   if (!animationDef) {
     return;
   }
 
-  // Если позиция не передана, используем стандартную логику
-  const timelinePosition =
-    position !== undefined ? position : params.delay === 0 ? '0' : `${params.delay}`;
+  const timelinePosition = position !== undefined ? position : params.delay === 0 ? '0' : `${params.delay}`;
 
   if (animationType === 'svg-draw') {
     addSvgDrawAnimation(timeline, { element, params }, timelinePosition);
@@ -232,9 +240,6 @@ function addAnimationToTimeline(
   addBaseAnimation(timeline, { element, params, animationDef }, timelinePosition);
 }
 
-/**
- * Получает или создает SplitText экземпляр для элемента
- */
 function getSplitTextInstance(element: HTMLElement): SplitTextInstance | null {
   const storage = ((globalThis as unknown as GlobalSplitTextStorage).__splitTextInstances ??=
     new WeakMap<Element, SplitTextInstance>());
@@ -250,9 +255,6 @@ function getSplitTextInstance(element: HTMLElement): SplitTextInstance | null {
   return splitText;
 }
 
-/**
- * Создает внутренние элементы для анимации text-reveal
- */
 function createLineInners(lines: Element[]): HTMLElement[] {
   return lines.map((line) => {
     const inner = document.createElement('div');
@@ -264,10 +266,6 @@ function createLineInners(lines: Element[]): HTMLElement[] {
   });
 }
 
-/**
- * Добавляет анимацию рисования SVG элементов
- * Анимирует stroke-dashoffset для эффекта рисования
- */
 function addSvgDrawAnimation(
   timeline: gsap.core.Timeline,
   config: ElementAnimationConfig,
@@ -275,14 +273,7 @@ function addSvgDrawAnimation(
 ) {
   const { element, params } = config;
   const pathElements = element.querySelectorAll('path');
-
-  // Если delay равен 0, используем "0" для одновременного старта
-  const position =
-    positionOverride !== undefined
-      ? positionOverride
-      : params.delay === 0
-        ? '0'
-        : `${params.delay}`;
+  const position = positionOverride !== undefined ? positionOverride : params.delay === 0 ? '0' : `${params.delay}`;
 
   pathElements.forEach((pathElement: Element) => {
     const pathLength = (pathElement as SVGPathElement).getTotalLength();
@@ -297,16 +288,22 @@ function addSvgDrawAnimation(
         strokeDashoffset: 0,
         duration: params.duration,
         ease: params.ease,
+        onStart: () => {
+          const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+          const cur = __animDiag.get(key);
+          if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
+        },
+        onComplete: () => {
+          const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+          const cur = __animDiag.get(key);
+          if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
+        },
       },
       position,
     );
   });
 }
 
-/**
- * Добавляет анимацию reveal для текстовых элементов
- * Использует SplitText.create() для совместимости с gsap.context
- */
 function addTextRevealAnimation(
   timeline: gsap.core.Timeline,
   config: ElementAnimationConfig,
@@ -318,17 +315,10 @@ function addTextRevealAnimation(
   const splitText = getSplitTextInstance(element as HTMLElement);
   if (!splitText?.lines?.length) return;
 
-  // Убираем прямой set вне таймлайна, чтобы не терять видимость после clearProps
-  // gsap.set(element, { opacity: 1, visibility: 'visible' });
-
   const position = positionOverride ?? (params.delay === 0 ? '0' : `${params.delay}`);
-
-  // Применяем overflow: hidden на строки для правильного эффекта маскирования
   gsap.set(splitText.lines, { overflow: 'hidden' });
-
   const lineInners = createLineInners(splitText.lines);
 
-  // 0. Делаем контейнер видимым именно в рамках таймлайна
   timeline.set(
     element,
     {
@@ -338,7 +328,6 @@ function addTextRevealAnimation(
     position,
   );
 
-  // 1. Устанавливаем начальное состояние (скрытое)
   timeline.set(
     lineInners,
     {
@@ -348,7 +337,6 @@ function addTextRevealAnimation(
     position,
   );
 
-  // 2. Добавляем основную анимацию появления
   timeline.to(
     lineInners,
     {
@@ -356,8 +344,17 @@ function addTextRevealAnimation(
       duration: animationDef.duration || 0.8,
       stagger: params.stagger ?? 0.1,
       ease: animationDef.ease || 'expo.out',
+      onStart: () => {
+        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+        const cur = __animDiag.get(key);
+        if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
+      },
+      onComplete: () => {
+        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+        const cur = __animDiag.get(key);
+        if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
+      },
       onReverseComplete: () => {
-        // При реверсе возвращаем элементы в скрытое состояние
         gsap.set(lineInners, {
           yPercent: 100,
           opacity: 1,
@@ -368,11 +365,6 @@ function addTextRevealAnimation(
   );
 }
 
-/**
- * Добавляет базовую анимацию элемента
- * Применяет стандартную анимацию from/to с пользовательскими параметрами
- * Теперь GSAP полностью контролирует все свойства включая visibility
- */
 function addBaseAnimation(
   timeline: gsap.core.Timeline,
   config: ElementAnimationConfig,
@@ -388,27 +380,36 @@ function addBaseAnimation(
         ? '0'
         : `${params.delay}`;
 
-  // Устанавливаем начальное состояние в timeline
   timeline.set(
     element,
     {
       ...animationDef.from,
       autoAlpha: 0,
-      visibility: 'hidden', // Явно скрываем элемент
+      visibility: 'hidden',
     },
     position,
   );
 
-  // Анимируем к конечному состоянию
   timeline.to(
     element,
     {
       ...animationDef.to,
       autoAlpha: 1,
-      visibility: 'visible', // Показываем элемент
+      visibility: 'visible',
       duration: animationDef.duration,
       ease: animationDef.ease,
+      onStart: () => {
+        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+        const cur = __animDiag.get(key);
+        if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
+      },
+      onComplete: () => {
+        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+        const cur = __animDiag.get(key);
+        if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
+      },
     },
     position,
   );
 }
+
