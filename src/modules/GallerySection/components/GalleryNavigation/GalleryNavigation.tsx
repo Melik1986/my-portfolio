@@ -20,16 +20,14 @@ export function GalleryNavigation({ prevSlide, nextSlide, displayedIndex, totalI
     >
       <button className={styles['gallery-arrows__button']} onClick={prevSlide} title="Previous slide">
         <SpriteIcon
-          id="arrow-left"
-          name="icon-arrow-left"
+          id="icon-arrow-left"
           className={styles['gallery-arrows__icon']}
           sprite="/images/icons/tech-icons.svg"
         />
       </button>
       <button className={styles['gallery-arrows__button']} onClick={nextSlide} title="Next slide">
         <SpriteIcon
-          id="arrow-right"
-          name="icon-arrow-right"
+          id="icon-arrow-right"
           className={styles['gallery-arrows__icon']}
           sprite="/images/icons/tech-icons.svg"
         />

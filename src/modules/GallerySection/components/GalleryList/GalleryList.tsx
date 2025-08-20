@@ -9,16 +9,16 @@ interface GalleryListProps {
 
 export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
   const modifierClassMap = useMemo((): Record<GalleryClassName, string> => ({
-    sunrise: styles['galleryItem--sunrise'],
-    rocky: styles['galleryItem--rocky'],
-    forest: styles['galleryItem--forest'],
-    meadow: styles['galleryItem--meadow'],
-    lake: styles['galleryItem--lake'],
-    clouds: styles['galleryItem--clouds'],
-    riverbank: styles['galleryItem--riverbank'],
-    ridges: styles['galleryItem--ridges'],
-    cliffs: styles['galleryItem--cliffs'],
-    valley: styles['galleryItem--valley'],
+    sunrise: styles['gallery-item--sunrise'],
+    rocky: styles['gallery-item--rocky'],
+    forest: styles['gallery-item--forest'],
+    meadow: styles['gallery-item--meadow'],
+    lake: styles['gallery-item--lake'],
+    clouds: styles['gallery-item--clouds'],
+    riverbank: styles['gallery-item--riverbank'],
+    ridges: styles['gallery-item--ridges'],
+    cliffs: styles['gallery-item--cliffs'],
+    valley: styles['gallery-item--valley'],
   }), []);
 
   const memoizedList = useMemo(

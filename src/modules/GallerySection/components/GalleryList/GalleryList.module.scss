@@ -37,6 +37,12 @@
         animation: change-bg 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
       }
     }
+
+    // Уменьшаем тень и размер заголовка для маленьких карточек
+    .gallery-item__title {
+      font: $font-p-small;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
   }
 
   &::after {
@@ -86,11 +92,15 @@
 
   &:nth-child(1) .gallery-item__content,
   &:nth-child(2) .gallery-item__content {
-    transform: translateY(-50%);
-    left: 100px;
-    width: 600px;
-    top: 50%;
+    top: 60px;
+    left: 60px;
+    bottom: auto;
+    width: auto;
+    max-width: 60%;
     padding: 0;
+    transform: none;
+    justify-content: flex-start;
+    align-items: flex-start;
     background: transparent;
     box-shadow: none;
     backdrop-filter: none;
@@ -199,7 +209,7 @@
   color: $color-text-light;
   z-index: 3;
   left: 0;
-  bottom: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -212,7 +222,7 @@
   opacity: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .gallery-item__title {
@@ -234,15 +244,7 @@
   }
 
   &::after {
-    content: attr(data-item);
-    border-radius: 50%;
-    color: $color-white;
-    font: $font-p-x-small;
-    position: absolute;
-    top: -20px;
-    left: 0px;
-    z-index: 2;
-    font-weight: 400;
+    content: none;
   }
 }
 
