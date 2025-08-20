@@ -18,6 +18,12 @@ const getItems = (listEl: HTMLUListElement): NodeListOf<HTMLLIElement> => {
   return listEl.querySelectorAll(':scope > li');
 };
 
+const applyTransitionClass = (element: HTMLElement | null, className: string): void => {
+  if (!element) return;
+  element.classList.add(className);
+  setTimeout(() => element.classList.remove(className), CAROUSEL_CONFIG.transitionDurationMs);
+};
+
 const withTransition = (
   action: () => void,
   setIsAnimating: (v: boolean) => void,
@@ -41,11 +47,6 @@ export const useCarouselNavigation = ({
   startAutoSlide,
   stopAutoSlide,
 }: UseCarouselNavigationProps) => {
-  const applyClass = (el: HTMLElement | null, className: string) => {
-    el?.classList.add(className);
-    setTimeout(() => el?.classList.remove(className), CAROUSEL_CONFIG.transitionDurationMs);
-  };
-
   const doNext = useCallback(() => {
     const listEl = listRef.current;
     if (!listEl) return;
@@ -53,7 +54,7 @@ export const useCarouselNavigation = ({
     if (items.length === 0) return;
 
     listEl.appendChild(items[0]);
-    applyClass(listEl.parentElement as HTMLElement, 'next');
+    applyTransitionClass(listEl.parentElement as HTMLElement, 'next');
     const newIndex = (currentIndex + 1) % (totalItems * 3);
     setCurrentIndex(newIndex);
   }, [listRef, currentIndex, totalItems, setCurrentIndex]);
@@ -65,7 +66,7 @@ export const useCarouselNavigation = ({
     if (items.length === 0) return;
 
     listEl.prepend(items[items.length - 1]);
-    applyClass(listEl.parentElement as HTMLElement, 'prev');
+    applyTransitionClass(listEl.parentElement as HTMLElement, 'prev');
     const newIndex = (currentIndex - 1 + totalItems * 3) % (totalItems * 3);
     setCurrentIndex(newIndex);
   }, [listRef, currentIndex, totalItems, setCurrentIndex]);

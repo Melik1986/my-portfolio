@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { gsap } from 'gsap';
 import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
 
 // Централизованная регистрация
