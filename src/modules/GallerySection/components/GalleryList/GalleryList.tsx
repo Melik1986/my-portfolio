@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { type GalleryItem, type GalleryClassName } from '../../types/gallery';
-import styles from '../../GallerySection.module.scss';
+import styles from './GalleryList.module.scss';
 
 interface GalleryListProps {
   itemsToRender: GalleryItem[];
@@ -9,30 +9,30 @@ interface GalleryListProps {
 
 export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
   const modifierClassMap = useMemo((): Record<GalleryClassName, string> => ({
-    sunrise: styles['gallery__item--sunrise'],
-    rocky: styles['gallery__item--rocky'],
-    forest: styles['gallery__item--forest'],
-    meadow: styles['gallery__item--meadow'],
-    lake: styles['gallery__item--lake'],
-    clouds: styles['gallery__item--clouds'],
-    riverbank: styles['gallery__item--riverbank'],
-    ridges: styles['gallery__item--ridges'],
-    cliffs: styles['gallery__item--cliffs'],
-    valley: styles['gallery__item--valley'],
+    sunrise: styles['galleryItem--sunrise'],
+    rocky: styles['galleryItem--rocky'],
+    forest: styles['galleryItem--forest'],
+    meadow: styles['galleryItem--meadow'],
+    lake: styles['galleryItem--lake'],
+    clouds: styles['galleryItem--clouds'],
+    riverbank: styles['galleryItem--riverbank'],
+    ridges: styles['galleryItem--ridges'],
+    cliffs: styles['galleryItem--cliffs'],
+    valley: styles['galleryItem--valley'],
   }), []);
 
   const memoizedList = useMemo(
     () => (
-      <ul ref={listRef} className={styles.gallery__list}>
+      <ul ref={listRef} className={styles['gallery-list']}>
         {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
           <li
             key={`${className}-${index}`}
-            className={`${styles.gallery__item} ${modifierClassMap[className] ?? ''}`}
+            className={`${styles['gallery-item']} ${modifierClassMap[className] ?? ''}`}
           >
-            <div className={styles.gallery__content}>
-              <div className={styles.gallery__title} data-item={index + 1}>{title}</div>
-              <div className={styles.gallery__name}>{name}</div>
-              <div className={styles.gallery__des}>{description}</div>
+            <div className={styles['gallery-item__content']}>
+              <div className={styles['gallery-item__title']} data-item={index + 1}>{title}</div>
+              <div className={styles['gallery-item__name']}>{name}</div>
+              <div className={styles['gallery-item__des']}>{description}</div>
             </div>
           </li>
         ))}
