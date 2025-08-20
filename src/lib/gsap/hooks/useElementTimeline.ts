@@ -16,7 +16,7 @@ ensureGSAPRegistered();
 const IS_DEBUG = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_ANIM_DEBUG === '1';
 
 // Diagnostics storage: expected vs started/completed counters per section/groupDelay
-const __animDiag = new Map<string, { expected: number; started: number; completed: number }>();
+const animDiagnostics = new Map<string, { expected: number; started: number; completed: number }>();
 
 type ElementAnimationParams = {
   duration: number;
@@ -95,55 +95,58 @@ const sortSections = (sections: Map<string, ReturnType<typeof parseElements>>) =
   });
 };
 
-const processSection = (
-  timeline: gsap.core.Timeline,
-  sectionElements: ReturnType<typeof parseElements>,
-  sectionStartTime: number,
-) => {
+const createGroupsByDelay = (sectionElements: ReturnType<typeof parseElements>) => {
   const groups = new Map<number, typeof sectionElements>();
   sectionElements.forEach((item) => {
-    if (!groups.has(item.groupDelay)) {
-      groups.set(item.groupDelay, []);
-    }
+    if (!groups.has(item.groupDelay)) groups.set(item.groupDelay, []);
     groups.get(item.groupDelay)!.push(item);
   });
+  return groups;
+};
 
-  const sortedGroups = Array.from(groups.entries()).sort(([a], [b]) => a - b);
+const sortGroupsByDelay = (
+  groups: Map<number, ReturnType<typeof parseElements>>,
+) => Array.from(groups.entries()).sort(([a], [b]) => a - b);
 
-  sortedGroups.forEach(([groupDelay, groupElements]) => {
-    const groupStartTime = sectionStartTime + groupDelay;
-    const sortedGroupElements = groupElements.sort((a, b) => a.delay - b.delay);
+const setGroupExpectedDiagnostics = (
+  groupElements: ReturnType<typeof parseElements>,
+  groupDelay: number,
+) => {
+  const diagKey = `${groupElements[0]?.sectionId ?? 'default'}::${groupDelay}`;
+  animDiagnostics.set(diagKey, { expected: groupElements.length, started: 0, completed: 0 });
+};
 
-    // overwrite expected for this render pass; don't accumulate across cycles
-    const diagKey = `${sortedGroupElements[0]?.sectionId ?? 'default'}::${groupDelay}`;
-    __animDiag.set(diagKey, { expected: sortedGroupElements.length, started: 0, completed: 0 });
-
-    sortedGroupElements.forEach((item, index) => {
-      const params: ElementAnimationParams = {
-        duration: item.config!.duration ?? 1,
-        delay: item.delay,
-        ease: item.config!.ease ?? 'power1.out',
-        stagger: item.stagger,
-        groupDelay: item.groupDelay,
-        sectionId: item.sectionId,
-      };
-
-      const staggerDelay = item.stagger > 0 ? index * item.stagger : 0;
-      const elementPosition = groupStartTime + item.delay + staggerDelay;
-
-      addAnimationToTimeline(
-        timeline,
-        {
-          element: item.element,
-          animationType: item.config!.animation,
-          params,
-        },
-        elementPosition,
-      );
-    });
+const addGroupAnimations = (
+  timeline: gsap.core.Timeline,
+  groupDelay: number,
+  groupElements: ReturnType<typeof parseElements>,
+  sectionStartTime: number,
+) => {
+  const groupStartTime = sectionStartTime + groupDelay;
+  const sortedGroupElements = groupElements.sort((a, b) => a.delay - b.delay);
+  setGroupExpectedDiagnostics(sortedGroupElements, groupDelay);
+  sortedGroupElements.forEach((item, index) => {
+    const params: ElementAnimationParams = {
+      duration: item.config!.duration ?? 1,
+      delay: item.delay,
+      ease: item.config!.ease ?? 'power1.out',
+      stagger: item.stagger,
+      groupDelay: item.groupDelay,
+      sectionId: item.sectionId,
+    };
+    const staggerDelay = item.stagger > 0 ? index * item.stagger : 0;
+    const elementPosition = groupStartTime + item.delay + staggerDelay;
+    addAnimationToTimeline(
+      timeline,
+      { element: item.element, animationType: item.config!.animation, params },
+      elementPosition,
+    );
   });
+};
 
-  // Duration accounting for max stagger in groups, so last staggered item fits in timeline
+const computeSectionDuration = (
+  groups: Map<number, ReturnType<typeof parseElements>>,
+) => {
   let sectionDuration = 0;
   groups.forEach((groupElems, groupDelay) => {
     const maxDelay = Math.max(...groupElems.map((it) => it.delay));
@@ -154,6 +157,19 @@ const processSection = (
     if (groupEnd > sectionDuration) sectionDuration = groupEnd;
   });
   return sectionDuration;
+};
+
+const processSection = (
+  timeline: gsap.core.Timeline,
+  sectionElements: ReturnType<typeof parseElements>,
+  sectionStartTime: number,
+) => {
+  const groups = createGroupsByDelay(sectionElements);
+  const sortedGroups = sortGroupsByDelay(groups);
+  sortedGroups.forEach(([groupDelay, groupElements]) => {
+    addGroupAnimations(timeline, groupDelay, groupElements, sectionStartTime);
+  });
+  return computeSectionDuration(groups);
 };
 
 export function createElementTimeline(
@@ -187,26 +203,24 @@ export function createElementTimeline(
     if (IS_DEBUG) {
       requestAnimationFrame(() => {
         let anyWarn = false;
-        __animDiag.forEach((val, key) => {
+        animDiagnostics.forEach((val, key) => {
           const [sec] = key.split('::');
           if (sec !== String(sectionId)) return;
           // if any completed, consider group OK for this cycle
           if (val.completed > 0) return;
           if (val.started < val.expected) {
             anyWarn = true;
-            // eslint-disable-next-line no-console
             console.warn(
               `[ANIM][WARN] group not fully started sec=${sec} started=${val.started}/${val.expected}`,
             );
           }
         });
         if (!anyWarn) {
-          // eslint-disable-next-line no-console
           console.log(`[ANIM][OK] sec=${sectionId} all groups started`);
         }
         // cleanup keys for this section
-        Array.from(__animDiag.keys()).forEach((key) => {
-          if (key.startsWith(`${sectionId}::`)) __animDiag.delete(key);
+        Array.from(animDiagnostics.keys()).forEach((key) => {
+          if (key.startsWith(`${sectionId}::`)) animDiagnostics.delete(key);
         });
       });
     }
@@ -255,6 +269,43 @@ function getSplitTextInstance(element: HTMLElement): SplitTextInstance | null {
   return splitText;
 }
 
+const markAnimStart = (params: ElementAnimationParams) => {
+  const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+  const cur = animDiagnostics.get(key);
+  if (cur) animDiagnostics.set(key, { ...cur, started: cur.started + 1 });
+};
+
+const markAnimComplete = (params: ElementAnimationParams) => {
+  const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
+  const cur = animDiagnostics.get(key);
+  if (cur) animDiagnostics.set(key, { ...cur, completed: cur.completed + 1 });
+};
+
+const setInitialTextRevealState = (
+  timeline: gsap.core.Timeline,
+  element: Element,
+  lineInners: HTMLElement[],
+  position: number | string,
+) => {
+  timeline.set(
+    element,
+    {
+      opacity: 1,
+      visibility: 'visible',
+    },
+    position,
+  );
+
+  timeline.set(
+    lineInners,
+    {
+      yPercent: 100,
+      opacity: 1,
+    },
+    position,
+  );
+};
+
 function createLineInners(lines: Element[]): HTMLElement[] {
   return lines.map((line) => {
     const inner = document.createElement('div');
@@ -288,16 +339,8 @@ function addSvgDrawAnimation(
         strokeDashoffset: 0,
         duration: params.duration,
         ease: params.ease,
-        onStart: () => {
-          const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-          const cur = __animDiag.get(key);
-          if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
-        },
-        onComplete: () => {
-          const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-          const cur = __animDiag.get(key);
-          if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
-        },
+        onStart: () => markAnimStart(params),
+        onComplete: () => markAnimComplete(params),
       },
       position,
     );
@@ -319,23 +362,7 @@ function addTextRevealAnimation(
   gsap.set(splitText.lines, { overflow: 'hidden' });
   const lineInners = createLineInners(splitText.lines);
 
-  timeline.set(
-    element,
-    {
-      opacity: 1,
-      visibility: 'visible',
-    },
-    position,
-  );
-
-  timeline.set(
-    lineInners,
-    {
-      yPercent: 100,
-      opacity: 1,
-    },
-    position,
-  );
+  setInitialTextRevealState(timeline, element, lineInners, position);
 
   timeline.to(
     lineInners,
@@ -344,16 +371,8 @@ function addTextRevealAnimation(
       duration: animationDef.duration || 0.8,
       stagger: params.stagger ?? 0.1,
       ease: animationDef.ease || 'expo.out',
-      onStart: () => {
-        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-        const cur = __animDiag.get(key);
-        if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
-      },
-      onComplete: () => {
-        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-        const cur = __animDiag.get(key);
-        if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
-      },
+      onStart: () => markAnimStart(params),
+      onComplete: () => markAnimComplete(params),
       onReverseComplete: () => {
         gsap.set(lineInners, {
           yPercent: 100,
@@ -398,16 +417,8 @@ function addBaseAnimation(
       visibility: 'visible',
       duration: animationDef.duration,
       ease: animationDef.ease,
-      onStart: () => {
-        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-        const cur = __animDiag.get(key);
-        if (cur) __animDiag.set(key, { ...cur, started: cur.started + 1 });
-      },
-      onComplete: () => {
-        const key = `${params.sectionId ?? 'default'}::${params.groupDelay ?? 0}`;
-        const cur = __animDiag.get(key);
-        if (cur) __animDiag.set(key, { ...cur, completed: cur.completed + 1 });
-      },
+      onStart: () => markAnimStart(params),
+      onComplete: () => markAnimComplete(params),
     },
     position,
   );

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { type GalleryItem } from '../../types/gallery';
+import { type GalleryItem, type GalleryClassName } from '../../types/gallery';
 import styles from '../../GallerySection.module.scss';
 
 interface GalleryListProps {
@@ -8,7 +8,7 @@ interface GalleryListProps {
 }
 
 export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
-  const modifierClassMap: Record<string, string> = {
+  const modifierClassMap = useMemo((): Record<GalleryClassName, string> => ({
     sunrise: styles['gallery__item--sunrise'],
     rocky: styles['gallery__item--rocky'],
     forest: styles['gallery__item--forest'],
@@ -19,7 +19,7 @@ export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
     ridges: styles['gallery__item--ridges'],
     cliffs: styles['gallery__item--cliffs'],
     valley: styles['gallery__item--valley'],
-  };
+  }), []);
 
   const memoizedList = useMemo(
     () => (
@@ -38,7 +38,7 @@ export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
         ))}
       </ul>
     ),
-    [itemsToRender, listRef],
+    [itemsToRender, listRef, modifierClassMap],
   );
 
   return memoizedList;
