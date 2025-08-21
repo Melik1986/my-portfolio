@@ -108,7 +108,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --about-right-bg: var(--color-bg-card);
 
   /* Цвета логотипа */
-  --logo-color: var(--color-accent-primary);
+  --logo-color: #ffffff; /* белый в тёмной теме */
   --logo-color-hover: var(--color-accent-secondary);
 
   /* Фокусные подсветки (умеренные для глобальных элементов) */
