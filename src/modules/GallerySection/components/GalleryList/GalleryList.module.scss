@@ -218,7 +218,7 @@
 .gallery-item__content {
   position: absolute;
   text-align: left;
-  color: $color-text-light;
+  color: var(--color-text-primary);
   z-index: 3;
   left: 0;
   top: 0;
@@ -241,7 +241,7 @@
 
 .gallery-item__title {
   text-transform: uppercase;
-  color: $color-white;
+  color: var(--color-text-heading);
   font: $font-h6;
   margin-bottom: 10px;
   transition: all $carousel-transition-time;
@@ -265,7 +265,7 @@
     display: block;
     height: 1px;
     width: 20px;
-    background-color: $color-white;
+    background-color: var(--color-text-heading);
     margin-bottom: 10px;
   }
 
@@ -279,7 +279,7 @@
   text-transform: uppercase;
   transition: all $carousel-transition-time;
   margin-bottom: 10px;
-  color: $color-accent;
+  color: var(--color-accent-primary);
 }
 
 .gallery-item__des {
@@ -287,6 +287,7 @@
   transition: all $carousel-transition-time;
   opacity: 1;
   display: block;
+  color: var(--color-text-primary);
 }
 
 @keyframes change-bg {

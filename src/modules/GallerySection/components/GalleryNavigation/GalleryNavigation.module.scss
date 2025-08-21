@@ -16,8 +16,8 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid $color-white;
-  color: $color-white;
+  border: 2px solid var(--color-text-heading);
+  color: var(--color-text-heading);
   background-color: transparent;
   outline: none;
   font: $font-h6;
@@ -29,24 +29,24 @@
 
   &:hover,
   &:focus {
-    border: 2px solid $color-white;
-    color: $color-white;
+    border: 2px solid var(--color-text-heading);
+    color: var(--color-text-heading);
     background-color: transparent;
   }
   &:hover .gallery-arrows__icon {
-    color: $color-accent;
+    color: var(--color-accent-primary);
   }
 }
 
 .gallery-arrows__icon {
   font-size: 20px;
   fill: currentColor;
-  color: $color-white;
+  color: var(--color-text-heading);
 }
 
 .gallery-arrows__slide-number {
   font: $font-h6;
-  color: $color-white;
+  color: var(--color-text-heading);
   margin-left: auto;
   letter-spacing: 5px;
   opacity: 0;
