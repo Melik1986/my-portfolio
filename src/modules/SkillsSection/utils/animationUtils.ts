@@ -83,8 +83,8 @@ export const hideCharts = (
  * @param designChartRef - ссылка на график дизайна
  */
 export const resetAnimation = (
-  devChartRef: React.MutableRefObject<echarts.ECharts | null>,
-  designChartRef: React.MutableRefObject<echarts.ECharts | null>,
+  devChartRef: React.RefObject<echarts.ECharts | null>,
+  designChartRef: React.RefObject<echarts.ECharts | null>,
 ) => {
   /** Скрывает графики и уничтожает их через секунду */
   hideCharts(devChartRef.current, designChartRef.current);

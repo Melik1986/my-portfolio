@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { AiVideoContentProps } from './types/AiVideoContent.types';
-import { VideoMarqueeGroup } from './component';
+import { VideoMarqueeGroup, VideoOverlay } from './component';
 import { DEFAULT_VIDEO_ROWS } from './constants/AiVideoContent.constants';
 import { HorizontalMarquee, ContentSection } from '../AiContentSection/component';
 import styles from '../AiContentSection/AiContentSection.module.scss';
 import { AI_CONTENT_CONSTANTS } from '../AiContentSection/constants/AiContent.constants';
 import groupStyles from './component/VideoMarqueeGroup/VideoMarqueeGroup.module.scss';
+import { useVideoOverlay } from './hooks/useVideoOverlay';
 
 export function AiVideoContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
@@ -16,6 +17,8 @@ export function AiVideoContentSection({
   description = AI_CONTENT_CONSTANTS.DEFAULT_DESCRIPTION,
   className = '',
 }: AiVideoContentProps) {
+  const { containerRef, overlayVideoRef, state, onContainerClick, closeOverlay } =
+    useVideoOverlay();
   return (
     <section className={`${styles['ai-content']} ${className}`} id="ai-video-content-section">
       <h2 className={`${styles['ai-content__title']} visually-hidden`}>
@@ -38,7 +41,19 @@ export function AiVideoContentSection({
             data-ease="back.out(1.7)"
             data-delay="0.2"
           >
-            <VideoMarqueeGroup rows={videoRows} />
+            <div
+              ref={containerRef}
+              onClick={onContainerClick}
+              className={groupStyles['ai-content__overlay-anchor']}
+            >
+              <VideoMarqueeGroup rows={videoRows} />
+              <VideoOverlay
+                isOpen={state.isOpen}
+                src={state.activeSrc}
+                onClose={closeOverlay}
+                videoRef={overlayVideoRef}
+              />
+            </div>
           </div>
           <ContentSection title={title} description={description} />
         </div>
@@ -46,4 +61,3 @@ export function AiVideoContentSection({
     </section>
   );
 }
-

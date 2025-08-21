@@ -1,0 +1,36 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.link {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-main;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+  border-radius: 6px;
+
+  &:hover {
+    color: $color-accent;
+    transform: translateY(-2px);
+  }
+
+  &:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

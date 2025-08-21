@@ -16,5 +16,3 @@ export function AppThemeProvider({ children }: AppThemeProviderProps) {
 }
 
 export default AppThemeProvider;
-
-

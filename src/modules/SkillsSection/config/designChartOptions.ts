@@ -40,12 +40,12 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
         itemStyle: { borderRadius: 8 },
         label: { show: false },
         labelLine: { show: false },
-        data: SKILLS_DATA.design.map((item, index) => ({ 
-          value: 0, 
+        data: SKILLS_DATA.design.map((item, index) => ({
+          value: 0,
           name: item.name,
           itemStyle: {
-            color: index % 2 === 0 ? COLOR_PALETTE.primary : COLOR_PALETTE.secondary
-          }
+            color: index % 2 === 0 ? COLOR_PALETTE.primary : COLOR_PALETTE.secondary,
+          },
         })),
         color: ['#29abe2', '#f9f9f7', '#494a51', '#29abe2', '#d7cfcb', '#3668b1'],
         animationType: 'expansion',

@@ -7,21 +7,14 @@
 }
 
 body {
-  background: linear-gradient(
-    90deg,
-    rgba(125, 205, 240, 1) 0%,
-    rgba(206, 225, 237, 1) 25%,
-    rgba(228, 245, 245, 1) 50%,
-    rgba(206, 225, 237, 1) 75%,
-    rgba(125, 205, 240, 1) 100%
-  );
-  color: #292929;
+  background: var(--background-gradient-body);
+  color: var(--color-text-primary);
   font-family: sans-serif;
   font-size: 1rem;
   line-height: 1.5;
   transition:
     color 0.3s,
-    background-color 0.3s;
+    background 0.3s;
 }
 
 // Глобальные стили скроллбара для всех элементов

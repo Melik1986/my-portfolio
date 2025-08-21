@@ -14,7 +14,7 @@
     &:hover &__icon,
     &:focus-visible &__icon {
       outline: none;
-      fill: $color-accent;
+      fill: var(--logo-color-hover);
       transform: scale(1.1);
       transition: all 0.3s ease;
     }
@@ -25,5 +25,7 @@
     z-index: 1;
     width: 120px;
     height: auto;
+    fill: var(--logo-color);
+    transition: fill 0.3s ease;
   }
 }

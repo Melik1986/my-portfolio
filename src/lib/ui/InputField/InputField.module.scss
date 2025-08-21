@@ -1,0 +1,72 @@
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+$color-danger: #e74c3c;
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: $color-text-main;
+  font-family: inherit;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &--textarea {
+    min-height: 120px;
+    resize: vertical;
+    padding-top: 12px;
+  }
+
+  &--error {
+    border-color: $color-danger;
+
+    &:focus {
+      border-color: $color-danger;
+    }
+  }
+}
+
+.icon {
+  position: absolute;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  color: $color-accent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.error {
+  color: $color-danger;
+  font-size: 12px;
+  margin-top: 2px;
+  display: block;
+}

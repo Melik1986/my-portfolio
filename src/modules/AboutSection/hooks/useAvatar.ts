@@ -144,8 +144,8 @@ const useModelLoader = () => {
 
 // Хук для анимационной логики
 const useAnimationControl = (
-  assetsRef: React.MutableRefObject<AvatarAssets | null>,
-  stateRef: React.MutableRefObject<AvatarState>,
+  assetsRef: React.RefObject<AvatarAssets | null>,
+  stateRef: React.RefObject<AvatarState>,
 ) => {
   const executeStumbleSequence = useCallback((): void => {
     const assets = assetsRef.current;
@@ -254,7 +254,7 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
       event: MouseEvent,
       container: HTMLElement,
       scene: AvatarScene,
-      assetsRef: React.MutableRefObject<AvatarAssets | null>,
+      assetsRef: React.RefObject<AvatarAssets | null>,
     ): void => {
       const rect = container.getBoundingClientRect();
       const coords = new THREE.Vector2(
@@ -303,9 +303,9 @@ interface ModelHandlerDeps {
 
 interface ModelHandlerContext {
   calculateScale: (width: number, height: number) => number;
-  assetsRef: React.MutableRefObject<AvatarAssets | null>;
-  stateRef: React.MutableRefObject<AvatarState>;
-  refs: React.MutableRefObject<AvatarRefs>;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  stateRef: React.RefObject<AvatarState>;
+  refs: React.RefObject<AvatarRefs>;
 }
 
 const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
@@ -371,9 +371,9 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
 
 // Хук для анимационного цикла
 const useAnimationLoop = (
-  sceneRef: React.MutableRefObject<AvatarScene | null>,
-  assetsRef: React.MutableRefObject<AvatarAssets | null>,
-  stateRef: React.MutableRefObject<AvatarState>,
+  sceneRef: React.RefObject<AvatarScene | null>,
+  assetsRef: React.RefObject<AvatarAssets | null>,
+  stateRef: React.RefObject<AvatarState>,
 ) => {
   const animate = useCallback((): void => {
     const scene = sceneRef.current;
@@ -394,10 +394,10 @@ const useAnimationLoop = (
 
 // Хук для очистки ресурсов (уменьшено количество параметров)
 interface CleanupContext {
-  stateRef: React.MutableRefObject<AvatarState>;
-  sceneRef: React.MutableRefObject<AvatarScene | null>;
-  assetsRef: React.MutableRefObject<AvatarAssets | null>;
-  refs: React.MutableRefObject<AvatarRefs>;
+  stateRef: React.RefObject<AvatarState>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  refs: React.RefObject<AvatarRefs>;
 }
 
 const useCleanup = (ctx: CleanupContext) => {

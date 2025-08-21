@@ -1,0 +1,10 @@
+.magnifierGlass {
+  position: absolute;
+  pointer-events: none;
+  border-style: solid;
+  border-radius: 50%;
+  cursor: none;
+  z-index: 10;
+  background-color: transparent;
+  will-change: left, top, background-position, background-size;
+}

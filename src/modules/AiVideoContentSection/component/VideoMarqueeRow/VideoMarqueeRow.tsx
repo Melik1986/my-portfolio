@@ -57,8 +57,8 @@ export function VideoMarqueeRow({
     : `${styles['ai-content__track']} ${styles['ai-content__track-horizontal']}`;
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`${styles['ai-content__horizontal']} ${videoStyles['video-marquee-row']} ${className}`}
     >
       <ul ref={trackRef} className={trackClassName}>

@@ -156,8 +156,8 @@ type SmootherInitConfig = {
   smooth: number;
   effects: boolean;
   normalizeScroll: boolean;
-  smootherRef: React.MutableRefObject<ScrollSmootherInstance | null>;
-  isInitializingRef: React.MutableRefObject<boolean>;
+  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+  isInitializingRef: React.RefObject<boolean>;
   setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
 

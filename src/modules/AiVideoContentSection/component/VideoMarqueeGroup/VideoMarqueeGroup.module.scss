@@ -5,4 +5,10 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  cursor: none;
+}
+
+.ai-content__overlay-anchor {
+  position: relative;
+  width: 100%;
 }

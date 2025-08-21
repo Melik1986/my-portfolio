@@ -218,6 +218,7 @@ export class AnimationController {
       'gallery-section': 4, // Горизонтальный скролл
       'ai-content-section': 5, // Горизонтальный скролл
       'ai-video-section': 6, // Горизонтальный скролл
+      'contact-section': 7, // Горизонтальный скролл
     };
 
     return sectionMapping[sectionId] ?? -1;

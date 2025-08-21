@@ -1,0 +1,45 @@
+.toggle-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.toggle-panel {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-inverse);
+  transition: all 0.3s ease;
+
+  &--left {
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  &--right {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.toggle-panel__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-text-inverse);
+}
+
+.toggle-panel p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}

@@ -1,4 +1,5 @@
-import { VideoMarqueeGroup } from "./VideoMarqueeGroup/VideoMarqueeGroup";
-import { VideoMarqueeRow } from "./VideoMarqueeRow/VideoMarqueeRow";
+import { VideoMarqueeGroup } from './VideoMarqueeGroup/VideoMarqueeGroup';
+import { VideoMarqueeRow } from './VideoMarqueeRow/VideoMarqueeRow';
+import { VideoOverlay } from './VideoOverlay/VideoOverlay';
 
-export { VideoMarqueeGroup, VideoMarqueeRow };
+export { VideoMarqueeGroup, VideoMarqueeRow, VideoOverlay };

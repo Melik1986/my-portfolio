@@ -9,6 +9,7 @@ import { GallerySection } from '@/modules/GallerySection/GallerySection';
 import { AiContentSection } from '@/modules/AiContentSection/AiContentSection';
 import { AiVideoContentSection } from '@/modules/AiVideoContentSection/AiVideoContentSection';
 import { PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
+import { ContactSection } from '@/modules/ContactSection/ContactSection';
 
 /**
  * Главная страница портфолио
@@ -48,6 +49,10 @@ export default function Home() {
           </AnimatedCardSection>
           <AnimatedCardSection id="ai-video-section" title="Ai Video" sectionIndex={6}>
             <AiVideoContentSection />
+          </AnimatedCardSection>
+
+          <AnimatedCardSection id="contact-section" title="Contact" sectionIndex={7}>
+            <ContactSection />
           </AnimatedCardSection>
         </ul>
       </div>

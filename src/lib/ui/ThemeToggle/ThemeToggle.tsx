@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTheme } from 'next-themes';
+import styles from './ThemeToggle.module.scss';
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -12,7 +13,7 @@ export function ThemeToggle() {
       type="button"
       aria-label="Toggle theme"
       onClick={() => setTheme(current === 'dark' ? 'light' : 'dark')}
-      style={{ position: 'fixed', right: 16, bottom: 16, zIndex: 1000 }}
+      className={styles.themeToggle}
     >
       {current === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
     </button>
@@ -20,5 +21,3 @@ export function ThemeToggle() {
 }
 
 export default ThemeToggle;
-
-
