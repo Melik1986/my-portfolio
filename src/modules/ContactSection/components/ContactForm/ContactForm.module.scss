@@ -1,14 +1,213 @@
-.form-container {
-  position: relative;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
+
+// Form
+.form {
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  border-radius: 12px;
-  background: var(--color-background-secondary);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: space-between;
 
-  &.active {
-    transform: translateX(-50%);
+  &__title {
+    font-family: $font-family-poppins;
+    font-size: 27px;
+    margin: -10px 0;
   }
+
+  &__social-text {
+    margin-top: 15px;
+    font-size: 14.5px;
+  }
+}
+
+// Form box
+.form-box {
+  position: absolute;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: $color-white;
+  display: flex;
+  align-items: center;
+  color: $color-text-main;
+  text-align: center;
+  padding: 40px;
+  z-index: 1;
+  transition:
+    0.6s ease-in-out 1.2s,
+    visibility 0s 1s;
+
+  &--freelance {
+    visibility: hidden;
+  }
+
+  &--company {
+    // Company form specific styles
+  }
+}
+
+// Inputs
+.input-box {
+  position: relative;
+
+  &__input {
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    background: $color-bg-light;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: $color-text-main;
+    font-weight: 500;
+    resize: none;
+
+    &::placeholder {
+      color: $color-text-grey;
+      font-weight: 400;
+    }
+
+    &--textarea {
+      min-height: 120px;
+      border-radius: 8px;
+      padding: 13px 50px 13px 20px;
+      line-height: 1.5;
+    }
+
+    &--error {
+      border: 2px solid #e74c3c;
+      background: rgba(231, 76, 60, 0.2);
+    }
+  }
+
+  i,
+  .contact-info__icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    margin-right: 10px;
+    color: $color-accent;
+  }
+
+  .social-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    transition: fill 0.3s ease;
+  }
+}
+
+.forgot-link {
+  margin: -15px 0 15px;
+
+  &__link {
+    font-size: 14.5px;
+    color: $color-text-main;
+    cursor: pointer;
+  }
+}
+
+// Social icons
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  &__link {
+    max-width: 40px;
+    max-height: 40px;
+    display: inline-flex;
+    font-size: 24px;
+    color: $color-text-main;
+    cursor: pointer;
+  }
+}
+
+.social-icon {
+  max-width: 30px;
+  max-height: 30px;
+}
+
+// Buttons group and buttons
+.btn__group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.btn__form {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  background: $color-accent;
+  color: $color-white;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    background: $color-accent-dark;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+// Error text under inputs
+.error-text {
+  display: block;
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 6px;
+  text-align: left;
+}
+
+// Responsive for form-box
+@media screen and (max-width: 650px) {
+  .form-box {
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    padding: 20px;
+  }
+
+  // Active state on mobile mirrors original behavior
+  [data-active='true'] .form-box {
+    right: 0;
+    bottom: 30%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .form-box {
+    padding: 20px;
+  }
+}
+
+// Active state driven by data attribute on container
+[data-active='true'] .form-box {
+  right: 50%;
+}
+
+[data-active='true'] .form-box--freelance {
+  visibility: visible;
 }

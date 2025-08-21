@@ -22,8 +22,6 @@ function getFormValues(form: HTMLFormElement): Record<string, string> {
   return result;
 }
 
-
-
 function buildInitialData(config: ValidationConfig): Record<string, string> {
   const out: Record<string, string> = {};
   Object.keys(config).forEach((k) => (out[k] = ''));

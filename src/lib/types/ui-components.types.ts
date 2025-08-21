@@ -15,6 +15,7 @@ export interface SocialLinksProps {
   useDefaultStyles?: boolean;
   containerClassName?: string;
   linkClassName?: string;
+  iconClassName?: string;
 }
 
 // InputField Types

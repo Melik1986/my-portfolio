@@ -65,10 +65,11 @@ function FieldLayout(props: {
   errorMessage?: string;
   showError: boolean;
 }): React.ReactElement {
-  const { wrapper, inner, iconId, iconCls, control, errorId, errorCls, errorMessage, showError } = props;
+  const { wrapper, inner, iconId, iconCls, control, errorId, errorCls, errorMessage, showError } =
+    props;
   return (
-    <div className={wrapper}>
-      <div className={inner}>
+    <div className={wrapper || undefined}>
+      <div className={inner || undefined}>
         <SpriteIcon id={iconId} sprite="/icons/tech-icons.svg" className={iconCls} />
         {control}
       </div>

@@ -21,6 +21,10 @@
     overflow: hidden;
   }
 
+  &__item:first-child {
+    height: 80vh;
+  }
+
   &__title {
     font-size: $font-h6;
 

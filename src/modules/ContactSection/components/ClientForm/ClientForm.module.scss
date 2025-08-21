@@ -1,68 +1,57 @@
-.form-box {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50%;
-  height: 100%;
-  padding: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+@use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
-  &--freelance {
-    background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
-    z-index: 1;
-  }
-}
+// Client form specific styles
+.client-form {
+  // Специфичные стили для формы клиента
+  // Наследует базовые стили из ContactForm.module.scss
 
-.form {
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form__title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.btn__group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.btn__form {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: var(--color-accent);
-  color: var(--color-text-inverse);
-
-  &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-2px);
+  .form__title {
+    color: $color-text-main;
   }
 
-  &--company {
-    background: transparent;
-    color: var(--color-text-primary);
-    border: 2px solid var(--color-border);
+  .form__social-text {
+    color: $color-text-grey;
+  }
 
+  // Дополнительные стили для клиентской формы
+  .input-box__input {
+    &:focus {
+      border: 2px solid $color-accent;
+      background: rgba(74, 144, 226, 0.1);
+    }
+  }
+
+  .btn__form {
     &:hover {
-      background: var(--color-background-hover);
-      border-color: var(--color-accent);
+      background: $color-accent-dark;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+    }
+  }
+}
+
+// Responsive adjustments for client form
+@media screen and (max-width: 650px) {
+  .client-form {
+    .form__title {
+      font-size: 24px;
+    }
+
+    .form__social-text {
+      font-size: 13px;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .client-form {
+    .form__title {
+      font-size: 20px;
+    }
+
+    .form__social-text {
+      font-size: 12px;
     }
   }
 }

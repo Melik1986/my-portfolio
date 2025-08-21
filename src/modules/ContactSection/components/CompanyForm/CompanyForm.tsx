@@ -4,16 +4,15 @@ import { useFormValidation } from '../../hooks/useFormValidation';
 import { CompanyFormFields } from '../FormFields/CompanyFormFields';
 import { SocialLinks } from '@/lib/ui/SocialLinks';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
+
 import styles from './CompanyForm.module.scss';
-import contactStyles from '../../ContactSection.module.scss';
+import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const COMPANY_VALIDATION_CONFIG = {
   companyName: { label: 'Company Name', required: true },
   companyEmail: { label: 'Company Email', required: true, email: true },
   companyDetails: { label: 'Company Details', required: false },
 };
-
-
 
 export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -33,9 +32,9 @@ export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
   };
 
   return (
-    <div className={`${styles['form-box']} ${styles['form-box--company']}`}>
-      <form ref={formRef} className={styles.form} onSubmit={handleSubmit} noValidate>
-        <h1 className={styles['form__title']}>Company Contact Form</h1>
+    <div className={`${formStyles['form-box']} ${formStyles['form-box--company']}`}>
+      <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
+        <h1 className={formStyles['form__title']}>Company Contact Form</h1>
 
         <CompanyFormFields
           formData={formData}
@@ -44,19 +43,20 @@ export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
           fieldErrors={fieldErrors}
         />
 
-        <div className={contactStyles['btn__group']}>
-          <button type="submit" className={contactStyles['btn__form']}>
+        <div className={formStyles['btn__group']}>
+          <button type="submit" className={formStyles['btn__form']}>
             Send Inquiry
           </button>
-          <button type="button" className={contactStyles['btn__form']} onClick={onToggleToClient}>
+          <button type="button" className={formStyles['btn__form']} onClick={onToggleToClient}>
             Client Form
           </button>
         </div>
 
         <SocialLinks
           useDefaultStyles={false}
-          containerClassName={contactStyles['social-icons']}
-          linkClassName={contactStyles['social-icons__link']}
+          containerClassName={formStyles['social-icons']}
+          linkClassName={formStyles['social-icons__link']}
+          iconClassName={formStyles['social-icon']}
         />
       </form>
     </div>

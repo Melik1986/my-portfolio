@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@/styles/_variables.scss' as *;
 
 * {
@@ -35,7 +36,7 @@ body {
     border-radius: 4px;
 
     &:hover {
-      background: darken($color-accent, 10%);
+      background: color.adjust($color-accent, $lightness: -10%);
     }
   }
 }

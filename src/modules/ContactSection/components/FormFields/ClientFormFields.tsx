@@ -1,15 +1,15 @@
 import React from 'react';
 import { InputField } from '@/lib/ui/InputField';
 import type { ClientFormFieldsProps, ClientFieldConfig } from '../../types';
-import contactStyles from '../../ContactSection.module.scss';
+import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const CLIENT_FIELDS: ClientFieldConfig[] = [
-  { key: 'userName', placeholder: 'Ваше имя', iconId: 'icon-user' },
-  { key: 'userEmail', placeholder: 'Ваш email', iconId: 'icon-email', type: 'email' },
+  { key: 'userName', placeholder: 'Your Name', iconId: 'icon-user' },
+  { key: 'userEmail', placeholder: 'Your Email', iconId: 'icon-envelope', type: 'email' },
   {
     key: 'projectDescription',
-    placeholder: 'Описание проекта',
-    iconId: 'icon-project',
+    placeholder: 'Project Description',
+    iconId: 'icon-building',
     isTextarea: true,
   },
 ];
@@ -37,12 +37,13 @@ export function ClientFormFields({
           hasError={Boolean(fieldErrors[key])}
           errorMessage={fieldErrors[key]}
           useDefaultStyles={false}
-          wrapperClassName={contactStyles['input-box']}
-          inputClassName={contactStyles['input-box__input']}
-          textareaClassName={contactStyles['input-box__input--textarea']}
-          inputErrorClassName={contactStyles['input-box__input--error']}
-          iconClassName={contactStyles['contact-info__icon']}
-          errorClassName={contactStyles['error-text']}
+          wrapperClassName={formStyles['input-box']}
+          inputWrapperClassName=""
+          inputClassName={formStyles['input-box__input']}
+          textareaClassName={formStyles['input-box__input--textarea']}
+          inputErrorClassName={formStyles['input-box__input--error']}
+          iconClassName={formStyles['contact-info__icon']}
+          errorClassName={formStyles['error-text']}
         />
       ))}
     </>

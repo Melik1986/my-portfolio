@@ -30,6 +30,7 @@ export function SocialLinks({
   useDefaultStyles = true,
   containerClassName,
   linkClassName,
+  iconClassName,
 }: SocialLinksProps) {
   const rootCls = useDefaultStyles
     ? [styles.container, className].filter(Boolean).join(' ')
@@ -48,7 +49,11 @@ export function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <SpriteIcon id={link.iconId} sprite="/icons/tech-icons.svg" />
+          <SpriteIcon
+            id={link.iconId}
+            sprite="/icons/tech-icons.svg"
+            className={iconClassName || ''}
+          />
         </a>
       ))}
     </div>
