@@ -73,3 +73,21 @@ img {
   height: auto;
   object-fit: cover;
 }
+
+// Remove default focus outline from interactive elements
+a:focus,
+a:focus-visible,
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+summary:focus,
+summary:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none;
+}
