@@ -103,6 +103,10 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-primary);
 
+  /* About section backgrounds */
+  --about-left-bg: var(--color-bg-surface);
+  --about-right-bg: var(--color-bg-card);
+
   /* Цвета логотипа */
   --logo-color: var(--color-accent-primary);
   --logo-color-hover: var(--color-accent-secondary);
@@ -171,6 +175,10 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-text: var(--color-text-heading);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-inverse);
+
+  /* About section backgrounds */
+  --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
+  --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
 
   /* Цвета логотипа */
   --logo-color: var(--color-accent-primary);
