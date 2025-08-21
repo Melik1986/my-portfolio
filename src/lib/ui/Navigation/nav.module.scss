@@ -61,6 +61,15 @@
     }
   }
 
+  /* Inner text wrapper for smooth scale without layout shift */
+  &__text {
+    display: inline-block;
+    will-change: transform;
+    transform: translateZ(0);
+    transform-origin: 50% 60%;
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   &__link:hover,
   &__link:focus-visible {
     outline: none;
@@ -89,6 +98,22 @@
         0 0 18px rgba(99, 218, 252, 0.45),
         0 0 32px rgba(29, 113, 157, 0.4),
         0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Smooth upscale only the text node to avoid reflow/jitter */
+    .nav__text {
+      transform: scale(1.06);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__text {
+      transition: none;
+      transform: none;
+    }
+    &__link:hover .nav__text,
+    &__link:focus-visible .nav__text {
+      transform: none;
     }
   }
 }
