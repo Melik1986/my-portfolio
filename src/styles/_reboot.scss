@@ -92,22 +92,14 @@ summary:focus-visible,
   outline: none;
 }
 
-// Subtle focus glow for common interactive controls
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
+// Subtle focus glow for common interactive controls (low-specificity)
+:where(button, input, select, textarea):focus-visible {
   outline: none;
   box-shadow: var(--focus-ring-shadow);
-  transition: box-shadow 0.2s ease;
 }
 
-// Subtle text glow for link-like interactive elements
-a:focus-visible,
-summary:focus-visible,
-[role='button']:focus-visible,
-[tabindex]:focus-visible {
+// Subtle text glow for link-like interactive elements (low-specificity)
+:where(a, summary, [role='button'], [tabindex]):focus-visible {
   outline: none;
   text-shadow: var(--focus-text-shadow);
-  transition: text-shadow 0.2s ease;
 }
