@@ -7,6 +7,15 @@
 @use '../styles/_visually-hidden' as *;
 @use '../styles/_animations' as *;
 
+/* Theme variables */
+:root[data-theme='light'] {
+  @include light-theme-variables;
+}
+
+:root[data-theme='dark'] {
+  @include dark-theme-variables;
+}
+
 /**
  * Базовые стили для портфолио
  * Определяет основную структуру и стили для всех секций

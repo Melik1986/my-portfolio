@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.scss';
+import AppThemeProvider from './ThemeProvider';
 import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
@@ -138,18 +139,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
-        <main className="portfolio" id="smooth-wrapper">
-          <div className="portfolio__section" id="smooth-content">
-            <Container>
-              <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
-            </Container>
-          </div>
-          <AnchorButton />
-        </main>
+        <AppThemeProvider>
+          <main className="portfolio" id="smooth-wrapper">
+            <div className="portfolio__section" id="smooth-content">
+              <Container>
+                <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+              </Container>
+            </div>
+            <AnchorButton />
+            {/* Optional theme toggle, can be removed later */}
+            {/* <ThemeToggle /> */}
+          </main>
+        </AppThemeProvider>
       </body>
     </html>
   );

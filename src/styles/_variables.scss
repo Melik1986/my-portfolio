@@ -15,8 +15,118 @@ $color-shadow-light: rgba(0, 0, 0, 0.08);
 $color-border: #d7cfcb;
 $color-white: #fff;
 
+// Цвета для темной темы #020008 #2C394C #1D719D #63DAFC #908388 #795238 #959595
+// Цвета для светлой темы #f9f9f7 #4e74ab #89CFF0 #CBCAC6 #A0E5D9 #F0FBFA #ADEBFF
+// Цвета для темной темы градиенты linear-gradient(#082026, #134D80, #97DDE8);
+// Цвета для светлой темы градиенты linear-gradient(to right, #a0e5d9, #f9f7ec);
+
 // Градиенты (пример)
 $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
+
+// =============================================================================
+// ТЕМОВЫЕ МИКСИНЫ
+// =============================================================================
+
+// Миксин для светлой темы
+@mixin light-theme-variables {
+  /* Основные цвета фона */
+  --color-bg-primary: #f9f9f7;      /* Основной фон - Кремовый */
+  --color-bg-surface: #F0FBFA;       /* Поверхность - Облачный */
+  --color-bg-card: #ffffff;          /* Карточки - Белый */
+  --color-bg-overlay: rgba(255, 255, 255, 0.9);
+  
+  /* Цвета акцентов */
+  --color-accent-primary: #4e74ab;   /* Основной акцент - Стальной синий */
+  --color-accent-secondary: #89CFF0; /* Вторичный акцент - Небесно-голубой */
+  --color-accent-highlight: #A0E5D9; /* Яркий акцент - Мятный */
+  --color-accent-ice: #ADEBFF;       /* Дополнительный голубой - Ледяной синий */
+  
+  /* Цвета текста */
+  --color-text-primary: #333333;     /* Основной текст - Темно-серый */
+  --color-text-secondary: #4e74ab;   /* Вторичный текст - Стальной синий */
+  --color-text-heading: #4e74ab;     /* Заголовки - Стальной синий */
+  --color-text-muted: #666666;       /* Приглушенный текст */
+  --color-text-inverse: #ffffff;     /* Инвертированный текст */
+  
+  /* Цвета границ и разделителей */
+  --color-border-primary: #CBCAC6;   /* Границы - Серебристый */
+  --color-border-secondary: #e0e0e0; /* Вторичные границы */
+  --color-border-accent: #A0E5D9;    /* Акцентные границы - Мятный */
+  
+  /* Цвета теней */
+  --color-shadow-primary: rgba(0, 0, 0, 0.08);
+  --color-shadow-secondary: rgba(0, 0, 0, 0.12);
+  --color-shadow-accent: rgba(78, 116, 171, 0.15);
+  
+  /* Градиенты */
+  --gradient-primary: linear-gradient(to right, #a0e5d9, #f9f7ec);
+  --gradient-secondary: linear-gradient(135deg, #89CFF0, #ADEBFF);
+  --gradient-accent: linear-gradient(45deg, #4e74ab, #A0E5D9);
+  
+  /* Специфичные для секций */
+  --hero-left-bg: var(--color-bg-primary);
+  --hero-right-bg: var(--color-bg-surface);
+  --hero-title: var(--color-text-heading);
+  
+  /* Универсальные цвета */
+  --section-bg: var(--color-bg-primary);
+  --card-bg: var(--color-bg-card);
+  --button-bg: var(--color-accent-primary);
+  --button-text: var(--color-text-inverse);
+  --button-hover-bg: var(--color-accent-secondary);
+  --button-hover-text: var(--color-text-primary);
+}
+
+// Миксин для темной темы
+@mixin dark-theme-variables {
+  /* Основные цвета фона */
+  --color-bg-primary: #020008;       /* Основной фон - Полночный синий */
+  --color-bg-surface: #2C394C;       /* Поверхность - Графитовый синий */
+  --color-bg-card: #1a1b1c;         /* Карточки - Темный */
+  --color-bg-overlay: rgba(2, 0, 8, 0.9);
+  
+  /* Цвета акцентов */
+  --color-accent-primary: #1D719D;   /* Основной акцент - Глубокий синий */
+  --color-accent-secondary: #63DAFC; /* Вторичный акцент - Неоновый голубой */
+  --color-accent-highlight: #97DDE8; /* Яркий акцент - Светло-голубой */
+  --color-accent-neutral1: #908388;  /* Нейтральный акцент 1 - Пыльная роза */
+  --color-accent-neutral2: #795238;  /* Нейтральный акцент 2 - Кофейный */
+  
+  /* Цвета текста */
+  --color-text-primary: #959595;     /* Основной текст - Светло-серый */
+  --color-text-secondary: #63DAFC;   /* Вторичный текст - Неоновый голубой */
+  --color-text-heading: #E5E5E5;     /* Заголовки - Почти белый */
+  --color-text-muted: #666666;       /* Приглушенный текст */
+  --color-text-inverse: #020008;     /* Инвертированный текст */
+  
+  /* Цвета границ и разделителей */
+  --color-border-primary: #2C394C;   /* Границы - Графитовый синий */
+  --color-border-secondary: #1D719D; /* Вторичные границы - Глубокий синий */
+  --color-border-accent: #63DAFC;    /* Акцентные границы - Неоновый голубой */
+  
+  /* Цвета теней */
+  --color-shadow-primary: rgba(0, 0, 0, 0.3);
+  --color-shadow-secondary: rgba(0, 0, 0, 0.5);
+  --color-shadow-accent: rgba(99, 218, 252, 0.2);
+  
+  /* Градиенты */
+  --gradient-primary: linear-gradient(#082026, #134D80, #97DDE8);
+  --gradient-secondary: linear-gradient(135deg, #1D719D, #63DAFC);
+  --gradient-accent: linear-gradient(45deg, #2C394C, #63DAFC);
+  
+  /* Специфичные для секций */
+  --hero-left-bg: var(--color-bg-primary);
+  --hero-right-bg: var(--color-bg-surface);
+  --hero-title: var(--color-text-heading);
+  
+  /* Универсальные цвета */
+  --section-bg: var(--color-bg-primary);
+  --card-bg: var(--color-bg-card);
+  --button-bg: var(--color-accent-primary);
+  --button-text: var(--color-text-heading);
+  --button-hover-bg: var(--color-accent-secondary);
+  --button-hover-text: var(--color-text-inverse);
+}
 
 // Typography
 $font-family-chango: var(--font-chango), Arial, sans-serif;
