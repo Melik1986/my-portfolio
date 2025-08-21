@@ -11,8 +11,8 @@
     border: none;
     color: inherit;
 
-    &:hover &__icon,
-    &:focus-visible &__icon {
+    &:hover .logo__icon,
+    &:focus-visible .logo__icon {
       outline: none;
       fill: var(--logo-color-hover);
       transform: scale(1.1);
