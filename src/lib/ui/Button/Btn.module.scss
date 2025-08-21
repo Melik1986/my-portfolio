@@ -34,6 +34,15 @@
     0 10px 10px rgba(0, 0, 0, 0.2),
     0 20px 20px rgba(0, 0, 0, 0.15);
 
+  :root[data-theme='dark'] & {
+    color: var(--color-text-heading);
+    text-shadow:
+      0 0 6px rgba(99, 218, 252, 0.25),
+      0 0 12px rgba(99, 218, 252, 0.2),
+      0 1px 0 rgba(0, 0, 0, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.35);
+  }
+
   &:hover,
   &:focus-visible {
     outline: none;
@@ -87,6 +96,15 @@
     outline: none;
     color: $color-accent;
     text-shadow: rgba(0, 191, 255, 0.9) 0px 0px 24px;
+
+    :root[data-theme='dark'] & {
+      color: var(--color-accent-secondary);
+      text-shadow:
+        0 0 10px rgba(99, 218, 252, 0.6),
+        0 0 18px rgba(99, 218, 252, 0.45),
+        0 0 32px rgba(29, 113, 157, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+    }
 
     .btn__icon_path {
       stroke: $color-accent;
