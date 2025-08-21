@@ -28,11 +28,17 @@
   &__content-left {
     position: relative;
     z-index: 1;
-    background-color: $color-bg-white-light;
+    background: var(--about-left-bg);
+    color: var(--color-text-primary);
+    --skills-heading-color: var(--color-text-heading);
+    --skills-text-color: var(--color-text-primary);
   }
 
   &__content-right {
-    background-color: $color-bg-dark-light;
+    background: var(--about-right-bg);
     justify-content: center;
+    color: var(--color-text-primary);
+    --skills-heading-color: var(--color-text-heading);
+    --skills-text-color: var(--color-text-primary);
   }
 }
