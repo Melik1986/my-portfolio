@@ -79,6 +79,13 @@
     transition-timing-function: ease;
   }
 
+  // Dark theme base border color for icon
+  :root[data-theme='dark'] & {
+    .btn__icon_path {
+      stroke: var(--color-text-heading);
+    }
+  }
+
   &:hover,
   &:focus-visible {
     outline: none;
@@ -99,6 +106,12 @@
       stroke-dasharray: 30, 310;
       stroke-dashoffset: 290;
       transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    :root[data-theme='dark'] & {
+      .btn__icon_path {
+        stroke: var(--color-accent-secondary);
+      }
     }
   }
 }
