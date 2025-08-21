@@ -50,7 +50,7 @@ export function VerticalMarquee({
               <div
                 key={`${index}-${src}`}
                 className={`${styles['ai-content__picture']}${index === 0 ? ' ' + styles['ai-content__picture-main'] : ''}`}
-                aria-hidden={isClone}
+                {...(isClone && { 'aria-hidden': true })}
               >
                 <Image
                   className={styles['ai-content__image']}

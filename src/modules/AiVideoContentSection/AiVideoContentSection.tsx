@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { AiVideoContentProps } from './types/AiVideoContent.types';
-import { VideoMarqueeGroup } from './component/VideoMarqueeGroup/VideoMarqueeGroup';
+import { VideoMarqueeGroup } from './component';
 import { DEFAULT_VIDEO_ROWS } from './constants/AiVideoContent.constants';
 import { HorizontalMarquee, ContentSection } from '../AiContentSection/component';
 import styles from '../AiContentSection/AiContentSection.module.scss';
@@ -47,4 +47,3 @@ export function AiVideoContentSection({
   );
 }
 
-export default AiVideoContentSection;

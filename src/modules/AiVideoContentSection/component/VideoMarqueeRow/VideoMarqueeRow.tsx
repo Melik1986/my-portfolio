@@ -21,7 +21,7 @@ const renderVideoItem = (src: string, index: number, isClone: boolean) => (
       playsInline
       preload="metadata"
       autoPlay
-      aria-hidden={isClone}
+      {...(isClone && { 'aria-hidden': true })}
       onError={(e) => {
         console.warn('Video failed to load:', src);
         e.currentTarget.style.display = 'none';
