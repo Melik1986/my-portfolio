@@ -11,7 +11,7 @@
     width: 100%;
     border-radius: 6px;
     overflow: hidden;
-    background-color: $color-bg-dark;
+    background: var(--about-right-bg);
   }
 }
 
@@ -19,4 +19,5 @@
   display: block;
   width: 100%;
   height: 100%;
+  background: var(--about-canvas-bg);
 }

@@ -106,6 +106,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface);
   --about-right-bg: var(--color-bg-card);
+  /* About canvas background */
+  --about-canvas-bg: #ffffff;
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
@@ -183,6 +185,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
   --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
+  /* About canvas background */
+  --about-canvas-bg: #020008;
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);

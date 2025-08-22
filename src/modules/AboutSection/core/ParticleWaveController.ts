@@ -7,10 +7,17 @@ import {
   Points,
   Clock,
   Material,
+  Color,
 } from 'three';
 import type { AuroraConfig } from '@/modules/AboutSection/types/about.types';
 import { ShaderAnimationModule } from './ShaderAnimationModule';
 import { CameraController } from './CameraController';
+
+function readCssVarColor(varName: string, fallback: string = '#000000'): string {
+  if (typeof window === 'undefined') return fallback;
+  const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return val || fallback;
+}
 
 interface ControllerState {
   isInitialized: boolean;
@@ -33,6 +40,7 @@ export class ParticleWaveController {
   private particles: Points | null = null;
   private frameId: number | null = null;
   private state: ControllerState;
+  private themeObserver: MutationObserver | null = null;
 
   constructor(
     private readonly container: HTMLElement,
@@ -51,6 +59,27 @@ export class ParticleWaveController {
       isAnimating: false,
       shouldUpdateCamera: false,
     };
+
+    // Set initial clear color based on theme var
+    const bg = readCssVarColor('--about-canvas-bg', '#000000');
+    try {
+      this.renderer.setClearColor(new Color(bg), 1);
+    } catch {
+      this.renderer.setClearColor(0x000000, 1);
+    }
+
+    // Observe theme changes (data-theme on :root)
+    if (typeof window !== 'undefined') {
+      this.themeObserver = new MutationObserver(() => {
+        const clr = readCssVarColor('--about-canvas-bg', '#000000');
+        try {
+          this.renderer.setClearColor(new Color(clr), 1);
+        } catch {
+          this.renderer.setClearColor(0x000000, 1);
+        }
+      });
+      this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }
   }
 
   /**
@@ -151,6 +180,11 @@ export class ParticleWaveController {
 
     this.renderer.dispose();
     this.container.removeChild(this.renderer.domElement);
+
+    if (this.themeObserver) {
+      this.themeObserver.disconnect();
+      this.themeObserver = null;
+    }
   }
 
   /**
@@ -202,7 +236,7 @@ export class ParticleWaveController {
    */
   private createRenderer(): WebGLRenderer {
     const renderer = new WebGLRenderer({
-      alpha: true,
+      alpha: false,
       antialias: true,
       powerPreference: 'high-performance',
     });
