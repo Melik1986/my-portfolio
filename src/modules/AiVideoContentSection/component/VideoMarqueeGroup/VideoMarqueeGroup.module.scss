@@ -1,3 +1,5 @@
+@use '@/styles/_mixins.scss' as *;
+
 .ai-content__horizontal-flex {
   display: flex;
   flex-direction: column;
@@ -6,9 +8,16 @@
   align-items: center;
   width: 100%;
   cursor: default;
+
+  @include vp-1024 { gap: 24px; }
+  @include vp-768 { gap: 20px; }
+  @include vp-360 { gap: 16px; }
 }
 
 .ai-content__overlay-anchor {
   position: relative;
   width: 100%;
+  padding: 0 1rem;
+  @include vp-1024 { padding: 0 0.75rem; }
+  @include vp-768 { padding: 0 0.5rem; }
 }
