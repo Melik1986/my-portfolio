@@ -51,4 +51,11 @@
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);
   }
+
+  // Stack halves vertically on small screens: left on top, right below
+  @include vp-768 {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
 }
