@@ -16,6 +16,10 @@
     z-index: 2;
     opacity: 0;
 
+    @include vp-1304 {
+      max-width: 520px;
+    }
+
     @include vp-1024 {
       max-width: 400px;
       font: $font-h5;
@@ -40,6 +44,10 @@
     margin-left: 40px;
     z-index: 3;
 
+    @include vp-1024 { margin-left: 24px; }
+    @include vp-768 { margin-left: 16px; }
+    @include vp-360 { margin-left: 10px; }
+
     span {
       font-family: $font-family-okinawa;
       font: $font-h6;
@@ -48,6 +56,10 @@
       transform: rotate3d(1, 1, 1, -5deg);
       z-index: 4;
       opacity: 0;
+
+      @include vp-1024 { font: $font-h6; }
+      @include vp-768 { font: $font-h6; }
+      @include vp-360 { font: $font-p-small; }
     }
   }
 
@@ -57,5 +69,9 @@
     height: 35px;
     margin-top: -10px;
     z-index: 0;
+
+    @include vp-1024 { width: 210px; height: 32px; }
+    @include vp-768 { width: 180px; height: 28px; }
+    @include vp-360 { width: 160px; height: 24px; }
   }
 }
