@@ -8,5 +8,6 @@
     margin-bottom: 1rem;
     will-change: transform;
     opacity: 0;
+    color: var(--skills-heading-color, var(--color-text-heading));
   }
 }

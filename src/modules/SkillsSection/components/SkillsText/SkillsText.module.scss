@@ -10,5 +10,6 @@
     letter-spacing: 0.05rem;
     will-change: transform;
     opacity: 0;
+    color: var(--skills-text-color, var(--color-text-primary));
   }
 }

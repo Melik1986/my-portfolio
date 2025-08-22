@@ -8,7 +8,7 @@
 .ai-content__content-subtitle {
   font-size: 14px;
   letter-spacing: 1px;
-  color: $color-text-main;
+  color: var(--ai-text-color, var(--color-text-primary));
   margin-bottom: 8px;
 }
 
@@ -16,11 +16,13 @@
   font-family: $font-family-chango;
   font-size: 40px;
   line-height: 1.2;
+  color: var(--ai-heading-color, var(--color-text-heading));
 }
 
 .ai-content__content-paragraph {
   font-size: 16px;
   font-family: $font-family-roboto;
+  color: var(--ai-text-color, var(--color-text-primary));
 }
 
 .ai-content__content-small {

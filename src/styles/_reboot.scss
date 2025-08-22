@@ -74,3 +74,33 @@ img {
   height: auto;
   object-fit: cover;
 }
+
+// Remove default focus outline from interactive elements
+a:focus,
+a:focus-visible,
+button:focus,
+button:focus-visible,
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+summary:focus,
+summary:focus-visible,
+[tabindex]:focus,
+[tabindex]:focus-visible {
+  outline: none;
+}
+
+// Subtle focus glow for common interactive controls (low-specificity)
+:where(button, input, select, textarea):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring-shadow);
+}
+
+// Subtle text glow for link-like interactive elements (low-specificity)
+:where(a, summary, [role='button'], [tabindex]):focus-visible {
+  outline: none;
+  text-shadow: var(--focus-text-shadow);
+}

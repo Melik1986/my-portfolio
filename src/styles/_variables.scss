@@ -103,9 +103,21 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-primary);
 
+  /* About section backgrounds */
+  --about-left-bg: var(--color-bg-surface);
+  --about-right-bg: var(--color-bg-card);
+
+  /* AI Content section backgrounds */
+  --ai-left-bg: var(--color-bg-surface);
+  --ai-right-bg: var(--color-bg-card);
+
   /* Цвета логотипа */
-  --logo-color: var(--color-accent-primary);
+  --logo-color: #ffffff; /* белый в тёмной теме */
   --logo-color-hover: var(--color-accent-secondary);
+
+  /* Фокусные подсветки (умеренные для глобальных элементов) */
+  --focus-ring-shadow: 0 0 0 2px rgba(78, 116, 171, 0.35), 0 0 6px rgba(78, 116, 171, 0.25);
+  --focus-text-shadow: 0 0 4px rgba(78, 116, 171, 0.35), 0 1px 0 rgba(0, 0, 0, 0.15);
 }
 
 // Миксин для темной темы
@@ -168,9 +180,21 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-inverse);
 
+  /* About section backgrounds */
+  --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
+  --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
+
+  /* AI Content section backgrounds */
+  --ai-left-bg: var(--color-bg-surface);
+  --ai-right-bg: var(--color-bg-card);
+
   /* Цвета логотипа */
   --logo-color: var(--color-accent-primary);
   --logo-color-hover: var(--color-accent-secondary);
+
+  /* Фокусные подсветки (умеренные для глобальных элементов) */
+  --focus-ring-shadow: 0 0 0 2px rgba(99, 218, 252, 0.35), 0 0 8px rgba(29, 113, 157, 0.3);
+  --focus-text-shadow: 0 0 5px rgba(99, 218, 252, 0.45), 0 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 // Typography

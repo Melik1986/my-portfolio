@@ -3,8 +3,8 @@
 
 .ai-content {
   font-family: $font-family-roboto;
-  background-color: $color-bg-white-light;
-  color: $color-text-main;
+  background: var(--about-left-bg);
+  color: var(--color-text-primary);
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -38,6 +38,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background: var(--ai-left-bg);
   }
 
   &__horizontal-center {
@@ -62,6 +63,9 @@
   &__container-vertical {
     display: flex;
     flex-direction: column;
+    /* Left/Right halves background via CSS vars */
+    --ai-heading-color: var(--color-text-heading);
+    --ai-text-color: var(--color-text-primary);
   }
 
   &__wrapper {
@@ -166,6 +170,9 @@
   &__content {
     width: 41%;
     position: relative;
+    /* Text tokens for inner content */
+    --ai-heading-color: var(--color-text-heading);
+    --ai-text-color: var(--color-text-primary);
   }
 
   &__content-small {

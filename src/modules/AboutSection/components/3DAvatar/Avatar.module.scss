@@ -28,8 +28,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
-  background: rgba(0, 0, 0, 0.7);
+  color: var(--color-text-inverse);
+  background: var(--color-bg-overlay);
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 16px;
@@ -65,19 +65,21 @@
 
   &__content {
     text-align: left;
-    color: $color-white;
+    color: var(--color-text-primary);
     padding: 8px;
 
     h3 {
       margin: 0 0 8px 0;
       font-size: 1.1rem;
       font-weight: 600;
+      color: var(--color-text-heading);
     }
 
     p {
       margin: 0 0 12px 0;
-      opacity: 0.8;
       font-size: 0.9rem;
+      color: var(--color-text-primary);
+      opacity: 0.85;
     }
 
     ul {
@@ -87,7 +89,8 @@
 
       li {
         margin-bottom: 4px;
-        opacity: 0.7;
+        color: var(--color-text-primary);
+        opacity: 0.75;
       }
     }
   }

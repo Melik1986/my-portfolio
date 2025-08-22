@@ -26,19 +26,7 @@
       color 0.6s cubic-bezier(0.77, 0, 0.175, 1),
       text-shadow 0.6s cubic-bezier(0.77, 0, 0.175, 1),
       transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
-    text-shadow:
-      0 1px 0 #cccccc,
-      0 2px 0 #c9c9c9,
-      0 3px 0 #bbb,
-      0 4px 0 #b9b9b9,
-      0 5px 0 #aaa,
-      0 6px 1px rgba(0, 0, 0, 0.1),
-      0 0 5px rgba(0, 0, 0, 0.1),
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 3px 5px rgba(0, 0, 0, 0.2),
-      0 5px 10px rgba(0, 0, 0, 0.25),
-      0 10px 10px rgba(0, 0, 0, 0.2),
-      0 20px 20px rgba(0, 0, 0, 0.15);
+    text-shadow: var(--nav-link-shadow);
 
     @include vp-1024 {
       font-size: 32px;
@@ -51,27 +39,55 @@
     @include vp-360 {
       font-size: 20px;
     }
+
+    :root[data-theme='dark'] & {
+      color: var(--color-text-heading);
+      text-shadow:
+        0 0 6px rgba(99, 218, 252, 0.25),
+        0 0 12px rgba(99, 218, 252, 0.2),
+        0 1px 0 rgba(0, 0, 0, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  /* Inner text wrapper for smooth scale without layout shift */
+  &__text {
+    display: inline-block;
+    will-change: transform;
+    transform: translateZ(0);
+    transform-origin: 50% 60%;
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   &__link:hover,
   &__link:focus-visible {
     outline: none;
     color: $color-accent;
-    text-shadow:
-      0 0 8px rgba(0, 230, 255, 0.7),
-      0 0 16px rgba(0, 230, 255, 0.5),
-      0 0 32px rgba(0, 230, 255, 0.3),
-      0 1px 0 #cccccc,
-      0 2px 0 #c9c9c9,
-      0 3px 0 #bbb,
-      0 4px 0 #b9b9b9,
-      0 5px 0 #aaa,
-      0 6px 1px rgba(0, 0, 0, 0.1),
-      0 0 5px rgba(0, 0, 0, 0.1),
-      0 1px 3px rgba(0, 0, 0, 0.3),
-      0 3px 5px rgba(0, 0, 0, 0.2),
-      0 5px 10px rgba(0, 0, 0, 0.25),
-      0 10px 10px rgba(0, 0, 0, 0.2),
-      0 20px 20px rgba(0, 0, 0, 0.15);
+    text-shadow: var(--nav-link-shadow-hover);
+
+    :root[data-theme='dark'] & {
+      color: var(--color-accent-secondary);
+      text-shadow:
+        0 0 10px rgba(99, 218, 252, 0.6),
+        0 0 18px rgba(99, 218, 252, 0.45),
+        0 0 32px rgba(29, 113, 157, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Smooth upscale only the text node to avoid reflow/jitter */
+    .nav__text {
+      transform: scale(1.06);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__text {
+      transition: none;
+      transform: none;
+    }
+    &__link:hover .nav__text,
+    &__link:focus-visible .nav__text {
+      transform: none;
+    }
   }
 }
