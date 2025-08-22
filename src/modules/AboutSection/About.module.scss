@@ -8,7 +8,7 @@
   align-items: center;
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 
   &__title {
     font-family: $font-family-leckerli;
@@ -51,15 +51,15 @@
 
   // Stack halves vertically on small screens: left on top, right below
   @include vp-768 {
-    height: 100vh;
+    height: 100%;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
 
     &__content {
       width: 100%;
-      height: 50vh;
-      flex: 0 0 50vh;
+      height: 50%;
+      flex: 0 0 50%;
       gap: 24px;
       padding: 1.5rem;
     }
