@@ -51,15 +51,15 @@
 
   // Stack halves vertically on small screens: left on top, right below
   @include vp-768 {
-    height: auto;
-    min-height: 80vh;
+    height: 100vh;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
 
     &__content {
       width: 100%;
-      height: auto;
+      height: 50vh;
+      flex: 0 0 50vh;
       gap: 24px;
       padding: 1.5rem;
     }

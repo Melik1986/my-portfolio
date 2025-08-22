@@ -12,7 +12,7 @@
 
   @include vp-1304 { height: 92vh; }
   @include vp-1024 { height: 86vh; }
-  @include vp-768 { height: auto; min-height: 80vh; }
+  @include vp-768 { height: 100vh; }
   @include vp-360 { min-height: 72vh; }
 
   &__title {
@@ -31,7 +31,7 @@
 
     @include vp-1304 { padding: 2.5rem; }
     @include vp-1024 { padding: 2rem; }
-    @include vp-768 { width: 100%; padding: 1.5rem; }
+    @include vp-768 { width: 100%; padding: 1.5rem; height: 50vh; flex: 0 0 50vh; }
     @include vp-360 { padding: 1rem; }
   }
 
