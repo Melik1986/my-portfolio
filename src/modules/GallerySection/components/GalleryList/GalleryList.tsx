@@ -1,50 +1,58 @@
-import React, { useMemo } from 'react';
-import { type GalleryItem, type GalleryClassName } from '../../types/gallery';
+import React from 'react';
 import styles from './GalleryList.module.scss';
 
-interface GalleryListProps {
-  itemsToRender: GalleryItem[];
-  listRef: React.RefObject<HTMLUListElement | null>;
+interface GalleryItem {
+  id: string;
+  modifier?: string;
+  title: string;
+  name: string;
+  description: string;
 }
 
-export function GalleryList({ itemsToRender, listRef }: GalleryListProps) {
-  const modifierClassMap = useMemo(
-    (): Record<GalleryClassName, string> => ({
-      sunrise: styles['gallery-item--sunrise'],
-      rocky: styles['gallery-item--rocky'],
-      forest: styles['gallery-item--forest'],
-      meadow: styles['gallery-item--meadow'],
-      lake: styles['gallery-item--lake'],
-      clouds: styles['gallery-item--clouds'],
-      riverbank: styles['gallery-item--riverbank'],
-      ridges: styles['gallery-item--ridges'],
-      cliffs: styles['gallery-item--cliffs'],
-      valley: styles['gallery-item--valley'],
-    }),
-    [],
-  );
+interface GalleryListProps {
+  items: GalleryItem[];
+}
 
-  const memoizedList = useMemo(
-    () => (
-      <ul ref={listRef} className={styles['gallery-list']}>
-        {itemsToRender.map(({ className, title, name, description }: GalleryItem, index) => (
-          <li
-            key={`${className}-${index}`}
-            className={`${styles['gallery-item']} ${modifierClassMap[className] ?? ''}`}
-          >
+export function GalleryList({ items }: GalleryListProps) {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const handle = () => setIsMobile(window.innerWidth <= 767);
+    handle();
+    window.addEventListener('resize', handle, { passive: true });
+    return () => window.removeEventListener('resize', handle);
+  }, []);
+
+  const visibleItems = React.useMemo(() => {
+    // keep full-width first two always, then at mobile keep only first 3 small ones
+    if (!items) return [];
+    const firstTwo = items.slice(0, 2);
+    const rest = items.slice(2);
+    const small = isMobile ? rest.slice(0, 3) : rest;
+    return [...firstTwo, ...small];
+  }, [items, isMobile]);
+
+  return (
+    <ul className={styles['gallery-list']}>
+      {visibleItems.map((item, index) => {
+        const isFull = index < 2;
+        const className = [
+          styles['gallery-item'],
+          item.modifier ? styles[`gallery-item--${item.modifier}`] : '',
+        ]
+          .filter(Boolean)
+          .join(' ');
+
+        return (
+          <li key={item.id} className={className}>
             <div className={styles['gallery-item__content']}>
-              <div className={styles['gallery-item__title']} data-item={index + 1}>
-                {title}
-              </div>
-              <div className={styles['gallery-item__name']}>{name}</div>
-              <div className={styles['gallery-item__des']}>{description}</div>
+              <h3 className={styles['gallery-item__title']}>{item.title}</h3>
+              <p className={styles['gallery-item__name']}>{item.name}</p>
+              <p className={styles['gallery-item__des']}>{item.description}</p>
             </div>
           </li>
-        ))}
-      </ul>
-    ),
-    [itemsToRender, listRef, modifierClassMap],
+        );
+      })}
+    </ul>
   );
-
-  return memoizedList;
 }
