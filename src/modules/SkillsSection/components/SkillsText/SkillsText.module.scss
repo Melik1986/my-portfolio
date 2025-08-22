@@ -11,5 +11,9 @@
     will-change: transform;
     opacity: 0;
     color: var(--skills-text-color, var(--color-text-primary));
+
+    @include vp-1024 { font-size: clamp(0.75rem, 1vw + 0.7rem, 1.05rem); }
+    @include vp-768 { font-size: clamp(0.75rem, 1vw + 0.65rem, 1rem); }
+    @include vp-360 { font-size: 0.9rem; }
   }
 }

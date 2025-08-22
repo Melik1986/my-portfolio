@@ -9,6 +9,10 @@
   align-items: center;
   justify-content: center;
   min-height: 500px;
+
+  @include vp-1024 { min-height: 460px; }
+  @include vp-768 { min-height: 420px; }
+  @include vp-360 { min-height: 380px; }
 }
 
 .skills-charts__container {
@@ -26,6 +30,10 @@
   // Оптимизация для touch устройств - решает проблему с non-passive event listeners
   touch-action: pan-y;
   will-change: transform;
+
+  @include vp-1024 { min-height: 460px; gap: 16px; }
+  @include vp-768 { min-height: 420px; gap: 14px; }
+  @include vp-360 { min-height: 380px; gap: 12px; }
 }
 
 .chart-wrapper {
@@ -49,6 +57,10 @@
   touch-action: pan-y;
   will-change: transform;
   opacity: 0;
+
+  @include vp-1024 { min-height: 560px; }
+  @include vp-768 { min-height: 480px; width: 100%; }
+  @include vp-360 { min-height: 420px; }
 }
 
 .dev-skills-chart,
