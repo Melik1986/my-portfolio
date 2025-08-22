@@ -151,7 +151,11 @@ export class ParticleWaveController {
    */
   public handleResize(): void {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
-    const height = this.container.clientHeight || this.container.offsetHeight || 1;
+    let height = this.container.clientHeight || this.container.offsetHeight || 1;
+    if (height < 60) {
+      const derived = Math.round(width / 3); // ~ 16:5 ratio
+      height = Math.max(derived, 160);
+    }
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
@@ -220,7 +224,11 @@ export class ParticleWaveController {
    */
   private createCamera(): PerspectiveCamera {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
-    const height = this.container.clientHeight || this.container.offsetHeight || 1;
+    let height = this.container.clientHeight || this.container.offsetHeight || 1;
+    if (height < 60) {
+      const derived = Math.round(width / 3);
+      height = Math.max(derived, 160);
+    }
 
     const camera = new PerspectiveCamera(
       this.config.cameraFov,
@@ -245,7 +253,11 @@ export class ParticleWaveController {
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
-    const height = this.container.clientHeight || this.container.offsetHeight || 1;
+    let height = this.container.clientHeight || this.container.offsetHeight || 1;
+    if (height < 60) {
+      const derived = Math.round(width / 3);
+      height = Math.max(derived, 160);
+    }
     renderer.setSize(width, height);
 
     this.container.appendChild(renderer.domElement);
