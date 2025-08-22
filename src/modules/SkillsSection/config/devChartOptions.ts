@@ -9,16 +9,34 @@ import * as echarts from 'echarts';
  * @param containerWidth - ширина контейнера диаграммы
  * @returns объект с адаптивными настройками
  */
-const getResponsiveConfig = (containerWidth: number) => ({
-  barWidth: Math.max(25, Math.min(45, containerWidth / 12)),
-  fontSize:
+const getResponsiveConfig = (containerWidth: number) => {
+  // Более агрессивное сжатие для узких экранов, чтобы влезало на 768px
+  let barWidth: number;
+  if (containerWidth < 420) {
+    barWidth = Math.max(10, Math.min(16, containerWidth / 22));
+  } else if (containerWidth < 768) {
+    barWidth = Math.max(12, Math.min(22, containerWidth / 20));
+  } else if (containerWidth < 1024) {
+    barWidth = Math.max(16, Math.min(28, containerWidth / 18));
+  } else {
+    barWidth = Math.max(18, Math.min(36, containerWidth / 16));
+  }
+
+  const fontSize =
     containerWidth < RESPONSIVE_BREAKPOINTS.mobile
-      ? 10
+      ? 9
       : containerWidth < RESPONSIVE_BREAKPOINTS.tablet
-        ? 11
-        : 12,
-  labelRotation: containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 45 : 0,
-});
+        ? 10
+        : containerWidth < 1024
+          ? 11
+          : 12;
+
+  const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 60 : 0;
+
+  const barGap = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 8 : 12;
+
+  return { barWidth, fontSize, labelRotation, barGap };
+};
 
 /**
  * Создает конфигурацию всплывающих подсказок для столбчатой диаграммы
@@ -69,12 +87,12 @@ const getYAxisConfig = () => ({
  * @param barWidth - ширина столбцов
  * @returns массив конфигураций серий
  */
-const getSeriesConfig = (barWidth: number) => [
+const getSeriesConfig = (barWidth: number, barGap: number) => [
   {
     name: 'Навыки разработки',
     type: 'bar',
     barWidth,
-    barGap: 15,
+    barGap,
     data: SKILLS_DATA.development.map(() => 0),
     itemStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -103,6 +121,6 @@ export const getDevChartOptions = (containerWidth: number) => {
     tooltip: getTooltipConfig(),
     xAxis: getXAxisConfig(config),
     yAxis: getYAxisConfig(),
-    series: getSeriesConfig(config.barWidth),
+    series: getSeriesConfig(config.barWidth, (config as any).barGap ?? 12),
   } as echarts.EChartsOption;
 };

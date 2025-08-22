@@ -17,13 +17,18 @@ function readCssVar(name: string, fallback: string): string {
 export const getDesignChartOptions = (designWidth: number, designHeight: number): EChartsOption => {
   /** Вычисление адаптивного радиуса диаграммы */
   const minDimension = Math.min(designWidth, designHeight);
-  const radius = Math.max(100, minDimension * 0.35);
+  const radius =
+    designWidth < RESPONSIVE_BREAKPOINTS.mobile
+      ? Math.max(80, minDimension * 0.28)
+      : designWidth < RESPONSIVE_BREAKPOINTS.tablet
+        ? Math.max(90, minDimension * 0.3)
+        : Math.max(100, minDimension * 0.35);
   /** Адаптивный размер шрифта легенды в зависимости от ширины экрана */
   const legendFontSize =
     designWidth < RESPONSIVE_BREAKPOINTS.mobile
-      ? 10
+      ? 9
       : designWidth < RESPONSIVE_BREAKPOINTS.tablet
-        ? 11
+        ? 10
         : 12;
 
   const legendTextColor = readCssVar('--charts-text-color', '#333333');
@@ -33,7 +38,7 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
     /** Конфигурация легенды диаграммы */
     legend: {
       orient: 'horizontal',
-      bottom: '0%',
+      bottom: designWidth < RESPONSIVE_BREAKPOINTS.tablet ? '2%' : '0%',
       left: 'center',
       textStyle: { color: legendTextColor, fontSize: legendFontSize },
       data: SKILLS_DATA.design.map((item) => item.name),
@@ -44,7 +49,7 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
         name: 'Design Skills',
         type: 'pie',
         radius: [0, radius],
-        center: ['50%', '35%'],
+        center: ['50%', designWidth < RESPONSIVE_BREAKPOINTS.tablet ? '38%' : '35%'],
         roseType: 'area',
         itemStyle: { borderRadius: 8 },
         label: { show: false },
