@@ -1,6 +1,6 @@
 import { SKILLS_DATA, RESPONSIVE_BREAKPOINTS } from './skillsCharts.config';
 import { COLOR_PALETTE } from './skillsCharts.config';
-import { BASE_CHART_STYLES, TOOLTIP_STYLE, AXIS_STYLE } from './chartStyles';
+import { getBaseChartStyles, getTooltipStyle, getAxisStyle } from './chartStyles';
 
 import * as echarts from 'echarts';
 
@@ -26,7 +26,7 @@ const getResponsiveConfig = (containerWidth: number) => ({
  */
 const getTooltipConfig = () => ({
   trigger: 'axis',
-  ...TOOLTIP_STYLE,
+  ...getTooltipStyle(),
   formatter: (params: { name: string; value: number }[]) => {
     const data = params[0];
     return `<strong>${data.name}</strong><br/>Level: ${data.value}%`;
@@ -41,9 +41,9 @@ const getTooltipConfig = () => ({
 const getXAxisConfig = (config: { fontSize: number; labelRotation: number }) => ({
   type: 'category',
   data: SKILLS_DATA.development.map((item) => item.skill),
-  ...AXIS_STYLE,
+  ...getAxisStyle(),
   axisLabel: {
-    ...AXIS_STYLE.axisLabel,
+    ...getAxisStyle().axisLabel,
     rotate: config.labelRotation,
     fontSize: config.fontSize,
   },
@@ -56,9 +56,9 @@ const getXAxisConfig = (config: { fontSize: number; labelRotation: number }) => 
 const getYAxisConfig = () => ({
   type: 'value',
   max: 100,
-  ...AXIS_STYLE,
+  ...getAxisStyle(),
   axisLabel: {
-    ...AXIS_STYLE.axisLabel,
+    ...getAxisStyle().axisLabel,
     formatter: '{value}%',
   },
   splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.2)' } },
@@ -99,10 +99,10 @@ export const getDevChartOptions = (containerWidth: number) => {
   const config = getResponsiveConfig(containerWidth);
 
   return {
-    ...BASE_CHART_STYLES,
+    ...getBaseChartStyles(),
     tooltip: getTooltipConfig(),
     xAxis: getXAxisConfig(config),
     yAxis: getYAxisConfig(),
     series: getSeriesConfig(config.barWidth),
-  };
+  } as echarts.EChartsOption;
 };

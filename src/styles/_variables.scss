@@ -120,6 +120,10 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(78, 116, 171, 0.35), 0 0 6px rgba(78, 116, 171, 0.25);
   --focus-text-shadow: 0 0 4px rgba(78, 116, 171, 0.35), 0 1px 0 rgba(0, 0, 0, 0.15);
+
+  /* Charts backgrounds and text */
+  --charts-canvas-bg: #ffffff;
+  --charts-text-color: #333333;
 }
 
 // Миксин для темной темы
@@ -199,6 +203,10 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(99, 218, 252, 0.35), 0 0 8px rgba(29, 113, 157, 0.3);
   --focus-text-shadow: 0 0 5px rgba(99, 218, 252, 0.45), 0 1px 0 rgba(0, 0, 0, 0.35);
+
+  /* Charts backgrounds and text */
+  --charts-canvas-bg: #0f1220;
+  --charts-text-color: #e5e5e5;
 }
 
 // Typography
