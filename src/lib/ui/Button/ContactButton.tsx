@@ -31,7 +31,7 @@ export function ContactButton({ className = '', iconClassName = '', ...rest }: C
       type="button"
       className={`${styles.btn} ${styles.header__btn} ${className}`.trim()}
       aria-label="Contact me"
-      data-target="#contact"
+      data-target="#contact-section"
       {...rest}
     >
       <ContactIcon iconClassName={iconClassName} />

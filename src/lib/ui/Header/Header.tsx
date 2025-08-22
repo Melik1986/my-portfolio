@@ -22,23 +22,31 @@ const navigateToSection = (
     | ((target: string | number | Element, smooth?: boolean, position?: string) => void)
     | null,
 ) => {
+  console.log('🔍 Navigation attempt:', { sectionId, isReady });
+  
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
+  console.log('📍 Card index for section:', cardIndex);
 
   if (cardIndex !== -1 && animationController.isReady()) {
+    console.log('✅ Using AnimationController navigation');
     animationController.navigateToCard(cardIndex);
     return;
   }
 
   const element = document.getElementById(sectionId);
+  console.log('🎯 Element found:', !!element);
   if (!element) return;
 
   if (isReady && smoother && scrollTo) {
+    console.log('🚀 Using ScrollSmoother navigation');
     try {
       scrollTo(element, true, 'top top');
     } catch {
+      console.log('⚠️ ScrollSmoother failed, using fallback');
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   } else {
+    console.log('📜 Using native scrollIntoView');
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 };
@@ -59,6 +67,7 @@ export function Header() {
   }, []);
 
   const handleNavigate = (sectionId: string) => {
+    console.log('🎯 handleNavigate called with:', sectionId);
     navigateToSection(sectionId, isReady, smoother, scrollTo);
   };
 
@@ -86,6 +95,7 @@ export function Header() {
           data-duration="1.0"
           data-ease="power2.out"
           data-delay="0"
+          onClick={() => handleNavigate('contact-section')}
         />
       </div>
     </header>

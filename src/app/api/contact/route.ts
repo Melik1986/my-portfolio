@@ -140,6 +140,16 @@ export async function POST(req: NextRequest) {
     const payload = await parsePayload(req);
     if ('error' in payload) return badRequest(payload.error);
 
+    // В режиме разработки с тестовыми SMTP данными - имитируем отправку
+    const isDevelopment = process.env.NODE_ENV === 'development' && 
+      process.env.SMTP_USER === 'your-email@gmail.com';
+    
+    if (isDevelopment) {
+      console.log('[CONTACT_API] Development mode - simulating email send');
+      console.log('[CONTACT_API] Payload:', JSON.stringify(payload, null, 2));
+      return ok();
+    }
+
     const cfg = getSmtpConfig();
     if ('error' in cfg) return serverError(cfg.error);
 
