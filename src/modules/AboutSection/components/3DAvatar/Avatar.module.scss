@@ -98,4 +98,32 @@
       }
     }
   }
+
+  // На планшетах и ниже — смещаем тултип влево от аватара и не перекрываем его
+  @include vp-768 {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    transform: none;
+    max-width: 60%;
+    pointer-events: none;
+
+    &--visible {
+      transform: none;
+    }
+
+    &__content {
+      padding: 6px;
+      h3 { font-size: 1rem; }
+      p { font-size: 0.9rem; }
+      ul { font-size: 0.8rem; }
+    }
+  }
+
+  @include vp-360 {
+    max-width: 66%;
+    &__content {
+      padding: 4px;
+    }
+  }
 }
