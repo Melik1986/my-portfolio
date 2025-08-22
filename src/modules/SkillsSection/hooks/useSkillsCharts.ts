@@ -93,8 +93,9 @@ const createChartInstances = (
     ssr: false,
     width: 'auto',
     height: 'auto',
-    backgroundColor: bg,
   });
+  // Apply background via container
+  devChartElement.style.background = bg;
 
   designChartRef.current = echarts.init(designChartElement, null, {
     renderer: 'canvas',
@@ -103,8 +104,9 @@ const createChartInstances = (
     ssr: false,
     width: 'auto',
     height: 'auto',
-    backgroundColor: bg,
   });
+  // Apply background via container
+  designChartElement.style.background = bg;
 
   // Отключаем wheel события для предотвращения passive listener warnings
   if (devChartRef.current) {
@@ -186,6 +188,10 @@ export const useSkillsCharts = () => {
       // Re-init (simplest) to apply new backgroundColor; ECharts lacks live update for init bg
       createChartInstances(devChartRef, designChartRef, devChartElement, designChartElement);
       configureChartOptions(devChartRef, designChartRef, devChartElement, designChartElement);
+      // update container background on theme change
+      const bg = readCssVar('--charts-canvas-bg', '#ffffff');
+      devChartElement.style.background = bg;
+      designChartElement.style.background = bg;
     });
     themeObserverRef.current.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
