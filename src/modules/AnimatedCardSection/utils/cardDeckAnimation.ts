@@ -93,7 +93,6 @@ export function initCardDeckScroll(
         end: () => `+=${(items.length - 1) * 100}%`,
         scrub: 0.5,
         invalidateOnRefresh: true,
-        scroller: '#smooth-wrapper',
         markers: false,
       },
     });
@@ -119,7 +118,6 @@ export function initCardDeckScroll(
         end: () => `+=${(items.length - 1) * 100}%`,
         scrub: 1,
         invalidateOnRefresh: true,
-        scroller: '#smooth-wrapper',
         markers: false,
       },
     });
