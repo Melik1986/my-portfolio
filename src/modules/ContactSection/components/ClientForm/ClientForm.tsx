@@ -18,15 +18,29 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
   const { formData, fieldErrors, validateForm, clearErrors, handleInputChange, handleInputBlur } =
     useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const form = formRef.current;
     if (!form) return;
 
     if (validateForm(form)) {
-      clearErrors();
-      form.reset();
-      alert('Message sent successfully');
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'client', ...formData }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data?.ok === false) {
+          throw new Error(data?.error || `Request failed: ${res.status}`);
+        }
+        clearErrors();
+        form.reset();
+        alert('Message sent successfully');
+      } catch (err) {
+        console.error('[ClientForm] send error:', err);
+        alert('Failed to send message. Please try again later.');
+      }
     }
   };
 
