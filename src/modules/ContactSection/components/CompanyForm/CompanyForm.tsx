@@ -18,15 +18,29 @@ export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
   const { formData, fieldErrors, validateForm, clearErrors, handleInputChange, handleInputBlur } =
     useFormValidation<CompanyFormData>(COMPANY_VALIDATION_CONFIG);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const form = formRef.current;
     if (!form) return;
 
     if (validateForm(form)) {
-      clearErrors();
-      form.reset();
-      alert('Inquiry sent successfully');
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'company', ...formData }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || data?.ok === false) {
+          throw new Error(data?.error || `Request failed: ${res.status}`);
+        }
+        clearErrors();
+        form.reset();
+        alert('Inquiry sent successfully');
+      } catch (err) {
+        console.error('[CompanyForm] send error:', err);
+        alert('Failed to send inquiry. Please try again later.');
+      }
     }
   };
 
