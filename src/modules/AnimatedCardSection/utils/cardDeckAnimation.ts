@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 ensureGSAPRegistered();
 
@@ -99,6 +100,9 @@ export function initCardDeckScroll(
 
     createCardAnimation(timeline, items, onCardActivate);
 
+    // ensure correct measurements after init
+    ScrollTrigger.refresh();
+
     // cleanup for this media query
     return () => {
       if (timeline) {
@@ -123,6 +127,9 @@ export function initCardDeckScroll(
     });
 
     createCardAnimation(timeline, items, onCardActivate);
+
+    // ensure correct measurements after init
+    ScrollTrigger.refresh();
 
     // cleanup for this media query
     return () => {
