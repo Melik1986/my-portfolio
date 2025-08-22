@@ -24,6 +24,8 @@
   min-height: 240px;
   border-radius: 16px;
   overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 4px 12px var(--color-shadow-secondary);
   @include vp-768 { min-height: 200px; aspect-ratio: 16 / 6; }
   @include vp-360 { min-height: 160px; aspect-ratio: 16 / 7; }
 }
