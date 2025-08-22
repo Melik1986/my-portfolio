@@ -298,3 +298,40 @@
     transform: translateY(100%);
   }
 }
+
+// Responsive adjustments for Gallery
+@include vp-1024 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 40px;
+      left: 40px;
+      max-width: 70%;
+    }
+  }
+}
+
+@include vp-768 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 28px;
+      left: 28px;
+      max-width: 80%;
+    }
+    &:not(:nth-child(1)):not(:nth-child(2)) .gallery-item__title {
+      font: $font-p-x-small;
+    }
+  }
+}
+
+@include vp-360 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 20px;
+      left: 20px;
+      max-width: 86%;
+    }
+  }
+}

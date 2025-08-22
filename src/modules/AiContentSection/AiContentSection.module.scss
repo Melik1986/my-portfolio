@@ -200,3 +200,52 @@
     transform: translateY(calc(-1 * var(--single-set-height, 50%)));
   }
 }
+
+// Responsive adjustments for AI Content section
+@include vp-1024 {
+  .ai-content {
+    padding: 2rem 0;
+  }
+  .ai-content__wrapper {
+    gap: 24px;
+  }
+  .ai-content__image {
+    width: 180px;
+    height: 240px;
+  }
+  .ai-content__horizontal-vertical {
+    min-height: 480px;
+  }
+}
+
+@include vp-768 {
+  .ai-content {
+    padding: 1.5rem 0;
+  }
+  .ai-content__wrapper {
+    gap: 20px;
+  }
+  .ai-content__image {
+    width: 160px;
+    height: 210px;
+  }
+  .ai-content__horizontal-vertical {
+    min-height: 420px;
+  }
+}
+
+@include vp-360 {
+  .ai-content {
+    padding: 1rem 0;
+  }
+  .ai-content__wrapper {
+    gap: 16px;
+  }
+  .ai-content__image {
+    width: 140px;
+    height: 180px;
+  }
+  .ai-content__horizontal-vertical {
+    min-height: 360px;
+  }
+}

@@ -15,6 +15,10 @@
   align-items: center;
   flex-direction: column;
 
+  @include vp-1024 { padding: 2rem; }
+  @include vp-768 { padding: 1.5rem; }
+  @include vp-360 { padding: 1rem; }
+
   &__title {
     font-family: $font-family-poppins;
     font-size: 27px;
@@ -33,6 +37,10 @@
   border-radius: 30px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+
+  @include vp-1024 { width: 720px; height: 520px; }
+  @include vp-768 { width: 100%; height: auto; border-radius: 20px; }
+  @include vp-360 { width: 100%; height: auto; border-radius: 16px; }
 }
 
 // Responsive for form-container (original only changes height)
