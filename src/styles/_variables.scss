@@ -124,6 +124,9 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Charts backgrounds and text */
   --charts-canvas-bg: #ffffff;
   --charts-text-color: #333333;
+
+  /* Avatar podium */
+  --avatar-podium-color: #e0e0e0;
 }
 
 // Миксин для темной темы
@@ -207,6 +210,9 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Charts backgrounds and text */
   --charts-canvas-bg: #0f1220;
   --charts-text-color: #e5e5e5;
+
+  /* Avatar podium */
+  --avatar-podium-color: #2c394c;
 }
 
 // Typography

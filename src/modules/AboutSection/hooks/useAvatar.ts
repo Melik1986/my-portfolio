@@ -95,10 +95,17 @@ const useSceneSetup = () => {
 
 // Хук для работы с 3D моделью
 const useModelLoader = () => {
+  const readCssVar = (name: string, fallback: string): string => {
+    if (typeof window === 'undefined') return fallback;
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  };
+
   const createGround = useCallback((): THREE.Mesh => {
     const geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 64);
+    const podiumColor = readCssVar('--avatar-podium-color', '#e0e0e0');
     const material = new THREE.MeshStandardMaterial({
-      color: avatarConfig.pedestalColor,
+      color: new THREE.Color(podiumColor),
     });
     const mesh = new THREE.Mesh(geometry, material);
 
@@ -497,6 +504,25 @@ export const useAvatar = () => {
       setupLighting(scene);
       loadModel(sceneData);
 
+      // Observe theme changes to update podium color dynamically
+      const themeObserver = new MutationObserver(() => {
+        const assets = assetsRef.current;
+        if (assets?.groundMesh) {
+          const color = getComputedStyle(document.documentElement)
+            .getPropertyValue('--avatar-podium-color')
+            .trim();
+          try {
+            (assets.groundMesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(
+              color || '#e0e0e0',
+            );
+            (assets.groundMesh.material as THREE.MeshStandardMaterial).needsUpdate = true;
+          } catch {
+            // noop
+          }
+        }
+      });
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
       container.addEventListener('mousedown', handleMouseClickWrapper);
       const mouseMoveHandler = (event: MouseEvent) =>
         handleMouseMove(event, container, sceneData, assetsRef);
@@ -521,6 +547,7 @@ export const useAvatar = () => {
           container.removeEventListener('mousemove', mouseMoveHandler);
         }
         resizeObserver.disconnect();
+        themeObserver.disconnect();
         cleanup();
       };
     } catch (error) {
