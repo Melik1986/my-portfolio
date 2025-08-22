@@ -249,3 +249,27 @@
     min-height: 360px;
   }
 }
+
+// Responsive adjustments for AI Content layout ordering and spacings
+@include vp-768 {
+  .ai-content__wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  .ai-content__horizontal {
+    order: 2;
+  }
+  .ai-content__content,
+  .ai-content__content-small {
+    order: 1;
+    width: 100%;
+    padding: 0 0.5rem;
+  }
+  .ai-content__marquee-container { gap: 28px; }
+}
+
+@include vp-360 {
+  .ai-content__wrapper { gap: 14px; }
+  .ai-content__marquee-container { gap: 22px; }
+}

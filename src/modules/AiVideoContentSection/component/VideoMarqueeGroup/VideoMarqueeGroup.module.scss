@@ -21,3 +21,8 @@
   @include vp-1024 { padding: 0 0.75rem; }
   @include vp-768 { padding: 0 0.5rem; }
 }
+
+// Ensure ContentSection goes above group on mobile (uses shared AiContentSection classes)
+@include vp-768 {
+  .ai-content__horizontal { order: 2; }
+}
