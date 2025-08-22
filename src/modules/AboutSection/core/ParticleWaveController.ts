@@ -150,7 +150,8 @@ export class ParticleWaveController {
    * Обработка изменения размера контейнера
    */
   public handleResize(): void {
-    const { offsetWidth: width, offsetHeight: height } = this.container;
+    const width = this.container.clientWidth || this.container.offsetWidth || 1;
+    const height = this.container.clientHeight || this.container.offsetHeight || 1;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
@@ -218,7 +219,8 @@ export class ParticleWaveController {
    * Создание камеры с настройками из конфигурации
    */
   private createCamera(): PerspectiveCamera {
-    const { offsetWidth: width, offsetHeight: height } = this.container;
+    const width = this.container.clientWidth || this.container.offsetWidth || 1;
+    const height = this.container.clientHeight || this.container.offsetHeight || 1;
 
     const camera = new PerspectiveCamera(
       this.config.cameraFov,
@@ -242,7 +244,9 @@ export class ParticleWaveController {
     });
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
+    const width = this.container.clientWidth || this.container.offsetWidth || 1;
+    const height = this.container.clientHeight || this.container.offsetHeight || 1;
+    renderer.setSize(width, height);
 
     this.container.appendChild(renderer.domElement);
     return renderer;
