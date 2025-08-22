@@ -136,12 +136,24 @@
     font-size: 24px;
     color: var(--color-text-primary);
     cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--color-accent-primary);
+
+      :root[data-theme='dark'] & {
+        color: var(--color-accent-secondary);
+      }
+    }
   }
 }
 
 .social-icon {
   max-width: 30px;
   max-height: 30px;
+  color: inherit;
+  fill: currentColor;
+  transition: color 0.2s ease, fill 0.2s ease;
 }
 
 // Buttons group and buttons
