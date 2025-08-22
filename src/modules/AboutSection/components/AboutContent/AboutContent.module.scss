@@ -1,10 +1,11 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .about {
   &__heading {
     font-family: $font-family-chango;
-    font: $font-h2;
+    @include typo.type-h2;
     margin-bottom: 1rem;
     will-change: transform;
     opacity: 0;
@@ -14,8 +15,7 @@
   &__text {
     margin: 0 0 20px;
     font-family: $font-family-roboto;
-    line-height: 1.2;
-    font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
+    @include typo.type-body;
     letter-spacing: 0.05rem;
     will-change: transform;
     opacity: 0;

@@ -1,5 +1,6 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 // Contact section general styles (synced with original)
 .contact {
@@ -21,7 +22,7 @@
 
   &__title {
     font-family: $font-family-poppins;
-    font-size: 27px;
+    @include typo.type-h3;
     margin: -10px 0;
     text-align: center;
   }
