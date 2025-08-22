@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { CompanyForm } from '../CompanyForm/CompanyForm';
 import { ClientForm } from '../ClientForm/ClientForm';
 import { TogglePanel } from '../TogglePanel/TogglePanel';
-import styles from './ContactForm.module.scss';
 import containerStyles from '../../ContactSection.module.scss';
 
 export function ContactForm() {

@@ -5,7 +5,6 @@ import { CompanyFormFields } from '../FormFields/CompanyFormFields';
 import { SocialLinks } from '@/lib/ui/SocialLinks';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
 
-import styles from './CompanyForm.module.scss';
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const COMPANY_VALIDATION_CONFIG = {

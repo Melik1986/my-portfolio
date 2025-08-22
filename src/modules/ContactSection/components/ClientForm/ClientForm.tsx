@@ -5,7 +5,6 @@ import { ClientFormFields } from '../FormFields/ClientFormFields';
 import { SocialLinks } from '@/lib/ui/SocialLinks';
 import type { ClientFormProps, ClientFormData } from '../../types';
 
-import styles from './ClientForm.module.scss';
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const CLIENT_VALIDATION_CONFIG = {
