@@ -59,6 +59,9 @@
       gap: 24px;
       padding: 1.5rem;
     }
+
+    &__content-left { order: 0; }
+    &__content-right { order: 1; }
   }
 
   @include vp-360 {
