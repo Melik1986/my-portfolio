@@ -5,10 +5,10 @@
   &__animation {
     position: relative;
     padding: 0;
-    display: inline-flex;
+    display: flex;
     justify-content: center;
     align-items: center;
-    width: auto;
+    width: 100%;
     height: auto;
     border-radius: 0;
     overflow: visible;
@@ -17,8 +17,8 @@
 }
 
 #aurora-container {
-  display: inline-block;
-  width: auto;
+  display: block;
+  width: 100%;
   height: auto;
 }
 
