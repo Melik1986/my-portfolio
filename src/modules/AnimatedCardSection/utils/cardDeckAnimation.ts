@@ -95,11 +95,17 @@ export function initCardDeckScroll(
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
-        onKill: () => mm.revert(),
       },
     });
 
     createCardAnimation(timeline, items, onCardActivate);
+
+    // cleanup for this media query
+    return () => {
+      if (timeline) {
+        timeline.kill();
+      }
+    };
   });
 
   // Планшеты и десктоп (768px и больше)
@@ -115,11 +121,17 @@ export function initCardDeckScroll(
         invalidateOnRefresh: true,
         scroller: '#smooth-wrapper',
         markers: false,
-        onKill: () => mm.revert(),
       },
     });
 
     createCardAnimation(timeline, items, onCardActivate);
+
+    // cleanup for this media query
+    return () => {
+      if (timeline) {
+        timeline.kill();
+      }
+    };
   });
 
   return timeline!;
