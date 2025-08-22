@@ -13,37 +13,29 @@ const CLIENT_VALIDATION_CONFIG = {
   projectDescription: { label: 'Project Description', required: false },
 };
 
-export function ClientForm({ onToggleToCompany }: ClientFormProps) {
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const { formData, fieldErrors, validateForm, clearErrors, handleInputChange, handleInputBlur } =
-    useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
+interface ClientFormViewProps {
+  formRef: React.RefObject<HTMLFormElement | null>;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  formData: ClientFormData;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleInputBlur: (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  fieldErrors: Record<string, string>;
+  onToggleToCompany: () => void;
+}
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    const form = formRef.current;
-    if (!form) return;
-
-    if (validateForm(form)) {
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'client', ...formData }),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok || data?.ok === false) {
-          throw new Error(data?.error || `Request failed: ${res.status}`);
-        }
-        clearErrors();
-        form.reset();
-        alert('Message sent successfully');
-      } catch (err) {
-        console.error('[ClientForm] send error:', err);
-        alert('Failed to send message. Please try again later.');
-      }
-    }
-  };
-
+function ClientFormView({
+  formRef,
+  handleSubmit,
+  formData,
+  handleInputChange,
+  handleInputBlur,
+  fieldErrors,
+  onToggleToCompany,
+}: ClientFormViewProps) {
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--freelance']}`}>
       <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
@@ -73,5 +65,35 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
         />
       </form>
     </div>
+  );
+}
+
+export function ClientForm({ onToggleToCompany }: ClientFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const { formData, fieldErrors, validateForm, clearErrors, handleInputChange, handleInputBlur } =
+    useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const form = formRef.current;
+    if (!form) return;
+
+    if (validateForm(form)) {
+      clearErrors();
+      form.reset();
+      alert('Message sent successfully');
+    }
+  };
+
+  return (
+    <ClientFormView
+      formRef={formRef}
+      handleSubmit={handleSubmit}
+      formData={formData}
+      handleInputChange={handleInputChange}
+      handleInputBlur={handleInputBlur}
+      fieldErrors={fieldErrors}
+      onToggleToCompany={onToggleToCompany}
+    />
   );
 }
