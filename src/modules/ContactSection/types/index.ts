@@ -55,7 +55,7 @@ export interface TogglePanelProps {
 export interface FieldConfig {
   key: string;
   placeholder: string;
-  iconId: string;
+  iconId?: string;
   isTextarea?: boolean;
   type?: string;
 }

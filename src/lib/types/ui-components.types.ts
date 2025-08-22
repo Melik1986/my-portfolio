@@ -27,7 +27,7 @@ export interface InputFieldProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  iconId: string;
+  iconId?: string;
   isTextarea?: boolean;
   hasError?: boolean;
   errorMessage?: string;
@@ -56,7 +56,7 @@ export type ControlBaseProps = {
 export type FieldVM = {
   wrapper: string;
   inner: string;
-  iconId: string;
+  iconId?: string;
   iconCls: string;
   control: React.ReactNode;
   errorId: string;

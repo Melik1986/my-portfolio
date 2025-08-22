@@ -9,7 +9,6 @@ const COMPANY_FIELDS: CompanyFieldConfig[] = [
   {
     key: 'companyDetails',
     placeholder: 'Company Details',
-    iconId: 'icon-user',
     isTextarea: true,
   },
 ];
@@ -38,7 +37,7 @@ export function CompanyFormFields({
           errorMessage={fieldErrors[key]}
           useDefaultStyles={false}
           wrapperClassName={formStyles['input-box']}
-          inputWrapperClassName=""
+          inputWrapperClassName={formStyles['input-box__input-wrapper']}
           inputClassName={formStyles['input-box__input']}
           textareaClassName={formStyles['input-box__input--textarea']}
           inputErrorClassName={formStyles['input-box__input--error']}

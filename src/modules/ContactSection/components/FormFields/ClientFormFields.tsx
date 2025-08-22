@@ -9,7 +9,6 @@ const CLIENT_FIELDS: ClientFieldConfig[] = [
   {
     key: 'projectDescription',
     placeholder: 'Project Description',
-    iconId: 'icon-building',
     isTextarea: true,
   },
 ];
@@ -38,7 +37,7 @@ export function ClientFormFields({
           errorMessage={fieldErrors[key]}
           useDefaultStyles={false}
           wrapperClassName={formStyles['input-box']}
-          inputWrapperClassName=""
+          inputWrapperClassName={formStyles['input-box__input-wrapper']}
           inputClassName={formStyles['input-box__input']}
           textareaClassName={formStyles['input-box__input--textarea']}
           inputErrorClassName={formStyles['input-box__input--error']}

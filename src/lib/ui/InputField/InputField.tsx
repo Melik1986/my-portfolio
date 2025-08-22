@@ -57,7 +57,7 @@ function getAria(
 function FieldLayout(props: {
   wrapper: string;
   inner: string;
-  iconId: string;
+  iconId?: string;
   iconCls: string;
   control: React.ReactNode;
   errorId: string;
@@ -70,7 +70,7 @@ function FieldLayout(props: {
   return (
     <div className={wrapper || undefined}>
       <div className={inner || undefined}>
-        <SpriteIcon id={iconId} sprite="/icons/tech-icons.svg" className={iconCls} />
+        {iconId && <SpriteIcon id={iconId} sprite="/icons/tech-icons.svg" className={iconCls} />}
         {control}
       </div>
       {showError && errorMessage ? (
