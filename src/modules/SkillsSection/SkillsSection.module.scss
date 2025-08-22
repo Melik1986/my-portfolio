@@ -50,6 +50,10 @@
     color: var(--color-text-primary);
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);
+
+    :root[data-theme='dark'] & {
+      background: var(--about-canvas-bg);
+    }
   }
 
   // Stack halves vertically on small screens: left on top, right below
