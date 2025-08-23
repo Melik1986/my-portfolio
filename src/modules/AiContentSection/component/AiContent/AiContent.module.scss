@@ -29,3 +29,12 @@
   width: 41%;
   position: relative;
 }
+
+// Responsive: make content full-width on mobile
+@media (max-width: 768px) {
+  .ai-content__content,
+  .ai-content__content-small {
+    width: 100%;
+    max-width: none;
+  }
+}
