@@ -60,7 +60,6 @@
 
   @include vp-1304 { min-height: clamp(340px, 48vh, 560px); }
   @include vp-1024 { min-height: clamp(320px, 46vh, 520px); }
-  @include vp-900 { width: 100%; }
   @include vp-768 { min-height: clamp(300px, 44vh, 500px); width: 100%; }
   @include vp-360 { min-height: clamp(260px, 42vh, 420px); }
 }
@@ -123,6 +122,7 @@
     flex-basis: auto;
     min-height: clamp(300px, 44vh, 520px);
     padding: 15px;
+    width: 100%;
   }
   .dev-skills-chart,
   .design-skills-chart {
