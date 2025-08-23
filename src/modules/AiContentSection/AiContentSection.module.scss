@@ -37,7 +37,9 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
+    /* Unify group block height across AI Content and AI Video */
+    height: clamp(380px, 46vh, 560px);
     background: var(--ai-left-bg);
   }
 
@@ -208,14 +210,17 @@
 }
 @include vp-1024 {
   .ai-content__container { max-width: 1000px; padding: 16px 28px; }
+  .ai-content__horizontal { height: clamp(360px, 44vh, 540px); }
 }
 @include vp-768 {
   .ai-content { padding: 1.25rem 0; }
   .ai-content__container { width: 100%; max-width: 680px; padding: 12px 16px; }
+  .ai-content__horizontal { height: clamp(320px, 42vh, 500px); }
 }
 @include vp-360 {
   .ai-content { padding: 1rem 0; }
   .ai-content__container { width: 100%; max-width: 560px; padding: 10px 12px; }
+  .ai-content__horizontal { height: clamp(280px, 40vh, 460px); }
 }
 
 // Responsive adjustments for AI Content layout ordering and spacings
