@@ -68,7 +68,7 @@
   width: 210px;
   height: 280px;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -104,31 +104,16 @@
 
 // Responsive adjustments for vertical marquee
 @include vp-1024 {
-  .ai-content__horizontal-vertical {
-    min-height: 480px;
-  }
-  .ai-content__image {
-    width: 180px;
-    height: 240px;
-  }
+  .ai-content__horizontal-vertical { min-height: 480px; }
+  .ai-content__image { width: 180px; height: 240px; }
 }
 
 @include vp-768 {
-  .ai-content__horizontal-vertical {
-    min-height: 420px;
-  }
-  .ai-content__image {
-    width: 160px;
-    height: 210px;
-  }
+  .ai-content__horizontal-vertical { min-height: 420px; }
+  .ai-content__image { width: 160px; height: 210px; }
 }
 
 @include vp-360 {
-  .ai-content__horizontal-vertical {
-    min-height: 360px;
-  }
-  .ai-content__image {
-    width: 140px;
-    height: 180px;
-  }
+  .ai-content__horizontal-vertical { min-height: 360px; }
+  .ai-content__image { width: 140px; height: 180px; }
 }

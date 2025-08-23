@@ -6,7 +6,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -50%);
   transform-style: preserve-3d;
   width: clamp(260px, 72vw, 820px);
   height: clamp(320px, 54vh, 580px);
