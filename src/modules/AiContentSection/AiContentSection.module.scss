@@ -58,6 +58,7 @@
     z-index: 10;
     border-radius: 4px;
     border: 1px solid #ccc;
+    box-sizing: border-box;
   }
 
   &__container-vertical {
@@ -201,53 +202,20 @@
   }
 }
 
-// Responsive adjustments for AI Content section
+// Responsive: unify container size across breakpoints
+@include vp-1304 {
+  .ai-content__container { max-width: 1200px; padding: 18px 32px; }
+}
 @include vp-1024 {
-  .ai-content {
-    padding: 2rem 0;
-  }
-  .ai-content__wrapper {
-    gap: 24px;
-  }
-  .ai-content__image {
-    width: 180px;
-    height: 240px;
-  }
-  .ai-content__horizontal-vertical {
-    min-height: 480px;
-  }
+  .ai-content__container { max-width: 1000px; padding: 16px 28px; }
 }
-
 @include vp-768 {
-  .ai-content {
-    padding: 1.5rem 0;
-  }
-  .ai-content__wrapper {
-    gap: 20px;
-  }
-  .ai-content__image {
-    width: 160px;
-    height: 210px;
-  }
-  .ai-content__horizontal-vertical {
-    min-height: 420px;
-  }
+  .ai-content { padding: 1.25rem 0; }
+  .ai-content__container { width: 100%; max-width: 680px; padding: 12px 16px; }
 }
-
 @include vp-360 {
-  .ai-content {
-    padding: 1rem 0;
-  }
-  .ai-content__wrapper {
-    gap: 16px;
-  }
-  .ai-content__image {
-    width: 140px;
-    height: 180px;
-  }
-  .ai-content__horizontal-vertical {
-    min-height: 360px;
-  }
+  .ai-content { padding: 1rem 0; }
+  .ai-content__container { width: 100%; max-width: 560px; padding: 10px 12px; }
 }
 
 // Responsive adjustments for AI Content layout ordering and spacings
