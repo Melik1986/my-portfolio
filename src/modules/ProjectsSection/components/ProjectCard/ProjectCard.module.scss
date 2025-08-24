@@ -6,10 +6,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -50%);
   transform-style: preserve-3d;
-  width: 900px;
-  height: 530px;
+  width: clamp(260px, 72vw, 820px);
+  height: clamp(320px, 54vh, 580px);
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   font: $font-h6;
@@ -20,25 +20,10 @@
   // Плавные переходы для всех свойств
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-  @mixin vp-min($width) {
-    width: 900px;
-  }
-
-  @mixin vp-1440 {
-    width: 800px;
-  }
-
-  @mixin vp-1024 {
-    width: 700px;
-  }
-
-  @mixin vp-768 {
-    width: 600px;
-  }
-
-  @mixin vp-360 {
-    width: 100%;
-  }
+  @include vp-1304 { width: clamp(240px, 70vw, 780px); height: clamp(300px, 52vh, 560px); }
+  @include vp-1024 { width: clamp(220px, 80vw, 700px); height: clamp(280px, 50vh, 520px); }
+  @include vp-768 { width: 90vw; height: clamp(260px, 48vh, 480px); }
+  @include vp-360 { width: 95vw; height: clamp(240px, 46vh, 440px); }
 }
 
 // Стили для полноэкранного режима

@@ -10,6 +10,16 @@
   display: flex;
   gap: 5%;
   align-items: center;
+
+  @include vp-768 {
+    bottom: 28px;
+    gap: 16px;
+  }
+
+  @include vp-360 {
+    bottom: 18px;
+    gap: 12px;
+  }
 }
 
 .gallery-arrows__button {
@@ -36,12 +46,18 @@
   &:hover .gallery-arrows__icon {
     color: var(--color-accent-primary);
   }
+
+  @include vp-768 { width: 34px; height: 34px; }
+  @include vp-360 { width: 30px; height: 30px; }
 }
 
 .gallery-arrows__icon {
   font-size: 20px;
   fill: currentColor;
   color: var(--color-text-heading);
+
+  @include vp-768 { font-size: 16px; }
+  @include vp-360 { font-size: 14px; }
 }
 
 .gallery-arrows__slide-number {
@@ -52,6 +68,9 @@
   opacity: 0;
   animation: animate $carousel-animation-duration $carousel-animation-ease $carousel-animation-delay
     1 forwards;
+
+  @include vp-768 { letter-spacing: 3px; }
+  @include vp-360 { display: none; }
 }
 
 @keyframes animate {

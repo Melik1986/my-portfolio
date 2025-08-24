@@ -19,6 +19,12 @@ import { resizeCharts } from '../utils/resizeUtils';
 // Флаг для отслеживания регистрации ECharts компонентов
 let echartsRegistered = false;
 
+const readCssVar = (name: string, fallback: string) => {
+  if (typeof window === 'undefined') return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+};
+
 /**
  * Регистрирует ECharts компоненты только при первом использовании
  */
@@ -77,6 +83,8 @@ const createChartInstances = (
     designChartRef.current.dispose();
   }
 
+  const bg = readCssVar('--charts-canvas-bg', '#ffffff');
+
   // Инициализация с отключением wheel событий для улучшения производительности
   devChartRef.current = echarts.init(devChartElement, null, {
     renderer: 'canvas',
@@ -86,6 +94,8 @@ const createChartInstances = (
     width: 'auto',
     height: 'auto',
   });
+  // Apply background via container
+  devChartElement.style.background = bg;
 
   designChartRef.current = echarts.init(designChartElement, null, {
     renderer: 'canvas',
@@ -95,6 +105,8 @@ const createChartInstances = (
     width: 'auto',
     height: 'auto',
   });
+  // Apply background via container
+  designChartElement.style.background = bg;
 
   // Отключаем wheel события для предотвращения passive listener warnings
   if (devChartRef.current) {
@@ -104,7 +116,7 @@ const createChartInstances = (
     // Отключаем обработчики событий на уровне DOM
     const dom = devChartRef.current.getDom();
     if (dom) {
-      dom.style.touchAction = 'pan-y';
+      (dom as HTMLElement).style.touchAction = 'pan-y';
     }
   }
 
@@ -115,7 +127,7 @@ const createChartInstances = (
     // Отключаем обработчики событий на уровне DOM
     const dom = designChartRef.current.getDom();
     if (dom) {
-      dom.style.touchAction = 'pan-y';
+      (dom as HTMLElement).style.touchAction = 'pan-y';
     }
   }
 };
@@ -130,11 +142,11 @@ const configureChartOptions = (
   designChartElement: HTMLElement,
 ) => {
   const containerWidth = devChartElement.offsetWidth;
-  devChartRef.current?.setOption(getDevChartOptions(containerWidth));
+  devChartRef.current?.setOption(getDevChartOptions(containerWidth), { notMerge: true });
 
   const designWidth = designChartElement.offsetWidth;
   const designHeight = designChartElement.offsetHeight;
-  designChartRef.current?.setOption(getDesignChartOptions(designWidth, designHeight));
+  designChartRef.current?.setOption(getDesignChartOptions(designWidth, designHeight), { notMerge: true });
 };
 
 /**
@@ -145,6 +157,7 @@ const configureChartOptions = (
 export const useSkillsCharts = () => {
   const devChartRef = useRef<echarts.ECharts | null>(null);
   const designChartRef = useRef<echarts.ECharts | null>(null);
+  const themeObserverRef = useRef<MutationObserver | null>(null);
 
   const setupCharts = useCallback(() => {
     const elements = validateChartElements();
@@ -176,7 +189,22 @@ export const useSkillsCharts = () => {
     };
     window.addEventListener('resize', onResize);
 
-    // Сохраняем текущие значения ref в локальные переменные
+    // Observe theme changes to update background/text colors
+    themeObserverRef.current = new MutationObserver(() => {
+      const elements = validateChartElements();
+      if (!elements) return;
+      const { devChartElement, designChartElement } = elements;
+
+      // Re-init (simplest) to apply new backgroundColor; ECharts lacks live update for init bg
+      createChartInstances(devChartRef, designChartRef, devChartElement, designChartElement);
+      configureChartOptions(devChartRef, designChartRef, devChartElement, designChartElement);
+      // update container background on theme change
+      const bg = readCssVar('--charts-canvas-bg', '#ffffff');
+      devChartElement.style.background = bg;
+      designChartElement.style.background = bg;
+    });
+    themeObserverRef.current.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     const currentDevChart = devChartRef.current;
     const currentDesignChart = designChartRef.current;
 
@@ -185,8 +213,12 @@ export const useSkillsCharts = () => {
       if (rafId != null) cancelAnimationFrame(rafId);
       if (currentDevChart) currentDevChart.dispose();
       if (currentDesignChart) currentDesignChart.dispose();
+      if (themeObserverRef.current) {
+        themeObserverRef.current.disconnect();
+        themeObserverRef.current = null;
+      }
     };
-  }, []); // Убираем зависимость от initializeCharts
+  }, []);
 
   return {
     initializeCharts,

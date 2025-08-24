@@ -9,26 +9,85 @@
   transition: all 0.3s ease;
   will-change: transform;
 
+  /* Responsive paddings without changing existing defaults */
+  @include vp-1304 {
+    padding: 8px 16px;
+  }
+
+  @include vp-1024 {
+    padding: 8px 12px;
+  }
+
+  @include vp-768 {
+    padding: 6px 10px;
+  }
+
+  @include vp-360 {
+    padding: 4px 8px;
+  }
+
   &__content {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     justify-content: center;
+    gap: 16px;
+
+    @include vp-1024 {
+      gap: 12px;
+    }
+
+    @include vp-768 {
+      gap: 10px;
+    }
+
+    @include vp-360 {
+      gap: 8px;
+    }
   }
 
   &__logo {
     will-change: transform;
     opacity: 0;
+
+    /* Scale down logo at breakpoints — without touching base size */
+    .logo__icon {
+      @include vp-1304 { width: 110px; }
+      @include vp-1024 { width: 100px; }
+      @include vp-768 { width: 88px; }
+      @include vp-360 { width: 76px; }
+    }
   }
 
   &__navigation {
     will-change: transform;
     opacity: 0;
+
+    /* Control link spacing across breakpoints */
+    .nav__list {
+      gap: 18px;
+      @include vp-1024 { gap: 14px; }
+      @include vp-768 { gap: 12px; }
+      @include vp-360 { gap: 10px; }
+    }
+
+    .nav__link {
+      /* keep author base font-sizes in nav.module.scss; here only margins */
+      margin: 0 2px;
+      @include vp-1024 { margin: 0 1px; }
+      @include vp-768 { margin: 0; }
+    }
   }
 
   &__contact-button {
     will-change: transform;
     opacity: 0;
+
+    /* Adjust button sizing via its width rules; here only outer spacing */
+    margin-left: auto;
+    @include vp-1024 { margin-left: 12px; }
+    @include vp-768 { margin-left: 8px; }
+    @include vp-360 { margin-left: 6px; }
   }
 }

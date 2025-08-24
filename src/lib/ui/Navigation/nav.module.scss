@@ -1,5 +1,6 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .nav {
   &__list {
@@ -11,6 +12,10 @@
     width: 100%;
     gap: 20px;
     padding: 0;
+
+    @include vp-1024 { gap: 16px; }
+    @include vp-768 { gap: 12px; }
+    @include vp-360 { gap: 10px; }
   }
 
   &__link {
@@ -18,8 +23,7 @@
     text-decoration: none;
     color: $color-text-main;
     font-family: $font-family-leckerli;
-    font-size: 38px;
-    line-height: 1.2;
+    @include typo.type-h2;
     font-weight: 400;
 
     transition:
@@ -28,17 +32,7 @@
       transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
     text-shadow: var(--nav-link-shadow);
 
-    @include vp-1024 {
-      font-size: 32px;
-    }
-
-    @include vp-768 {
-      font-size: 24px;
-    }
-
-    @include vp-360 {
-      font-size: 20px;
-    }
+    // clamp in mixin covers responsive sizes, so we can drop manual steps
 
     :root[data-theme='dark'] & {
       color: var(--color-text-heading);

@@ -1,12 +1,13 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .projects-card {
   &__number {
     position: absolute;
     top: 10px;
     left: 10px;
-    font: $font-h6;
+    @include typo.type-small;
     color: $color-white;
     text-shadow: 0 0 10px #000;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);

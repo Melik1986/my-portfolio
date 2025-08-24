@@ -106,6 +106,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface);
   --about-right-bg: var(--color-bg-card);
+  /* About canvas background */
+  --about-canvas-bg: #ffffff;
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
@@ -118,6 +120,13 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(78, 116, 171, 0.35), 0 0 6px rgba(78, 116, 171, 0.25);
   --focus-text-shadow: 0 0 4px rgba(78, 116, 171, 0.35), 0 1px 0 rgba(0, 0, 0, 0.15);
+
+  /* Charts backgrounds and text */
+  --charts-canvas-bg: #ffffff;
+  --charts-text-color: #333333;
+
+  /* Avatar podium */
+  --avatar-podium-color: #e0e0e0;
 }
 
 // Миксин для темной темы
@@ -158,14 +167,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --gradient-accent: linear-gradient(45deg, #2c394c, #63dafc);
 
   /* Градиент для body */
-  --background-gradient-body: linear-gradient(
-    90deg,
-    rgba(29, 113, 157, 0.6) 0%,
-    rgba(44, 57, 76, 0.8) 25%,
-    rgba(2, 0, 8, 1) 50%,
-    rgba(44, 57, 76, 0.8) 75%,
-    rgba(29, 113, 157, 0.6) 100%
-  );
+  --background-gradient-body: linear-gradient(180deg, #5A5A5A 0%, #2C2C2C 50%, #0F0F0F 100%);
 
   /* Специфичные для секций */
   --hero-left-bg: var(--color-bg-primary);
@@ -183,6 +185,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
   --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
+  /* About canvas background */
+  --about-canvas-bg: #020008;
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
@@ -195,6 +199,13 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(99, 218, 252, 0.35), 0 0 8px rgba(29, 113, 157, 0.3);
   --focus-text-shadow: 0 0 5px rgba(99, 218, 252, 0.45), 0 1px 0 rgba(0, 0, 0, 0.35);
+
+  /* Charts backgrounds and text */
+  --charts-canvas-bg: #0f1220;
+  --charts-text-color: #e5e5e5;
+
+  /* Avatar podium */
+  --avatar-podium-color: #2c394c;
 }
 
 // Typography

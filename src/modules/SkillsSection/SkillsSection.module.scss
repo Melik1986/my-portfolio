@@ -8,7 +8,12 @@
   display: flex;
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
+
+  @include vp-1304 { height: 92vh; }
+  @include vp-1024 { height: 86vh; }
+  @include vp-768 { height: 100%; }
+  @include vp-360 { min-height: 72vh; }
 
   &__title {
     font-family: $font-family-leckerli;
@@ -23,6 +28,11 @@
     padding: 3rem;
     width: 50%;
     height: 100%;
+
+    @include vp-1304 { padding: 2.5rem; }
+    @include vp-1024 { padding: 2rem; }
+    @include vp-768 { width: 100%; padding: 1.5rem; height: 50%; flex: 0 0 50%; }
+    @include vp-360 { padding: 1rem; }
   }
 
   &__content-left {
@@ -40,5 +50,19 @@
     color: var(--color-text-primary);
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);
+
+    :root[data-theme='dark'] & {
+      background: var(--about-canvas-bg);
+    }
+  }
+
+  // Stack halves vertically on small screens: left on top, right below
+  @include vp-768 {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    &__content-left { order: 0; }
+    &__content-right { order: 1; }
   }
 }

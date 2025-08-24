@@ -1,5 +1,6 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .skills {
   &__text {
@@ -11,5 +12,6 @@
     will-change: transform;
     opacity: 0;
     color: var(--skills-text-color, var(--color-text-primary));
+    @include typo.type-body;
   }
 }

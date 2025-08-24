@@ -1,5 +1,6 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .hero {
   &__heading {
@@ -8,7 +9,7 @@
     height: auto;
     margin: 0 0 10px 0;
     padding: 0;
-    font: $font-h6;
+    @include typo.type-h2;
     letter-spacing: 0.1em;
     z-index: 13;
     color: #29abe2;
@@ -16,20 +17,24 @@
     z-index: 2;
     opacity: 0;
 
+    @include vp-1304 {
+      max-width: 520px;
+    }
+
     @include vp-1024 {
       max-width: 400px;
-      font: $font-h5;
+      @include typo.type-h3;
       margin-left: 0;
     }
 
     @include vp-768 {
       max-width: 300px;
-      font: $font-h6;
+      @include typo.type-h4;
     }
 
     @include vp-360 {
       max-width: 200px;
-      font: $font-p-small;
+      @include typo.type-small;
     }
   }
 
@@ -40,14 +45,22 @@
     margin-left: 40px;
     z-index: 3;
 
+    @include vp-1024 { margin-left: 24px; }
+    @include vp-768 { margin-left: 16px; }
+    @include vp-360 { margin-left: 10px; }
+
     span {
       font-family: $font-family-okinawa;
-      font: $font-h6;
+      @include typo.type-h4;
       letter-spacing: 0.1em;
       color: $color-accent;
       transform: rotate3d(1, 1, 1, -5deg);
       z-index: 4;
       opacity: 0;
+
+      @include vp-1024 { @include typo.type-h4; }
+      @include vp-768 { @include typo.type-h4; }
+      @include vp-360 { @include typo.type-small; }
     }
   }
 
@@ -57,5 +70,9 @@
     height: 35px;
     margin-top: -10px;
     z-index: 0;
+
+    @include vp-1024 { width: 210px; height: 32px; }
+    @include vp-768 { width: 180px; height: 28px; }
+    @include vp-360 { width: 160px; height: 24px; }
   }
 }

@@ -1,4 +1,5 @@
 @use '@/styles/_variables.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .ai-content__content {
   width: 41%;
@@ -6,7 +7,7 @@
 }
 
 .ai-content__content-subtitle {
-  font-size: 14px;
+  @include typo.type-small;
   letter-spacing: 1px;
   color: var(--ai-text-color, var(--color-text-primary));
   margin-bottom: 8px;
@@ -14,13 +15,12 @@
 
 .ai-content__content-title {
   font-family: $font-family-chango;
-  font-size: 40px;
-  line-height: 1.2;
+  @include typo.type-h2;
   color: var(--ai-heading-color, var(--color-text-heading));
 }
 
 .ai-content__content-paragraph {
-  font-size: 16px;
+  @include typo.type-body;
   font-family: $font-family-roboto;
   color: var(--ai-text-color, var(--color-text-primary));
 }
@@ -28,4 +28,13 @@
 .ai-content__content-small {
   width: 41%;
   position: relative;
+}
+
+// Responsive: make content full-width on mobile
+@media (max-width: 768px) {
+  .ai-content__content,
+  .ai-content__content-small {
+    width: 100%;
+    max-width: none;
+  }
 }

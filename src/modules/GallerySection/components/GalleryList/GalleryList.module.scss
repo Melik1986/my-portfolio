@@ -1,5 +1,6 @@
 @use '@/styles/_variables.scss' as *;
 @use '@/styles/_mixins.scss' as *;
+@use '@/styles/_typography.scss' as typo;
 
 .gallery-list {
   list-style: none;
@@ -242,7 +243,7 @@
 .gallery-item__title {
   text-transform: uppercase;
   color: var(--color-text-heading);
-  font: $font-h6;
+  @include typo.type-h3;
   margin-bottom: 10px;
   transition: all $carousel-transition-time;
   position: relative;
@@ -275,7 +276,7 @@
 }
 
 .gallery-item__name {
-  font: $font-p-x-small;
+  @include typo.type-small;
   text-transform: uppercase;
   transition: all $carousel-transition-time;
   margin-bottom: 10px;
@@ -283,7 +284,7 @@
 }
 
 .gallery-item__des {
-  font: $font-p;
+  @include typo.type-body;
   transition: all $carousel-transition-time;
   opacity: 1;
   display: block;
@@ -296,5 +297,42 @@
   }
   100% {
     transform: translateY(100%);
+  }
+}
+
+// Responsive adjustments for Gallery
+@include vp-1024 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 40px;
+      left: 40px;
+      max-width: 70%;
+    }
+  }
+}
+
+@include vp-768 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 28px;
+      left: 28px;
+      max-width: 80%;
+    }
+    &:not(:nth-child(1)):not(:nth-child(2)) .gallery-item__title {
+      @include typo.type-small;
+    }
+  }
+}
+
+@include vp-360 {
+  .gallery-item {
+    &:nth-child(1) .gallery-item__content,
+    &:nth-child(2) .gallery-item__content {
+      top: 20px;
+      left: 20px;
+      max-width: 86%;
+    }
   }
 }

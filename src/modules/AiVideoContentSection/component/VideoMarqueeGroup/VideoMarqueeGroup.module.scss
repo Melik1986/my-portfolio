@@ -1,14 +1,30 @@
+@use '@/styles/_mixins.scss' as *;
+
 .ai-content__horizontal-flex {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 26px;
   justify-content: flex-start;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   cursor: default;
+
+  @include vp-1304 { gap: 24px; }
+  @include vp-1024 { gap: 20px; }
+  @include vp-768 { gap: 16px; }
+  @include vp-360 { gap: 12px; }
 }
 
 .ai-content__overlay-anchor {
   position: relative;
   width: 100%;
+  padding: 0 1rem;
+  @include vp-1304 { padding: 0 0.85rem; }
+  @include vp-1024 { padding: 0 0.75rem; }
+  @include vp-768 { padding: 0 0.5rem; }
+}
+
+// Ensure ContentSection goes above group on mobile (uses shared AiContentSection classes)
+@include vp-768 {
+  .ai-content__horizontal { order: 2; }
 }

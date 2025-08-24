@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 ensureGSAPRegistered();
 
@@ -93,13 +94,21 @@ export function initCardDeckScroll(
         end: () => `+=${(items.length - 1) * 100}%`,
         scrub: 0.5,
         invalidateOnRefresh: true,
-        scroller: '#smooth-wrapper',
         markers: false,
-        onKill: () => mm.revert(),
       },
     });
 
     createCardAnimation(timeline, items, onCardActivate);
+
+    // ensure correct measurements after init
+    ScrollTrigger.refresh();
+
+    // cleanup for this media query
+    return () => {
+      if (timeline) {
+        timeline.kill();
+      }
+    };
   });
 
   // Планшеты и десктоп (768px и больше)
@@ -113,13 +122,21 @@ export function initCardDeckScroll(
         end: () => `+=${(items.length - 1) * 100}%`,
         scrub: 1,
         invalidateOnRefresh: true,
-        scroller: '#smooth-wrapper',
         markers: false,
-        onKill: () => mm.revert(),
       },
     });
 
     createCardAnimation(timeline, items, onCardActivate);
+
+    // ensure correct measurements after init
+    ScrollTrigger.refresh();
+
+    // cleanup for this media query
+    return () => {
+      if (timeline) {
+        timeline.kill();
+      }
+    };
   });
 
   return timeline!;
