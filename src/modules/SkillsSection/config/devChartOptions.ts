@@ -14,12 +14,12 @@ const getResponsiveConfig = (containerWidth: number) => {
   let barWidth: number;
   if (containerWidth < 420) {
     barWidth = Math.max(10, Math.min(16, containerWidth / 22));
-  } else if (containerWidth < 768) {
-    barWidth = Math.max(12, Math.min(22, containerWidth / 20));
+  } else if (containerWidth < 800) {
+    barWidth = Math.max(12, Math.min(20, containerWidth / 22));
   } else if (containerWidth < 1024) {
-    barWidth = Math.max(16, Math.min(28, containerWidth / 18));
+    barWidth = Math.max(16, Math.min(26, containerWidth / 18));
   } else {
-    barWidth = Math.max(18, Math.min(36, containerWidth / 16));
+    barWidth = Math.max(18, Math.min(34, containerWidth / 16));
   }
 
   const fontSize =
@@ -31,7 +31,7 @@ const getResponsiveConfig = (containerWidth: number) => {
           ? 11
           : 12;
 
-  const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 60 : 0;
+  const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 65 : 0;
 
   const barGap = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 8 : 12;
 
@@ -64,6 +64,7 @@ const getXAxisConfig = (config: { fontSize: number; labelRotation: number }) => 
     ...getAxisStyle().axisLabel,
     rotate: config.labelRotation,
     fontSize: config.fontSize,
+    interval: 0,
   },
 });
 
