@@ -18,6 +18,11 @@ body {
     background 0.3s;
 }
 
+/* Explicitly enforce dark body gradient when dark theme is active */
+html[data-theme='dark'] body {
+  background: var(--background-gradient-body);
+}
+
 // Глобальные стили скроллбара для всех элементов
 * {
   // WebKit scrollbar styles (Safari, Chrome)
@@ -94,13 +99,13 @@ summary:focus-visible,
 }
 
 // Subtle focus glow for common interactive controls (low-specificity)
-:where(button, input, select, textarea):focus-visible {
+::where(button, input, select, textarea):focus-visible {
   outline: none;
   box-shadow: var(--focus-ring-shadow);
 }
 
 // Subtle text glow for link-like interactive elements (low-specificity)
-:where(a, summary, [role='button'], [tabindex]):focus-visible {
+::where(a, summary, [role='button'], [tabindex]):focus-visible {
   outline: none;
   text-shadow: var(--focus-text-shadow);
 }
