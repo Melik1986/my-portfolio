@@ -37,8 +37,8 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
 
   return {
     ...getBaseChartStyles(),
-    /** Конфигурация легенды диаграммы */
-    legend: {
+    /** Конфигурация легенды диаграммы - отключаем для экранов до 768px */
+    legend: designWidth < RESPONSIVE_BREAKPOINTS.tablet ? { show: false } : {
       orient: 'horizontal',
       bottom: isTablet ? '2%' : '0%',
       left: 'center',

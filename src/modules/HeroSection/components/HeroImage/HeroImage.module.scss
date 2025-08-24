@@ -13,24 +13,20 @@
     justify-content: flex-end;
     z-index: 1;
 
-    @mixin vp-max($width) {
-      top: 80%;
-    }
-
-    @mixin vp-1440 {
+    @include vp-1440 {
       top: 75%;
     }
 
-    @mixin vp-1024 {
+    @include vp-1024 {
       top: 75%;
     }
 
-    @mixin vp-768 {
+    @include vp-768 {
       top: 80%;
     }
 
-    @mixin vp-360 {
-      top: 80%;
+    @include vp-375 {
+      top: 85.99%;
     }
   }
 

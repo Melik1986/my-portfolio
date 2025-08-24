@@ -27,14 +27,7 @@ const COMPANY_ICONS: ReadonlyArray<IconDef> = [
 function PreloaderContent(): JSX.Element {
   return (
     <div className={styles['preloader__content']}>
-      <SpriteIcon
-        className={styles['preloader__logo']}
-        name="whitemark"
-        sprite={SPRITE_PATH}
-        width={100}
-        height={100}
-        aria-hidden
-      />
+      <SpriteIcon name="logo" width={160} height={160} className={styles['preloader__logo']} />
       {COMPANY_ICONS.map(({ name, width, height }) => (
         <SpriteIcon
           key={name}

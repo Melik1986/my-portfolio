@@ -43,12 +43,13 @@
     flex-direction: column;
   }
   @include vp-768 {
-    min-height: auto;
+    min-height: unset;
     gap: 14px;
     height: 100%;
+    flex-direction: column;
   }
   @include vp-360 {
-    min-height: auto;
+    min-height: unset;
     gap: 12px;
   }
 }
@@ -83,6 +84,7 @@
     min-height: clamp(320px, 46vh, 520px);
   }
   @include vp-768 {
+    width: 100%;
     min-height: clamp(300px, 44vh, 500px);
   }
   @include vp-360 {
@@ -93,7 +95,8 @@
 .dev-skills-chart,
 .design-skills-chart {
   width: 100%;
-  height: clamp(280px, 40vh, 420px);
+  // Высоту графика подчиняем высоте обёртки, чтобы она не раздувала .chart-wrapper
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,6 +116,9 @@
   div[_echarts_instance_] {
     touch-action: pan-y;
     will-change: transform;
+    // Гарантируем, что внутренний контейнер ECharts не раздувает родителя
+    height: 100%;
+    max-height: 100%;
   }
   background: transparent;
   font-family: 'Poppins', sans-serif;
@@ -142,6 +148,7 @@
 @media (max-width: 900px) {
   .skills-charts__container {
     flex-direction: column;
+    flex-wrap: nowrap;
     gap: 15px;
   }
   .chart-wrapper {
@@ -152,7 +159,8 @@
   }
   .dev-skills-chart,
   .design-skills-chart {
-    height: clamp(260px, 38vh, 380px);
+    // На планшетах также не позволяем графикам выходить за пределы обёртки
+    height: 100%;
   }
 }
 
@@ -161,20 +169,25 @@
     gap: 10px;
   }
   .chart-wrapper {
-    min-height: clamp(260px, 80vw, 300px);
+    // Жёстко фиксируем высоту, чтобы исключить влияние vh и inline-стилей
+    min-height: 300px;
+    height: 300px;
+    max-height: 300px;
     min-width: 280px;
     padding: 10px;
   }
   .dev-skills-chart,
   .design-skills-chart {
-    height: clamp(240px, 36vh, 340px);
+    // Графики занимают доступную высоту обёртки
+    height: 100%;
     min-width: 250px;
   }
 }
 
 @media (max-width: 375px) {
   .chart-wrapper {
-    min-height: 300px;
-    height: auto;
+    // Дополнительно закрепляем ограничения на очень узких экранах
+    min-height: 260px;
+    height: 260px;
   }
 }
