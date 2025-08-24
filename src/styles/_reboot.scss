@@ -97,15 +97,3 @@ summary:focus-visible,
 [tabindex]:focus-visible {
   outline: none;
 }
-
-// Subtle focus glow for common interactive controls (low-specificity)
-:where(button, input, select, textarea):focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring-shadow);
-}
-
-// Subtle text glow for link-like interactive elements (low-specificity)
-:where(a, summary, [role='button'], [tabindex]):focus-visible {
-  outline: none;
-  text-shadow: var(--focus-text-shadow);
-}
