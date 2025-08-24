@@ -16,6 +16,7 @@ function createCardAnimation(
   timeline: gsap.core.Timeline,
   items: HTMLElement[],
   onProgressUpdate?: ElementAnimationCallback,
+  options?: { verticalOnly?: boolean },
 ): void {
   items.forEach((item, index) => {
     if (index === 0) return;
@@ -28,7 +29,7 @@ function createCardAnimation(
       scale: 0.9,
     });
 
-    const property = index <= 2 ? 'yPercent' : 'xPercent';
+    const property = options?.verticalOnly ? 'yPercent' : index <= 2 ? 'yPercent' : 'xPercent';
     timeline.to(
       item,
       {
@@ -85,6 +86,15 @@ export function initCardDeckScroll(
 
   // Мобильные устройства (до 768px)
   mm.add('(max-width: 767px)', () => {
+    // Переинициализируем позиции: все карточки движутся вертикально на мобилках
+    items.forEach((item, index) => {
+      if (index === 0) {
+        gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
+      } else {
+        gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
+      }
+    });
+
     timeline = gsap.timeline({
       id: 'card-deck-timeline-mobile',
       scrollTrigger: {
@@ -98,7 +108,7 @@ export function initCardDeckScroll(
       },
     });
 
-    createCardAnimation(timeline, items, onCardActivate);
+    createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
 
     // ensure correct measurements after init
     ScrollTrigger.refresh();
