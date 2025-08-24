@@ -32,9 +32,10 @@
       @include typo.type-h4;
     }
 
-    @include vp-360 {
+    @include vp-375 {
+      margin-left: -90px;
       max-width: 200px;
-      @include typo.type-small;
+      @include typo.type-body;
     }
   }
 
@@ -45,9 +46,15 @@
     margin-left: 40px;
     z-index: 3;
 
-    @include vp-1024 { margin-left: 24px; }
-    @include vp-768 { margin-left: 16px; }
-    @include vp-360 { margin-left: 10px; }
+    @include vp-1024 {
+      margin-left: 24px;
+    }
+    @include vp-768 {
+      margin-left: 16px;
+    }
+    @include vp-375 {
+      margin-left: -80px;
+    }
 
     span {
       font-family: $font-family-okinawa;
@@ -58,9 +65,15 @@
       z-index: 4;
       opacity: 0;
 
-      @include vp-1024 { @include typo.type-h4; }
-      @include vp-768 { @include typo.type-h4; }
-      @include vp-360 { @include typo.type-small; }
+      @include vp-1024 {
+        @include typo.type-h4;
+      }
+      @include vp-768 {
+        @include typo.type-h4;
+      }
+      @include vp-375 {
+        @include typo.type-small;
+      }
     }
   }
 
@@ -71,8 +84,17 @@
     margin-top: -10px;
     z-index: 0;
 
-    @include vp-1024 { width: 210px; height: 32px; }
-    @include vp-768 { width: 180px; height: 28px; }
-    @include vp-360 { width: 160px; height: 24px; }
+    @include vp-1024 {
+      width: 210px;
+      height: 32px;
+    }
+    @include vp-768 {
+      width: 180px;
+      height: 28px;
+    }
+    @include vp-375 {
+      width: 160px;
+      height: 24px;
+    }
   }
 }

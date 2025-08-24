@@ -24,6 +24,11 @@
     @include vp-768 {
       align-items: center;
     }
+
+    @include vp-375 {
+      padding: 0;
+      margin-top: 160px;
+    }
   }
 
   &__image {
@@ -42,9 +47,9 @@
         max-width: 180px;
         max-height: 64px;
       }
-      @include vp-360 {
-        max-width: 160px;
-        max-height: 56px;
+      @include vp-375 {
+        width: 360px;
+        height: 56px;
       }
     }
 
@@ -60,9 +65,10 @@
         max-width: 100px;
         max-height: 50px;
       }
-      @include vp-360 {
-        max-width: 90px;
-        max-height: 44px;
+      @include vp-375 {
+        width: 290px;
+        height: 44px;
+        margin-left: -10px;
       }
     }
 
@@ -79,9 +85,9 @@
         max-width: 180px;
         max-height: 64px;
       }
-      @include vp-360 {
-        max-width: 160px;
-        max-height: 56px;
+      @include vp-375 {
+        width: 360px;
+        height: 56px;
       }
     }
 
@@ -97,9 +103,9 @@
         max-width: 100px;
         max-height: 50px;
       }
-      @include vp-360 {
-        max-width: 90px;
-        max-height: 44px;
+      @include vp-375 {
+        width: 290px;
+        height: 44px;
       }
     }
   }
