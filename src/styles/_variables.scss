@@ -167,14 +167,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --gradient-accent: linear-gradient(45deg, #2c394c, #63dafc);
 
   /* Градиент для body */
-  --background-gradient-body: linear-gradient(
-    90deg,
-    rgba(29, 113, 157, 0.6) 0%,
-    rgba(44, 57, 76, 0.8) 25%,
-    rgba(2, 0, 8, 1) 50%,
-    rgba(44, 57, 76, 0.8) 75%,
-    rgba(29, 113, 157, 0.6) 100%
-  );
+  --background-gradient-body: linear-gradient(180deg, #5A5A5A 0%, #2C2C2C 50%, #0F0F0F 100%);
 
   /* Специфичные для секций */
   --hero-left-bg: var(--color-bg-primary);
