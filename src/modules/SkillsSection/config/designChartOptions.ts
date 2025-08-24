@@ -14,6 +14,7 @@ function readCssVar(name: string, fallback: string): string {
  * @param designHeight - высота контейнера диаграммы
  * @returns объект конфигурации ECharts для круговой диаграммы
  */
+// eslint-disable-next-line max-lines-per-function
 export const getDesignChartOptions = (designWidth: number, designHeight: number): EChartsOption => {
   /** Вычисление адаптивного радиуса диаграммы */
   const minDimension = Math.min(designWidth, designHeight);

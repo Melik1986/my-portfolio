@@ -114,7 +114,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --ai-right-bg: var(--color-bg-card);
 
   /* Цвета логотипа */
-  --logo-color: #ffffff; /* белый в тёмной теме */
+  --logo-color: #292929; /* белый в тёмной теме */
   --logo-color-hover: var(--color-accent-secondary);
 
   /* Фокусные подсветки (умеренные для глобальных элементов) */
@@ -168,6 +168,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
   /* Градиент для body */
   --background-gradient-body: linear-gradient(180deg, #5A5A5A 0%, #2C2C2C 50%, #0F0F0F 100%);
+  --background-body: #0f1220;
 
   /* Специфичные для секций */
   --hero-left-bg: var(--color-bg-primary);
@@ -193,7 +194,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --ai-right-bg: var(--color-bg-card);
 
   /* Цвета логотипа */
-  --logo-color: var(--color-accent-primary);
+  --logo-color: #ffffff;
   --logo-color-hover: var(--color-accent-secondary);
 
   /* Фокусные подсветки (умеренные для глобальных элементов) */
@@ -243,10 +244,10 @@ $scale-hover: 1.08;
 $rotate-card: 8deg;
 
 // Preloader
-$preloader-bg: $color-bg-dark;
+$preloader-bg: #0f1220;
 $preloader-progress-bg: rgba(255, 255, 255, 0.2);
 $preloader-bar-color: $color-accent;
-$progress-duration: 10s;
+$progress-duration: 15s;
 
 // Carousel
 $carousel-left-position: 15%;

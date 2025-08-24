@@ -14,23 +14,33 @@ const AboutAnimationLazy = lazy(() =>
  * Содержимое текста "Обо мне"
  * Содержит основной текст описания разработчика
  */
-function AboutText() {
+function AboutTextDesktop() {
   return (
-    <>
+    <span className={styles['about__text-desktop']}>
       Hi, I&rsquo;m Melik&nbsp;&mdash; a&nbsp;results-driven frontend developer and UI/UX designer
-      with a&nbsp;strong commitment to&nbsp;creating modern, high-performance websites. After moving
-      to&nbsp;Germany, I&nbsp;transformed my&nbsp;career, leveraging my&nbsp;technical background
-      to&nbsp;master web development. Today, I&nbsp;specialize in&nbsp;building responsive,
-      user-centric digital experiences using HTML, CSS, JavaScript, and React. My&nbsp;value goes
-      beyond just writing code&nbsp;&mdash;&nbsp;I&nbsp;combine technical skills with
-      a&nbsp;design-driven mindset to&nbsp;deliver clean, intuitive interfaces that not only look
-      great but also drive engagement. I&rsquo;m passionate about solving real-world problems,
-      optimizing user experiences, and ensuring every project is&nbsp;efficient and scalable.
-      Successfully transitioned from a&nbsp;technical industry to&nbsp;web development, continuously
-      upgrading my&nbsp;skills through professional webinars and courses. As&nbsp;a&nbsp;dedicated
-      professional and a&nbsp;proud father, I&nbsp;know the value of&nbsp;responsibility,
-      persistence, and inspiring those around&nbsp;me.
-    </>
+      with a&nbsp;strong focus on&nbsp;creating modern, high-performance websites. After moving
+      to&nbsp;Germany, I&nbsp;made a&nbsp;bold career transition, leveraging my&nbsp;technical
+      background to&nbsp;fully master web development. Today, I&nbsp;specialize in&nbsp;building
+      responsive, user-centric digital experiences using HTML, CSS, JavaScript, and React.
+      My&nbsp;value goes beyond coding&nbsp;&mdash; I&nbsp;combine technical expertise with
+      a&nbsp;design-driven mindset, delivering clean, intuitive interfaces that don&rsquo;t just
+      look good but also engage users and achieve business goals. Passionate about solving real
+      problems and optimizing user experiences, I&nbsp;ensure every project is&nbsp;efficient,
+      scalable, and meaningful. As&nbsp;a&nbsp;dedicated professional and a&nbsp;proud father,
+      I&nbsp;bring responsibility, persistence, and inspiration into everything I&nbsp;create.
+    </span>
+  );
+}
+
+function AboutTextMobile() {
+  return (
+    <span className={styles['about__text-mobile']}>
+      Hi, I&rsquo;m Melik&nbsp;&mdash; a&nbsp;frontend developer and UI/UX designer focused
+      on&nbsp;building modern, user-centric websites. I&nbsp;combine clean code with thoughtful
+      design to&nbsp;create responsive, engaging experiences. Passionate about solving real problems
+      and delivering value, I&nbsp;bring both technical skills and a&nbsp;creative mindset
+      to&nbsp;every project.
+    </span>
   );
 }
 
@@ -57,7 +67,8 @@ export function AboutContent() {
         data-ease="power2.out"
         data-delay="0.5"
       >
-        <AboutText />
+        <AboutTextDesktop />
+        <AboutTextMobile />
       </p>
       <div
         className={styles['about__animation']}

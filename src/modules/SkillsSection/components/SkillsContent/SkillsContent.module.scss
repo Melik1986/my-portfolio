@@ -12,9 +12,20 @@
     color: var(--skills-heading-color, var(--color-text-heading));
     @include typo.type-h2;
 
-    @include vp-1304 { max-width: 520px; }
-    @include vp-1024 { max-width: 420px; }
-    @include vp-768 { max-width: 360px; }
-    @include vp-360 { max-width: 300px; }
+    @include vp-1304 {
+      max-width: 520px;
+    }
+    @include vp-1024 {
+      max-width: 420px;
+    }
+    @include vp-768 {
+      max-width: 360px;
+      @include typo.type-h3;
+    }
+    @include vp-375 {
+      max-width: 300px;
+      @include typo.type-h4;
+      margin-bottom: 0;
+    }
   }
 }

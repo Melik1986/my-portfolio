@@ -10,9 +10,15 @@
   justify-content: center;
   min-height: 500px;
 
-  @include vp-1024 { min-height: 460px; }
-  @include vp-768 { min-height: 420px; }
-  @include vp-360 { min-height: 380px; }
+  @include vp-1024 {
+    min-height: 460px;
+  }
+  @include vp-768 {
+    min-height: 420px;
+  }
+  @include vp-360 {
+    min-height: 380px;
+  }
 }
 
 .skills-charts__container {
@@ -31,9 +37,20 @@
   touch-action: pan-y;
   will-change: transform;
 
-  @include vp-1024 { min-height: 460px; gap: 16px; flex-direction: column; }
-  @include vp-768 { min-height: auto; gap: 14px; height: 100%; }
-  @include vp-360 { min-height: auto; gap: 12px; }
+  @include vp-1024 {
+    min-height: 460px;
+    gap: 16px;
+    flex-direction: column;
+  }
+  @include vp-768 {
+    min-height: auto;
+    gap: 14px;
+    height: 100%;
+  }
+  @include vp-360 {
+    min-height: auto;
+    gap: 12px;
+  }
 }
 
 .chart-wrapper {
@@ -58,10 +75,19 @@
   will-change: transform;
   opacity: 0;
 
-  @include vp-1304 { min-height: clamp(340px, 48vh, 560px); }
-  @include vp-1024 { width: 100%; min-height: clamp(320px, 46vh, 520px); }
-  @include vp-768 { min-height: clamp(300px, 44vh, 500px); }
-  @include vp-360 { min-height: clamp(260px, 42vh, 420px); }
+  @include vp-1304 {
+    min-height: clamp(340px, 48vh, 560px);
+  }
+  @include vp-1024 {
+    width: 100%;
+    min-height: clamp(320px, 46vh, 520px);
+  }
+  @include vp-768 {
+    min-height: clamp(300px, 44vh, 500px);
+  }
+  @include vp-360 {
+    min-height: clamp(260px, 42vh, 420px);
+  }
 }
 
 .dev-skills-chart,
@@ -135,7 +161,7 @@
     gap: 10px;
   }
   .chart-wrapper {
-    min-height: clamp(260px, 42vh, 420px);
+    min-height: clamp(260px, 80vw, 300px);
     min-width: 280px;
     padding: 10px;
   }
@@ -143,5 +169,12 @@
   .design-skills-chart {
     height: clamp(240px, 36vh, 340px);
     min-width: 250px;
+  }
+}
+
+@media (max-width: 375px) {
+  .chart-wrapper {
+    min-height: 300px;
+    height: auto;
   }
 }

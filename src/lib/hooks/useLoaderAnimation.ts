@@ -17,7 +17,12 @@ export function useLoaderAnimation(config?: PreloaderConfig): LoaderHookResult {
     const el = document.querySelector(progressSelector) as HTMLElement | null;
     if (!el) return;
 
+    let done = false;
+    let timerId: number | null = null;
+
     const complete = () => {
+      if (done) return;
+      done = true;
       try {
         const target = el.ownerDocument ?? document;
         target.dispatchEvent(new CustomEvent('preloader:complete'));
@@ -26,18 +31,30 @@ export function useLoaderAnimation(config?: PreloaderConfig): LoaderHookResult {
       }
     };
 
-    // Ждем окончания fade-out корневого контейнера прелоадера
-    const root = (el.closest('[data-preloader-root]') as HTMLElement | null) ?? el;
+    // Слушаем окончание анимации прогресс-бара (без привязки к имени анимации)
+    const handleAnimationEnd = () => complete();
+    el.addEventListener('animationend', handleAnimationEnd as EventListener, { once: true });
 
-    const handleRootEnd = (e: AnimationEvent) => {
-      if (e.animationName !== 'loaderFadeIn') return;
-      complete();
+    // Надёжный fallback на случай, если CSS-анимация не завершится или отсутствует
+    // Вычисляем по фактической длительности/задержке анимации элемента
+    const toMs = (v: string) => {
+      const n = parseFloat(v);
+      if (Number.isNaN(n)) return 0;
+      return v.trim().endsWith('ms') ? n : n * 1000;
     };
 
-    root.addEventListener('animationend', handleRootEnd as EventListener, { once: true });
+    const cs = window.getComputedStyle(el);
+    const durs = cs.animationDuration.split(',').map((s) => toMs(s.trim()));
+    const dels = cs.animationDelay.split(',').map((s) => toMs(s.trim()));
+    const maxDur = Math.max(0, ...durs);
+    const maxDel = Math.max(0, ...dels);
+    const fallbackMs = Math.max(maxDur + maxDel + 800, 4000); // +буфер 0.8s
+
+    timerId = window.setTimeout(complete, fallbackMs);
 
     return () => {
-      root.removeEventListener('animationend', handleRootEnd as EventListener);
+      el.removeEventListener('animationend', handleAnimationEnd as EventListener);
+      if (timerId) window.clearTimeout(timerId);
     };
   }, [progressSelector]);
 

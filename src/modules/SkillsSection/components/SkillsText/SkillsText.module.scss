@@ -9,9 +9,30 @@
     line-height: 1.2;
     font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
     letter-spacing: 0.05rem;
+    text-wrap: balance;
     will-change: transform;
     opacity: 0;
     color: var(--skills-text-color, var(--color-text-primary));
     @include typo.type-body;
+
+    @include vp-375 {
+      margin: 0;
+    }
+
+    &-desktop {
+      display: block;
+
+      @include vp-768 {
+        display: none;
+      }
+    }
+
+    &-mobile {
+      display: none;
+
+      @include vp-768 {
+        display: block;
+      }
+    }
   }
 }

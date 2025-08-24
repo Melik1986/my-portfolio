@@ -153,7 +153,7 @@ export class ParticleWaveController {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
     if (height < 60) {
-      const derived = Math.round(width / 3); // ~ 16:5 ratio
+      const derived = Math.round(width / 8); // ~ 16:5 ratio
       height = Math.max(derived, 160);
     }
 
@@ -255,7 +255,7 @@ export class ParticleWaveController {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
     if (height < 60) {
-      const derived = Math.round(width / 3);
+      const derived = Math.round(width / 4);
       height = Math.max(derived, 160);
     }
     renderer.setSize(width, height);

@@ -4,12 +4,19 @@ import { getBaseChartStyles, getTooltipStyle, getAxisStyle } from './chartStyles
 
 import * as echarts from 'echarts';
 
+interface ResponsiveConfig {
+  barWidth: number;
+  fontSize: number;
+  labelRotation: number;
+  barGap: number;
+}
+
 /**
  * Создает адаптивную конфигурацию для столбчатой диаграммы
  * @param containerWidth - ширина контейнера диаграммы
  * @returns объект с адаптивными настройками
  */
-const getResponsiveConfig = (containerWidth: number) => {
+const getResponsiveConfig = (containerWidth: number): ResponsiveConfig => {
   // Более агрессивное сжатие для узких экранов, чтобы влезало на 768px
   let barWidth: number;
   if (containerWidth < 420) {
@@ -115,13 +122,13 @@ const getSeriesConfig = (barWidth: number, barGap: number) => [
  * @returns объект конфигурации ECharts для столбчатой диаграммы
  */
 export const getDevChartOptions = (containerWidth: number) => {
-  const config = getResponsiveConfig(containerWidth);
+  const config: ResponsiveConfig = getResponsiveConfig(containerWidth);
 
   return {
     ...getBaseChartStyles(),
     tooltip: getTooltipConfig(),
     xAxis: getXAxisConfig(config),
     yAxis: getYAxisConfig(),
-    series: getSeriesConfig(config.barWidth, (config as any).barGap ?? 12),
+    series: getSeriesConfig(config.barWidth, config.barGap),
   } as echarts.EChartsOption;
 };

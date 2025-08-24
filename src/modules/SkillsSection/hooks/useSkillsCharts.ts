@@ -66,6 +66,7 @@ const validateChartElements = () => {
 /**
  * Создает экземпляры графиков
  */
+// eslint-disable-next-line max-lines-per-function
 const createChartInstances = (
   devChartRef: { current: echarts.ECharts | null },
   designChartRef: { current: echarts.ECharts | null },
@@ -154,6 +155,7 @@ const configureChartOptions = (
  * Инициализирует и управляет ECharts графиками для отображения навыков
  * @returns объект с методами управления графиками
  */
+// eslint-disable-next-line max-lines-per-function
 export const useSkillsCharts = () => {
   const devChartRef = useRef<echarts.ECharts | null>(null);
   const designChartRef = useRef<echarts.ECharts | null>(null);

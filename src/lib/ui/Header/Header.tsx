@@ -54,6 +54,7 @@ const navigateToSection = (
 /**
  * Компонент шапки сайта
  */
+// eslint-disable-next-line max-lines-per-function
 export function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const elementTimelineRef = useRef<gsap.core.Timeline | null>(null);

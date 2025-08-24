@@ -18,9 +18,8 @@ body {
     background 0.3s;
 }
 
-/* Explicitly enforce dark body gradient when dark theme is active */
-html[data-theme='dark'] body {
-  background: var(--background-gradient-body);
+:root[data-theme='dark'] body {
+  background: var(--background-body);
 }
 
 // Глобальные стили скроллбара для всех элементов

@@ -481,6 +481,7 @@ export const useAvatar = () => {
     updateSize(container, scene, assets, calculateScale);
   }, [updateSize, calculateScale]);
 
+  // eslint-disable-next-line max-lines-per-function
   useEffect(() => {
     const container = refs.current.container;
     if (!container) return;

@@ -10,6 +10,15 @@
     will-change: transform;
     opacity: 0;
     color: var(--about-heading-color, var(--color-text-heading));
+
+    @include vp-768 {
+      @include typo.type-h3;
+    }
+
+    @include vp-375 {
+      @include typo.type-h4;
+      margin-bottom: 0;
+    }
   }
 
   &__text {
@@ -17,9 +26,31 @@
     font-family: $font-family-roboto;
     @include typo.type-body;
     letter-spacing: 0.05rem;
+    line-height: 1.2;
+    text-wrap: balance;
     will-change: transform;
     opacity: 0;
     color: var(--about-text-color, var(--color-text-primary));
+
+    @include vp-375 {
+      margin: 0;
+    }
+
+    &-desktop {
+      display: block;
+
+      @include vp-768 {
+        display: none;
+      }
+    }
+    
+    &-mobile {
+      display: none;
+
+      @include vp-768 {
+        display: block;
+      }
+    }
   }
 
   &__animation {
