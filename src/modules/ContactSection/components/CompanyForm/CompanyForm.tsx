@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { CompanyFormFields } from '../FormFields/CompanyFormFields';
-import { SocialLinks } from '@/lib/ui/SocialLinks';
+import { SocialLinks } from '@/lib/ui';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
 
 import formStyles from '../ContactForm/ContactForm.module.scss';
@@ -17,12 +17,8 @@ interface CompanyFormViewProps {
   formRef: React.RefObject<HTMLFormElement | null>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   formData: CompanyFormData;
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  handleInputBlur: (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleInputBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   fieldErrors: Record<string, string>;
   onToggleToClient: () => void;
 }

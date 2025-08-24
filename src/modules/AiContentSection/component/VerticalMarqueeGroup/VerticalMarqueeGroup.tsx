@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { VerticalMarquee } from '../VerticalMarquee/VerticalMarquee';
 import styles from './VerticalMarqueeGroup.module.scss';
-import { MagnifierCursor } from '@/lib/ui/MagnifierCursor';
+import { MagnifierCursor } from '@/lib/ui';
 
 interface VerticalMarqueeGroupProps {
   columns: string[][];

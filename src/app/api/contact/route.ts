@@ -52,9 +52,7 @@ function ok() {
 function isClientBody(b: unknown): b is ClientPayload {
   if (typeof b !== 'object' || b === null) return false;
   const x = b as Record<string, unknown>;
-  return (
-    x.type === 'client' && typeof x.userName === 'string' && typeof x.userEmail === 'string'
-  );
+  return x.type === 'client' && typeof x.userName === 'string' && typeof x.userEmail === 'string';
 }
 
 function isCompanyBody(b: unknown): b is CompanyPayload {
@@ -141,9 +139,9 @@ export async function POST(req: NextRequest) {
     if ('error' in payload) return badRequest(payload.error);
 
     // В режиме разработки с тестовыми SMTP данными - имитируем отправку
-    const isDevelopment = process.env.NODE_ENV === 'development' && 
-      process.env.SMTP_USER === 'your-email@gmail.com';
-    
+    const isDevelopment =
+      process.env.NODE_ENV === 'development' && process.env.SMTP_USER === 'your-email@gmail.com';
+
     if (isDevelopment) {
       console.log('[CONTACT_API] Development mode - simulating email send');
       console.log('[CONTACT_API] Payload:', JSON.stringify(payload, null, 2));

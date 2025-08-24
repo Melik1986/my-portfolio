@@ -166,15 +166,23 @@ export const useSkillsCharts = () => {
     // Убираем автоматическую инициализацию - она будет вызываться из useChartsVisibility
     // initializeCharts();
 
-    const handleResize = () => resizeCharts(devChartRef.current, designChartRef.current);
-    window.addEventListener('resize', handleResize);
+    let rafId: number | null = null;
+    const onResize = () => {
+      if (rafId != null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        resizeCharts(devChartRef.current, designChartRef.current);
+        rafId = null;
+      });
+    };
+    window.addEventListener('resize', onResize);
 
     // Сохраняем текущие значения ref в локальные переменные
     const currentDevChart = devChartRef.current;
     const currentDesignChart = designChartRef.current;
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', onResize);
+      if (rafId != null) cancelAnimationFrame(rafId);
       if (currentDevChart) currentDevChart.dispose();
       if (currentDesignChart) currentDesignChart.dispose();
     };

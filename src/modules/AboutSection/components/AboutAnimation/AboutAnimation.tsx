@@ -82,16 +82,23 @@ export function AboutAnimation() {
 
     const { onResize, onMouseMove, onTouchMove, onVisibility } = handlers;
 
-    window.addEventListener('resize', onResize, { passive: true });
+    let rafId = 0;
+    const onResizeFrame = (): void => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => onResize());
+    };
+
+    window.addEventListener('resize', onResizeFrame, { passive: true });
     container.addEventListener('mousemove', onMouseMove as EventListener, { passive: true });
     container.addEventListener('touchmove', onTouchMove as EventListener, { passive: true });
     document.addEventListener('visibilitychange', onVisibility as EventListener);
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onResizeFrame);
       container.removeEventListener('mousemove', onMouseMove as EventListener);
       container.removeEventListener('touchmove', onTouchMove as EventListener);
       document.removeEventListener('visibilitychange', onVisibility as EventListener);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [isInitialized, createHandlers]);
 

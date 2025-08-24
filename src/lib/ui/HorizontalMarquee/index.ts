@@ -1,0 +1,1 @@
+export { HorizontalMarquee } from './HorizontalMarquee';

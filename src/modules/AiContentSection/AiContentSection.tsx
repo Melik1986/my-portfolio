@@ -32,12 +32,11 @@ export function AiContentSection({
       >
         <div className={styles['ai-content__wrapper']}>
           <div
-            className={`${styles['ai-content__horizontal']} 
-          data-animation="zoom-in"
-          data-duration="1.5"
-          data-ease="back.out(1.7)"
-          data-delay="0.2"
-          ${styles['ai-content__horizontal-flex']}`}
+            className={`${styles['ai-content__horizontal']} ${styles['ai-content__horizontal-flex']}`}
+            data-animation="zoom-in"
+            data-duration="1.5"
+            data-ease="back.out(1.7)"
+            data-delay="0.2"
           >
             <VerticalMarqueeGroup
               columns={

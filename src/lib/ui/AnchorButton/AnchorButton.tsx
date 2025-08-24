@@ -2,7 +2,7 @@
 
 import React, { useCallback, forwardRef } from 'react';
 import { ScrollToTopButtonProps } from '@/lib/types/btn.types';
-import { Logo } from '@/lib/ui/Logo/logo';
+import { Logo } from '@/lib/ui';
 import styles from './AnchorBtn.module.scss';
 
 export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps>(

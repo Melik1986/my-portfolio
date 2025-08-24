@@ -6,6 +6,8 @@ import AppThemeProvider from './ThemeProvider';
 import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
+import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
+
 
 // Локальные шрифты
 const chango = localFont({
@@ -147,7 +149,10 @@ export default function RootLayout({
           <main className="portfolio" id="smooth-wrapper">
             <div className="portfolio__section" id="smooth-content">
               <Container>
-                <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+                <ScrollSmootherProvider>
+                  <GlobalPreloader />
+                  {children}
+                </ScrollSmootherProvider>
               </Container>
             </div>
             <AnchorButton />

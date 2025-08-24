@@ -1,6 +1,6 @@
 'use client';
 
-import { SpriteIcon } from '@/lib/ui/SpriteIcon/SpriteIcon';
+import { SpriteIcon } from '@/lib/ui';
 import { useRef, useEffect } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroContentRight.module.scss';
@@ -9,9 +9,22 @@ function HeroHeading() {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const tl = createElementTimeline(el);
+    const start = () => tl.play();
+    const preloaderRoot = document.querySelector('[data-preloader-root]');
+
+    if (preloaderRoot) {
+      document.addEventListener('preloader:complete', start as EventListener, { once: true });
+    } else {
+      start();
     }
+
+    return () => {
+      document.removeEventListener('preloader:complete', start as EventListener);
+    };
   }, []);
 
   return (
@@ -32,9 +45,22 @@ function HeroParagraph() {
   const containerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const tl = createElementTimeline(el);
+    const start = () => tl.play();
+    const preloaderRoot = document.querySelector('[data-preloader-root]');
+
+    if (preloaderRoot) {
+      document.addEventListener('preloader:complete', start as EventListener, { once: true });
+    } else {
+      start();
     }
+
+    return () => {
+      document.removeEventListener('preloader:complete', start as EventListener);
+    };
   }, []);
 
   return (

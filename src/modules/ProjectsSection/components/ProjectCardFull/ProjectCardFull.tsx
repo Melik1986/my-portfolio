@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectCardFull.module.scss';
-import { GlassCard } from '@/lib/ui/GlassCard';
+import { GlassCard } from '@/lib/ui';
 
 interface ProjectCardFullscreenProps {
   project: ProjectData;

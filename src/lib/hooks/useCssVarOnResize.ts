@@ -25,16 +25,27 @@ export function useCssVarOnResize<T extends HTMLElement>(
 
     let ro: ResizeObserver | undefined;
     let detach: (() => void) | undefined;
+    let rafId: number | null = null;
 
     // Безопасно получаем объект окна для текущего документа
     const win: Window | null =
       el.ownerDocument?.defaultView ?? (typeof window !== 'undefined' ? window : null);
 
+    // Планируем обновление через rAF, чтобы избежать цикла ResizeObserver
+    const schedule = () => {
+      if (!win) return;
+      if (rafId != null) win.cancelAnimationFrame(rafId);
+      rafId = win.requestAnimationFrame(() => {
+        setVar();
+        rafId = null;
+      });
+    };
+
     if (win && 'ResizeObserver' in win && win.ResizeObserver) {
-      ro = new (win.ResizeObserver as typeof ResizeObserver)(() => setVar());
+      ro = new (win.ResizeObserver as typeof ResizeObserver)(() => schedule());
       ro?.observe(el);
     } else if (win && typeof win.addEventListener === 'function') {
-      const onResize = () => setVar();
+      const onResize = () => schedule();
       win.addEventListener('resize', onResize);
       detach = () => {
         if (win && typeof win.removeEventListener === 'function') {
@@ -44,6 +55,9 @@ export function useCssVarOnResize<T extends HTMLElement>(
     }
 
     return () => {
+      if (rafId != null && win) {
+        win.cancelAnimationFrame(rafId);
+      }
       ro?.disconnect();
       detach?.();
     };

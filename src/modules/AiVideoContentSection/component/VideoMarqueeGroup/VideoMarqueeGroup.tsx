@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { VideoMarqueeRow } from '../VideoMarqueeRow/VideoMarqueeRow';
 import styles from './VideoMarqueeGroup.module.scss';
-import { MagnifierCursor } from '@/lib/ui/MagnifierCursor';
+import { MagnifierCursor } from '@/lib/ui';
 
 interface VideoMarqueeGroupProps {
   rows: string[][];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputField } from '@/lib/ui/InputField';
+import { InputField } from '@/lib/ui';
 import type { CompanyFormFieldsProps, CompanyFieldConfig } from '../../types';
 import formStyles from '../ContactForm/ContactForm.module.scss';
 

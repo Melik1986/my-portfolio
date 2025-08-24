@@ -6,9 +6,9 @@ import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
 import type { ScrollSmootherInstance } from '@/lib/gsap/hooks/useScrollSmoother';
 import { animationController } from '@/modules/AnimatedCardSection/core/AnimationController';
-import { Logo } from '@/lib/ui/Logo/logo';
-import { Navigation } from '@/lib/ui/Navigation/Navigation';
-import { ContactButton } from '@/lib/ui/Button/ContactButton';
+import { Logo } from '@/lib/ui';
+import { Navigation } from '@/lib/ui';
+import { ContactButton } from '@/lib/ui';
 import styles from './header.module.scss';
 
 /**
@@ -23,7 +23,7 @@ const navigateToSection = (
     | null,
 ) => {
   console.log('🔍 Navigation attempt:', { sectionId, isReady });
-  
+
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
   console.log('📍 Card index for section:', cardIndex);
 
@@ -60,10 +60,23 @@ export function Header() {
   const { scrollTo, isReady, smoother } = useScrollSmoother();
 
   useEffect(() => {
-    if (headerRef.current) {
-      elementTimelineRef.current = createElementTimeline(headerRef.current);
-      elementTimelineRef.current?.play();
+    if (!headerRef.current) return;
+
+    const tl = createElementTimeline(headerRef.current);
+    elementTimelineRef.current = tl;
+
+    const start = () => elementTimelineRef.current?.play();
+    const preloaderRoot = document.querySelector('[data-preloader-root]');
+
+    if (preloaderRoot) {
+      document.addEventListener('preloader:complete', start as EventListener, { once: true });
+    } else {
+      start();
     }
+
+    return () => {
+      document.removeEventListener('preloader:complete', start as EventListener);
+    };
   }, []);
 
   const handleNavigate = (sectionId: string) => {

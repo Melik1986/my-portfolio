@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAvatar } from '../../hooks/useAvatar';
-import { GlassCard } from '@/lib/ui/GlassCard';
+import { GlassCard } from '@/lib/ui';
 import styles from './Avatar.module.scss';
 
 function useAvatarLoading(container: HTMLDivElement | null) {

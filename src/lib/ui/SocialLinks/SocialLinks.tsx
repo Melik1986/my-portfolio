@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpriteIcon } from '@/lib/ui/SpriteIcon';
+import { SpriteIcon } from '@/lib/ui';
 import type { SocialLink, SocialLinksProps } from '@/lib/types/types.index';
 import styles from './SocialLinks.module.scss';
 

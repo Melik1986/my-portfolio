@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpriteIcon } from '@/lib/ui/SpriteIcon';
+import { SpriteIcon } from '@/lib/ui';
 import styles from './GalleryNavigation.module.scss';
 
 interface GalleryNavigationProps {

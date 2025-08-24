@@ -19,9 +19,22 @@ export function HeroLetters() {
   const deferredLetters = useDeferredValue(letters);
 
   useEffect(() => {
-    if (containerRef.current) {
-      createElementTimeline(containerRef.current);
+    const el = containerRef.current;
+    if (!el) return;
+
+    const tl = createElementTimeline(el);
+    const start = () => tl.play();
+    const preloaderRoot = document.querySelector('[data-preloader-root]');
+
+    if (preloaderRoot) {
+      document.addEventListener('preloader:complete', start as EventListener, { once: true });
+    } else {
+      start();
     }
+
+    return () => {
+      document.removeEventListener('preloader:complete', start as EventListener);
+    };
   }, [deferredLetters]); // зависимость от deferred значения
 
   return (

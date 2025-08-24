@@ -1,5 +1,5 @@
-import React from 'react';
-import { SpriteIcon } from '@/lib/ui/SpriteIcon';
+import React, { type ReactElement } from 'react';
+import { SpriteIcon } from '@/lib/ui';
 import type { InputFieldProps, ControlBaseProps, FieldVM, Classes } from '@/lib/types/types.index';
 import styles from './InputField.module.scss';
 
@@ -64,7 +64,7 @@ function FieldLayout(props: {
   errorCls: string;
   errorMessage?: string;
   showError: boolean;
-}): React.ReactElement {
+}): ReactElement {
   const { wrapper, inner, iconId, iconCls, control, errorId, errorCls, errorMessage, showError } =
     props;
   return (
@@ -90,7 +90,7 @@ function renderControl(
     type: string;
     aria: { 'aria-describedby'?: string; 'aria-invalid': boolean };
   } & ControlBaseProps,
-): React.ReactElement {
+): ReactElement {
   const { isTextarea, type, aria, ...p } = args;
   return isTextarea ? (
     <textarea {...p} {...aria} rows={4} />
@@ -151,7 +151,7 @@ function buildViewModel(p: InputFieldProps): FieldVM {
   };
 }
 
-function present(vm: FieldVM): React.ReactElement {
+function present(vm: FieldVM): ReactElement {
   const { wrapper, inner, iconId, iconCls, control, errorId, errorCls, errorMessage, showError } =
     vm;
   return (
@@ -169,6 +169,6 @@ function present(vm: FieldVM): React.ReactElement {
   );
 }
 
-export function InputField(props: InputFieldProps): React.ReactElement {
+export function InputField(props: InputFieldProps): ReactElement {
   return present(buildViewModel(props));
 }

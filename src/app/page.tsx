@@ -1,5 +1,5 @@
 // серверный компонент
-import { Header } from '@/lib/ui/Header/Header';
+import { Header } from '@/lib/ui';
 import { AnimatedCardSection } from '@/modules/AnimatedCardSection/AnimatedCardSection';
 import { HeroSection } from '@/modules/HeroSection/HeroSection';
 import { AboutSection } from '@/modules/AboutSection/AboutSection';

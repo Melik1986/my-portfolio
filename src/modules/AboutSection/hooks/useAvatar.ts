@@ -501,9 +501,14 @@ export const useAvatar = () => {
       const mouseMoveHandler = (event: MouseEvent) =>
         handleMouseMove(event, container, sceneData, assetsRef);
       container.addEventListener('mousemove', mouseMoveHandler);
-      window.addEventListener('resize', handleResize);
+      let rafId = 0;
+      const onResizeFrame = (): void => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => handleResize());
+      };
+      window.addEventListener('resize', onResizeFrame);
 
-      const resizeObserver = new ResizeObserver(handleResize);
+      const resizeObserver = new ResizeObserver(onResizeFrame);
       resizeObserver.observe(container);
 
       refs.current.renderer = renderer;
@@ -515,12 +520,13 @@ export const useAvatar = () => {
       animate();
 
       return () => {
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('resize', onResizeFrame);
         if (container) {
           container.removeEventListener('mousedown', handleMouseClickWrapper);
           container.removeEventListener('mousemove', mouseMoveHandler);
         }
         resizeObserver.disconnect();
+        if (rafId) cancelAnimationFrame(rafId);
         cleanup();
       };
     } catch (error) {
