@@ -39,8 +39,10 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 
-  @include vp-1024 { width: 720px; height: 520px; }
-  @include vp-768 { width: 100%; height: auto; border-radius: 20px; }
+  // around tablet widths (~800-1024px) make it smaller
+  @include vp-1304 { width: 780px; height: 520px; }
+  @include vp-1024 { width: 680px; height: 480px; }
+  @include vp-768 { width: 96%; height: auto; border-radius: 20px; }
   @include vp-360 { width: 100%; height: auto; border-radius: 16px; }
 }
 
