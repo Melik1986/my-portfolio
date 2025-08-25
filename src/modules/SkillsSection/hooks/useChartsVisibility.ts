@@ -47,7 +47,7 @@ function useStartChartsOnVisible(
 
 export function useChartsVisibility() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { initializeCharts, playAnimation, hideCharts, resetAnimation, resizeCharts } = useSkillsCharts();
+  const { initializeCharts, playAnimation, resetAnimation, resizeCharts } = useSkillsCharts();
   const chartsInitializedRef = useRef(false);
 
   const handleHideCharts = useCallback(() => {
