@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -29,6 +29,10 @@
     "three": "^0.160.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.4.2",
     "@playwright/test": "^1.55.0",
@@ -45,6 +49,7 @@
     "@types/three": "^0.154.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
+    "babel-jest": "^30.0.5",
     "default-passive-events": "^4.0.0",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.4.2",
@@ -55,15 +60,38 @@
     "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.6.2",
     "sass": "^1.89.2",
+    "ts-jest": "^29.4.1",
     "typescript": "^5"
   },
   "jest": {
     "testEnvironment": "jest-environment-jsdom",
     "transform": {
       "^.+\\.(t|j)sx?$": [
-        "@swc/jest"
+        "babel-jest",
+        {
+          "presets": [
+            [
+              "@babel/preset-env",
+              {
+                "targets": {
+                  "node": "current"
+                }
+              }
+            ],
+            [
+              "@babel/preset-react",
+              {
+                "runtime": "automatic"
+              }
+            ],
+            "@babel/preset-typescript"
+          ]
+        }
       ]
     },
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/"
+    ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "\\.(css|scss|sass)$": "identity-obj-proxy"
