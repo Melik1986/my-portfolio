@@ -1,4 +1,5 @@
 @use '@/styles/_variables.scss' as *;
+@use '@/styles/_mixins.scss' as *;
 
 // Стили
 .preloader {
@@ -25,16 +26,31 @@
 
   &__logo {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 34%;
+    top: 30%;
     transform: translate(-50%, -50%);
     opacity: 0;
-    width: 180px;
-    height: 220px;
+    width: 480px;
+    height: 480px;
     /* Появление с блюром и увеличением (на 3 секунде) */
     animation:
       logoFadeInScale 1.5s ease-in-out forwards 3s,
       /* Уменьшение и исчезновение */ logoBlink 1s linear infinite alternate 4.5s;
+
+    @include vp-1440 {
+      left: 34%;
+      top: 30%;
+    }
+
+    @include vp-1304 {
+      left: 30%;
+      top: 30%;
+    }
+
+    @include vp-1024 {
+      left: 34%;
+      top: 30%;
+    }
 
     @media (max-width: 768px) {
       left: 10%; /* Центрирование по горизонтали */
