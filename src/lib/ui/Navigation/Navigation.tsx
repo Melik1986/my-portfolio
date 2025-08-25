@@ -11,6 +11,7 @@ const defaultItems = [
   { href: '#skills', label: 'Skills', sectionId: 'skills-section' },
   { href: '#projects', label: 'Projects', sectionId: 'projects-section' },
   { href: '#gallery', label: 'Gallery', sectionId: 'gallery-section' },
+  { href: '#contact', label: 'Contacts', sectionId: 'contact-section' },
 ];
 
 /**

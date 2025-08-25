@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
 import type { ScrollSmootherInstance } from '@/lib/gsap/hooks/useScrollSmoother';
@@ -9,6 +9,7 @@ import { animationController } from '@/modules/AnimatedCardSection/core/Animatio
 import { Logo } from '@/lib/ui';
 import { Navigation } from '@/lib/ui';
 import { ContactButton } from '@/lib/ui';
+import { GlassCard } from '@/lib/ui';
 import styles from './header.module.scss';
 
 /**
@@ -60,6 +61,8 @@ export function Header() {
   const elementTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const { scrollTo, isReady, smoother } = useScrollSmoother();
 
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
   useEffect(() => {
     if (!headerRef.current) return;
 
@@ -80,9 +83,50 @@ export function Header() {
     };
   }, []);
 
+  const closeMobileNav = useCallback(() => setIsMobileNavOpen(false), []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        closeMobileNav();
+      }
+    }
+    if (isMobileNavOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      // lock scroll
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isMobileNavOpen, closeMobileNav]);
+
+  useEffect(() => {
+    function onResize() {
+      if (window.innerWidth > 768 && isMobileNavOpen) {
+        setIsMobileNavOpen(false);
+      }
+    }
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [isMobileNavOpen]);
+
   const handleNavigate = (sectionId: string) => {
     console.log('🎯 handleNavigate called with:', sectionId);
     navigateToSection(sectionId, isReady, smoother, scrollTo);
+    closeMobileNav();
+  };
+
+  const handleButtonClick = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setIsMobileNavOpen((v) => !v);
+    } else {
+      handleNavigate('contact-section');
+    }
   };
 
   return (
@@ -109,9 +153,32 @@ export function Header() {
           data-duration="1.0"
           data-ease="power2.out"
           data-delay="0"
-          onClick={() => handleNavigate('contact-section')}
-        />
+          aria-expanded={isMobileNavOpen}
+          aria-controls="mobile-nav-panel"
+          aria-haspopup="menu"
+          onClick={handleButtonClick}
+        >
+          <span className={styles.header__btnTextDesktop}>Contact me</span>
+          <span className={styles.header__btnTextMobile}>Navigation</span>
+        </ContactButton>
       </div>
+
+      {/* Mobile overlay and dropdown */}
+      {isMobileNavOpen && (
+        <>
+          <button
+            type="button"
+            className={styles.header__overlay}
+            aria-label="Close navigation"
+            onClick={closeMobileNav}
+          />
+          <div id="mobile-nav-panel" className={styles.header__dropdown} role="navigation" aria-label="Mobile navigation">
+            <GlassCard className={styles.header__dropdownCard} variant="content-focused">
+              <Navigation className={styles.header__dropdownNav} onNavigate={handleNavigate} />
+            </GlassCard>
+          </div>
+        </>
+      )}
     </header>
   );
 }
