@@ -36,7 +36,17 @@ export const useCardAnimation = ({
       }
     };
 
-    requestAnimationFrame(initializeAnimation);
+    // Дожидаемся загрузки шрифтов, чтобы SplitText корректно посчитал линии
+    const ready =
+      typeof document !== 'undefined' && 'fonts' in document
+        ? (document as Document & { fonts: FontFaceSet }).fonts.ready
+        : Promise.resolve();
+
+    ready
+      .catch(() => undefined)
+      .finally(() => {
+        requestAnimationFrame(initializeAnimation);
+      });
 
     return () => {
       if (isInitializedRef.current) {
