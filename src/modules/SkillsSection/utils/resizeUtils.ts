@@ -1,5 +1,6 @@
 import * as echarts from 'echarts/core';
 import { SELECTORS, RESPONSIVE_BREAKPOINTS } from '../config/skillsCharts.config';
+import { computeDevResponsiveConfig } from '../config/devChartOptions';
 
 /**
  * Изменяет размеры графиков при изменении окна
@@ -21,21 +22,14 @@ export const resizeCharts = (
 
   /** Вычисление адаптивных параметров для столбчатой диаграммы */
   const containerWidth = devChartElement.offsetWidth;
-  const barWidth = Math.max(25, Math.min(45, containerWidth / 12));
-  const fontSize =
-    containerWidth < RESPONSIVE_BREAKPOINTS.mobile
-      ? 10
-      : containerWidth < RESPONSIVE_BREAKPOINTS.tablet
-        ? 11
-        : 12;
-  const labelRotation = containerWidth < RESPONSIVE_BREAKPOINTS.tablet ? 45 : 0;
+  const devConfig = computeDevResponsiveConfig(containerWidth);
 
   /** Обновление настроек столбчатой диаграммы */
   devChart.setOption({
     xAxis: {
-      axisLabel: { fontSize, rotate: labelRotation },
+      axisLabel: { fontSize: devConfig.fontSize, rotate: devConfig.labelRotation },
     },
-    series: [{ barWidth, barGap: 15 }],
+    series: [{ barWidth: devConfig.barWidth, barGap: devConfig.barGap }],
   });
   devChart.resize();
 
@@ -55,6 +49,7 @@ export const resizeCharts = (
   designChart.setOption({
     legend: {
       textStyle: { fontSize: legendFontSize },
+      show: (typeof window === 'undefined' ? designWidth : window.innerWidth) >= RESPONSIVE_BREAKPOINTS.desktop,
     },
     series: [{ radius: [0, radius] }],
   });

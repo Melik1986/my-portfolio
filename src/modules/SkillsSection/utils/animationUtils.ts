@@ -1,5 +1,7 @@
 import * as echarts from 'echarts/core';
 import { SKILLS_DATA } from '../config/skillsCharts.config';
+import { getDevChartOptions } from '../config/devChartOptions';
+import { getDesignChartOptions } from '../config/designChartOptions';
 
 /**
  * Запускает анимацию графиков навыков
@@ -13,27 +15,52 @@ export const playAnimation = (
 ) => {
   if (!devChart || !designChart) return;
 
+  // Страхуемся: если оси/серии ещё не сконфигурированы (например, после dispose/re-init), задаём базовые опции
+  const devOpt = devChart.getOption?.();
+  if (!devOpt?.xAxis || !devOpt?.yAxis) {
+    const dom = devChart.getDom?.() as HTMLElement | null;
+    const containerWidth = dom?.clientWidth || 800;
+    devChart.setOption(getDevChartOptions(containerWidth), { notMerge: true });
+  }
+  const designOpt = designChart.getOption?.();
+  if (!designOpt?.series) {
+    const dom = designChart.getDom?.() as HTMLElement | null;
+    const w = dom?.clientWidth || 600;
+    const h = dom?.clientHeight || 400;
+    designChart.setOption(getDesignChartOptions(w, h), { notMerge: true });
+  }
+
   /** Анимация столбчатой диаграммы с задержкой появления */
   devChart.setOption({
+    animationDurationUpdate: 1000,
+    animationEasingUpdate: 'cubicOut',
     series: [
       {
+        type: 'bar',
         data: SKILLS_DATA.development.map((item) => item.score),
         animation: true,
         animationDuration: 1000,
         animationEasing: 'cubicOut',
         animationDelay: (idx: number) => idx * 100,
+        animationDurationUpdate: 1000,
+        animationEasingUpdate: 'cubicOut',
       },
     ],
   });
 
   /** Анимация круговой диаграммы с эффектом расширения */
   designChart.setOption({
+    animationDurationUpdate: 1200,
+    animationEasingUpdate: 'cubicOut',
     series: [
       {
+        type: 'pie',
         data: SKILLS_DATA.design,
         animationType: 'expansion',
         animationDuration: 1200,
         animationDelay: (idx: number) => idx * 150,
+        animationDurationUpdate: 1200,
+        animationEasingUpdate: 'cubicOut',
       },
     ],
   });
@@ -51,26 +78,47 @@ export const hideCharts = (
 ) => {
   if (!devChart || !designChart) return;
 
+  // Страхуемся: оси/серии должны существовать для bar/pie
+  const devOpt = devChart.getOption?.();
+  if (!devOpt?.xAxis || !devOpt?.yAxis) {
+    const dom = devChart.getDom?.() as HTMLElement | null;
+    const containerWidth = dom?.clientWidth || 800;
+    devChart.setOption(getDevChartOptions(containerWidth), { notMerge: true });
+  }
+  const designOpt = designChart.getOption?.();
+  if (!designOpt?.series) {
+    const dom = designChart.getDom?.() as HTMLElement | null;
+    const w = dom?.clientWidth || 600;
+    const h = dom?.clientHeight || 400;
+    designChart.setOption(getDesignChartOptions(w, h), { notMerge: true });
+  }
+
   /** Скрытие столбчатой диаграммы с анимацией исчезновения */
   devChart.setOption({
+    animationDurationUpdate: 800,
+    animationEasingUpdate: 'cubicIn',
     series: [
       {
+        type: 'bar',
         data: new Array(SKILLS_DATA.development.length).fill(0),
         animation: true,
-        animationDuration: 800,
-        animationEasing: 'cubicIn',
+        animationDurationUpdate: 800,
+        animationEasingUpdate: 'cubicIn',
       },
     ],
   });
 
   /** Скрытие круговой диаграммы с анимацией исчезновения */
   designChart.setOption({
+    animationDurationUpdate: 800,
+    animationEasingUpdate: 'cubicIn',
     series: [
       {
+        type: 'pie',
         data: SKILLS_DATA.design.map((item) => ({ ...item, value: 0 })),
         animationType: 'expansion',
-        animationDuration: 800,
-        animationEasing: 'cubicIn',
+        animationDurationUpdate: 800,
+        animationEasingUpdate: 'cubicIn',
       },
     ],
   });
@@ -99,3 +147,4 @@ export const resetAnimation = (
     }
   }, 1000);
 };
+

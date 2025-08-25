@@ -157,7 +157,7 @@ export class ParticleWaveController {
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
     if (height < 60) {
       const derived = Math.round(width / 8); // ~ 16:5 ratio
-      height = Math.max(derived, 160);
+      height = Math.max(derived, 260);
     }
 
     this.camera.aspect = width / height;

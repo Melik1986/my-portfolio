@@ -86,14 +86,15 @@ export function initCardDeckScroll(
 
   // Мобильные устройства (до 768px)
   mm.add('(max-width: 767px)', () => {
-    // Переинициализируем позиции: все карточки движутся вертикально на мобилках
-    items.forEach((item, index) => {
-      if (index === 0) {
-        gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
-      } else {
-        gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
-      }
-    });
+    // [TEST] Отключено мобильное переопределение направления: используем смешанную раскладку как на десктопе
+    // Позиции не переинициализируем: сохраняем стартовые позиции (смешанная раскладка)
+    // items.forEach((item, index) => {
+    //   if (index === 0) {
+    //     gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
+    //   } else {
+    //     gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
+    //   }
+    // });
 
     timeline = gsap.timeline({
       id: 'card-deck-timeline-mobile',
@@ -108,7 +109,12 @@ export function initCardDeckScroll(
       },
     });
 
-    createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
+    // Диагностика: используем смешанную раскладку на мобилках для проверки багов порядка/скролла
+    // eslint-disable-next-line no-console
+    console.debug('[cardDeckAnimation] Mobile override disabled: using mixed layout for testing');
+
+    // Было: createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
+    createCardAnimation(timeline, items, onCardActivate);
 
     // ensure correct measurements after init
     ScrollTrigger.refresh();

@@ -37,16 +37,19 @@ export const useCardAnimation = ({
     };
 
     // Дожидаемся загрузки шрифтов, чтобы SplitText корректно посчитал линии
-    const ready =
-      typeof document !== 'undefined' && 'fonts' in document
-        ? (document as Document & { fonts: FontFaceSet }).fonts.ready
-        : Promise.resolve();
+    // const ready =
+    //   typeof document !== 'undefined' && 'fonts' in document
+    //     ? (document as Document & { fonts: FontFaceSet }).fonts.ready
+    //     : Promise.resolve();
 
-    ready
-      .catch(() => undefined)
-      .finally(() => {
-        requestAnimationFrame(initializeAnimation);
-      });
+    // ready
+    //   .catch(() => undefined)
+    //   .finally(() => {
+    //     requestAnimationFrame(initializeAnimation);
+    //   });
+
+    // Инициализируем сразу, без ожидания document.fonts.ready
+    requestAnimationFrame(initializeAnimation);
 
     return () => {
       if (isInitializedRef.current) {

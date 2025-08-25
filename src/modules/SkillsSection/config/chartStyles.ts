@@ -2,11 +2,7 @@
  * Базовые стили для всех графиков
  * Определяет отступы и сетку для корректного отображения
  */
-function readCssVar(name: string, fallback: string): string {
-  if (typeof window === 'undefined') return fallback;
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  return v || fallback;
-}
+import { readCssVar } from '../../../lib/utils/css-vars';
 
 export const getBaseChartStyles = () => ({
   backgroundColor: readCssVar('--charts-canvas-bg', '#ffffff'),

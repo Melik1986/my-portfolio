@@ -14,16 +14,13 @@ import { SELECTORS } from '../config/skillsCharts.config';
 import { getDevChartOptions } from '../config/devChartOptions';
 import { getDesignChartOptions } from '../config/designChartOptions';
 import { playAnimation, hideCharts, resetAnimation } from '../utils/animationUtils';
+import { readCssVar } from '../../../lib/utils/css-vars';
 import { resizeCharts } from '../utils/resizeUtils';
 
 // Флаг для отслеживания регистрации ECharts компонентов
 let echartsRegistered = false;
 
-const readCssVar = (name: string, fallback: string) => {
-  if (typeof window === 'undefined') return fallback;
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  return v || fallback;
-};
+// centralized in utils
 
 /**
  * Регистрирует ECharts компоненты только при первом использовании
@@ -173,9 +170,7 @@ export const useSkillsCharts = () => {
   }, [devChartRef, designChartRef]);
 
   const initializeCharts = useCallback(() => {
-    setTimeout(() => {
-      setupCharts();
-    }, 100);
+    setupCharts();
   }, [setupCharts]);
 
   /** Инициализация графиков и обработка изменения размера окна */
@@ -206,6 +201,8 @@ export const useSkillsCharts = () => {
       const bg = readCssVar('--charts-canvas-bg', '#ffffff');
       devChartElement.style.background = bg;
       designChartElement.style.background = bg;
+      // re-run animation after theme change
+      playAnimation(devChartRef.current, designChartRef.current);
     });
     themeObserverRef.current.observe(document.documentElement, {
       attributes: true,

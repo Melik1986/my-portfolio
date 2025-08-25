@@ -2,9 +2,10 @@ import { SKILLS_DATA, RESPONSIVE_BREAKPOINTS } from './skillsCharts.config';
 import { COLOR_PALETTE } from './skillsCharts.config';
 import { getBaseChartStyles, getTooltipStyle, getAxisStyle } from './chartStyles';
 
-import * as echarts from 'echarts';
+import * as echarts from 'echarts/core';
+import type { EChartsCoreOption } from 'echarts/core';
 
-interface ResponsiveConfig {
+export interface ResponsiveConfig {
   barWidth: number;
   fontSize: number;
   labelRotation: number;
@@ -16,7 +17,7 @@ interface ResponsiveConfig {
  * @param containerWidth - ширина контейнера диаграммы
  * @returns объект с адаптивными настройками
  */
-const getResponsiveConfig = (containerWidth: number): ResponsiveConfig => {
+export const computeDevResponsiveConfig = (containerWidth: number): ResponsiveConfig => {
   // Более агрессивное сжатие для узких экранов, чтобы влезало на 768px
   let barWidth: number;
   if (containerWidth < 420) {
@@ -109,10 +110,6 @@ const getSeriesConfig = (barWidth: number, barGap: number) => [
       ]),
       borderRadius: [4, 4, 0, 0],
     },
-    animation: true,
-    animationDuration: 1000,
-    animationEasing: 'cubicOut',
-    animationDelay: (idx: number) => idx * 100,
   },
 ];
 
@@ -122,7 +119,7 @@ const getSeriesConfig = (barWidth: number, barGap: number) => [
  * @returns объект конфигурации ECharts для столбчатой диаграммы
  */
 export const getDevChartOptions = (containerWidth: number) => {
-  const config: ResponsiveConfig = getResponsiveConfig(containerWidth);
+  const config: ResponsiveConfig = computeDevResponsiveConfig(containerWidth);
 
   return {
     ...getBaseChartStyles(),
@@ -130,5 +127,5 @@ export const getDevChartOptions = (containerWidth: number) => {
     xAxis: getXAxisConfig(config),
     yAxis: getYAxisConfig(),
     series: getSeriesConfig(config.barWidth, config.barGap),
-  } as echarts.EChartsOption;
+  } as EChartsCoreOption;
 };

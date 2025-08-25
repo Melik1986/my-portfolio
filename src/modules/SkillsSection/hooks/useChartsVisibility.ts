@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSkillsCharts } from '.';
 
-export function useChartsVisibility() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { initializeCharts, playAnimation, hideCharts } = useSkillsCharts();
+function useVisibilityObserver(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  chartsInitializedRef: { current: boolean },
+  onHide: () => void,
+) {
   const [visible, setVisible] = useState(false);
-  const chartsInitializedRef = useRef(false);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -18,35 +19,55 @@ export function useChartsVisibility() {
           setVisible(true);
         } else if (!entry.isIntersecting && chartsInitializedRef.current) {
           setVisible(false);
-          chartsInitializedRef.current = false; // Сбрасываем флаг
-          // Запускаем реверс анимацию при скрытии
-          setTimeout(() => {
-            hideCharts();
-          }, 100);
+          chartsInitializedRef.current = false;
+          requestAnimationFrame(onHide);
         }
       },
       { threshold: 0.5 },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hideCharts]);
+  }, [containerRef, chartsInitializedRef, onHide]);
 
+  return visible;
+}
+
+function useStartChartsOnVisible(
+  visible: boolean,
+  chartsInitializedRef: { current: boolean },
+  onStart: () => void,
+) {
   useEffect(() => {
-    if (visible && !chartsInitializedRef.current) {
-      // Проверяем, что оба элемента реально существуют в DOM
-      const devChart = document.getElementById('dev-skills-chart');
-      const designChart = document.getElementById('design-skills-chart');
-      if (devChart && designChart) {
-        initializeCharts();
-        chartsInitializedRef.current = true;
+    if (!visible || chartsInitializedRef.current) return;
+    const START_DELAY_MS = 900;
+    const id = window.setTimeout(onStart, START_DELAY_MS);
+    return () => window.clearTimeout(id);
+  }, [visible, chartsInitializedRef, onStart]);
+}
 
-        // Запускаем анимацию после инициализации
-        setTimeout(() => {
-          playAnimation();
-        }, 300);
-      }
-    }
-  }, [visible, initializeCharts, playAnimation]);
+export function useChartsVisibility() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { initializeCharts, playAnimation, hideCharts, resetAnimation, resizeCharts } = useSkillsCharts();
+  const chartsInitializedRef = useRef(false);
+
+  const handleHideCharts = useCallback(() => {
+    // resetAnimation сам вызывает hideCharts с анимацией и диспоузит после задержки
+    resetAnimation();
+  }, [resetAnimation]);
+
+  const handleStartCharts = useCallback(() => {
+    initializeCharts();
+    chartsInitializedRef.current = true;
+    requestAnimationFrame(() => {
+      resizeCharts();
+      requestAnimationFrame(() => {
+        playAnimation();
+      });
+    });
+  }, [initializeCharts, resizeCharts, playAnimation]);
+
+  const visible = useVisibilityObserver(containerRef, chartsInitializedRef, handleHideCharts);
+  useStartChartsOnVisible(visible, chartsInitializedRef, handleStartCharts);
 
   const chartWrapperProps = {
     'data-animation': 'slide-right',
