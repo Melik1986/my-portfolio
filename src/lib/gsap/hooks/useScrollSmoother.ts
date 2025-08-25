@@ -100,16 +100,34 @@ const initScrollSmoother = ({
   isInitializingRef,
   onReady,
 }: InitParams) => {
-  if (smootherRef.current || isInitializingRef.current) return;
+  console.log('[useScrollSmoother] initScrollSmoother started', {
+    wrapper,
+    content,
+    hasCurrentSmoother: !!smootherRef.current,
+    isInitializing: isInitializingRef.current,
+    timestamp: Date.now()
+  });
+
+  if (smootherRef.current || isInitializingRef.current) {
+    console.log('[useScrollSmoother] Skipping initialization - already exists or in progress');
+    return;
+  }
 
   isInitializingRef.current = true;
   const { wrapperElement, contentElement } = checkElements(wrapper, content);
 
   if (!wrapperElement || !contentElement) {
+    console.warn('[useScrollSmoother] Required elements not found', {
+      wrapper,
+      content,
+      hasWrapper: !!wrapperElement,
+      hasContent: !!contentElement
+    });
     isInitializingRef.current = false;
     return;
   }
 
+  console.log('[useScrollSmoother] Creating smoother instance');
   smootherRef.current = createSmoother({
     wrapperElement,
     contentElement,
@@ -117,15 +135,19 @@ const initScrollSmoother = ({
   });
 
   if (smootherRef.current) {
+    console.log('[useScrollSmoother] Smoother created successfully, setting up delay');
     // ✅ ПРАВИЛЬНАЯ СИНХРОНИЗАЦИЯ для CardDeck эффекта
     // 1. Сначала инициализируем ScrollSmoother
     // 2. Затем обновляем ScrollTrigger для синхронизации с виртуальным скроллом
     // 3. Используем больший timeout для полной инициализации
     setTimeout(() => {
+      console.log('[useScrollSmoother] Syncing ScrollTrigger and calling onReady');
       syncScrollTrigger();
       // Уведомляем о готовности после полной инициализации
       onReady?.();
     }, 100);
+  } else {
+    console.warn('[useScrollSmoother] Failed to create smoother instance');
   }
   isInitializingRef.current = false;
 };
@@ -173,27 +195,52 @@ const useSmootherInitialization = (config: SmootherInitConfig) => {
     setIsReady,
   } = config;
   useEffect(() => {
+    console.log('[useScrollSmoother] useSmootherInitialization effect started', {
+      wrapper,
+      content,
+      smooth,
+      effects,
+      normalizeScroll,
+      timestamp: Date.now()
+    });
+
     const existingSmoother = ScrollSmoother.get();
     if (existingSmoother) {
+      console.log('[useScrollSmoother] Found existing smoother, reusing it');
       smootherRef.current = existingSmoother;
       setIsReady(true);
       return;
     }
 
+    console.log('[useScrollSmoother] Setting timeout for DOM readiness check');
     const timer = setTimeout(() => {
+      console.log('[useScrollSmoother] Checking DOM readiness', {
+        wrapper,
+        content
+      });
+
       if (checkDOMReady(wrapper, content)) {
+        console.log('[useScrollSmoother] DOM is ready, initializing ScrollSmoother');
         initScrollSmoother({
           wrapper,
           content,
           options: { smooth, effects, normalizeScroll },
           smootherRef,
           isInitializingRef,
-          onReady: () => setIsReady(true),
+          onReady: () => {
+            console.log('[useScrollSmoother] ScrollSmoother ready callback triggered');
+            setIsReady(true);
+          },
         });
+      } else {
+        console.warn('[useScrollSmoother] DOM not ready, ScrollSmoother initialization skipped');
       }
     }, 50);
 
-    return () => clearTimeout(timer);
+    return () => {
+      console.log('[useScrollSmoother] Cleanup: clearing timeout');
+      clearTimeout(timer);
+    };
   }, [
     wrapper,
     content,
@@ -218,6 +265,17 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
+  console.log('[useScrollSmoother] Hook initialized', {
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    hasInstance: !!smootherRef.current,
+    isReady,
+    timestamp: Date.now()
+  });
+
   useSmootherInitialization({
     wrapper,
     content,
@@ -230,18 +288,44 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   });
 
   const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
-    smootherRef.current?.scrollTo(target, smooth, position);
+    console.log('[useScrollSmoother] scrollTo called', {
+      target,
+      hasInstance: !!smootherRef.current,
+      isReady,
+      smooth,
+      position
+    });
+
+    if (smootherRef.current && isReady) {
+      smootherRef.current.scrollTo(target, smooth, position);
+    } else {
+      console.warn('[useScrollSmoother] scrollTo failed - instance or readiness missing');
+    }
   };
 
-  const scrollTop = (value?: number) => smootherRef.current?.scrollTop(value) ?? 0;
+  const scrollTop = (value?: number) => {
+    const result = smootherRef.current?.scrollTop(value) ?? 0;
+    console.log('[useScrollSmoother] scrollTop called', {
+      value,
+      result,
+      hasInstance: !!smootherRef.current
+    });
+    return result;
+  };
 
   const kill = () => {
+    console.log('[useScrollSmoother] kill called', {
+      hasInstance: !!smootherRef.current
+    });
+
     if (smootherRef.current) {
       // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
       cleanupScrollTrigger();
 
       smootherRef.current.kill();
       smootherRef.current = null;
+      setIsReady(false);
+      console.log('[useScrollSmoother] Instance killed and state reset');
     }
   };
 
