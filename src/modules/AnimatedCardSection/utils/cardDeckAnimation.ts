@@ -110,7 +110,6 @@ export function initCardDeckScroll(
     });
 
     // Диагностика: используем смешанную раскладку на мобилках для проверки багов порядка/скролла
-    // eslint-disable-next-line no-console
     console.debug('[cardDeckAnimation] Mobile override disabled: using mixed layout for testing');
 
     // Было: createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
