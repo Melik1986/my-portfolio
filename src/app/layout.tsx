@@ -150,9 +150,7 @@ export default function RootLayout({
               <Container>
                 {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
                 <GlobalPreloader />
-                <ScrollSmootherProvider>
-                  {children}
-                </ScrollSmootherProvider>
+                <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
               </Container>
             </div>
             <AnchorButton />

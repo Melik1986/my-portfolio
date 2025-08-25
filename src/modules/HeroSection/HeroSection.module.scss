@@ -27,19 +27,34 @@
     height: 100%;
     padding: 3rem;
 
-    @include vp-1304 { padding: 2.5rem; }
-    @include vp-1024 { padding: 2rem; }
-    @include vp-768 { width: 100%; padding: 1.5rem; }
-    @include vp-360 { padding: 1rem; }
+    @include vp-1304 {
+      padding: 2.5rem;
+    }
+    @include vp-1024 {
+      padding: 2rem;
+    }
+    @include vp-768 {
+      width: 100%;
+      padding: 1.5rem;
+    }
+    @include vp-360 {
+      padding: 1rem;
+    }
   }
 
   &__content-left {
     // background: var(--gradient-primary);
     gap: 40px;
 
-    @include vp-1024 { gap: 24px; }
-    @include vp-768 { gap: 20px; }
-    @include vp-360 { gap: 16px; }
+    @include vp-1024 {
+      gap: 24px;
+    }
+    @include vp-768 {
+      gap: 20px;
+    }
+    @include vp-360 {
+      gap: 16px;
+    }
   }
 
   &__content-right {

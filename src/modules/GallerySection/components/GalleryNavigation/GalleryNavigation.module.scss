@@ -47,8 +47,14 @@
     color: var(--color-accent-primary);
   }
 
-  @include vp-768 { width: 34px; height: 34px; }
-  @include vp-360 { width: 30px; height: 30px; }
+  @include vp-768 {
+    width: 34px;
+    height: 34px;
+  }
+  @include vp-360 {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 .gallery-arrows__icon {
@@ -56,8 +62,12 @@
   fill: currentColor;
   color: var(--color-text-heading);
 
-  @include vp-768 { font-size: 16px; }
-  @include vp-360 { font-size: 14px; }
+  @include vp-768 {
+    font-size: 16px;
+  }
+  @include vp-360 {
+    font-size: 14px;
+  }
 }
 
 .gallery-arrows__slide-number {
@@ -69,8 +79,12 @@
   animation: animate $carousel-animation-duration $carousel-animation-ease $carousel-animation-delay
     1 forwards;
 
-  @include vp-768 { letter-spacing: 3px; }
-  @include vp-360 { display: none; }
+  @include vp-768 {
+    letter-spacing: 3px;
+  }
+  @include vp-360 {
+    display: none;
+  }
 }
 
 @keyframes animate {

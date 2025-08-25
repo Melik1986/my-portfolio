@@ -28,9 +28,17 @@
     color: var(--logo-color);
     transition: color 0.3s ease;
 
-    @include vp-1304 { width: 110px; }
-    @include vp-1024 { width: 100px; }
-    @include vp-768 { width: 88px; }
-    @include vp-360 { width: 76px; }
+    @include vp-1304 {
+      width: 110px;
+    }
+    @include vp-1024 {
+      width: 100px;
+    }
+    @include vp-768 {
+      width: 88px;
+    }
+    @include vp-360 {
+      width: 76px;
+    }
   }
 }

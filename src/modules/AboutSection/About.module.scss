@@ -44,7 +44,6 @@
       gap: 10px;
       padding: 1rem;
     }
-
   }
 
   &__content-left {
@@ -82,7 +81,11 @@
       flex: 0 0 50%;
     }
 
-    &__content-left { order: 0; }
-    &__content-right { order: 1; }
+    &__content-left {
+      order: 0;
+    }
+    &__content-right {
+      order: 1;
+    }
   }
 }

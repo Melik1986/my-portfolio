@@ -26,25 +26,23 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
       ? Math.max(90, minDimension * 0.28)
       : Math.max(100, minDimension * 0.33);
   /** Адаптивный размер шрифта легенды в зависимости от ширины экрана */
-  const legendFontSize =
-    designWidth < RESPONSIVE_BREAKPOINTS.mobile
-      ? 9
-      : isTablet
-        ? 10
-        : 12;
+  const legendFontSize = designWidth < RESPONSIVE_BREAKPOINTS.mobile ? 9 : isTablet ? 10 : 12;
 
   const legendTextColor = readCssVar('--charts-text-color', '#333333');
 
   return {
     ...getBaseChartStyles(),
     /** Конфигурация легенды диаграммы - отключаем для экранов до 768px */
-    legend: designWidth < RESPONSIVE_BREAKPOINTS.tablet ? { show: false } : {
-      orient: 'horizontal',
-      bottom: isTablet ? '2%' : '0%',
-      left: 'center',
-      textStyle: { color: legendTextColor, fontSize: legendFontSize },
-      data: SKILLS_DATA.design.map((item) => item.name),
-    },
+    legend:
+      designWidth < RESPONSIVE_BREAKPOINTS.tablet
+        ? { show: false }
+        : {
+            orient: 'horizontal',
+            bottom: isTablet ? '2%' : '0%',
+            left: 'center',
+            textStyle: { color: legendTextColor, fontSize: legendFontSize },
+            data: SKILLS_DATA.design.map((item) => item.name),
+          },
     /** Конфигурация серии данных для круговой диаграммы */
     series: [
       {

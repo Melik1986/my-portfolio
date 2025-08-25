@@ -23,7 +23,7 @@ function SkillsTextDesktop() {
 
 function SkillsTextMobile() {
   return (
-      <span className={styles['skills__text-mobile']}>
+    <span className={styles['skills__text-mobile']}>
       I&nbsp;combine frontend development and UI/UX design to&nbsp;create websites that are fast,
       responsive, and engaging. Skilled in&nbsp;HTML, CSS, JavaScript, React, and animations (GSAP,
       Three.js). Experienced in&nbsp;responsive design, performance optimization, and

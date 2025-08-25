@@ -4,7 +4,12 @@ import { ContactForm } from './components/ContactForm';
 
 export function ContactSection() {
   return (
-    <section id="contact-section" className={styles.contact} data-section-index="7" data-group-delay="2.5">
+    <section
+      id="contact-section"
+      className={styles.contact}
+      data-section-index="7"
+      data-group-delay="2.5"
+    >
       <h2 className="visually-hidden">Contact</h2>
       <div
         className={styles.contact__container}

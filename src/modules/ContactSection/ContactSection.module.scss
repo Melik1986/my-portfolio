@@ -16,9 +16,15 @@
   align-items: center;
   flex-direction: column;
 
-  @include vp-1024 { padding: 2rem; }
-  @include vp-768 { padding: 1.5rem; }
-  @include vp-360 { padding: 1rem; }
+  @include vp-1024 {
+    padding: 2rem;
+  }
+  @include vp-768 {
+    padding: 1.5rem;
+  }
+  @include vp-360 {
+    padding: 1rem;
+  }
 
   &__title {
     font-family: $font-family-poppins;
@@ -40,10 +46,24 @@
   overflow: hidden;
 
   // around tablet widths (~800-1024px) make it smaller
-  @include vp-1304 { width: 780px; height: 520px; }
-  @include vp-1024 { width: 680px; height: 480px; }
-  @include vp-768 { width: 96%; height: auto; border-radius: 20px; }
-  @include vp-360 { width: 100%; height: auto; border-radius: 16px; }
+  @include vp-1304 {
+    width: 780px;
+    height: 520px;
+  }
+  @include vp-1024 {
+    width: 680px;
+    height: 480px;
+  }
+  @include vp-768 {
+    width: 96%;
+    height: auto;
+    border-radius: 20px;
+  }
+  @include vp-360 {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+  }
 }
 
 // Responsive for form-container (original only changes height)

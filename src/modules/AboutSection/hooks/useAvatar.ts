@@ -522,7 +522,10 @@ export const useAvatar = () => {
           }
         }
       });
-      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
 
       container.addEventListener('mousedown', handleMouseClickWrapper);
       const mouseMoveHandler = (event: MouseEvent) =>
@@ -554,7 +557,9 @@ export const useAvatar = () => {
         }
         resizeObserver.disconnect();
         if (rafId) cancelAnimationFrame(rafId);
-        try { themeObserver.disconnect(); } catch {}
+        try {
+          themeObserver.disconnect();
+        } catch {}
         cleanup();
       };
     } catch (error) {

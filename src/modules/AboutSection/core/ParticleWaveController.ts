@@ -78,7 +78,10 @@ export class ParticleWaveController {
           this.renderer.setClearColor(0x000000, 1);
         }
       });
-      this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      this.themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      });
     }
   }
 

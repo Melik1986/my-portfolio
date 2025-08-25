@@ -44,9 +44,15 @@
     height: 100%;
     position: relative;
     background: var(--card-bg, transparent);
-    @include vp-1024 { padding: 1.5rem; }
-    @include vp-768 { padding: 1rem; }
-    @include vp-360 { padding: 0.75rem; }
+    @include vp-1024 {
+      padding: 1.5rem;
+    }
+    @include vp-768 {
+      padding: 1rem;
+    }
+    @include vp-360 {
+      padding: 0.75rem;
+    }
   }
 }
 

@@ -147,7 +147,9 @@ const configureChartOptions = (
 
   const designWidth = designChartElement.offsetWidth;
   const designHeight = designChartElement.offsetHeight;
-  designChartRef.current?.setOption(getDesignChartOptions(designWidth, designHeight), { notMerge: true });
+  designChartRef.current?.setOption(getDesignChartOptions(designWidth, designHeight), {
+    notMerge: true,
+  });
 };
 
 /**
@@ -205,7 +207,10 @@ export const useSkillsCharts = () => {
       devChartElement.style.background = bg;
       designChartElement.style.background = bg;
     });
-    themeObserverRef.current.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    themeObserverRef.current.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
 
     const currentDevChart = devChartRef.current;
     const currentDesignChart = designChartRef.current;
