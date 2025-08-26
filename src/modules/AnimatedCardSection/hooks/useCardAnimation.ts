@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { animationController } from '../core/AnimationController';
+import { waitForFontsReady } from '@/lib/utils/waitForFontsReady';
 
 interface UseCardAnimationProps {
   sectionIndex: number;
@@ -22,8 +23,11 @@ export const useCardAnimation = ({
     const wrapper = wrapperRef.current;
     if (!wrapper || isInitializedRef.current) return;
 
-    const initializeAnimation = () => {
+    const initializeAnimation = async () => {
       try {
+        // Ждём загрузки шрифтов для корректной работы SplitText
+        await waitForFontsReady();
+
         if (isHeroSection) {
           animationController.initializeMaster();
         }
@@ -48,8 +52,10 @@ export const useCardAnimation = ({
     //     requestAnimationFrame(initializeAnimation);
     //   });
 
-    // Инициализируем сразу, без ожидания document.fonts.ready
-    requestAnimationFrame(initializeAnimation);
+    // Инициализируем после кадра, дождавшись шрифтов
+    requestAnimationFrame(() => {
+      void initializeAnimation();
+    });
 
     return () => {
       if (isInitializedRef.current) {
