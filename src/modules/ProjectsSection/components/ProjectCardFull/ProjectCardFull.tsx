@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectCardFull.module.scss';
 import { GlassCard } from '@/lib/ui';
+import { useI18n } from '@/i18n';
 
 interface ProjectCardFullscreenProps {
   project: ProjectData;
@@ -13,6 +14,7 @@ interface ProjectCardFullscreenProps {
 }
 
 export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscreenProps) {
+  const { t } = useI18n();
   return (
     <>
       <Image
@@ -35,14 +37,14 @@ export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscree
           target="_blank"
           rel="noopener noreferrer"
         >
-          Repositories
+          {t('projects.repositories')}
         </Link>
       </GlassCard>
       {onClose && (
         <button
           className={styles['projects-card__close']}
           onClick={onClose}
-          aria-label="Close fullscreen view"
+          aria-label={t('projects.closeFullscreen')}
         >
           ✕
         </button>
