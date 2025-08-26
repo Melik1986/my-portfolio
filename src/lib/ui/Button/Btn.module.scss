@@ -36,14 +36,20 @@
     outline: none;
   }
 
-  @include vp-360 {
-    width: 120px;
-    font-size: 14px;
-    line-height: 1.4rem; // 1.2 * 14px
+  @media (min-width: 1920px) {
+    width: 170px;
+    font-size: clamp(1.2rem, 2vw, 14px);
+    line-height: 1.5rem;
   }
 
-  @include vp-768 {
-    width: 120px;
+  @include vp-1440 {
+    width: 170px;
+    font-size: clamp(1.2rem, 2vw, 14px);
+    line-height: 1.5rem;
+  }
+
+  @include vp-1304 {
+    width: 160px;
   }
 
   @include vp-1024 {
@@ -51,14 +57,14 @@
     font-size: clamp(1.2rem, 2vw, 14px);
   }
 
-  @include vp-1304 {
-    width: 160px;
+  @include vp-768 {
+    width: 120px;
   }
 
-  @media (min-width: 1920px) {
-    width: 170px;
-    font-size: clamp(1.2rem, 2vw, 14px);
-    line-height: 1.5rem;
+  @include vp-375 {
+    width: 120px;
+    font-size: 14px;
+    line-height: 1.4rem; // 1.2 * 14px
   }
 
   &__icon {

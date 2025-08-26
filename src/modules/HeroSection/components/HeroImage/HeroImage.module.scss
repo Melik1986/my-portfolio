@@ -30,11 +30,11 @@
     }
 
     @include vp-768 {
-      top: 75%;
+      top: 76%;
     }
 
     @include vp-375 {
-      top: 85.99%;
+      top: 89.3%;
     }
   }
 
@@ -46,5 +46,11 @@
     height: auto;
     min-width: 600px;
     max-height: 500px;
+
+
+    @include vp-375 {
+      min-width: 300px;
+      max-height: 200px;
+    }
   }
 }
