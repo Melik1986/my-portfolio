@@ -5,7 +5,7 @@ test.describe('Mobile navigation behavior', () => {
     await page.setViewportSize({ width: 375, height: 800 });
     await page.goto('/');
 
-    const navList = page.locator('#header .header__navigation');
+    const navList = page.getByTestId('desktop-nav');
     await expect(navList).toBeHidden();
 
     const toggleButton = page.getByRole('button', { name: 'Contact me' });
@@ -27,7 +27,7 @@ test.describe('Mobile navigation behavior', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/');
 
-    const navList = page.locator('#header .header__navigation');
+    const navList = page.getByTestId('desktop-nav');
     await expect(navList).toBeVisible();
 
     const toggleButton = page.getByRole('button', { name: 'Contact me' });

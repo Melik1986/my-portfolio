@@ -146,6 +146,7 @@ export function Header() {
           data-ease="power2.out"
           data-delay="0.3"
           onNavigate={handleNavigate}
+          data-testid="desktop-nav"
         />
         <ContactButton
           className={styles['header__contact-button']}
