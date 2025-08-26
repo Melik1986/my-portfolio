@@ -56,6 +56,26 @@ function createCardAnimation(
   });
 }
 
+// Дожидается появления pin-spacer рядом с секцией
+function waitForPinSpacer(section: HTMLElement, timeoutMs = 1000): Promise<void> {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    const check = () => {
+      const spacer = section.parentElement && section.parentElement.querySelector('.pin-spacer');
+      if (spacer) {
+        resolve();
+        return;
+      }
+      if (Date.now() - start >= timeoutMs) {
+        resolve();
+        return;
+      }
+      requestAnimationFrame(check);
+    };
+    check();
+  });
+}
+
 /**
  * Инициализация анимации колоды карт (Hero + остальные секции)
  * @param section - элемент секции (обёртка)
@@ -116,7 +136,10 @@ export function initCardDeckScroll(
     createCardAnimation(timeline, items, onCardActivate);
 
     // ensure correct measurements after init
-    ScrollTrigger.refresh();
+    waitForPinSpacer(section).then(() => {
+      ScrollTrigger.refresh();
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    });
 
     // cleanup for this media query
     return () => {
@@ -144,7 +167,10 @@ export function initCardDeckScroll(
     createCardAnimation(timeline, items, onCardActivate);
 
     // ensure correct measurements after init
-    ScrollTrigger.refresh();
+    waitForPinSpacer(section).then(() => {
+      ScrollTrigger.refresh();
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+    });
 
     // cleanup for this media query
     return () => {
