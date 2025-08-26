@@ -78,4 +78,3 @@ test.describe('Anchor button behavior', () => {
     expect(scrollY).toBeLessThan(80);
   });
 });
-

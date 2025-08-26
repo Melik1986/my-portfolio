@@ -37,11 +37,12 @@ describe('AnimationController', () => {
       })),
     });
     // rAF shim
-    (global as unknown as { requestAnimationFrame?: (cb: FrameRequestCallback) => number }).requestAnimationFrame =
-      ((cb: FrameRequestCallback) => {
-        cb(0 as unknown as DOMHighResTimeStamp);
-        return 0 as unknown as number;
-      }) as unknown as (cb: FrameRequestCallback) => number;
+    (
+      global as unknown as { requestAnimationFrame?: (cb: FrameRequestCallback) => number }
+    ).requestAnimationFrame = ((cb: FrameRequestCallback) => {
+      cb(0 as unknown as DOMHighResTimeStamp);
+      return 0 as unknown as number;
+    }) as unknown as (cb: FrameRequestCallback) => number;
     // Reset DOM and controller
     setupDOM();
     animationController.cleanup();
@@ -66,4 +67,3 @@ describe('AnimationController', () => {
     expect(animationController.getActiveCardIndex()).toBe(0);
   });
 });
-

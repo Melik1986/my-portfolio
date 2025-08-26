@@ -8,5 +8,3 @@ export interface SuccessContent {
   title: string;
   description: string;
 }
-
-

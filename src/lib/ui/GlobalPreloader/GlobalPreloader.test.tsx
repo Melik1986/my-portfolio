@@ -14,11 +14,12 @@ describe('GlobalPreloader', () => {
     document.documentElement.classList.remove('preload-lock');
     document.body.classList.remove('preload-lock');
     // Provide rAF in JSDOM
-    (global as unknown as { requestAnimationFrame?: (cb: FrameRequestCallback) => number }).requestAnimationFrame =
-      ((cb: FrameRequestCallback) => {
-        cb(0 as unknown as DOMHighResTimeStamp);
-        return 0 as unknown as number;
-      }) as unknown as (cb: FrameRequestCallback) => number;
+    (
+      global as unknown as { requestAnimationFrame?: (cb: FrameRequestCallback) => number }
+    ).requestAnimationFrame = ((cb: FrameRequestCallback) => {
+      cb(0 as unknown as DOMHighResTimeStamp);
+      return 0 as unknown as number;
+    }) as unknown as (cb: FrameRequestCallback) => number;
     jest.useFakeTimers();
   });
 
@@ -58,4 +59,3 @@ describe('GlobalPreloader', () => {
     expect(refreshSpy).toHaveBeenCalled();
   });
 });
-
