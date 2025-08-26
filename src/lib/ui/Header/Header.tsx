@@ -84,6 +84,7 @@ export function Header() {
           <button
             type="button"
             className={styles.header__overlay}
+            data-testid="header-overlay"
             aria-label="Close navigation"
             onClick={closeMobileNav}
           />
