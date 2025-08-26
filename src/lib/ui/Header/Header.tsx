@@ -62,6 +62,7 @@ export function Header() {
   const { scrollTo, isReady, smoother } = useScrollSmoother();
 
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!headerRef.current) return;
@@ -115,6 +116,22 @@ export function Header() {
     return () => window.removeEventListener('resize', onResize);
   }, [isMobileNavOpen]);
 
+  useEffect(() => {
+    function handleDocumentClick(e: MouseEvent) {
+      if (isMobileNavOpen && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        closeMobileNav();
+      }
+    }
+    
+    if (isMobileNavOpen) {
+      document.addEventListener('click', handleDocumentClick);
+    }
+    
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [isMobileNavOpen, closeMobileNav]);
+
   const handleNavigate = (sectionId: string) => {
     console.log('🎯 handleNavigate called with:', sectionId);
     navigateToSection(sectionId, isReady, smoother, scrollTo);
@@ -129,6 +146,11 @@ export function Header() {
     }
   };
 
+  const handleDropdownClick = (e: React.MouseEvent) => {
+    // Prevent closing when clicking inside the dropdown content
+    e.stopPropagation();
+  };
+
   return (
     <header ref={headerRef} className={styles.header} id="header">
       <div className={styles.header__content}>
@@ -141,6 +163,7 @@ export function Header() {
         />
         <Navigation
           className={styles['header__navigation']}
+          data-variant="desktop"
           data-animation="slide-down-blur"
           data-duration="0.8"
           data-ease="power2.out"
@@ -172,9 +195,16 @@ export function Header() {
             aria-label="Close navigation"
             onClick={closeMobileNav}
           />
-          <div id="mobile-nav-panel" className={styles.header__dropdown} role="navigation" aria-label="Mobile navigation">
+          <div 
+            ref={dropdownRef}
+            id="mobile-nav-panel" 
+            className={styles.header__dropdown} 
+            role="navigation" 
+            aria-label="Mobile navigation"
+            onClick={handleDropdownClick}
+          >
             <GlassCard className={styles.header__dropdownCard} variant="content-focused">
-              <Navigation className={styles.header__dropdownNav} onNavigate={handleNavigate} />
+              <Navigation data-variant="mobile" className={styles.header__dropdownNav} onNavigate={handleNavigate} />
             </GlassCard>
           </div>
         </>

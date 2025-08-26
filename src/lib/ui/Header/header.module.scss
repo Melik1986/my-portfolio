@@ -74,7 +74,9 @@
 
     /* Hide navigation under 768px */
     @include vp-768 {
-      display: none;
+      @at-root #{&}#{&} {
+        display: none;
+      }
     }
 
     /* Control link spacing across breakpoints */
@@ -99,6 +101,13 @@
       }
       @include vp-768 {
         margin: 0;
+      }
+    }
+
+    /* Hide contacts link only for desktop navigation instance */
+    &[data-variant='desktop'] {
+      @at-root #{&}#{&} > li:last-child {
+        display: none;
       }
     }
   }
@@ -140,8 +149,8 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border: none;
     padding: 0;
     margin: 0;
