@@ -5,6 +5,7 @@ import { AiContentProps } from './types/AiContent.types';
 import { HorizontalMarquee, VerticalMarqueeGroup, ContentSection } from './component';
 import styles from './AiContentSection.module.scss';
 import { AI_CONTENT_CONSTANTS, DEFAULT_VERTICAL_COLUMNS } from './constants/AiContent.constants';
+import { useI18n } from '@/i18n';
 
 export function AiContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
@@ -14,9 +15,12 @@ export function AiContentSection({
   description = AI_CONTENT_CONSTANTS.DEFAULT_DESCRIPTION,
   className = '',
 }: AiContentProps) {
+  const { t } = useI18n();
   return (
     <section className={`${styles['ai-content']} ${className}`} id="ai-content-section">
-      <h2 className={`${styles['ai-content__title']} visually-hidden`}>{title || 'AI Content'}</h2>
+      <h2 className={`${styles['ai-content__title']} visually-hidden`}>
+        {title === 'ai.title' ? t('ai.title') : title || 'AI Content'}
+      </h2>
 
       <div className={styles['ai-content__marquee-container']}>
         {/* Horizontal Marquee 1 */}
@@ -46,7 +50,10 @@ export function AiContentSection({
               }
             />
           </div>
-          <ContentSection title={title} description={description} />
+          <ContentSection
+            title={title === 'ai.title' ? t('ai.title') : title}
+            description={description === 'ai.description' ? t('ai.description') : description}
+          />
         </div>
       </div>
     </section>

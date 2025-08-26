@@ -12,6 +12,7 @@ import styles from '../AiContentSection/AiContentSection.module.scss';
 import { AI_CONTENT_CONSTANTS } from '../AiContentSection/constants/AiContent.constants';
 import groupStyles from './component/VideoMarqueeGroup/VideoMarqueeGroup.module.scss';
 import { useVideoOverlay } from './hooks/useVideoOverlay';
+import { useI18n } from '@/i18n';
 
 export function AiVideoContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
@@ -20,12 +21,13 @@ export function AiVideoContentSection({
   description = DEFAULT_VIDEO_DESCRIPTION,
   className = '',
 }: AiVideoContentProps) {
+  const { t } = useI18n();
   const { containerRef, overlayVideoRef, state, onContainerClick, closeOverlay } =
     useVideoOverlay();
   return (
     <section className={`${styles['ai-content']} ${className}`} id="ai-video-content-section">
       <h2 className={`${styles['ai-content__title']} visually-hidden`}>
-        {title || 'AI Video Content'}
+        {title === 'ai.title' ? t('ai.title') : title || 'AI Video Content'}
       </h2>
 
       <div className={styles['ai-content__marquee-container']}>
@@ -58,7 +60,12 @@ export function AiVideoContentSection({
               />
             </div>
           </div>
-          <ContentSection title={title} description={description} />
+          <ContentSection
+            title={title === 'ai.title' ? t('ai.title') : title}
+            description={
+              description === DEFAULT_VIDEO_DESCRIPTION ? t('ai.video.description') : description
+            }
+          />
         </div>
       </div>
     </section>

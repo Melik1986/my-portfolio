@@ -2,8 +2,10 @@
 
 import { SkillsText, SkillsAnimation } from '../index';
 import styles from './SkillsContent.module.scss';
+import { useI18n } from '@/i18n';
 
 export function SkillsContent() {
+  const { t } = useI18n();
   return (
     <>
       <h3
@@ -13,7 +15,7 @@ export function SkillsContent() {
         data-ease="power2.out"
         data-delay="0"
       >
-        Skills &amp;&nbsp;Expertise
+        {t('skills.heading')}
       </h3>
       <SkillsText />
       <SkillsAnimation />
