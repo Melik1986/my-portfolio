@@ -42,6 +42,8 @@ export class AnimationController {
   private isInitialized = false;
   private totalCardsCount: number | null = null;
   private pendingCardIndex: number | null = null;
+  private whenReadyPromise: Promise<void> | null = null;
+  private resolveWhenReady: (() => void) | null = null;
 
   private waitForMasterReady(): void {
     if (!this.masterTimeline) return;
@@ -52,6 +54,12 @@ export class AnimationController {
           const toGo = this.pendingCardIndex;
           this.pendingCardIndex = null;
           this.navigateToCard(toGo);
+        }
+        // resolve readiness promise
+        if (this.resolveWhenReady) {
+          this.resolveWhenReady();
+          this.whenReadyPromise = null;
+          this.resolveWhenReady = null;
         }
         return;
       }
@@ -91,6 +99,11 @@ export class AnimationController {
     this.isInitialized = true;
     this.totalCardsCount = items.length;
     // Wait until ScrollTrigger is attached, then process any pending navigation
+    if (!this.whenReadyPromise) {
+      this.whenReadyPromise = new Promise<void>((resolve) => {
+        this.resolveWhenReady = resolve;
+      });
+    }
     this.waitForMasterReady();
     return this.masterTimeline;
   }
@@ -192,7 +205,7 @@ export class AnimationController {
     // Получаем ScrollTrigger из мастер timeline
     const scrollTrigger = this.masterTimeline.scrollTrigger;
     if (!scrollTrigger) {
-      console.warn('ScrollTrigger not found in master timeline');
+      console.debug('ScrollTrigger not found in master timeline');
       // Попробуем освежить ScrollTrigger и повторить один раз
       try {
         void import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
@@ -237,6 +250,23 @@ export class AnimationController {
       ease: 'power2.inOut',
     });
     return true;
+  }
+
+  async navigateToCardAsync(cardIndex: number): Promise<boolean> {
+    if (!this.isInitialized || !this.masterTimeline) {
+      this.initializeMaster();
+    }
+    // wait until scrollTrigger attaches
+    if (this.whenReadyPromise) {
+      await this.whenReadyPromise;
+    }
+    // As an extra guard, rAF and refresh
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
+    try {
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      ScrollTrigger.refresh();
+    } catch {}
+    return this.navigateToCard(cardIndex);
   }
 
   /**
