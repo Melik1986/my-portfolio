@@ -5,7 +5,7 @@ import { ContactForm } from './components/ContactForm';
 export function ContactSection() {
   return (
     <section
-      id="contact-section"
+      id="contact-content"
       className={styles.contact}
       data-section-index="7"
       data-group-delay="2.5"
