@@ -63,6 +63,7 @@ export function Header() {
         />
         <ContactButton
           className={styles['header__contact-button']}
+          data-testid="header-contact-button"
           data-animation="slide-right"
           data-duration="1.0"
           data-ease="power2.out"
