@@ -22,6 +22,12 @@
   z-index: 110;
   animation: floatAnimation 3s ease-in-out infinite;
 
+  // Respect safe-area insets on mobile devices
+  @supports (bottom: max(1px)) {
+    bottom: max(20px, env(safe-area-inset-bottom));
+    right: max(20px, env(safe-area-inset-right));
+  }
+
   @include vp-1440 {
     bottom: 20px;
     right: 20px;
