@@ -37,8 +37,8 @@ test.describe('Header button and navigation behavior', () => {
     const dropdown = page.locator('#mobile-nav-panel');
     await expect(dropdown).toBeVisible();
 
-    // Clicking overlay closes
-    await page.locator('button.header__overlay').click();
+    // Close via Escape to align with hook behavior
+    await page.keyboard.press('Escape');
     await expect(dropdown).toBeHidden();
   });
 });
