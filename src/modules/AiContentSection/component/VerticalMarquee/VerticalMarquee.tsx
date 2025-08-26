@@ -2,6 +2,7 @@
 import React, { useRef, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './VerticalMarquee.module.scss';
+import { useI18n } from '@/i18n';
 import { useMarqueeVisibility } from '../../../../lib/hooks/useMarqueeVisibility';
 import { useCssVarOnResize } from '../../../../lib/hooks/useCssVarOnResize';
 
@@ -16,6 +17,7 @@ export function VerticalMarquee({
   className = '',
   eagerFirst = true,
 }: VerticalMarqueeProps) {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
@@ -55,7 +57,7 @@ export function VerticalMarquee({
                 <Image
                   className={styles['ai-content__image']}
                   src={src}
-                  alt={`AI Generated Poster ${index + 1}`}
+                  alt={`${t('ai.posterAlt')} ${index + 1}`}
                   width={210}
                   height={280}
                   loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
