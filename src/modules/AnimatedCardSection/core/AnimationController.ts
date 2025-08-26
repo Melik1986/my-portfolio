@@ -156,22 +156,29 @@ export class AnimationController {
   /**
    * Программная навигация к карточке по индексу
    */
-  navigateToCard(cardIndex: number): void {
+  navigateToCard(cardIndex: number): boolean {
     if (!this.isInitialized || !this.masterTimeline) {
       console.warn('AnimationController not initialized');
-      return;
+      return false;
     }
 
     if (!this.sections.has(cardIndex)) {
       console.warn(`Card with index ${cardIndex} not found`);
-      return;
+      return false;
     }
 
     // Получаем ScrollTrigger из мастер timeline
     const scrollTrigger = this.masterTimeline.scrollTrigger;
     if (!scrollTrigger) {
       console.warn('ScrollTrigger not found in master timeline');
-      return;
+      // Попробуем освежить ScrollTrigger и повторить один раз
+      try {
+        void import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          ScrollTrigger.refresh();
+          setTimeout(() => ScrollTrigger.refresh(), 50);
+        });
+      } catch {}
+      return false;
     }
 
     // Для первой карточки просто прокручиваем к началу секции
@@ -184,7 +191,7 @@ export class AnimationController {
         },
         ease: 'power2.inOut',
       });
-      return;
+      return true;
     }
 
     // Для остальных карточек вычисляем позицию
@@ -204,6 +211,7 @@ export class AnimationController {
       },
       ease: 'power2.inOut',
     });
+    return true;
   }
 
   /**
