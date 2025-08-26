@@ -25,7 +25,12 @@ function ContactIcon({ iconClassName }: { iconClassName: string }) {
  * Кнопка контакта с анимацией
  * Отображает кнопку с SVG иконкой и текстом для связи
  */
-export function ContactButton({ className = '', iconClassName = '', children, ...rest }: ContactButtonProps) {
+export function ContactButton({
+  className = '',
+  iconClassName = '',
+  children,
+  ...rest
+}: ContactButtonProps) {
   return (
     <button
       type="button"

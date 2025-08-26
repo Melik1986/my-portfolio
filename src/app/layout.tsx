@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
-import './globals.scss';
+import './styles/globals.scss';
 import AppThemeProvider from './ThemeProvider';
 import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';

@@ -1,136 +1,27 @@
 'use client';
 
 import React from 'react';
-import { useRef, useEffect, useState, useCallback } from 'react';
-import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import { useScrollSmoother } from '@/lib/gsap/hooks/useScrollSmoother';
-import type { ScrollSmootherInstance } from '@/lib/gsap/hooks/useScrollSmoother';
-import { animationController } from '@/modules/AnimatedCardSection/core/AnimationController';
 import { Logo } from '@/lib/ui';
 import { Navigation } from '@/lib/ui';
 import { ContactButton } from '@/lib/ui';
 import { GlassCard } from '@/lib/ui';
 import styles from './header.module.scss';
+import { useHeaderAnimation, useMobileNavigation } from '@/lib/hooks/useHeaderBehavior';
+import { navigateToSection } from '@/lib/utils/navigateToSection';
 
 /**
- * Навигация к секциям с использованием AnimationController
+ * Навигация к секциям вынесена в util `navigateToSection`
  */
-const navigateToSection = (
-  sectionId: string,
-  isReady: boolean,
-  smoother: ScrollSmootherInstance | null,
-  scrollTo:
-    | ((target: string | number | Element, smooth?: boolean, position?: string) => void)
-    | null,
-) => {
-  console.log('🔍 Navigation attempt:', { sectionId, isReady });
-
-  const cardIndex = animationController.getCardIndexBySectionId(sectionId);
-  console.log('📍 Card index for section:', cardIndex);
-
-  if (cardIndex !== -1 && animationController.isReady()) {
-    console.log('✅ Using AnimationController navigation');
-    animationController.navigateToCard(cardIndex);
-    return;
-  }
-
-  const element = document.getElementById(sectionId);
-  console.log('🎯 Element found:', !!element);
-  if (!element) return;
-
-  if (isReady && smoother && scrollTo) {
-    console.log('🚀 Using ScrollSmoother navigation');
-    try {
-      scrollTo(element, true, 'top top');
-    } catch {
-      console.log('⚠️ ScrollSmoother failed, using fallback');
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  } else {
-    console.log('📜 Using native scrollIntoView');
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-};
 
 /**
  * Компонент шапки сайта
  */
 // eslint-disable-next-line max-lines-per-function
 export function Header() {
-  const headerRef = useRef<HTMLElement>(null);
-  const elementTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const { headerRef } = useHeaderAnimation();
   const { scrollTo, isReady, smoother } = useScrollSmoother();
-
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!headerRef.current) return;
-
-    const tl = createElementTimeline(headerRef.current);
-    elementTimelineRef.current = tl;
-
-    const start = () => elementTimelineRef.current?.play();
-    const preloaderRoot = document.querySelector('[data-preloader-root]');
-
-    if (preloaderRoot) {
-      document.addEventListener('preloader:complete', start as EventListener, { once: true });
-    } else {
-      start();
-    }
-
-    return () => {
-      document.removeEventListener('preloader:complete', start as EventListener);
-    };
-  }, []);
-
-  const closeMobileNav = useCallback(() => setIsMobileNavOpen(false), []);
-
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        closeMobileNav();
-      }
-    }
-    if (isMobileNavOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      // lock scroll
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [isMobileNavOpen, closeMobileNav]);
-
-  useEffect(() => {
-    function onResize() {
-      if (window.innerWidth > 768 && isMobileNavOpen) {
-        setIsMobileNavOpen(false);
-      }
-    }
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, [isMobileNavOpen]);
-
-  useEffect(() => {
-    function handleDocumentClick(e: MouseEvent) {
-      if (isMobileNavOpen && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        closeMobileNav();
-      }
-    }
-    
-    if (isMobileNavOpen) {
-      document.addEventListener('click', handleDocumentClick);
-    }
-    
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, [isMobileNavOpen, closeMobileNav]);
+  const { isMobileNavOpen, toggleMobileNav, closeMobileNav, dropdownRef } = useMobileNavigation();
 
   const handleNavigate = (sectionId: string) => {
     console.log('🎯 handleNavigate called with:', sectionId);
@@ -140,16 +31,13 @@ export function Header() {
 
   const handleButtonClick = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      setIsMobileNavOpen((v) => !v);
+      toggleMobileNav();
     } else {
       handleNavigate('contact-section');
     }
   };
 
-  const handleDropdownClick = (e: React.MouseEvent) => {
-    // Prevent closing when clicking inside the dropdown content
-    e.stopPropagation();
-  };
+  // клики по документу и внутри дропдауна обрабатываются в хукe useMobileNavigation
 
   return (
     <header ref={headerRef} className={styles.header} id="header">
@@ -195,16 +83,19 @@ export function Header() {
             aria-label="Close navigation"
             onClick={closeMobileNav}
           />
-          <div 
+          <div
             ref={dropdownRef}
-            id="mobile-nav-panel" 
-            className={styles.header__dropdown} 
-            role="navigation" 
+            id="mobile-nav-panel"
+            className={styles.header__dropdown}
+            role="navigation"
             aria-label="Mobile navigation"
-            onClick={handleDropdownClick}
           >
             <GlassCard className={styles.header__dropdownCard} variant="content-focused">
-              <Navigation data-variant="mobile" className={styles.header__dropdownNav} onNavigate={handleNavigate} />
+              <Navigation
+                data-variant="mobile"
+                className={styles.header__dropdownNav}
+                onNavigate={handleNavigate}
+              />
             </GlassCard>
           </div>
         </>

@@ -1,6 +1,6 @@
-@use '@/styles/_variables.scss' as *;
-@use '@/styles/_mixins.scss' as *;
-@use '@/styles/_typography.scss' as typo;
+@use '@/app/styles/_variables.scss' as *;
+@use '@/app/styles/_mixins.scss' as *;
+@use '@/app/styles/_typography.scss' as typo;
 
 .skills {
   &__text {

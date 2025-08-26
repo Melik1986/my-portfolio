@@ -1,3 +1,6 @@
+export const DEFAULT_VIDEO_DESCRIPTION =
+  'Short animated ads and promo videos powered by AI. Every clip is a dynamic tool to grab attention, tell a story, and enhance any campaign.';
+
 export const DEFAULT_VIDEO_ROWS: string[][] = [
   [
     'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',

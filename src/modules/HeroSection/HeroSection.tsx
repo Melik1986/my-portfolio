@@ -3,7 +3,7 @@
 import { HeroLetters, HeroAvatar } from './components/index';
 import { HeroContentLeft, HeroContentRight } from './components/index';
 import styles from './HeroSection.module.scss';
-import '@/styles/_visually-hidden.scss';
+import '@/app/styles/_visually-hidden.scss';
 
 export function HeroSection() {
   return (

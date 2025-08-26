@@ -147,4 +147,3 @@ export const resetAnimation = (
     }
   }, 1000);
 };
-

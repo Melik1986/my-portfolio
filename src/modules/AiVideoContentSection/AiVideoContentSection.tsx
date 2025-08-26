@@ -3,7 +3,10 @@
 import React from 'react';
 import { AiVideoContentProps } from './types/AiVideoContent.types';
 import { VideoMarqueeGroup, VideoOverlay } from './component';
-import { DEFAULT_VIDEO_ROWS } from './constants/AiVideoContent.constants';
+import {
+  DEFAULT_VIDEO_ROWS,
+  DEFAULT_VIDEO_DESCRIPTION,
+} from './constants/AiVideoContent.constants';
 import { HorizontalMarquee, ContentSection } from '../AiContentSection/component';
 import styles from '../AiContentSection/AiContentSection.module.scss';
 import { AI_CONTENT_CONSTANTS } from '../AiContentSection/constants/AiContent.constants';
@@ -14,7 +17,7 @@ export function AiVideoContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
   videoRows = DEFAULT_VIDEO_ROWS,
   title = AI_CONTENT_CONSTANTS.DEFAULT_TITLE,
-  description = AI_CONTENT_CONSTANTS.DEFAULT_DESCRIPTION,
+  description = DEFAULT_VIDEO_DESCRIPTION,
   className = '',
 }: AiVideoContentProps) {
   const { containerRef, overlayVideoRef, state, onContainerClick, closeOverlay } =

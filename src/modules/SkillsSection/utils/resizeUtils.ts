@@ -49,7 +49,9 @@ export const resizeCharts = (
   designChart.setOption({
     legend: {
       textStyle: { fontSize: legendFontSize },
-      show: (typeof window === 'undefined' ? designWidth : window.innerWidth) >= RESPONSIVE_BREAKPOINTS.desktop,
+      show:
+        (typeof window === 'undefined' ? designWidth : window.innerWidth) >=
+        RESPONSIVE_BREAKPOINTS.desktop,
     },
     series: [{ radius: [0, radius] }],
   });
