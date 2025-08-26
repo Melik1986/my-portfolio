@@ -41,6 +41,24 @@ export class AnimationController {
   private activeCardIndex = 0;
   private isInitialized = false;
   private totalCardsCount: number | null = null;
+  private pendingCardIndex: number | null = null;
+
+  private waitForMasterReady(): void {
+    if (!this.masterTimeline) return;
+    const tryNotify = () => {
+      const hasTrigger = Boolean(this.masterTimeline && this.masterTimeline.scrollTrigger);
+      if (hasTrigger) {
+        if (this.pendingCardIndex !== null) {
+          const toGo = this.pendingCardIndex;
+          this.pendingCardIndex = null;
+          this.navigateToCard(toGo);
+        }
+        return;
+      }
+      requestAnimationFrame(tryNotify);
+    };
+    tryNotify();
+  }
 
   /**
    * Инициализация мастер-анимации (только для Hero секции)
@@ -72,6 +90,8 @@ export class AnimationController {
 
     this.isInitialized = true;
     this.totalCardsCount = items.length;
+    // Wait until ScrollTrigger is attached, then process any pending navigation
+    this.waitForMasterReady();
     return this.masterTimeline;
   }
 
@@ -180,6 +200,8 @@ export class AnimationController {
           setTimeout(() => ScrollTrigger.refresh(), 50);
         });
       } catch {}
+      // Запомним намерение навигации и выполним, когда ScrollTrigger станет доступен
+      this.pendingCardIndex = cardIndex;
       return false;
     }
 

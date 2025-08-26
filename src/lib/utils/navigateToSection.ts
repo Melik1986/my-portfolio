@@ -23,9 +23,17 @@ export function navigateToSection(
 
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
 
-  if (cardIndex !== -1 && animationController.isReady()) {
+  if (cardIndex !== -1) {
+    // Ensure master is initialized if user navigates very early
+    if (!animationController.isReady()) {
+      animationController.initializeMaster();
+    }
     const ok = animationController.navigateToCard(cardIndex);
     if (ok) return;
+    // Retry once on next frame if ScrollTrigger attaches a moment later
+    requestAnimationFrame(() => {
+      animationController.navigateToCard(cardIndex);
+    });
   }
 
   const element = document.getElementById(sectionId);
