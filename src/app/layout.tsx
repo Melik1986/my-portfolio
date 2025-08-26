@@ -3,6 +3,7 @@ import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './styles/globals.scss';
 import AppThemeProvider from './ThemeProvider';
+import { I18nProvider } from '@/i18n';
 import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
@@ -145,6 +146,7 @@ export default function RootLayout({
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
         <AppThemeProvider>
+          <I18nProvider>
           <main className="portfolio" id="smooth-wrapper">
             <div className="portfolio__section" id="smooth-content">
               <Container>
@@ -157,6 +159,7 @@ export default function RootLayout({
             {/* Optional theme toggle, can be removed later */}
             {/* <ThemeToggle /> */}
           </main>
+          </I18nProvider>
         </AppThemeProvider>
       </body>
     </html>

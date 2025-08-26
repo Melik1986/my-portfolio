@@ -1,0 +1,30 @@
+{
+  "error.title": "Что-то пошло не так!",
+  "error.tryAgain": "Попробовать снова",
+
+  "notFound.title": "Страница не найдена",
+  "notFound.description": "К сожалению, запрашиваемая страница не существует.",
+  "notFound.backHome": "Вернуться на главную",
+
+  "header.contactMe": "Связаться со мной",
+  "header.navigation": "Навигация",
+  "header.closeNavigation": "Закрыть навигацию",
+  "header.mobileNavigation": "Мобильная навигация",
+
+  "skills.title": "Навыки",
+  "contact.title": "Контакты"
+  ,
+  "api.invalidPayload": "Неверный формат данных",
+  "api.invalidJson": "Некорректный JSON",
+  "api.smtpNotConfigured": "SMTP не настроен",
+  "api.serverError": "Не удалось отправить сообщение",
+  "api.ok": "Сообщение успешно отправлено",
+  "mail.subject.client": "Новая заявка от клиента: {name}",
+  "mail.subject.company": "Новая заявка от компании: {name}",
+  "mail.type": "Тип",
+  "mail.name": "Имя",
+  "mail.email": "Email",
+  "mail.message": "Сообщение",
+  "mail.noMessage": "(без сообщения)"
+}
+

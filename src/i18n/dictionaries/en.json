@@ -1,0 +1,30 @@
+{
+  "error.title": "Something went wrong!",
+  "error.tryAgain": "Try again",
+
+  "notFound.title": "Page not found",
+  "notFound.description": "Unfortunately, the requested page does not exist.",
+  "notFound.backHome": "Back to home",
+
+  "header.contactMe": "Contact me",
+  "header.navigation": "Navigation",
+  "header.closeNavigation": "Close navigation",
+  "header.mobileNavigation": "Mobile navigation",
+
+  "skills.title": "Skills",
+  "contact.title": "Contact"
+  ,
+  "api.invalidPayload": "Invalid payload",
+  "api.invalidJson": "Invalid JSON",
+  "api.smtpNotConfigured": "SMTP is not configured",
+  "api.serverError": "Failed to send message",
+  "api.ok": "Message sent successfully",
+  "mail.subject.client": "New client inquiry from {name}",
+  "mail.subject.company": "New company inquiry from {name}",
+  "mail.type": "Type",
+  "mail.name": "Name",
+  "mail.email": "Email",
+  "mail.message": "Message",
+  "mail.noMessage": "(no message)"
+}
+
