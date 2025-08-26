@@ -30,11 +30,14 @@ export function Header() {
   };
 
   const handleButtonClick = () => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      toggleMobileNav();
-    } else {
-      handleNavigate('contact-section');
+    if (typeof window !== 'undefined') {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) {
+        toggleMobileNav();
+        return;
+      }
     }
+    handleNavigate('contact-section');
   };
 
   // клики по документу и внутри дропдауна обрабатываются в хукe useMobileNavigation
