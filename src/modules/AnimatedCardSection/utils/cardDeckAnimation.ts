@@ -108,13 +108,13 @@ export function initCardDeckScroll(
   mm.add('(max-width: 767px)', () => {
     // [TEST] Отключено мобильное переопределение направления: используем смешанную раскладку как на десктопе
     // Позиции не переинициализируем: сохраняем стартовые позиции (смешанная раскладка)
-    // items.forEach((item, index) => {
-    //   if (index === 0) {
-    //     gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
-    //   } else {
-    //     gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
-    //   }
-    // });
+    items.forEach((item, index) => {
+      if (index === 0) {
+        gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
+      } else {
+        gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
+      }
+    });
 
     timeline = gsap.timeline({
       id: 'card-deck-timeline-mobile',
