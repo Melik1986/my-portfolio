@@ -18,7 +18,7 @@ test.describe('Header button and navigation behavior', () => {
     await disableAnimations(page);
     const btn = page.getByRole('button', { name: /contact me/i });
     await btn.click();
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(1000);
     // Assert either deck scrolled near contact or content is visible
     const contactContainer = page.locator('#contact-content');
     await expect(contactContainer).toBeVisible();
