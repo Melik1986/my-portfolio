@@ -6,17 +6,21 @@
   &__text {
     margin: 0 0 20px;
     font-family: $font-family-roboto;
-    line-height: 1.2;
+    line-height: 1.5;
     font-size: clamp(0.75rem, 1vw + 0.75rem, 1.1rem);
     letter-spacing: 0.05rem;
-    text-wrap: balance;
     will-change: transform;
     opacity: 0;
     color: var(--skills-text-color, var(--color-text-primary));
     @include typo.type-body;
 
+    @include vp-768 {
+      line-height: 1.2;
+    }
+
     @include vp-375 {
       margin: 0;
+      line-height: 1.1;
     }
 
     &-desktop {

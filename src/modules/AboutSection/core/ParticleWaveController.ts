@@ -155,14 +155,12 @@ export class ParticleWaveController {
   public handleResize(): void {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
-    if (height < 60) {
-      const derived = Math.round(width / 8); // ~ 16:5 ratio
-      height = Math.max(derived, 260);
-    }
+    // Высота полностью задаётся CSS контейнера; оставляем лишь защиту от нуля
+    if (height <= 0) height = 1;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
     this.cameraController.updateViewport(width, height);
   }
 
@@ -228,10 +226,7 @@ export class ParticleWaveController {
   private createCamera(): PerspectiveCamera {
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
-    if (height < 60) {
-      const derived = Math.round(width / 3);
-      height = Math.max(derived, 160);
-    }
+    if (height <= 0) height = 1;
 
     const camera = new PerspectiveCamera(
       this.config.cameraFov,
@@ -257,13 +252,17 @@ export class ParticleWaveController {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const width = this.container.clientWidth || this.container.offsetWidth || 1;
     let height = this.container.clientHeight || this.container.offsetHeight || 1;
-    if (height < 60) {
-      const derived = Math.round(width / 4);
-      height = Math.max(derived, 160);
-    }
-    renderer.setSize(width, height);
+    if (height <= 0) height = 1;
+    renderer.setSize(width, height, false);
 
     this.container.appendChild(renderer.domElement);
+    try {
+      const canvas = renderer.domElement as HTMLCanvasElement;
+      canvas.style.width = '';
+      canvas.style.height = '';
+    } catch {
+      // no-op
+    }
     return renderer;
   }
 
