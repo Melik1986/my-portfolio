@@ -28,12 +28,8 @@ export function navigateToSection(
     if (!animationController.isReady()) {
       animationController.initializeMaster();
     }
-    const ok = animationController.navigateToCard(cardIndex);
-    if (ok) return;
-    // Retry once on next frame if ScrollTrigger attaches a moment later
-    requestAnimationFrame(() => {
-      animationController.navigateToCard(cardIndex);
-    });
+    void animationController.navigateToCardAsync(cardIndex);
+    return;
   }
 
   const element = document.getElementById(sectionId);
