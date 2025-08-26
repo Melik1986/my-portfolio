@@ -11,11 +11,7 @@ export function SuccessModal({ isOpen, onClose, messageType }: SuccessModalProps
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.modal}
-        onClick={(e) => e.stopPropagation()}
-        {...containerProps}
-      >
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()} {...containerProps}>
         <GlassCard variant="content-focused" className={styles.card}>
           <div className={styles.content}>
             <div className={styles.icon}>

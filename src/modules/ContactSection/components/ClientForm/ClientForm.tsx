@@ -106,11 +106,7 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
         fieldErrors={fieldErrors}
         onToggleToCompany={onToggleToCompany}
       />
-      <SuccessModal
-        isOpen={showSuccessModal}
-        onClose={handleCloseModal}
-        messageType="client"
-      />
+      <SuccessModal isOpen={showSuccessModal} onClose={handleCloseModal} messageType="client" />
     </>
   );
 }

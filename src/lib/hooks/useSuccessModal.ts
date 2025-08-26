@@ -18,5 +18,3 @@ export function useSuccessModal(isOpen: boolean, type: 'client' | 'company') {
 
   return { content, containerProps } as const;
 }
-
-

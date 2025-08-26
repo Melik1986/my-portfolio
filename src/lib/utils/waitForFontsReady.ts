@@ -22,4 +22,3 @@ export async function waitForFontsReady(timeoutMs = 4000): Promise<void> {
     // ignore
   }
 }
-
