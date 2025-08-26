@@ -12,8 +12,8 @@ export function navigateToSection(
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
 
   if (cardIndex !== -1 && animationController.isReady()) {
-    animationController.navigateToCard(cardIndex);
-    return;
+    const ok = animationController.navigateToCard(cardIndex);
+    if (ok) return;
   }
 
   const element = document.getElementById(sectionId);
