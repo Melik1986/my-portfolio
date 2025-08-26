@@ -13,3 +13,4 @@ export * from './Navigation';
 export * from './SocialLinks';
 export * from './SpriteIcon';
 export * from './ThemeToggle';
+export * from './SuccessModal';

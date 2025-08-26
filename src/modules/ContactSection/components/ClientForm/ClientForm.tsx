@@ -1,8 +1,9 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFormValidation } from '../../hooks/useFormValidation';
 import { ClientFormFields } from '../FormFields/ClientFormFields';
 import { SocialLinks } from '@/lib/ui';
+import { SuccessModal } from '@/lib/ui/SuccessModal';
 import type { ClientFormProps, ClientFormData } from '../../types';
 
 import formStyles from '../ContactForm/ContactForm.module.scss';
@@ -66,8 +67,16 @@ function ClientFormView({
 
 export function ClientForm({ onToggleToCompany }: ClientFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const { formData, fieldErrors, validateForm, clearErrors, handleInputChange, handleInputBlur } =
-    useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const {
+    formData,
+    fieldErrors,
+    validateForm,
+    clearErrors,
+    resetFormData,
+    handleInputChange,
+    handleInputBlur,
+  } = useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -77,19 +86,31 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
     if (validateForm(form)) {
       clearErrors();
       form.reset();
-      alert('Message sent successfully');
+      resetFormData();
+      setShowSuccessModal(true);
     }
   };
 
+  const handleCloseModal = (): void => {
+    setShowSuccessModal(false);
+  };
+
   return (
-    <ClientFormView
-      formRef={formRef}
-      handleSubmit={handleSubmit}
-      formData={formData}
-      handleInputChange={handleInputChange}
-      handleInputBlur={handleInputBlur}
-      fieldErrors={fieldErrors}
-      onToggleToCompany={onToggleToCompany}
-    />
+    <>
+      <ClientFormView
+        formRef={formRef}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleInputBlur={handleInputBlur}
+        fieldErrors={fieldErrors}
+        onToggleToCompany={onToggleToCompany}
+      />
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleCloseModal}
+        messageType="client"
+      />
+    </>
   );
 }

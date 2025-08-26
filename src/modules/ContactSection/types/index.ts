@@ -51,6 +51,8 @@ export interface TogglePanelProps {
   onToggleToCompany: () => void;
 }
 
+
+
 // Field configuration types
 export interface FieldConfig {
   key: string;
