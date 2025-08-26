@@ -9,17 +9,17 @@ export function TogglePanel({ onToggleToClient, onToggleToCompany }: TogglePanel
   return (
     <div className={styles['toggle-box']}>
       <div className={`${styles['toggle-panel']} ${styles['toggle-panel--left']}`}>
-        <h1 className={styles['toggle-panel__title']}>{t('contact.toggle.welcomeTitle')}</h1>
-        <p className={styles['toggle-panel__text']}>{t('contact.toggle.welcomeText')}</p>
+        <h1 className={styles['toggle-panel__title']}>{t('section.contact.toggle.welcomeTitle')}</h1>
+        <p className={styles['toggle-panel__text']}>{t('section.contact.toggle.welcomeText')}</p>
         <button type="button" className={styles['toggle-btn']} onClick={onToggleToClient}>
-          {t('contact.toggle.clientForm')}
+          {t('section.contact.toggle.clientForm')}
         </button>
       </div>
       <div className={`${styles['toggle-panel']} ${styles['toggle-panel--right']}`}>
-        <h1 className={styles['toggle-panel__title']}>{t('contact.toggle.quoteTitle')}</h1>
-        <p className={styles['toggle-panel__text']}>{t('contact.toggle.quoteText')}</p>
+        <h1 className={styles['toggle-panel__title']}>{t('section.contact.toggle.quoteTitle')}</h1>
+        <p className={styles['toggle-panel__text']}>{t('section.contact.toggle.quoteText')}</p>
         <button type="button" className={styles['toggle-btn']} onClick={onToggleToCompany}>
-          {t('contact.toggle.companyForm')}
+          {t('section.contact.toggle.companyForm')}
         </button>
       </div>
     </div>

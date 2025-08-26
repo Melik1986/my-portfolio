@@ -19,7 +19,7 @@ export function AiContentSection({
   return (
     <section className={`${styles['ai-content']} ${className}`} id="ai-content-section">
       <h2 className={`${styles['ai-content__title']} visually-hidden`}>
-        {title === 'ai.title' ? t('section.ai.title') : title || 'AI Content'}
+        {title === 'section.ai.title' ? t('section.ai.title') : title || 'AI Content'}
       </h2>
 
       <div className={styles['ai-content__marquee-container']}>
@@ -51,9 +51,9 @@ export function AiContentSection({
             />
           </div>
           <ContentSection
-            title={title === 'ai.title' ? t('section.ai.title') : title}
+            title={title === 'section.ai.title' ? t('section.ai.title') : title}
             description={
-              description === 'ai.description' ? t('section.ai.description') : description
+              description === 'section.ai.description' ? t('section.ai.description') : description
             }
           />
         </div>

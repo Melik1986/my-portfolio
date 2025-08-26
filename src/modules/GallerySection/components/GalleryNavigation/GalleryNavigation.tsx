@@ -27,7 +27,7 @@ export function GalleryNavigation({
       <button
         className={styles['gallery-arrows__button']}
         onClick={prevSlide}
-        title={t('gallery.prev')}
+        title={t('section.gallery.prev')}
       >
         <SpriteIcon
           id="icon-arrow-left"
@@ -35,7 +35,7 @@ export function GalleryNavigation({
           sprite="/icons/tech-icons.svg"
         />
       </button>
-      <button className={styles['gallery-arrows__button']} onClick={nextSlide} title={t('gallery.next')}>
+      <button className={styles['gallery-arrows__button']} onClick={nextSlide} title={t('section.gallery.next')}>
         <SpriteIcon
           id="icon-arrow-right"
           className={styles['gallery-arrows__icon']}

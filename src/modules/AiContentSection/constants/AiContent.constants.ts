@@ -6,9 +6,8 @@ export interface AiContentSectionConstantsType {
 }
 
 export const AI_CONTENT_CONSTANTS: AiContentSectionConstantsType = {
-  DEFAULT_TITLE: 'ai.title',
-  DEFAULT_DESCRIPTION:
-    'ai.description',
+  DEFAULT_TITLE: 'section.ai.title',
+  DEFAULT_DESCRIPTION: 'section.ai.description',
   DEFAULT_HORIZONTAL_TEXTS: [
     'GitHub Copilot Cursor AI LLM ChatGPT SORA AI Recraft KREA FLORA',
     'VS Code Cursor GitDesktop GitLab Github React Figma Adobe Tilda Spine Blender',

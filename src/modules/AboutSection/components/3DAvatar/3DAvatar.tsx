@@ -100,12 +100,12 @@ function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
     <div className={`${styles.tooltip} ${styles['tooltip--visible']}`}>
       <GlassCard>
         <div className={styles.tooltip__content}>
-          <h3>{t('about.avatar.title')}</h3>
-          <p>{t('about.avatar.subtitle')}</p>
+          <h3>{t('section.about.avatar.title')}</h3>
+          <p>{t('section.about.avatar.subtitle')}</p>
           <ul>
-            <li>{t('about.avatar.features.greeting')}</li>
-            <li>{t('about.avatar.features.reactivity')}</li>
-            <li>{t('about.avatar.features.scaling')}</li>
+            <li>{t('section.about.avatar.features.greeting')}</li>
+            <li>{t('section.about.avatar.features.reactivity')}</li>
+            <li>{t('section.about.avatar.features.scaling')}</li>
           </ul>
         </div>
       </GlassCard>

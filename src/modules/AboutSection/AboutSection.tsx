@@ -1,3 +1,4 @@
+"use client";
 import { AboutContent, Avatar } from './components/index';
 import styles from './About.module.scss';
 import { useI18n } from '@/i18n';

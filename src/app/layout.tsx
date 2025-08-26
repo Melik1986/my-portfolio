@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
 import { tServer } from '@/i18n/server';
+import { I18nProvider } from '@/i18n';
+import type { SupportedLocale } from '@/i18n';
 import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './styles/globals.scss';
 import AppThemeProvider from './ThemeProvider';
-import { I18nProvider } from '@/i18n';
 import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
@@ -69,8 +70,8 @@ const poppins = Poppins({
  * Определяет заголовок и описание страницы для поисковых систем
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const cookieStore = cookies();
-  const hdrs = headers();
+  const cookieStore = await cookies();
+  const hdrs = await headers();
   const cookieLocale = cookieStore.get('locale')?.value || '';
   const headerLocale = (hdrs.get('x-locale') || '').toLowerCase();
   const accept = hdrs.get('accept-language') || '';
@@ -144,13 +145,14 @@ export async function generateMetadata(): Promise<Metadata> {
  * Корневой layout компонент
  * Оборачивает все страницы в HTML структуру с контейнером
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const hdrs = typeof window === 'undefined' ? undefined : undefined;
-  const cookieLocale = cookies().get('locale')?.value || 'en';
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get('locale')?.value || 'en';
   const htmlLang = cookieLocale === 'ru' ? 'ru' : 'en';
 
   return (
@@ -159,7 +161,7 @@ export default function RootLayout({
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
         <AppThemeProvider>
-          <I18nProvider>
+          <I18nProvider locale={htmlLang as SupportedLocale}>
           <main className="portfolio" id="smooth-wrapper">
             <div className="portfolio__section" id="smooth-content">
               <Container>

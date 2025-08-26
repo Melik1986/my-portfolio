@@ -1,3 +1,4 @@
+"use client";
 import { lazy, Suspense } from 'react';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsSection.module.scss';
