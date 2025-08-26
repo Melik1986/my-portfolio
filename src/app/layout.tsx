@@ -131,6 +131,55 @@ export const metadata: Metadata = {
   },
 };
 
+function GlobalJsonLd() {
+  return (
+    <>
+      <JsonLd
+        id="jsonld-person"
+        item={{
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: 'Melik Musinian',
+          url: 'https://melikmusinian.com',
+          jobTitle: 'Full-Stack / Frontend Developer',
+          sameAs: ['https://github.com/Melik1986', 'https://x.com/melikmusinian'],
+        }}
+      />
+      <JsonLd
+        id="jsonld-website"
+        item={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'My Portfolio',
+          url: 'https://melikmusinian.com',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: 'https://melikmusinian.com/?q={search_term_string}',
+            'query-input': 'required name=search_term_string',
+          },
+        }}
+      />
+    </>
+  );
+}
+
+function MainShell({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="portfolio" id="smooth-wrapper">
+      <div className="portfolio__section" id="smooth-content">
+        <Container>
+          {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
+          <GlobalPreloader />
+          <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+        </Container>
+      </div>
+      <AnchorButton />
+      {/* Optional theme toggle, can be removed later */}
+      {/* <ThemeToggle /> */}
+    </main>
+  );
+}
+
 /**
  * Корневой layout компонент
  * Оборачивает все страницы в HTML структуру с контейнером
@@ -146,47 +195,9 @@ export default function RootLayout({
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
         <AppThemeProvider>
-          <main className="portfolio" id="smooth-wrapper">
-            <div className="portfolio__section" id="smooth-content">
-              <Container>
-                {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
-                <GlobalPreloader />
-                <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
-              </Container>
-            </div>
-            <AnchorButton />
-            {/* Optional theme toggle, can be removed later */}
-            {/* <ThemeToggle /> */}
-          </main>
+          <MainShell>{children}</MainShell>
           {/* JSON-LD for Person and WebSite */}
-          <JsonLd
-            id="jsonld-person"
-            item={{
-              '@context': 'https://schema.org',
-              '@type': 'Person',
-              name: 'Melik Musinian',
-              url: 'https://melikmusinian.com',
-              jobTitle: 'Full-Stack / Frontend Developer',
-              sameAs: [
-                'https://github.com/Melik1986',
-                'https://x.com/melikmusinian',
-              ],
-            }}
-          />
-          <JsonLd
-            id="jsonld-website"
-            item={{
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: 'My Portfolio',
-              url: 'https://melikmusinian.com',
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: 'https://melikmusinian.com/?q={search_term_string}',
-                'query-input': 'required name=search_term_string',
-              },
-            }}
-          />
+          <GlobalJsonLd />
         </AppThemeProvider>
       </body>
     </html>

@@ -6,9 +6,9 @@ import { QueryFanOut } from '@/lib/ui';
 
 // Ленивый импорт тяжёлой анимации
 const AboutAnimationLazy = lazy(() =>
-  import('../AboutAnimation/AboutAnimation').then((mod) => ({
-    default: mod.AboutAnimation,
-  })),
+	import('../AboutAnimation/AboutAnimation').then((mod) => ({
+		default: mod.AboutAnimation,
+	})),
 );
 
 /**
@@ -63,58 +63,70 @@ function AboutTextMobile() {
 	);
 }
 
+function AboutAnimationBlock() {
+	return (
+		<div
+			className={styles['about__animation']}
+			data-animation="fade-up"
+			data-duration="0.8"
+			data-ease="power2.out"
+			data-delay="0.6"
+		>
+			<Suspense fallback={<div className={styles['about__animation-placeholder']} />}>
+				<AboutAnimationLazy />
+			</Suspense>
+		</div>
+	);
+}
+
+function AboutQFO() {
+	return (
+		<QueryFanOut
+			title="Related questions about my background"
+			relatedQuestions={[
+				'How does design thinking influence implementation?',
+				'Which performance metrics do you prioritize?',
+				'What is your accessibility checklist?',
+			]}
+			clarifications={[
+				'Preferred tech stack for different project sizes',
+				'How timelines change for animations and 3D',
+			]}
+			comparisons={[
+				'SSR vs. SSG in Next.js portfolios',
+				'GSAP vs. CSS animations for micro‑interactions',
+			]}
+		/>
+	);
+}
+
 /**
  * Основной контент секции "Обо мне"
  * Композирует заголовок, текст и Aurora анимацию
  */
 export function AboutContent() {
-  return (
-    <>
-      <h3
-        className={styles['about__heading']}
-        data-animation="slide-left"
-        data-duration="1.0"
-        data-ease="power2.out"
-        data-delay="0"
-      >
-        About Me
-      </h3>
-      <div
-        data-animation="text-reveal"
-        data-duration="1.2"
-        data-ease="power2.out"
-        data-delay="0.5"
-      >
-        <AboutTextDesktop />
-        <AboutTextMobile />
-      </div>
-      <div
-        className={styles['about__animation']}
-        data-animation="fade-up"
-        data-duration="0.8"
-        data-ease="power2.out"
-        data-delay="0.6"
-      >
-        <Suspense fallback={<div className={styles['about__animation-placeholder']} />}>
-          <AboutAnimationLazy />
-        </Suspense>
-      </div>
-      <QueryFanOut
-        title="Related questions about my background"
-        relatedQuestions={[
-          'How does design thinking influence implementation?',
-          'Which performance metrics do you prioritize?',
-          'What is your accessibility checklist?',
-        ]}
-        clarifications={[
-          'Preferred tech stack for different project sizes',
-          'How timelines change for animations and 3D',
-        ]}
-        comparisons={[
-          'SSR vs. SSG in Next.js portfolios',
-          'GSAP vs. CSS animations for micro‑interactions',
-        ]}
-      />
-    </>
-  );
+	return (
+		<>
+			<h3
+				className={styles['about__heading']}
+				data-animation="slide-left"
+				data-duration="1.0"
+				data-ease="power2.out"
+				data-delay="0"
+			>
+				About Me
+			</h3>
+			<div
+				data-animation="text-reveal"
+				data-duration="1.2"
+				data-ease="power2.out"
+				data-delay="0.5"
+			>
+				<AboutTextDesktop />
+				<AboutTextMobile />
+			</div>
+			<AboutAnimationBlock />
+			<AboutQFO />
+		</>
+	);
 }
