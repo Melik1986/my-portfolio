@@ -2,6 +2,7 @@
 
 import { gsap } from 'gsap';
 import { SplitText as GsapSplitText } from 'gsap/SplitText';
+import { waitForFontsReady } from '@/lib/utils/waitForFontsReady';
 import type {
   AnimationType,
   GlobalSplitTextStorage,
@@ -351,13 +352,16 @@ function addSvgDrawAnimation(
   });
 }
 
-function addTextRevealAnimation(
+async function addTextRevealAnimation(
   timeline: gsap.core.Timeline,
   config: ElementAnimationConfig,
   positionOverride?: number | string,
 ) {
   const { element, params, animationDef } = config;
   if (!element || !element.textContent?.trim() || !animationDef) return;
+
+  // Ensure fonts are ready before splitting text to get correct line breaks
+  await waitForFontsReady();
 
   const splitText = getSplitTextInstance(element as HTMLElement);
   if (!splitText?.lines?.length) return;
