@@ -7,6 +7,7 @@ import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
 import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
+import { JsonLd } from '../lib/ui';
 
 // Локальные шрифты
 const chango = localFont({
@@ -157,6 +158,35 @@ export default function RootLayout({
             {/* Optional theme toggle, can be removed later */}
             {/* <ThemeToggle /> */}
           </main>
+          {/* JSON-LD for Person and WebSite */}
+          <JsonLd
+            id="jsonld-person"
+            item={{
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: 'Melik Musinian',
+              url: 'https://melikmusinian.com',
+              jobTitle: 'Full-Stack / Frontend Developer',
+              sameAs: [
+                'https://github.com/Melik1986',
+                'https://x.com/melikmusinian',
+              ],
+            }}
+          />
+          <JsonLd
+            id="jsonld-website"
+            item={{
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'My Portfolio',
+              url: 'https://melikmusinian.com',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://melikmusinian.com/?q={search_term_string}',
+                'query-input': 'required name=search_term_string',
+              },
+            }}
+          />
         </AppThemeProvider>
       </body>
     </html>

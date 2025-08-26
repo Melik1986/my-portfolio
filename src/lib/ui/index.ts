@@ -13,3 +13,5 @@ export * from './Navigation';
 export * from './SocialLinks';
 export * from './SpriteIcon';
 export * from './ThemeToggle';
+export * from './JsonLd/JsonLd';
+export * from './QueryFanOut/QueryFanOut';

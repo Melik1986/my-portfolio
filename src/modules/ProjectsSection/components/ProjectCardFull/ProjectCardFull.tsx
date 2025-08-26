@@ -6,47 +6,66 @@ import Link from 'next/link';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectCardFull.module.scss';
 import { GlassCard } from '@/lib/ui';
+import { QueryFanOut } from '@/lib/ui';
 
 interface ProjectCardFullscreenProps {
-  project: ProjectData;
-  onClose?: () => void;
+	project: ProjectData;
+	onClose?: () => void;
 }
 
 export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscreenProps) {
-  return (
-    <>
-      <Image
-        className={styles['projects-card__img']}
-        src={project.image}
-        alt={project.title}
-        width={800}
-        height={600}
-        priority
-        sizes="100vw"
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-      />
-      <GlassCard className={styles['projects-card__content']} variant="content-focused">
-        <h3 className={styles['projects-card__title']}>{project.title}</h3>
-        <p className={styles['projects-card__text']}>{project.text}</p>
-        <Link
-          className={styles['projects-card__link']}
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Repositories
-        </Link>
-      </GlassCard>
-      {onClose && (
-        <button
-          className={styles['projects-card__close']}
-          onClick={onClose}
-          aria-label="Close fullscreen view"
-        >
-          ✕
-        </button>
-      )}
-    </>
-  );
+	return (
+		<>
+			<Image
+				className={styles['projects-card__img']}
+				src={project.image}
+				alt={`${project.title} — project screenshot`}
+				width={800}
+				height={600}
+				priority
+				sizes="100vw"
+				placeholder="blur"
+				blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+			/>
+			<GlassCard className={styles['projects-card__content']} variant="content-focused">
+				<h3 className={styles['projects-card__title']}>{project.title}</h3>
+				<p className={styles['projects-card__text']} data-nosnippet>
+					{project.text}
+				</p>
+				<Link
+					className={styles['projects-card__link']}
+					href={project.link}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Repositories
+				</Link>
+				<QueryFanOut
+					title="Related questions for this project"
+					relatedQuestions={[
+						'What tech stack best fits this project?',
+						'How does the animation impact performance?',
+						'What SEO measures were implemented?',
+					]}
+					clarifications={[
+						'Expected metrics: LCP, CLS, and TTI goals',
+						'Deployment environment and CDN setup',
+					]}
+					comparisons={[
+						'Next.js vs. Vite for this use‑case',
+						'SCSS Modules vs. CSS‑in‑JS for styling',
+					]}
+				/>
+			</GlassCard>
+			{onClose && (
+				<button
+					className={styles['projects-card__close']}
+					onClick={onClose}
+					aria-label="Close fullscreen view"
+				>
+					✕
+				</button>
+			)}
+		</>
+	);
 }

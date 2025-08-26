@@ -1,0 +1,148 @@
+# Melik Musinian — Web Portfolio
+
+## Overview
+A modern portfolio showcasing projects, skills, and approach to building high‑performance, user‑centric web apps with React, Next.js, TypeScript, and advanced animations.
+
+- Focus: frontend engineering, UI/UX, performance, and animation.
+- Stack: Next.js (App Router), React, TypeScript, SCSS Modules, GSAP, Next/Image.
+- Principles: accessibility, semantic HTML, atomic content, SEO + AI optimization.
+
+## Site Structure
+- Hero
+- About
+- Skills
+- Projects
+- Gallery
+- AI Content
+- AI Video
+- Contact
+
+---
+
+## Hero
+### Purpose
+Introduce identity and value proposition at a glance.
+
+### Key Elements
+- Animated letters, personal avatar, responsive layout.
+- Immediate visual context for brand and expertise.
+
+### Results
+- Fast first impression, scannable headline hierarchy.
+
+---
+
+## About
+### What I do
+- Build modern, performant, and accessible UIs.
+- Combine engineering rigor with design thinking.
+
+### Background
+- Transitioned from technical manufacturing to web development.
+- Strong focus on craft, maintainability, and UX.
+
+### Outcomes
+- Clear, credible narrative aligned to client value.
+
+---
+
+## Skills
+### Core Skills
+- Frontend: HTML5, CSS3, JavaScript (ES6+), React, Next.js
+- UI/UX: user‑centered design, wireframing, prototyping (Figma)
+- Performance: efficient code, image optimization, lazy loading
+- Animation & 3D: CSS, GSAP, Three.js; Blender, Spline
+- Tooling: Git, GitHub, Vite, ESLint, Prettier
+
+### Languages
+- Armenian, Russian, Ukrainian; German (B2 Beruf); English (A2)
+
+### Table — Skills Snapshot
+| Area        | Key Tools/Tech                  | Notes                              |
+|-------------|----------------------------------|------------------------------------|
+| Frontend    | React, Next.js, TypeScript      | App Router, SSR/SSG, code‑splitting |
+| UI/UX       | Figma, Design Systems           | Accessibility, component libraries  |
+| Performance | Next/Image, lazy load, caching  | CLS/LCP focus, image pipelines      |
+| Animation   | GSAP, CSS Animations, Three.js  | Micro‑interactions, 3D scenes       |
+
+---
+
+## Projects
+### Catalog
+Interactive project cards with fullscreen details and smooth animations.
+
+### Representative Projects
+- Algora — Next.js site for SMBs; emphasis on adaptability and usability.
+- Houzzy — e‑commerce furniture store, responsive and SEO‑friendly.
+- Format Archive — catalog with search/filter, modern design, and performance.
+- Balanced Pitch — one‑page SMB site focused on clarity and conversion.
+- Aiden‑Brooks — SPA portfolio on React + Vite with modern tooling.
+- Origin Studio — minimal structure, fast build (Vite), SEO‑ready.
+
+### Table — Project Overview
+| Project          | Tech Stack              | Scope/Focus                      | Outcome                          |
+|------------------|-------------------------|----------------------------------|-----------------------------------|
+| Algora           | Next.js, SCSS, GSAP     | Corporate site, animations       | Adaptive, usable, optimized       |
+| Houzzy           | React, Next.js, SCSS    | E‑commerce layout, SEO           | Responsive, clean, valid code     |
+| Format Archive   | Next.js, Search/Filter  | Catalog UX, performance          | Fast loading, intuitive UI        |
+| Balanced Pitch   | React/Next.js           | SMB landing, simplicity          | Works across devices, converts    |
+| Aiden‑Brooks     | React, Vite             | Portfolio SPA                    | Interactive, modern stack         |
+| Origin Studio    | Vite, React             | Minimalistic, SEO‑ready          | Instant build, extensible         |
+
+### Timelines (Typical)
+| Phase          | Duration |
+|----------------|----------|
+| Discovery      | 2–5 days |
+| Design         | 5–10 days|
+| Development    | 10–25 d. |
+| QA/Polish      | 3–7 days |
+
+---
+
+## Gallery
+Selected visuals and motion/3D content supporting case studies and aesthetic direction.
+
+---
+
+## AI Content
+AI‑augmented demos and experiments illustrating content generation and interaction patterns.
+
+---
+
+## AI Video
+Short video snippets and marquee rows demonstrating motion systems and overlays.
+
+---
+
+## Contact
+- Simple contact flows for clients and companies.
+- Accessible, validated forms.
+
+---
+
+## SEO and AI Optimization
+### Atomic Content
+- Each paragraph answers a single question or expresses one idea.
+- Clear H2–H4 hierarchy per section; H5–H6 for sub‑details.
+
+### Query Fan‑Out (QFO)
+- Related questions, comparisons, and clarifications embedded per section.
+- Encourages LLMs to index richer, disambiguated contexts.
+
+### Multimodal Content
+- Tables for tech/results/timelines; optimized images with descriptive `alt`.
+- Consistent filenames: semantic, hyphen‑separated.
+
+### Structured Data
+- JSON‑LD: `Person`, `WebSite`, `BreadcrumbList`, `FAQPage`, `HowTo`.
+- Visible FAQ and HowTo sections for users.
+
+### Content Protection
+- `data-nosnippet` on premium/unique insights to limit verbatim extraction.
+
+---
+
+## Contact Details
+- Site: https://melikmusinian.com
+- Twitter: @melikmusinian
+- GitHub: https://github.com/Melik1986

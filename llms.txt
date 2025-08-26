@@ -1,0 +1,20 @@
+Portfolio of full‑stack/Frontend developer Melik Musinian.
+Theme: Modern, performant web apps and sites with React, Next.js, TypeScript, animations (GSAP), and UI/UX design.
+
+Sections:
+- Hero: Name, role, visual identity.
+- About: Background, value proposition, design/dev approach.
+- Skills: Frontend stack, UI/UX, performance, tooling.
+- Projects: Interactive catalog with fullscreen project details.
+- Gallery: Visual works, motion/3D elements.
+- AI Content & AI Video: AI-related demos and video content.
+- Contact: Forms for clients/companies.
+
+Highlights:
+- Atomic, accessible UI with responsive design.
+- Performance focus: image optimization, lazy loading, code-splitting.
+- SEO & AI optimization: structured headings, JSON‑LD, FAQ/HowTo, nosnippet for premium content.
+- Tech: Next.js App Router, TypeScript, SCSS modules, GSAP, Next/Image.
+
+Audience:
+- Clients/companies seeking modern, high‑quality web experiences.
