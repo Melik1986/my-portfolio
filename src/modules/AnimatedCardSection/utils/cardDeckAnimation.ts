@@ -106,8 +106,7 @@ export function initCardDeckScroll(
 
   // Мобильные устройства (до 768px)
   mm.add('(max-width: 767px)', () => {
-    // [TEST] Отключено мобильное переопределение направления: используем смешанную раскладку как на десктопе
-    // Позиции не переинициализируем: сохраняем стартовые позиции (смешанная раскладка)
+    // Вертикальная раскладка: все карточки идут сверху вниз
     items.forEach((item, index) => {
       if (index === 0) {
         gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
@@ -129,11 +128,8 @@ export function initCardDeckScroll(
       },
     });
 
-    // Диагностика: используем смешанную раскладку на мобилках для проверки багов порядка/скролла
-    console.debug('[cardDeckAnimation] Mobile override disabled: using mixed layout for testing');
-
-    // Было: createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
-    createCardAnimation(timeline, items, onCardActivate);
+    // Вертикальная анимация: скролл сверху вниз без горизонтальных смещений
+    createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
 
     // ensure correct measurements after init
     waitForPinSpacer(section).then(() => {
