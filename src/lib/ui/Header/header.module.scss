@@ -74,7 +74,7 @@
 
     /* Hide navigation under 768px */
     @include vp-768 {
-      display: none;
+      display: none !important;
     }
 
     /* Control link spacing across breakpoints */
