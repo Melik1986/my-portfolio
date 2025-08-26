@@ -52,8 +52,18 @@
       top: 30%;
     }
 
-    @media (max-width: 768px) {
-      left: 10%; /* Центрирование по горизонтали */
+    @include vp-768 {
+      left: 26%;
+      top: 30%;
+      width: 360px;
+      height: 360px;
+    }
+
+    @include vp-375 {
+      left: 20%;
+      top: 30%;
+      width: 260px;
+      height: 260px;
     }
   }
 
@@ -159,6 +169,14 @@
     height: 2px;
     background-color: $preloader-progress-bg;
     overflow: hidden;
+
+    @include vp-768 {
+      bottom: 22vh;
+    }
+
+    @include vp-375 {
+      bottom: 20vh;
+    }
   }
 
   &__progress-bar {
