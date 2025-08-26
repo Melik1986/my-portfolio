@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { cookies, headers } from 'next/headers';
-import { t } from '@/i18n';
+import { tServer } from '@/i18n/server';
 import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './styles/globals.scss';
@@ -79,10 +79,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      default: t('seo.title.default'),
-      template: t('seo.title.template'),
+      default: tServer(locale, 'seo.title.default'),
+      template: tServer(locale, 'seo.title.template'),
     },
-    description: t('seo.description'),
+    description: tServer(locale, 'seo.description'),
     keywords: ['portfolio', 'web developer', 'React', 'Next.js', 'TypeScript', 'full-stack'],
     authors: [{ name: 'Melik Musinian' }],
     creator: 'Melik Musinian',
@@ -111,22 +111,22 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       locale: locale === 'ru' ? 'ru_RU' : 'en_US',
       url: 'https://melikmusinian.com',
-      siteName: t('seo.siteName'),
-      title: t('seo.title.default'),
-      description: t('seo.description'),
+      siteName: tServer(locale, 'seo.siteName'),
+      title: tServer(locale, 'seo.title.default'),
+      description: tServer(locale, 'seo.description'),
       images: [
         {
           url: '/images/og-image.jpg',
           width: 1200,
           height: 630,
-          alt: t('seo.og.alt'),
+          alt: tServer(locale, 'seo.og.alt'),
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: t('seo.title.default'),
-      description: t('seo.description'),
+      title: tServer(locale, 'seo.title.default'),
+      description: tServer(locale, 'seo.description'),
       images: ['/images/og-image.jpg'],
       creator: '@melikmusinian',
     },
