@@ -4,7 +4,7 @@
 .hero {
   &__image-container {
     position: absolute;
-    top: 75%;
+    top: 76%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -14,19 +14,23 @@
     z-index: 1;
 
     @include vp-1440 {
-      top: 76%;
+      top: 77%;
+    }
+
+    @media (max-width: 1440px) {
+      top: 77%;
     }
 
     @include vp-1304 {
-      top: 76%;
+      top: 77%;
     }
 
     @include vp-1024 {
-      top: 75%;
+      top: 77%;
     }
 
     @include vp-768 {
-      top: 80%;
+      top: 75%;
     }
 
     @include vp-375 {
