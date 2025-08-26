@@ -47,11 +47,12 @@ export class AnimationController {
   initializeMaster(): gsap.core.Timeline | null {
     if (this.isInitialized) return this.masterTimeline;
 
-    const scrollSection = document.querySelector('.scroll-section');
-    if (!scrollSection) return null;
+    // Корректный выбор обёртки: сначала .portfolio__wrapper, затем запасные варианты
+    const wrapperElement = (document.querySelector('.portfolio__wrapper') ||
+      document.querySelector('.scroll-section') ||
+      document.querySelector('#smooth-content')) as HTMLElement | null;
 
-    const wrapperElement = (scrollSection.querySelector('.portfolio__wrapper') ||
-      scrollSection) as HTMLElement;
+    if (!wrapperElement) return null;
 
     // Выбираем только прямых детей списка секций, чтобы не захватить внутренние li
     const directCardNodes = wrapperElement.querySelectorAll(':scope > ul.portfolio__list > li');
@@ -260,7 +261,7 @@ export class AnimationController {
    * Проверка инициализации
    */
   isReady(): boolean {
-    return this.isInitialized;
+    return Boolean(this.masterTimeline);
   }
 }
 
