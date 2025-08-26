@@ -4,6 +4,7 @@ import React from 'react';
 import { useAvatar } from '../../hooks/useAvatar';
 import { GlassCard } from '@/lib/ui';
 import styles from './Avatar.module.scss';
+import { useI18n } from '@/i18n';
 
 function useAvatarLoading(container: HTMLDivElement | null) {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -85,7 +86,7 @@ function AvatarContainer({
     >
       {isLoading && (
         <div id="avaturn-loading" className={styles['avatar-loading']}>
-          Loading...
+          {t('common.loading')}
         </div>
       )}
     </div>
@@ -93,17 +94,18 @@ function AvatarContainer({
 }
 
 function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
+  const { t } = useI18n();
   if (!isVisible) return null;
   return (
     <div className={`${styles.tooltip} ${styles['tooltip--visible']}`}>
       <GlassCard>
         <div className={styles.tooltip__content}>
-          <h3>3D Avatar</h3>
-          <p>Интерактивная модель с анимациями</p>
+          <h3>{t('about.avatar.title')}</h3>
+          <p>{t('about.avatar.subtitle')}</p>
           <ul>
-            <li>Приветствие при клике</li>
-            <li>Реакция на взаимодействие</li>
-            <li>Адаптивное масштабирование</li>
+            <li>{t('about.avatar.features.greeting')}</li>
+            <li>{t('about.avatar.features.reactivity')}</li>
+            <li>{t('about.avatar.features.scaling')}</li>
           </ul>
         </div>
       </GlassCard>

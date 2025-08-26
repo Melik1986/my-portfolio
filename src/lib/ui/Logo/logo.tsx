@@ -2,6 +2,7 @@ import React from 'react';
 import { SpriteIcon } from '@/lib/ui';
 import { LogoProps } from '@/lib/types/logo.types';
 import styles from './logo.module.scss';
+import { t } from '@/i18n';
 
 /**
  * SVG иконка логотипа
@@ -14,7 +15,7 @@ function LogoIcon({ iconClassName }: { iconClassName: string }) {
       className={`${styles.logo__icon} ${iconClassName}`.trim()}
       width={50}
       height={50}
-      aria-label="Logo"
+      aria-label={t('a11y.logo')}
     />
   );
 }

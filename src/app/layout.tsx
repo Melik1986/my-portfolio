@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { cookies, headers } from 'next/headers';
+import { t } from '@/i18n';
 import { Roboto_Serif, Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 import './styles/globals.scss';
@@ -8,6 +10,7 @@ import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
 import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
+import LanguageSwitcher from '@/lib/ui/LanguageSwitcher/LanguageSwitcher';
 
 // Локальные шрифты
 const chango = localFont({
@@ -65,71 +68,77 @@ const poppins = Poppins({
  * Метаданные для SEO оптимизации
  * Определяет заголовок и описание страницы для поисковых систем
  */
-export const metadata: Metadata = {
-  title: {
-    default: 'My Portfolio | Full-Stack Developer',
-    template: '%s | My Portfolio',
-  },
-  description:
-    'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
-  keywords: ['portfolio', 'web developer', 'React', 'Next.js', 'TypeScript', 'full-stack'],
-  authors: [{ name: 'Melik Musinian' }],
-  creator: 'Melik Musinian',
-  publisher: 'Melik Musinian',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL('https://melikmusinian.com'),
-  alternates: {
-    canonical: '/',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = cookies();
+  const hdrs = headers();
+  const cookieLocale = cookieStore.get('locale')?.value || '';
+  const headerLocale = (hdrs.get('x-locale') || '').toLowerCase();
+  const accept = hdrs.get('accept-language') || '';
+  const preferred = (cookieLocale || headerLocale || accept.split(',')[0]?.slice(0, 2) || 'en').toLowerCase();
+  const locale = preferred === 'ru' ? 'ru' : 'en';
+
+  return {
+    title: {
+      default: t('seo.title.default'),
+      template: t('seo.title.template'),
+    },
+    description: t('seo.description'),
+    keywords: ['portfolio', 'web developer', 'React', 'Next.js', 'TypeScript', 'full-stack'],
+    authors: [{ name: 'Melik Musinian' }],
+    creator: 'Melik Musinian',
+    publisher: 'Melik Musinian',
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    metadataBase: new URL('https://melikmusinian.com'),
+    alternates: {
+      canonical: '/',
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://melikmusinian.com',
-    siteName: 'My Portfolio',
-    title: 'My Portfolio | Full-Stack Developer',
-    description:
-      'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
-    images: [
-      {
-        url: '/images/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'My Portfolio - Full-Stack Developer',
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'My Portfolio | Full-Stack Developer',
-    description:
-      'Personal portfolio website showcasing web development projects, skills, and experience in React, Next.js, TypeScript, and more.',
-    images: ['/images/og-image.jpg'],
-    creator: '@melikmusinian',
-  },
-  other: {
-    // Preload критических шрифтов
-    'font-chango': '/fonts/Chango-Regular.woff2',
-    'font-okinawa': '/fonts/Okinawa.woff2',
-    'font-leckerli': '/fonts/LeckerliOne-Regular.woff2',
-    'font-roboto': '/fonts/RobotoSerif-Regular.woff2',
-    'font-poppins': '/fonts/Poppins-Regular.woff2',
-  },
-};
+    },
+    openGraph: {
+      type: 'website',
+      locale: locale === 'ru' ? 'ru_RU' : 'en_US',
+      url: 'https://melikmusinian.com',
+      siteName: t('seo.siteName'),
+      title: t('seo.title.default'),
+      description: t('seo.description'),
+      images: [
+        {
+          url: '/images/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: t('seo.og.alt'),
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('seo.title.default'),
+      description: t('seo.description'),
+      images: ['/images/og-image.jpg'],
+      creator: '@melikmusinian',
+    },
+    other: {
+      'font-chango': '/fonts/Chango-Regular.woff2',
+      'font-okinawa': '/fonts/Okinawa.woff2',
+      'font-leckerli': '/fonts/LeckerliOne-Regular.woff2',
+      'font-roboto': '/fonts/RobotoSerif-Regular.woff2',
+      'font-poppins': '/fonts/Poppins-Regular.woff2',
+    },
+  };
+}
 
 /**
  * Корневой layout компонент
@@ -140,8 +149,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const hdrs = typeof window === 'undefined' ? undefined : undefined;
+  const cookieLocale = cookies().get('locale')?.value || 'en';
+  const htmlLang = cookieLocale === 'ru' ? 'ru' : 'en';
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={htmlLang} suppressHydrationWarning>
       <body
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
@@ -156,6 +169,9 @@ export default function RootLayout({
               </Container>
             </div>
             <AnchorButton />
+            <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 1000 }}>
+              <LanguageSwitcher />
+            </div>
             {/* Optional theme toggle, can be removed later */}
             {/* <ThemeToggle /> */}
           </main>

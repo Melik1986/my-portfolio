@@ -4,9 +4,11 @@ import Image from 'next/image';
 import { useRef, useEffect } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroImage.module.scss';
+import { useI18n } from '@/i18n';
 
 export function HeroAvatar() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -33,7 +35,7 @@ export function HeroAvatar() {
         className={styles['hero__image']}
         id="avatar"
         src="/images/avatar.webp"
-        alt="Melik Musinian Avatar"
+        alt={t('hero.avatarAlt')}
         width={500}
         height={400}
         style={{ height: 'auto' }}

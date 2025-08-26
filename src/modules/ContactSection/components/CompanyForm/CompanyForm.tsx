@@ -5,13 +5,14 @@ import { CompanyFormFields } from '../FormFields/CompanyFormFields';
 import { SocialLinks } from '@/lib/ui';
 import { SuccessModal } from '@/lib/ui/SuccessModal';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
+import { useI18n } from '@/i18n';
 
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const COMPANY_VALIDATION_CONFIG = {
-  companyName: { label: 'Company Name', required: true },
-  companyEmail: { label: 'Company Email', required: true, email: true },
-  companyDetails: { label: 'Company Details', required: false },
+  companyName: { label: 'validation.companyName', required: true },
+  companyEmail: { label: 'validation.companyEmail', required: true, email: true },
+  companyDetails: { label: 'validation.companyDetails', required: false },
 };
 
 interface CompanyFormViewProps {
@@ -33,10 +34,11 @@ function CompanyFormView({
   fieldErrors,
   onToggleToClient,
 }: CompanyFormViewProps) {
+  const { t } = useI18n();
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--company']}`}>
       <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
-        <h1 className={formStyles['form__title']}>Company Contact Form</h1>
+        <h1 className={formStyles['form__title']}>{t('contact.company.title')}</h1>
 
         <CompanyFormFields
           formData={formData}
@@ -47,10 +49,10 @@ function CompanyFormView({
 
         <div className={formStyles['btn__group']}>
           <button type="submit" className={formStyles['btn__form']}>
-            Send Inquiry
+            {t('contact.company.submit')}
           </button>
           <button type="button" className={formStyles['btn__form']} onClick={onToggleToClient}>
-            Client Form
+            {t('contact.company.switchToClient')}
           </button>
         </div>
 

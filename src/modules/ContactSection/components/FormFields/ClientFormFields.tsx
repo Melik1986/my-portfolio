@@ -2,13 +2,14 @@ import React from 'react';
 import { InputField } from '@/lib/ui';
 import type { ClientFormFieldsProps, ClientFieldConfig } from '../../types';
 import formStyles from '../ContactForm/ContactForm.module.scss';
+import { t } from '@/i18n';
 
 const CLIENT_FIELDS: ClientFieldConfig[] = [
-  { key: 'userName', placeholder: 'Your Name', iconId: 'icon-user' },
-  { key: 'userEmail', placeholder: 'Your Email', iconId: 'icon-envelope', type: 'email' },
+  { key: 'userName', placeholder: t('contact.client.placeholder.name'), iconId: 'icon-user' },
+  { key: 'userEmail', placeholder: t('contact.client.placeholder.email'), iconId: 'icon-envelope', type: 'email' },
   {
     key: 'projectDescription',
-    placeholder: 'Project Description',
+    placeholder: t('contact.client.placeholder.description'),
     isTextarea: true,
   },
 ];
