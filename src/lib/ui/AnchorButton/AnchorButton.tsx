@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useCallback, forwardRef } from 'react';
+import React, { useCallback, forwardRef, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ScrollToTopButtonProps } from '@/lib/types/btn.types';
 import { Logo } from '@/lib/ui';
 import styles from './AnchorBtn.module.scss';
@@ -10,6 +11,12 @@ export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps
     { scrollTarget, className, 'aria-label': ariaLabel = 'Scroll to top', onClick, ...props },
     ref,
   ) => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
     // ===== HANDLERS =====
     const scrollToTarget = useCallback(() => {
       if (scrollTarget) {
@@ -41,7 +48,7 @@ export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps
     );
 
     // ===== RENDER =====
-    return (
+    const el = (
       <button
         ref={ref}
         type="button"
@@ -53,6 +60,9 @@ export const AnchorButton = forwardRef<HTMLButtonElement, ScrollToTopButtonProps
         <Logo className={styles['anchor-button__icon']} aria-hidden="true" />
       </button>
     );
+
+    if (!mounted) return null;
+    return createPortal(el, document.body);
   },
 );
 
