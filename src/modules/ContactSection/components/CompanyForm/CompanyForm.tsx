@@ -10,9 +10,9 @@ import { useI18n } from '@/i18n';
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
 const COMPANY_VALIDATION_CONFIG = {
-  companyName: { label: 'validation.companyName', required: true },
-  companyEmail: { label: 'validation.companyEmail', required: true, email: true },
-  companyDetails: { label: 'validation.companyDetails', required: false },
+  companyName: { label: 'form.validation.companyName', required: true },
+  companyEmail: { label: 'form.validation.companyEmail', required: true, email: true },
+  companyDetails: { label: 'form.validation.companyDetails', required: false },
 };
 
 interface CompanyFormViewProps {
@@ -38,7 +38,7 @@ function CompanyFormView({
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--company']}`}>
       <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
-        <h1 className={formStyles['form__title']}>{t('contact.company.title')}</h1>
+        <h1 className={formStyles['form__title']}>{t('section.contact.company.title')}</h1>
 
         <CompanyFormFields
           formData={formData}
@@ -49,10 +49,10 @@ function CompanyFormView({
 
         <div className={formStyles['btn__group']}>
           <button type="submit" className={formStyles['btn__form']}>
-            {t('contact.company.submit')}
+            {t('section.contact.company.submit')}
           </button>
           <button type="button" className={formStyles['btn__form']} onClick={onToggleToClient}>
-            {t('contact.company.switchToClient')}
+            {t('section.contact.company.switchToClient')}
           </button>
         </div>
 

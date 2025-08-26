@@ -12,7 +12,7 @@ export function ContactSection() {
       data-section-index="7"
       data-group-delay="2.5"
     >
-      <h2 className="visually-hidden">{t('contact.title')}</h2>
+      <h2 className="visually-hidden">{t('section.contact.title')}</h2>
       <div
         className={styles.contact__container}
         data-animation="fade-up"

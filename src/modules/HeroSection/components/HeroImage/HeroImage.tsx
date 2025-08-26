@@ -35,7 +35,7 @@ export function HeroAvatar() {
         className={styles['hero__image']}
         id="avatar"
         src="/images/avatar.webp"
-        alt={t('hero.avatarAlt')}
+        alt={t('section.hero.avatarAlt')}
         width={500}
         height={400}
         style={{ height: 'auto' }}

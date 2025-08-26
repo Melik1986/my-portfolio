@@ -27,7 +27,7 @@ export function AiVideoContentSection({
   return (
     <section className={`${styles['ai-content']} ${className}`} id="ai-video-content-section">
       <h2 className={`${styles['ai-content__title']} visually-hidden`}>
-        {title === 'ai.title' ? t('ai.title') : title || 'AI Video Content'}
+        {title === 'ai.title' ? t('section.ai.title') : title || 'AI Video Content'}
       </h2>
 
       <div className={styles['ai-content__marquee-container']}>
@@ -61,9 +61,11 @@ export function AiVideoContentSection({
             </div>
           </div>
           <ContentSection
-            title={title === 'ai.title' ? t('ai.title') : title}
+            title={title === 'ai.title' ? t('section.ai.title') : title}
             description={
-              description === DEFAULT_VIDEO_DESCRIPTION ? t('ai.video.description') : description
+              description === DEFAULT_VIDEO_DESCRIPTION
+                ? t('section.ai.video.description')
+                : description
             }
           />
         </div>

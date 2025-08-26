@@ -54,8 +54,8 @@ export function HeroContentLeft() {
         data-ease="power2.out"
         data-delay="0.4"
       >
-        <HeroImage id="melik" src="/images/melik.svg" alt={t('hero.melikAlt')} />
-        <HeroImage id="musinian" src="/images/musinian.svg" alt={t('hero.musinianAlt')} />
+        <HeroImage id="melik" src="/images/melik.svg" alt={t('section.hero.melikAlt')} />
+        <HeroImage id="musinian" src="/images/musinian.svg" alt={t('section.hero.musinianAlt')} />
       </div>
     </>
   );

@@ -11,7 +11,7 @@ export function SkillsSection() {
 
   return (
     <section ref={sectionRef} className={styles.skills} id="skills" data-group-delay="4.0">
-      <h2 className={`${styles.skills__title} visually-hidden`}>{t('skills.title')}</h2>
+      <h2 className={`${styles.skills__title} visually-hidden`}>{t('section.skills.title')}</h2>
       <div className={`${styles['skills__content']} ${styles['skills__content-left']}`}>
         <SkillsContent />
       </div>

@@ -5,11 +5,11 @@ import formStyles from '../ContactForm/ContactForm.module.scss';
 import { t } from '@/i18n';
 
 const COMPANY_FIELDS: CompanyFieldConfig[] = [
-  { key: 'companyName', placeholder: t('contact.company.placeholder.name'), iconId: 'icon-building' },
-  { key: 'companyEmail', placeholder: t('contact.company.placeholder.email'), iconId: 'icon-envelope', type: 'email' },
+  { key: 'companyName', placeholder: t('section.contact.company.placeholder.name'), iconId: 'icon-building' },
+  { key: 'companyEmail', placeholder: t('section.contact.company.placeholder.email'), iconId: 'icon-envelope', type: 'email' },
   {
     key: 'companyDetails',
-    placeholder: t('contact.company.placeholder.details'),
+    placeholder: t('section.contact.company.placeholder.details'),
     isTextarea: true,
   },
 ];

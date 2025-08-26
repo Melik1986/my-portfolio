@@ -57,7 +57,7 @@ export function VerticalMarquee({
                 <Image
                   className={styles['ai-content__image']}
                   src={src}
-                  alt={`${t('ai.posterAlt')} ${index + 1}`}
+                  alt={`${t('section.ai.posterAlt')} ${index + 1}`}
                   width={210}
                   height={280}
                   loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}

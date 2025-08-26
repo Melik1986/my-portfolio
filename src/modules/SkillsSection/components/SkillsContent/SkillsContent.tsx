@@ -15,7 +15,7 @@ export function SkillsContent() {
         data-ease="power2.out"
         data-delay="0"
       >
-        {t('skills.heading')}
+        {t('section.skills.heading')}
       </h3>
       <SkillsText />
       <SkillsAnimation />

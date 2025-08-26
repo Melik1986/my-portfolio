@@ -19,7 +19,7 @@ function AboutTextDesktop() {
   const { t } = useI18n();
   return (
     <span className={styles['about__text-desktop']}>
-      {t('about.text.desktop')}
+      {t('section.about.text.desktop')}
     </span>
   );
 }
@@ -28,7 +28,7 @@ function AboutTextMobile() {
   const { t } = useI18n();
   return (
     <span className={styles['about__text-mobile']}>
-      {t('about.text.mobile')}
+      {t('section.about.text.mobile')}
     </span>
   );
 }
@@ -48,7 +48,7 @@ export function AboutContent() {
         data-ease="power2.out"
         data-delay="0"
       >
-        {t('about.heading')}
+        {t('section.about.heading')}
       </h3>
       <p
         className={styles['about__text']}

@@ -23,7 +23,7 @@ export function GallerySection() {
 
   return (
     <section ref={carouselRef} className={styles.gallery} id="gallery" data-group-delay="7.5">
-      <h2 className="visually-hidden">{t('gallery.title')}</h2>
+      <h2 className="visually-hidden">{t('section.gallery.title')}</h2>
       <div
         className={styles.gallery__carousel}
         data-animation="fade-up"

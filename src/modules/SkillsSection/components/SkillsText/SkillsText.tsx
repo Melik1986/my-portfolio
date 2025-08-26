@@ -5,7 +5,7 @@ function SkillsTextDesktop() {
   const { t } = useI18n();
   return (
     <span className={styles['skills__text-desktop']}>
-      {t('skills.text.desktop')}
+      {t('section.skills.text.desktop')}
     </span>
   );
 }
@@ -14,7 +14,7 @@ function SkillsTextMobile() {
   const { t } = useI18n();
   return (
     <span className={styles['skills__text-mobile']}>
-      {t('skills.text.mobile')}
+      {t('section.skills.text.mobile')}
     </span>
   );
 }
