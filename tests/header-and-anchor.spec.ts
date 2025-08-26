@@ -61,6 +61,16 @@ test.describe('Anchor button behavior', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(anchor).toBeVisible();
 
+    // Resize to tablet
+    await page.setViewportSize({ width: 820, height: 1180 });
+    await expect(anchor).toBeVisible();
+
+    // Resize quickly across breakpoints
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await page.setViewportSize({ width: 1366, height: 900 });
+    await expect(anchor).toBeVisible();
+
     // Click to scroll to top
     await anchor.click();
     await page.waitForTimeout(250);
