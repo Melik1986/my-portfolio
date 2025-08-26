@@ -40,6 +40,7 @@ export class AnimationController {
   private masterTimeline: gsap.core.Timeline | null = null;
   private activeCardIndex = 0;
   private isInitialized = false;
+  private totalCardsCount: number | null = null;
 
   /**
    * Инициализация мастер-анимации (только для Hero секции)
@@ -70,6 +71,7 @@ export class AnimationController {
     });
 
     this.isInitialized = true;
+    this.totalCardsCount = items.length;
     return this.masterTimeline;
   }
 
@@ -195,7 +197,8 @@ export class AnimationController {
     }
 
     // Для остальных карточек вычисляем позицию
-    const progress = cardIndex / Math.max(1, this.sections.size - 1);
+    const denominator = Math.max(1, (this.totalCardsCount ?? this.sections.size) - 1);
+    const progress = cardIndex / denominator;
 
     // Вычисляем позицию по фактическому диапазону ScrollTrigger
     const startPos = scrollTrigger.start;
@@ -270,6 +273,10 @@ export class AnimationController {
    */
   isReady(): boolean {
     return Boolean(this.masterTimeline);
+  }
+
+  getTotalCardsCount(): number | null {
+    return this.totalCardsCount;
   }
 }
 
