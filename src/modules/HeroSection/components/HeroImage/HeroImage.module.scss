@@ -14,7 +14,11 @@
     z-index: 1;
 
     @include vp-1440 {
-      top: 75%;
+      top: 76%;
+    }
+
+    @include vp-1304 {
+      top: 76%;
     }
 
     @include vp-1024 {
@@ -36,5 +40,7 @@
     opacity: 0;
     width: auto;
     height: auto;
+    min-width: 600px;
+    max-height: 500px;
   }
 }
