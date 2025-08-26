@@ -168,7 +168,26 @@ src/
 
 - ScrollSmoother integration
 - Custom animation presets
-- Performance optimizations
+
+### E2E Notes (Playwright)
+
+- Wait for preloader to complete before asserting animations:
+
+```ts
+await page.waitForEvent('console', { predicate: (m) => m.text().includes('preloader:complete'), timeout: 0 }).catch(() => {});
+await page.waitForFunction(() => !!document.querySelector('[data-preloader-root]') === false);
+```
+
+- Ensure ScrollSmoother is ready and pin-spacer is created before checking ScrollTrigger-driven states:
+
+```ts
+await page.waitForFunction(() => {
+  const smoother = (window as any).ScrollSmoother?.get?.();
+  const wrapper = document.querySelector('.portfolio__wrapper') || document.querySelector('#smooth-content');
+  const hasPinSpacer = wrapper?.parentElement?.querySelector('.pin-spacer');
+  return Boolean(smoother) && Boolean(hasPinSpacer);
+});
+```
 
 ### TypeScript Configuration
 

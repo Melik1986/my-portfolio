@@ -13,6 +13,19 @@ export function GlobalPreloader() {
   useEffect(() => {
     const onComplete = () => {
       setIsLoading(false);
+      // После размонтирования прелоадера обновим ScrollTrigger для корректных размеров
+      try {
+        // import динамический, чтобы не тянуть плагин раньше времени
+        import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          if (ScrollTrigger?.refresh) {
+            // Первый refresh сразу, второй через небольшой таймаут
+            ScrollTrigger.refresh();
+            setTimeout(() => ScrollTrigger.refresh(), 100);
+          }
+        });
+      } catch {
+        // ignore
+      }
     };
 
     const onPreloaderComplete = () => onComplete();

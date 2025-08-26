@@ -19,6 +19,9 @@ export function ensureGSAPRegistered(): void {
     if (typeof window !== 'undefined') {
       // Экспортируем ScrollTrigger в window для совместимости со сторонним кодом/отладкой
       (window as unknown as { ScrollTrigger?: typeof ScrollTrigger }).ScrollTrigger = ScrollTrigger;
+      // Экспортируем gsap и ScrollSmoother для удобной отладки/интеграции
+      (window as unknown as { gsap?: typeof gsap }).gsap = gsap;
+      (window as unknown as { ScrollSmoother?: typeof ScrollSmoother }).ScrollSmoother = ScrollSmoother;
     }
 
     isRegistered = true;
