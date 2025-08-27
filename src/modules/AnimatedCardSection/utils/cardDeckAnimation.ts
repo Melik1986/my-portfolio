@@ -83,14 +83,7 @@ function waitForPinSpacer(section: HTMLElement, timeoutMs = 1000): Promise<void>
  * @param onCardActivate - callback для синхронизации с элементными анимациями
  * @returns gsap.core.Timeline
  */
-export function initCardDeckScroll(
-  section: HTMLElement,
-  items: HTMLElement[],
-  onCardActivate?: ElementAnimationCallback,
-): gsap.core.Timeline {
-  let timeline: gsap.core.Timeline;
-
-  // Инициализация позиций карт
+function initPositions(items: HTMLElement[]): void {
   items.forEach((item, index) => {
     if (index === 0) {
       gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
@@ -100,84 +93,76 @@ export function initCardDeckScroll(
       gsap.set(item, { yPercent: 0, xPercent: 100, opacity: 0, zIndex: 1 });
     }
   });
+}
 
-  // Адаптивные настройки с gsap.matchMedia()
+function createMobileTimeline(
+  section: HTMLElement,
+  items: HTMLElement[],
+  onCardActivate?: ElementAnimationCallback,
+): gsap.core.Timeline {
+  // Keep mixed layout, no reinit
+  const tl = gsap.timeline({
+    id: 'card-deck-timeline-mobile',
+    scrollTrigger: {
+      trigger: section,
+      pin: true,
+      start: 'top top',
+      end: () => `+=${(items.length - 1) * 100}%`,
+      scrub: 0.5,
+      invalidateOnRefresh: true,
+      markers: false,
+    },
+  });
+  createCardAnimation(tl, items, onCardActivate);
+  waitForPinSpacer(section).then(() => {
+    ScrollTrigger.refresh();
+    setTimeout(() => ScrollTrigger.refresh(), 100);
+  });
+  return tl;
+}
+
+function createDesktopTimeline(
+  section: HTMLElement,
+  items: HTMLElement[],
+  onCardActivate?: ElementAnimationCallback,
+): gsap.core.Timeline {
+  const tl = gsap.timeline({
+    id: 'card-deck-timeline-desktop',
+    scrollTrigger: {
+      trigger: section,
+      pin: true,
+      start: 'top top',
+      end: () => `+=${(items.length - 1) * 100}%`,
+      scrub: 1,
+      invalidateOnRefresh: true,
+      markers: false,
+    },
+  });
+  createCardAnimation(tl, items, onCardActivate);
+  waitForPinSpacer(section).then(() => {
+    ScrollTrigger.refresh();
+    setTimeout(() => ScrollTrigger.refresh(), 100);
+  });
+  return tl;
+}
+
+export function initCardDeckScroll(
+  section: HTMLElement,
+  items: HTMLElement[],
+  onCardActivate?: ElementAnimationCallback,
+): gsap.core.Timeline {
+  let timeline: gsap.core.Timeline;
+  initPositions(items);
   const mm = gsap.matchMedia();
 
-  // Мобильные устройства (до 768px)
   mm.add('(max-width: 767px)', () => {
-    // [TEST] Отключено мобильное переопределение направления: используем смешанную раскладку как на десктопе
-    // Позиции не переинициализируем: сохраняем стартовые позиции (смешанная раскладка)
-    items.forEach((item, index) => {
-      if (index === 0) {
-        gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
-      } else {
-        gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
-      }
-    });
-
-    timeline = gsap.timeline({
-      id: 'card-deck-timeline-mobile',
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        start: 'top top',
-        end: () => `+=${(items.length - 1) * 100}%`,
-        scrub: 0.5,
-        invalidateOnRefresh: true,
-        markers: false,
-      },
-    });
-
-    // Диагностика: используем смешанную раскладку на мобилках для проверки багов порядка/скролла
-    console.debug('[cardDeckAnimation] Mobile override disabled: using mixed layout for testing');
-
-    // Было: createCardAnimation(timeline, items, onCardActivate, { verticalOnly: true });
-    createCardAnimation(timeline, items, onCardActivate);
-
-    // ensure correct measurements after init
-    waitForPinSpacer(section).then(() => {
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 100);
-    });
-
-    // cleanup for this media query
-    return () => {
-      if (timeline) {
-        timeline.kill();
-      }
-    };
+    timeline = createMobileTimeline(section, items, onCardActivate);
+    return () => timeline.kill();
   });
 
-  // Планшеты и десктоп (768px и больше)
   mm.add('(min-width: 768px)', () => {
-    timeline = gsap.timeline({
-      id: 'card-deck-timeline-desktop',
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        start: 'top top',
-        end: () => `+=${(items.length - 1) * 100}%`,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        markers: false,
-      },
-    });
-
-    createCardAnimation(timeline, items, onCardActivate);
-
-    // ensure correct measurements after init
-    waitForPinSpacer(section).then(() => {
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 100);
-    });
-
-    // cleanup for this media query
-    return () => {
-      if (timeline) {
-        timeline.kill();
-      }
-    };
+    timeline = createDesktopTimeline(section, items, onCardActivate);
+    return () => timeline.kill();
   });
 
   return timeline!;

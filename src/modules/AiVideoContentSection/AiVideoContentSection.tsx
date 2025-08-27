@@ -14,6 +14,20 @@ import groupStyles from './component/VideoMarqueeGroup/VideoMarqueeGroup.module.
 import { useVideoOverlay } from './hooks/useVideoOverlay';
 import { useI18n } from '@/i18n';
 
+function AiVideoTextBlock({ title, description }: { title: string; description: string }) {
+  const { t } = useI18n();
+  return (
+    <ContentSection
+      title={title === 'section.ai.title' ? t('section.ai.title') : title}
+      description={
+        description === DEFAULT_VIDEO_DESCRIPTION
+          ? t('section.ai.video.description')
+          : description
+      }
+    />
+  );
+}
+
 export function AiVideoContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
   videoRows = DEFAULT_VIDEO_ROWS,
@@ -60,14 +74,7 @@ export function AiVideoContentSection({
               />
             </div>
           </div>
-          <ContentSection
-            title={title === 'section.ai.title' ? t('section.ai.title') : title}
-            description={
-              description === DEFAULT_VIDEO_DESCRIPTION
-                ? t('section.ai.video.description')
-                : description
-            }
-          />
+          <AiVideoTextBlock title={title} description={description} />
         </div>
       </div>
     </section>

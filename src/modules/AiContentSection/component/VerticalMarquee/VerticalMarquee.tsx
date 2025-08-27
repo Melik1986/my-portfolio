@@ -12,12 +12,25 @@ interface VerticalMarqueeProps {
   eagerFirst?: boolean;
 }
 
+function VerticalImage({ src, index, eagerFirst }: { src: string; index: number; eagerFirst: boolean }) {
+  const { t } = useI18n();
+  return (
+    <Image
+      className={styles['ai-content__image']}
+      src={src}
+      alt={`${t('section.ai.posterAlt')} ${index + 1}`}
+      width={210}
+      height={280}
+      loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
+    />
+  );
+}
+
 export function VerticalMarquee({
   images,
   className = '',
   eagerFirst = true,
 }: VerticalMarqueeProps) {
-  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,14 +67,7 @@ export function VerticalMarquee({
                 className={`${styles['ai-content__picture']}${index === 0 ? ' ' + styles['ai-content__picture-main'] : ''}`}
                 {...(isClone && { 'aria-hidden': true })}
               >
-                <Image
-                  className={styles['ai-content__image']}
-                  src={src}
-                  alt={`${t('section.ai.posterAlt')} ${index + 1}`}
-                  width={210}
-                  height={280}
-                  loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
-                />
+                <VerticalImage src={src} index={index} eagerFirst={eagerFirst} />
               </div>
             );
           })}

@@ -7,6 +7,14 @@ import styles from './AiContentSection.module.scss';
 import { AI_CONTENT_CONSTANTS, DEFAULT_VERTICAL_COLUMNS } from './constants/AiContent.constants';
 import { useI18n } from '@/i18n';
 
+function AiTextBlock({ title, description }: { title: string; description: string }) {
+  const { t } = useI18n();
+  return <ContentSection
+    title={title === 'section.ai.title' ? t('section.ai.title') : title}
+    description={description === 'section.ai.description' ? t('section.ai.description') : description}
+  />;
+}
+
 export function AiContentSection({
   horizontalTexts = AI_CONTENT_CONSTANTS.DEFAULT_HORIZONTAL_TEXTS,
   verticalColumns = DEFAULT_VERTICAL_COLUMNS,
@@ -50,12 +58,7 @@ export function AiContentSection({
               }
             />
           </div>
-          <ContentSection
-            title={title === 'section.ai.title' ? t('section.ai.title') : title}
-            description={
-              description === 'section.ai.description' ? t('section.ai.description') : description
-            }
-          />
+          <AiTextBlock title={title} description={description} />
         </div>
       </div>
     </section>
