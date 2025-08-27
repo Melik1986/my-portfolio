@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import styles from './ContactSection.module.scss';
 import { ContactForm } from './components/ContactForm';

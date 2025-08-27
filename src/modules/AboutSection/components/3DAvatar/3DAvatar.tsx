@@ -74,6 +74,7 @@ function AvatarContainer({
   onContainerRef: (el: HTMLDivElement | null) => void;
   isLoading: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <div
       id="avaturn-container"
