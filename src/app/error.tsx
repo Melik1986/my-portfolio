@@ -1,4 +1,5 @@
 'use client';
+import { useI18n } from '@/i18n';
 
 export default function Error({
   error,
@@ -7,13 +8,14 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useI18n();
   console.error('Application error:', error);
 
   return (
     <div className="error">
-      <h2>Что-то пошло не так!</h2>
+      <h2>{t('error.title')}</h2>
       <p>{error.message}</p>
-      <button onClick={reset}>Попробовать снова</button>
+      <button onClick={reset}>{t('error.tryAgain')}</button>
     </div>
   );
 }

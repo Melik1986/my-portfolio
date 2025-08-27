@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { Errors, ValidationConfig } from '../types';
+import { t } from '@/i18n';
 
 const EMAIL_RE = /.+@.+\..+/;
 
@@ -7,12 +8,12 @@ function buildError(id: string, msg: string): string {
   return `${id}-error:${msg}`;
 }
 
-function validateRequired(value: string, id: string, label: string, errors: Errors): void {
-  if (!value.trim()) errors[id] = buildError(id, `${label} is required`);
+function validateRequired(value: string, id: string, labelKey: string, errors: Errors): void {
+  if (!value.trim()) errors[id] = buildError(id, `${t(labelKey)} ${t('validation.isRequired')}`);
 }
 
 function validateEmail(value: string, id: string, errors: Errors): void {
-  if (!EMAIL_RE.test(value)) errors[id] = buildError(id, 'Email is invalid');
+  if (!EMAIL_RE.test(value)) errors[id] = buildError(id, t('validation.emailInvalid'));
 }
 
 function getFormValues(form: HTMLFormElement): Record<string, string> {
@@ -30,7 +31,7 @@ function buildInitialData(config: ValidationConfig): Record<string, string> {
 
 function toUserMessage(error?: string): string {
   if (!error) return '';
-  return error.includes('invalid') ? 'Email is invalid' : error.split(':')[1] || '';
+  return error.split(':')[1] || '';
 }
 
 function computeFieldError(

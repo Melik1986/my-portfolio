@@ -1,8 +1,11 @@
+"use client";
 import React from 'react';
 import styles from './ContactSection.module.scss';
 import { ContactForm } from './components/ContactForm';
+import { useI18n } from '@/i18n';
 
 export function ContactSection() {
+  const { t } = useI18n();
   return (
     <section
       id="contact-content"
@@ -10,7 +13,7 @@ export function ContactSection() {
       data-section-index="7"
       data-group-delay="2.5"
     >
-      <h2 className="visually-hidden">Contact</h2>
+      <h2 className="visually-hidden">{t('section.contact.title')}</h2>
       <div
         className={styles.contact__container}
         data-animation="fade-up"

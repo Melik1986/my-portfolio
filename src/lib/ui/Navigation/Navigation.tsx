@@ -1,18 +1,23 @@
+'use client';
+
 import React from 'react';
 import { NavigationProps } from '@/lib/types/navigation.types';
 import styles from './nav.module.scss';
+import { useI18n } from '@/i18n';
 
 /**
  * Массив элементов навигации по умолчанию
  * Определяет ссылки и метки для навигационного меню
  */
-const defaultItems = [
-  { href: '#about', label: 'About', sectionId: 'about-section' },
-  { href: '#skills', label: 'Skills', sectionId: 'skills-section' },
-  { href: '#projects', label: 'Projects', sectionId: 'projects-section' },
-  { href: '#gallery', label: 'Gallery', sectionId: 'gallery-section' },
-  { href: '#contact', label: 'Contacts', sectionId: 'contact-section' },
-];
+function buildDefaultItems(t: (k: string) => string) {
+  return [
+    { href: '#about', label: t('nav.about'), sectionId: 'about-section' },
+    { href: '#skills', label: t('nav.skills'), sectionId: 'skills-section' },
+    { href: '#projects', label: t('nav.projects'), sectionId: 'projects-section' },
+    { href: '#gallery', label: t('nav.gallery'), sectionId: 'gallery-section' },
+    { href: '#contact', label: t('nav.contacts'), sectionId: 'contact-section' },
+  ];
+}
 
 /**
  * Компонент элемента навигации
@@ -50,14 +55,16 @@ function NavigationItem({
  * Отображает список ссылок с GSAP анимацией и плавной прокруткой
  */
 export function Navigation({
-  items = defaultItems,
+  items,
   className = '',
   onNavigate,
   ...rest
 }: NavigationProps & React.HTMLAttributes<HTMLUListElement>) {
+  const { t } = useI18n();
+  const navItems = items ?? buildDefaultItems(t);
   return (
     <ul className={`${styles.nav__list} ${className}`.trim()} {...rest}>
-      {items.map(({ href, label, sectionId }) => (
+      {navItems.map(({ href, label, sectionId }) => (
         <NavigationItem
           key={href}
           href={href}
