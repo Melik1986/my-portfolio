@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   will-change: transform;
-  opacity: 0;
+  opacity: 1;
 
   // Адаптивность для разных размеров экрана
   @media (max-width: 1024px) {

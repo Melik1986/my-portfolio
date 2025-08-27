@@ -490,6 +490,13 @@ export const useAvatar = () => {
       const renderer = createRenderer(container);
       const { camera, controls } = createCameraAndControls(renderer);
       const scene = new THREE.Scene();
+      // Ensure renderer is sized to container immediately
+      try {
+        const { clientWidth, clientHeight } = container;
+        if (clientWidth && clientHeight) {
+          renderer.setSize(clientWidth, clientHeight);
+        }
+      } catch {}
       const clock = new THREE.Clock();
 
       const sceneData: AvatarScene = {
