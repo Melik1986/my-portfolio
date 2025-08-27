@@ -335,6 +335,30 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
         return;
       }
 
+      // Center and align model to ground
+      try {
+        const box = new THREE.Box3().setFromObject(avatar);
+        const size = new THREE.Vector3();
+        const center = new THREE.Vector3();
+        box.getSize(size);
+        box.getCenter(center);
+        avatar.position.sub(center); // center at origin
+        // Recompute and lift so bottom sits on y=0
+        const boxAfter = new THREE.Box3().setFromObject(avatar);
+        const minY = boxAfter.min.y;
+        avatar.position.y -= minY;
+
+        // Fit camera to model
+        const fov = (scene.camera.fov * Math.PI) / 180;
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const distance = maxDim / (2 * Math.tan(fov / 2)) + 0.6;
+        scene.camera.position.set(0.6, size.y * 0.7 + 0.4, distance);
+        scene.controls.target.set(0, size.y * 0.5, 0);
+        scene.controls.update();
+      } catch {
+        // ignore centering errors
+      }
+
       scene.scene.add(avatar, groundMesh);
 
       assetsRef.current = {
@@ -353,6 +377,12 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
       const scale = calculateScale(container.clientWidth, container.clientHeight);
       avatar.scale.setScalar(scale);
       groundMesh.scale.setScalar(scale);
+      // Ensure camera aspect and renderer size are correct now that we know dimensions
+      try {
+        scene.camera.aspect = container.clientWidth / container.clientHeight;
+        scene.camera.updateProjectionMatrix();
+        scene.renderer.setSize(container.clientWidth, container.clientHeight);
+      } catch {}
 
       container.dispatchEvent(new CustomEvent('modelLoaded'));
     },
@@ -362,7 +392,10 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
   const loadModel = useCallback(
     (scene: AvatarScene): void => {
       const loader = new GLTFLoader();
-
+      // Set cross-origin to anonymous to avoid tainting canvas for models on CDN
+      try {
+        (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
+      } catch {}
       loader.load(
         avatarConfig.modelPath,
         (gltf) => handleModelLoaded(gltf, scene),
