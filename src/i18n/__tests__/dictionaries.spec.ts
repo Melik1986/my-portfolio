@@ -5,16 +5,13 @@ import ru from '../dictionaries/ru.json';
 
 function flattenKeys(obj: Record<string, unknown>, prefix = ''): Set<string> {
   const keys = new Set<string>();
-  for (const [k, v] of Object.entries(obj)) {
-    const full = prefix ? `${prefix}.${k}` : k;
+  for (const [, v] of Object.entries(obj)) {
     if (v && typeof v === 'object' && !Array.isArray(v)) {
-      // Our dicts are flat; keep recursion utility for future nested support
-      const nested = flattenKeys(v as Record<string, unknown>, full);
+      const nested = flattenKeys(v as Record<string, unknown>, prefix);
       nested.forEach((nk) => keys.add(nk));
-    } else {
-      keys.add(full);
     }
   }
+  Object.keys(obj).forEach((k) => keys.add(prefix ? `${prefix}.${k}` : k));
   return keys;
 }
 
@@ -23,15 +20,15 @@ describe('i18n dictionaries consistency', () => {
     const enKeys = flattenKeys(en as unknown as Record<string, unknown>);
     const ruKeys = flattenKeys(ru as unknown as Record<string, unknown>);
 
-    const missingInRu = [...enKeys].filter((k) => !ruKeys.has(k));
-    const missingInEn = [...ruKeys].filter((k) => !enKeys.has(k));
+    const missingInRu = [...enKeys].filter((key) => !ruKeys.has(key));
+    const missingInEn = [...ruKeys].filter((key) => !enKeys.has(key));
 
     expect({ missingInRu, missingInEn }).toEqual({ missingInRu: [], missingInEn: [] });
   });
 
   it('all dictionary values are non-empty strings', () => {
     const check = (dict: Record<string, unknown>) => {
-      for (const [k, v] of Object.entries(dict)) {
+      for (const [, v] of Object.entries(dict)) {
         expect(typeof v).toBe('string');
         expect((v as string).trim().length).toBeGreaterThan(0);
       }

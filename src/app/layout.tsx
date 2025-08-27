@@ -150,7 +150,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const hdrs = typeof window === 'undefined' ? undefined : undefined;
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
   const htmlLang = cookieLocale === 'ru' ? 'ru' : 'en';

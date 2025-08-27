@@ -4,6 +4,11 @@ node_modules/
 .turbo/
 dist/
 coverage/
+playwright-report/
+blob-report/
+test-results/
+tests/
+src/i18n/__tests__/
 
 # Env
 .env.local
