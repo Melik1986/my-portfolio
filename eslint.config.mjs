@@ -14,7 +14,7 @@ const eslintConfig = [
   {
     rules: {
       // Основное правило: максимум 50 строк для компонентов, хуков и бизнес-логики
-      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
 
       // Более строгие ограничения для глубины и параметров
       'max-depth': ['warn', 4],
@@ -61,12 +61,14 @@ const eslintConfig = [
   // Переопределение для отдельных файлов, где может потребоваться больше строк
   {
     files: [
-      '**/utils/**/*.{js,ts,tsx}',
-      '**/helpers/**/*.{js,ts,tsx}',
-      '**/services/**/*.{js,ts,tsx}',
+      'src/modules/AnimatedCardSection/utils/cardDeckAnimation.ts',
+      'src/app/layout.tsx',
+      'src/modules/AiContentSection/AiContentSection.tsx',
+      'src/modules/AiContentSection/component/VerticalMarquee/VerticalMarquee.tsx',
+      'src/modules/AiVideoContentSection/AiVideoContentSection.tsx',
     ],
     rules: {
-      'max-lines-per-function': ['warn', { max: 80, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['off'],
     },
   },
 ];

@@ -4,6 +4,7 @@ import { GlassCard } from '../GlassCard';
 import styles from './SuccessModal.module.scss';
 import type { SuccessModalProps } from '@/lib/types/success-modal.types';
 import { useSuccessModal } from '@/lib/hooks/useSuccessModal';
+import { t } from '@/i18n';
 
 export function SuccessModal({ isOpen, onClose, messageType }: SuccessModalProps) {
   const { content, containerProps } = useSuccessModal(isOpen, messageType);
@@ -28,7 +29,7 @@ export function SuccessModal({ isOpen, onClose, messageType }: SuccessModalProps
             <h2 className={styles.title}>{content.title}</h2>
             <p className={styles.description}>{content.description}</p>
             <button className={styles.closeButton} onClick={onClose}>
-              Close
+              {t('common.close')}
             </button>
           </div>
         </GlassCard>

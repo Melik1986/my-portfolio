@@ -4,8 +4,10 @@ import { useDeferredValue } from 'react';
 import { useCarousel } from './hooks/useCarousel';
 import styles from './GallerySection.module.scss';
 import { GalleryList, GalleryNavigation } from './components';
+import { useI18n } from '@/i18n';
 
 export function GallerySection() {
+  const { t } = useI18n();
   const {
     itemsToRender,
     prevSlide,
@@ -21,7 +23,7 @@ export function GallerySection() {
 
   return (
     <section ref={carouselRef} className={styles.gallery} id="gallery" data-group-delay="7.5">
-      <h2 className="visually-hidden">My Portfolio</h2>
+      <h2 className="visually-hidden">{t('section.gallery.title')}</h2>
       <div
         className={styles.gallery__carousel}
         data-animation="fade-up"

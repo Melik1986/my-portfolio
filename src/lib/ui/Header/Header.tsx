@@ -9,6 +9,7 @@ import { GlassCard } from '@/lib/ui';
 import styles from './header.module.scss';
 import { useHeaderAnimation, useMobileNavigation } from '@/lib/hooks/useHeaderBehavior';
 import { navigateToSection } from '@/lib/utils/navigateToSection';
+import { useI18n } from '@/i18n';
 
 /**
  * Навигация к секциям вынесена в util `navigateToSection`
@@ -19,6 +20,7 @@ import { navigateToSection } from '@/lib/utils/navigateToSection';
  */
 // eslint-disable-next-line max-lines-per-function
 export function Header() {
+  const { t } = useI18n();
   const { headerRef } = useHeaderAnimation();
   const { scrollTo, isReady, smoother } = useScrollSmoother();
   const { isMobileNavOpen, toggleMobileNav, closeMobileNav, dropdownRef } = useMobileNavigation();
@@ -73,8 +75,8 @@ export function Header() {
           aria-haspopup="menu"
           onClick={handleButtonClick}
         >
-          <span className={styles.header__btnTextDesktop}>Contact me</span>
-          <span className={styles.header__btnTextMobile}>Navigation</span>
+          <span className={styles.header__btnTextDesktop}>{t('header.contactMe')}</span>
+          <span className={styles.header__btnTextMobile}>{t('header.navigation')}</span>
         </ContactButton>
       </div>
 
@@ -85,7 +87,7 @@ export function Header() {
             type="button"
             className={styles.header__overlay}
             data-testid="header-overlay"
-            aria-label="Close navigation"
+            aria-label={t('header.closeNavigation')}
             onClick={closeMobileNav}
           />
           <div
@@ -93,7 +95,7 @@ export function Header() {
             id="mobile-nav-panel"
             className={styles.header__dropdown}
             role="navigation"
-            aria-label="Mobile navigation"
+            aria-label={t('header.mobileNavigation')}
           >
             <GlassCard className={styles.header__dropdownCard} variant="content-focused">
               <Navigation

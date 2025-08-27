@@ -2,13 +2,14 @@ import React from 'react';
 import { InputField } from '@/lib/ui';
 import type { CompanyFormFieldsProps, CompanyFieldConfig } from '../../types';
 import formStyles from '../ContactForm/ContactForm.module.scss';
+import { t } from '@/i18n';
 
 const COMPANY_FIELDS: CompanyFieldConfig[] = [
-  { key: 'companyName', placeholder: 'Company Name', iconId: 'icon-building' },
-  { key: 'companyEmail', placeholder: 'Company Email', iconId: 'icon-envelope', type: 'email' },
+  { key: 'companyName', placeholder: t('section.contact.company.placeholder.name'), iconId: 'icon-building' },
+  { key: 'companyEmail', placeholder: t('section.contact.company.placeholder.email'), iconId: 'icon-envelope', type: 'email' },
   {
     key: 'companyDetails',
-    placeholder: 'Company Details',
+    placeholder: t('section.contact.company.placeholder.details'),
     isTextarea: true,
   },
 ];

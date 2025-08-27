@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRef, useEffect } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
 import styles from './HeroContentLeft.module.scss';
+import { useI18n } from '@/i18n';
 
 function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
   return (
@@ -22,6 +23,7 @@ function HeroImage({ id, src, alt }: { id: string; src: string; alt: string }) {
 
 export function HeroContentLeft() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -52,8 +54,8 @@ export function HeroContentLeft() {
         data-ease="power2.out"
         data-delay="0.4"
       >
-        <HeroImage id="melik" src="/images/melik.svg" alt="Melik" />
-        <HeroImage id="musinian" src="/images/musinian.svg" alt="Musinian" />
+        <HeroImage id="melik" src="/images/melik.svg" alt={t('section.hero.melikAlt')} />
+        <HeroImage id="musinian" src="/images/musinian.svg" alt={t('section.hero.musinianAlt')} />
       </div>
     </>
   );

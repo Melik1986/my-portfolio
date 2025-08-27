@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Btn.module.scss';
 import { ContactButtonProps } from '@/lib/types/btn.types';
+import { t } from '@/i18n';
 
 /**
  * SVG иконка для кнопки контакта
@@ -35,12 +36,12 @@ export function ContactButton({
     <button
       type="button"
       className={`${styles.btn} ${styles.header__btn} ${className}`.trim()}
-      aria-label="Contact me"
+      aria-label={t('header.contactMe')}
       data-target="#contact-section"
       {...rest}
     >
       <ContactIcon iconClassName={iconClassName} />
-      {children ?? 'Contact me'}
+      {children ?? t('header.contactMe')}
     </button>
   );
 }

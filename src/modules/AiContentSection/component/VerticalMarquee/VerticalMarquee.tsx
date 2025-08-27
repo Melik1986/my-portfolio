@@ -2,6 +2,7 @@
 import React, { useRef, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './VerticalMarquee.module.scss';
+import { useI18n } from '@/i18n';
 import { useMarqueeVisibility } from '../../../../lib/hooks/useMarqueeVisibility';
 import { useCssVarOnResize } from '../../../../lib/hooks/useCssVarOnResize';
 
@@ -9,6 +10,20 @@ interface VerticalMarqueeProps {
   images: string[];
   className?: string;
   eagerFirst?: boolean;
+}
+
+function VerticalImage({ src, index, eagerFirst }: { src: string; index: number; eagerFirst: boolean }) {
+  const { t } = useI18n();
+  return (
+    <Image
+      className={styles['ai-content__image']}
+      src={src}
+      alt={`${t('section.ai.posterAlt')} ${index + 1}`}
+      width={210}
+      height={280}
+      loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
+    />
+  );
 }
 
 export function VerticalMarquee({
@@ -52,14 +67,7 @@ export function VerticalMarquee({
                 className={`${styles['ai-content__picture']}${index === 0 ? ' ' + styles['ai-content__picture-main'] : ''}`}
                 {...(isClone && { 'aria-hidden': true })}
               >
-                <Image
-                  className={styles['ai-content__image']}
-                  src={src}
-                  alt={`AI Generated Poster ${index + 1}`}
-                  width={210}
-                  height={280}
-                  loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
-                />
+                <VerticalImage src={src} index={index} eagerFirst={eagerFirst} />
               </div>
             );
           })}
