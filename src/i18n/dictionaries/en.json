@@ -38,9 +38,7 @@
   "ai.title": "AI-Driven Creative Concepts",
   "ai.description": "Each image here is more than just a visual — it’s a solution: a banner, a product concept, or a marketing-ready design created with AI.",
   "ai.video.description": "Short animated ads and promo videos powered by AI. Every clip is a dynamic tool to grab attention, tell a story, and enhance any campaign.",
-  "section.gallery.title": "My Portfolio",
-  "section.gallery.prev": "Previous slide",
-  "section.gallery.next": "Next slide",
+
   "projects.repositories": "Repositories",
   "projects.closeFullscreen": "Close fullscreen view",
   "section.ai.posterAlt": "AI Generated Poster",
@@ -52,7 +50,7 @@
   "nav.about": "About",
   "nav.skills": "Skills",
   "nav.projects": "Projects",
-  "nav.gallery": "Gallery",
+
   "nav.contacts": "Contacts",
   "section.contact.toggle.welcomeTitle": "Hello, Welcome!",
   "section.contact.toggle.welcomeText": "Choose the form that fits your case.",
@@ -99,4 +97,3 @@
   "mail.message": "Message",
   "mail.noMessage": "(no message)"
 }
-

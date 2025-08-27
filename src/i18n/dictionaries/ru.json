@@ -38,9 +38,7 @@
   "ai.title": "AI‑генерируемые креативные концепции",
   "ai.description": "Каждое изображение — больше, чем просто визуал: это баннер, продукт‑концепт или маркетинговый дизайн, созданный с помощью ИИ.",
   "ai.video.description": "Короткие рекламные и промо‑видео на базе ИИ. Каждый ролик — инструмент, чтобы привлечь внимание, рассказать историю и усилить кампанию.",
-  "section.gallery.title": "Моё портфолио",
-  "section.gallery.prev": "Предыдущий слайд",
-  "section.gallery.next": "Следующий слайд",
+
   "projects.repositories": "Репозитории",
   "projects.closeFullscreen": "Закрыть полноэкранный режим",
   "section.ai.posterAlt": "AI‑постер",
@@ -52,7 +50,7 @@
   "nav.about": "Обо мне",
   "nav.skills": "Навыки",
   "nav.projects": "Проекты",
-  "nav.gallery": "Галерея",
+
   "nav.contacts": "Контакты",
   "section.contact.toggle.welcomeTitle": "Здравствуйте, добро пожаловать!",
   "section.contact.toggle.welcomeText": "Выберите форму, подходящую вашему случаю.",
@@ -99,4 +97,3 @@
   "mail.message": "Сообщение",
   "mail.noMessage": "(без сообщения)"
 }
-

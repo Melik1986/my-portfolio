@@ -2,7 +2,16 @@ import type { Metadata } from 'next';
 import type { SupportedLocale } from '@/i18n';
 import { tServer } from '@/i18n/server';
 
-function buildBaseMeta(): Pick<Metadata, 'keywords' | 'authors' | 'creator' | 'publisher' | 'formatDetection' | 'metadataBase' | 'alternates'> {
+function buildBaseMeta(): Pick<
+  Metadata,
+  | 'keywords'
+  | 'authors'
+  | 'creator'
+  | 'publisher'
+  | 'formatDetection'
+  | 'metadataBase'
+  | 'alternates'
+> {
   return {
     keywords: ['portfolio', 'web developer', 'React', 'Next.js', 'TypeScript', 'full-stack'],
     authors: [{ name: 'Melik Musinian' }],
@@ -64,7 +73,10 @@ function buildFontsOther(): NonNullable<Metadata['other']> {
 
 export function buildMetadataForLocale(locale: SupportedLocale): Metadata {
   return {
-    title: { default: tServer(locale, 'seo.title.default'), template: tServer(locale, 'seo.title.template') },
+    title: {
+      default: tServer(locale, 'seo.title.default'),
+      template: tServer(locale, 'seo.title.template'),
+    },
     description: tServer(locale, 'seo.description'),
     ...buildBaseMeta(),
     robots: buildRobots(),
@@ -73,4 +85,3 @@ export function buildMetadataForLocale(locale: SupportedLocale): Metadata {
     other: buildFontsOther(),
   };
 }
-

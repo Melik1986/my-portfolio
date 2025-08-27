@@ -4,7 +4,7 @@ A modern, interactive portfolio website built with Next.js 15, TypeScript, and a
 
 ## 🚀 Features
 
-- **Interactive Sections**: Hero, About, Skills, Projects, and Gallery
+- **Interactive Sections**: Hero, About, Skills, Projects
 - **3D Avatar**: Three.js powered 3D character with animations
 - **Smooth Animations**: GSAP-powered scroll animations and transitions
 - **Responsive Design**: Mobile-first approach with modern CSS
@@ -49,7 +49,6 @@ src/
 │   ├── AboutSection/      # Personal information
 │   ├── SkillsSection/     # Skills visualization with charts
 │   ├── ProjectsSection/   # Project showcase
-│   ├── GallerySection/    # Portfolio gallery
 │   └── AnimatedCardSection/ # Animation wrapper
 └── styles/                 # Global SCSS architecture
 ```
@@ -80,9 +79,6 @@ src/
 - Interactive project cards
 - GSAP-powered animations
 
-### GallerySection
-
-- Carousel navigation
 - Smooth transitions
 - Responsive image handling
 

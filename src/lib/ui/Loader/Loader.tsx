@@ -4,7 +4,6 @@ import React, { type JSX } from 'react';
 import { SpriteIcon } from '@/lib/ui';
 import { useLoaderAnimation } from '@/lib/hooks/useLoaderAnimation';
 import styles from './Loader.module.scss';
-import { div } from 'three/examples/jsm/nodes/Nodes.js';
 
 const SPRITE_PATH = '/preloader-icons/sprite-preloader.svg';
 

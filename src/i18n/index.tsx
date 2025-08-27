@@ -28,14 +28,15 @@ type I18nProviderProps = {
 export function I18nProvider({ children, locale = 'en' }: I18nProviderProps) {
   const messages = dictionaries[locale] ?? dictionaries.en;
 
-  const value = useMemo<I18nContextValue>(() => ({
-    locale,
-    t: (key: string) => messages[key] ?? key,
-  }), [locale, messages]);
-
-  return (
-    <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
+  const value = useMemo<I18nContextValue>(
+    () => ({
+      locale,
+      t: (key: string) => messages[key] ?? key,
+    }),
+    [locale, messages],
   );
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n() {
@@ -54,4 +55,3 @@ export function t(key: string): string {
 }
 
 export type { SupportedLocale };
-

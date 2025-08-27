@@ -8,9 +8,8 @@ Main sections (order):
 2) About — background, approach, tooling
 3) Skills — charts (ECharts) for core/front-end/back-end/tools
 4) Projects — curated project cards with links and descriptions
-5) Gallery — visual works and UI shots
-6) AI Content — AI‑generated texts/snippets
-7) AI Video — AI‑generated video content
+5) AI Content — AI‑generated texts/snippets
+6) AI Video — AI‑generated video content
 8) Contact — call‑to‑action
 
 Selected projects (short):

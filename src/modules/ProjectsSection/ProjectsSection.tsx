@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { lazy, Suspense } from 'react';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsSection.module.scss';
@@ -19,7 +19,9 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const { t } = useI18n();
   return (
     <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="5.5">
-      <h2 className={`${styles['projects__title']} visually-hidden`}>{t('section.projects.title')}</h2>
+      <h2 className={`${styles['projects__title']} visually-hidden`}>
+        {t('section.projects.title')}
+      </h2>
       <div
         className={styles['projects-catalog__container']}
         data-animation="fade-up"
@@ -28,7 +30,9 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
         data-ease="power2.out"
         data-delay="0"
       >
-        <Suspense fallback={<div className="projects-loading">{t('section.projects.loading')}</div>}>
+        <Suspense
+          fallback={<div className="projects-loading">{t('section.projects.loading')}</div>}
+        >
           <ProjectsCatalogLazy projects={projects} />
         </Suspense>
       </div>

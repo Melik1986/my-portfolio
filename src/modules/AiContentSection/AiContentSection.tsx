@@ -9,10 +9,14 @@ import { useI18n } from '@/i18n';
 
 function AiTextBlock({ title, description }: { title: string; description: string }) {
   const { t } = useI18n();
-  return <ContentSection
-    title={title === 'section.ai.title' ? t('section.ai.title') : title}
-    description={description === 'section.ai.description' ? t('section.ai.description') : description}
-  />;
+  return (
+    <ContentSection
+      title={title === 'section.ai.title' ? t('section.ai.title') : title}
+      description={
+        description === 'section.ai.description' ? t('section.ai.description') : description
+      }
+    />
+  );
 }
 
 export function AiContentSection({

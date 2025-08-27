@@ -279,10 +279,9 @@ export class AnimationController {
       'about-section': 1, // Вертикальный скролл
       'skills-section': 2, // Вертикальный скролл
       'projects-section': 3, // Горизонтальный скролл
-      'gallery-section': 4, // Горизонтальный скролл
-      'ai-content-section': 5, // Горизонтальный скролл
-      'ai-video-section': 6, // Горизонтальный скролл
-      'contact-section': 7, // Горизонтальный скролл
+      'ai-content-section': 4, // Горизонтальный скролл
+      'ai-video-section': 5, // Горизонтальный скролл
+      'contact-section': 6, // Горизонтальный скролл
     };
 
     return sectionMapping[sectionId] ?? -1;

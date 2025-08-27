@@ -19,7 +19,12 @@ export function middleware(request: NextRequest) {
   const cookieLocale = request.cookies.get('locale')?.value;
   const accept = request.headers.get('accept-language') || '';
   const headerLocale = (request.headers.get('x-locale') || '').toLowerCase();
-  const preferred = (cookieLocale || headerLocale || accept.split(',')[0]?.slice(0, 2) || 'en').toLowerCase();
+  const preferred = (
+    cookieLocale ||
+    headerLocale ||
+    accept.split(',')[0]?.slice(0, 2) ||
+    'en'
+  ).toLowerCase();
   const normalized = preferred === 'ru' ? 'ru' : 'en';
 
   if (cookieLocale !== normalized) {

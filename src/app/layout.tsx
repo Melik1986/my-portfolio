@@ -95,21 +95,21 @@ export default async function RootLayout({
       >
         <AppThemeProvider>
           <I18nProvider locale={htmlLang as SupportedLocale}>
-          <main className="portfolio" id="smooth-wrapper">
-            <div className="portfolio__section" id="smooth-content">
-              <Container>
-                {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
-                <GlobalPreloader />
-                <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
-              </Container>
-            </div>
-            <AnchorButton />
-            <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 1000 }}>
-              <LanguageSwitcher />
-            </div>
-            {/* Optional theme toggle, can be removed later */}
-            {/* <ThemeToggle /> */}
-          </main>
+            <main className="portfolio" id="smooth-wrapper">
+              <div className="portfolio__section" id="smooth-content">
+                <Container>
+                  {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
+                  <GlobalPreloader />
+                  <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+                </Container>
+              </div>
+              <AnchorButton />
+              <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 1000 }}>
+                <LanguageSwitcher />
+              </div>
+              {/* Optional theme toggle, can be removed later */}
+              {/* <ThemeToggle /> */}
+            </main>
           </I18nProvider>
         </AppThemeProvider>
       </body>

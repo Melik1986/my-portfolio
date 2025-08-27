@@ -112,7 +112,11 @@ function getMessage(p: ContactPayload): string {
   return p.type === 'client' ? p.projectDescription || '' : p.companyDetails || '';
 }
 
-function buildMail(p: ContactPayload, cfg: SmtpConfig, locale: 'en' | 'ru'): nodemailer.SendMailOptions {
+function buildMail(
+  p: ContactPayload,
+  cfg: SmtpConfig,
+  locale: 'en' | 'ru',
+): nodemailer.SendMailOptions {
   const name = p.type === 'client' ? p.userName : p.companyName;
   const email = getReplyTo(p);
   const message = getMessage(p);

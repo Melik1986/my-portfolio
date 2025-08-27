@@ -8,11 +8,6 @@ export interface AboutContentProps {
   className?: string;
 }
 
-export interface AboutGalleryProps {
-  // Пропсы для AboutGallery
-  className?: string;
-}
-
 export interface AboutAnimationProps {
   // Пропсы для AboutAnimation
   className?: string;

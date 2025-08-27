@@ -12,7 +12,15 @@ interface VerticalMarqueeProps {
   eagerFirst?: boolean;
 }
 
-function VerticalImage({ src, index, eagerFirst }: { src: string; index: number; eagerFirst: boolean }) {
+function VerticalImage({
+  src,
+  index,
+  eagerFirst,
+}: {
+  src: string;
+  index: number;
+  eagerFirst: boolean;
+}) {
   const { t } = useI18n();
   return (
     <Image

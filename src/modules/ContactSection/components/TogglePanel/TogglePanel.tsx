@@ -9,7 +9,9 @@ export function TogglePanel({ onToggleToClient, onToggleToCompany }: TogglePanel
   return (
     <div className={styles['toggle-box']}>
       <div className={`${styles['toggle-panel']} ${styles['toggle-panel--left']}`}>
-        <h1 className={styles['toggle-panel__title']}>{t('section.contact.toggle.welcomeTitle')}</h1>
+        <h1 className={styles['toggle-panel__title']}>
+          {t('section.contact.toggle.welcomeTitle')}
+        </h1>
         <p className={styles['toggle-panel__text']}>{t('section.contact.toggle.welcomeText')}</p>
         <button type="button" className={styles['toggle-btn']} onClick={onToggleToClient}>
           {t('section.contact.toggle.clientForm')}

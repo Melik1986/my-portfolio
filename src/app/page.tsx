@@ -5,7 +5,6 @@ import { HeroSection } from '@/modules/HeroSection/HeroSection';
 import { AboutSection } from '@/modules/AboutSection/AboutSection';
 import { SkillsSection } from '@/modules/SkillsSection/SkillsSection';
 import { ProjectsSection } from '@/modules/ProjectsSection/ProjectsSection';
-import { GallerySection } from '@/modules/GallerySection/GallerySection';
 import { AiContentSection } from '@/modules/AiContentSection/AiContentSection';
 import { AiVideoContentSection } from '@/modules/AiVideoContentSection/AiVideoContentSection';
 import { PROJECTS_DATA } from '@/modules/ProjectsSection/config/projects-catalog';
@@ -40,18 +39,14 @@ export default function Home() {
             <ProjectsSection projects={PROJECTS_DATA} />
           </AnimatedCardSection>
 
-          <AnimatedCardSection id="gallery-section" title="Gallery" sectionIndex={4}>
-            <GallerySection />
-          </AnimatedCardSection>
-
-          <AnimatedCardSection id="ai-content-section" title="Ai Content" sectionIndex={5}>
+          <AnimatedCardSection id="ai-content-section" title="Ai Content" sectionIndex={4}>
             <AiContentSection />
           </AnimatedCardSection>
-          <AnimatedCardSection id="ai-video-section" title="Ai Video" sectionIndex={6}>
+          <AnimatedCardSection id="ai-video-section" title="Ai Video" sectionIndex={5}>
             <AiVideoContentSection />
           </AnimatedCardSection>
 
-          <AnimatedCardSection id="contact-section" title="Contact" sectionIndex={7}>
+          <AnimatedCardSection id="contact-section" title="Contact" sectionIndex={6}>
             <ContactSection />
           </AnimatedCardSection>
         </ul>

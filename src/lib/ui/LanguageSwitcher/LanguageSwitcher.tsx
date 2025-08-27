@@ -13,18 +13,10 @@ export function LanguageSwitcher() {
 
   return (
     <div style={{ display: 'inline-flex', gap: 8 }}>
-      <button
-        type="button"
-        onClick={() => setLocale('en')}
-        aria-pressed={locale === 'en'}
-      >
+      <button type="button" onClick={() => setLocale('en')} aria-pressed={locale === 'en'}>
         EN
       </button>
-      <button
-        type="button"
-        onClick={() => setLocale('ru')}
-        aria-pressed={locale === 'ru'}
-      >
+      <button type="button" onClick={() => setLocale('ru')} aria-pressed={locale === 'ru'}>
         RU
       </button>
     </div>
@@ -32,4 +24,3 @@ export function LanguageSwitcher() {
 }
 
 export default LanguageSwitcher;
-

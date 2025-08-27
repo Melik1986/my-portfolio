@@ -41,8 +41,6 @@ A modern, interactive portfolio built with Next.js 15 (App Router), React 19, an
 - Interactive catalog with animated cards and lazy loading.
 - Data source: `src/modules/ProjectsSection/config/projects-catalog.ts`.
 
-### Gallery
-- Visual works, UI shots, and motion explorations.
 
 ### AI Content
 - AI‑generated summaries, concepts, and text artifacts.

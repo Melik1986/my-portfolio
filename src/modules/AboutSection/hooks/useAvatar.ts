@@ -315,6 +315,60 @@ interface ModelHandlerContext {
   refs: React.RefObject<AvatarRefs>;
 }
 
+// Вспомогательные функции для сокращения тела колбэков
+const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void => {
+  const box = new THREE.Box3().setFromObject(avatar);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+  avatar.position.sub(center);
+  const boxAfter = new THREE.Box3().setFromObject(avatar);
+  const minY = boxAfter.min.y;
+  avatar.position.y -= minY;
+  const fov = (scene.camera.fov * Math.PI) / 180;
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const distance = maxDim / (2 * Math.tan(fov / 2)) + 0.6;
+  scene.camera.position.set(0.6, size.y * 0.7 + 0.4, distance);
+  scene.controls.target.set(0, size.y * 0.5, 0);
+  scene.controls.update();
+};
+
+const createAssets = (
+  gltf: GLTF,
+  avatar: THREE.Group,
+  createGround: () => THREE.Mesh,
+  setupAnimations: (
+    gltf: GLTF,
+    mixer: THREE.AnimationMixer,
+  ) => { waveAction: THREE.AnimationAction | null; stumbleAction: THREE.AnimationAction | null },
+): AvatarAssets => {
+  const groundMesh = createGround();
+  const mixer = new THREE.AnimationMixer(avatar);
+  const { waveAction, stumbleAction } = setupAnimations(gltf, mixer);
+  return { avatar, groundMesh, mixer, waveAction, stumbleAction };
+};
+
+const applyInitialSizing = (
+  container: HTMLElement,
+  scene: AvatarScene,
+  assets: AvatarAssets,
+  calculateScale: (w: number, h: number) => number,
+): void => {
+  const scale = calculateScale(container.clientWidth, container.clientHeight);
+  assets.avatar.scale.setScalar(scale);
+  assets.groundMesh.scale.setScalar(scale);
+  scene.camera.aspect = container.clientWidth / container.clientHeight;
+  scene.camera.updateProjectionMatrix();
+  scene.renderer.setSize(container.clientWidth, container.clientHeight);
+};
+
+const updateRefsAfterLoad = (refs: React.RefObject<AvatarRefs>, assets: AvatarAssets): void => {
+  refs.current.avatar = assets.avatar;
+  refs.current.groundMesh = assets.groundMesh;
+  refs.current.mixer = assets.mixer;
+};
+
 const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
   const { setupMeshProperties, createGround, setupAnimations } = deps;
   const { calculateScale, assetsRef, stateRef, refs } = ctx;
@@ -322,68 +376,23 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
   const handleModelLoaded = useCallback(
     (gltf: GLTF, scene: AvatarScene): void => {
       if (stateRef.current.isDisposed) return;
-
       const avatar = gltf.scene;
       setupMeshProperties(avatar);
-
-      const groundMesh = createGround();
-      const mixer = new THREE.AnimationMixer(avatar);
-      const { waveAction, stumbleAction } = setupAnimations(gltf, mixer);
-
-      if (!waveAction && !stumbleAction) {
+      const assets = createAssets(gltf, avatar, createGround, setupAnimations);
+      if (!assets.waveAction && !assets.stumbleAction) {
         console.warn('No animations found in model');
         return;
       }
-
-      // Center and align model to ground
       try {
-        const box = new THREE.Box3().setFromObject(avatar);
-        const size = new THREE.Vector3();
-        const center = new THREE.Vector3();
-        box.getSize(size);
-        box.getCenter(center);
-        avatar.position.sub(center); // center at origin
-        // Recompute and lift so bottom sits on y=0
-        const boxAfter = new THREE.Box3().setFromObject(avatar);
-        const minY = boxAfter.min.y;
-        avatar.position.y -= minY;
-
-        // Fit camera to model
-        const fov = (scene.camera.fov * Math.PI) / 180;
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const distance = maxDim / (2 * Math.tan(fov / 2)) + 0.6;
-        scene.camera.position.set(0.6, size.y * 0.7 + 0.4, distance);
-        scene.controls.target.set(0, size.y * 0.5, 0);
-        scene.controls.update();
-      } catch {
-        // ignore centering errors
-      }
-
-      scene.scene.add(avatar, groundMesh);
-
-      assetsRef.current = {
-        avatar,
-        groundMesh,
-        mixer,
-        waveAction,
-        stumbleAction,
-      };
-
-      refs.current.avatar = avatar;
-      refs.current.groundMesh = groundMesh;
-      refs.current.mixer = mixer;
-
-      const container = refs.current.container!;
-      const scale = calculateScale(container.clientWidth, container.clientHeight);
-      avatar.scale.setScalar(scale);
-      groundMesh.scale.setScalar(scale);
-      // Ensure camera aspect and renderer size are correct now that we know dimensions
-      try {
-        scene.camera.aspect = container.clientWidth / container.clientHeight;
-        scene.camera.updateProjectionMatrix();
-        scene.renderer.setSize(container.clientWidth, container.clientHeight);
+        centerModelAndFitCamera(avatar, scene);
       } catch {}
-
+      scene.scene.add(avatar, assets.groundMesh);
+      assetsRef.current = assets;
+      updateRefsAfterLoad(refs, assets);
+      const container = refs.current.container!;
+      try {
+        applyInitialSizing(container, scene, assets, calculateScale);
+      } catch {}
       container.dispatchEvent(new CustomEvent('modelLoaded'));
     },
     [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],

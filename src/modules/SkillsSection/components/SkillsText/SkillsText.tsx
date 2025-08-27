@@ -3,20 +3,12 @@ import { useI18n } from '@/i18n';
 
 function SkillsTextDesktop() {
   const { t } = useI18n();
-  return (
-    <span className={styles['skills__text-desktop']}>
-      {t('section.skills.text.desktop')}
-    </span>
-  );
+  return <span className={styles['skills__text-desktop']}>{t('section.skills.text.desktop')}</span>;
 }
 
 function SkillsTextMobile() {
   const { t } = useI18n();
-  return (
-    <span className={styles['skills__text-mobile']}>
-      {t('section.skills.text.mobile')}
-    </span>
-  );
+  return <span className={styles['skills__text-mobile']}>{t('section.skills.text.mobile')}</span>;
 }
 
 export function SkillsText() {

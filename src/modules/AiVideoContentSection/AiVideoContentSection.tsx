@@ -20,9 +20,7 @@ function AiVideoTextBlock({ title, description }: { title: string; description: 
     <ContentSection
       title={title === 'section.ai.title' ? t('section.ai.title') : title}
       description={
-        description === DEFAULT_VIDEO_DESCRIPTION
-          ? t('section.ai.video.description')
-          : description
+        description === DEFAULT_VIDEO_DESCRIPTION ? t('section.ai.video.description') : description
       }
     />
   );

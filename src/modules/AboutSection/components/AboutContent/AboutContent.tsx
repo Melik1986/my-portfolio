@@ -17,20 +17,12 @@ const AboutAnimationLazy = lazy(() =>
  */
 function AboutTextDesktop() {
   const { t } = useI18n();
-  return (
-    <span className={styles['about__text-desktop']}>
-      {t('section.about.text.desktop')}
-    </span>
-  );
+  return <span className={styles['about__text-desktop']}>{t('section.about.text.desktop')}</span>;
 }
 
 function AboutTextMobile() {
   const { t } = useI18n();
-  return (
-    <span className={styles['about__text-mobile']}>
-      {t('section.about.text.mobile')}
-    </span>
-  );
+  return <span className={styles['about__text-mobile']}>{t('section.about.text.mobile')}</span>;
 }
 
 /**
