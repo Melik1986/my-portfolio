@@ -15,6 +15,14 @@
   opacity: 1;
   animation: loaderFadeIn 0.6s ease-in forwards $progress-duration;
 
+  &__wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
   &__content {
     position: relative;
     width: 100vw;
@@ -25,7 +33,7 @@
 
   &__logo {
     position: absolute;
-    left: 34%;
+    left: 35%;
     top: 30%;
     transform: translate(-50%, -50%);
     opacity: 0;
@@ -42,24 +50,24 @@
     }
 
     @include vp-1304 {
-      left: 30%;
+      left: 32%;
       top: 30%;
     }
 
     @include vp-1024 {
-      left: 30%;
+      left: 27%;
       top: 30%;
     }
 
     @include vp-768 {
-      left: 26%;
+      left: 28%;
       top: 30%;
       width: 360px;
       height: 360px;
     }
 
     @include vp-375 {
-      left: 20%;
+      left: 16%;
       top: 30%;
       width: 260px;
       height: 260px;
@@ -270,118 +278,3 @@
   display: none !important;
 }
 
-// Мобильная раскладка стартовых позиций иконок (ширина экрана до 375px)
-@media (max-width: 375px) {
-  .preloader {
-    &__logo {
-      left: 12%;
-      top: 30%;
-      width: 260px;
-      height: 260px;
-    }
-
-    &__company-icon {
-      // Переопределяем только координаты, тайминги и анимации остаются прежними
-
-      &:nth-child(2) {
-        // alcon (верхний левый)
-        top: 8%;
-        left: 8%;
-      }
-
-      &:nth-child(3) {
-        // sminex (верхний правый)
-        top: 10%;
-        left: 70%;
-      }
-
-      &:nth-child(4) {
-        // aeon (лево-верх)
-        top: 24%;
-        left: 6%;
-      }
-
-      &:nth-child(5) {
-        // coldy (право-верх)
-        top: 22%;
-        left: 74%;
-      }
-
-      &:nth-child(6) {
-        // cutu (лево-центр)
-        top: 38%;
-        left: 4%;
-      }
-
-      &:nth-child(7) {
-        // etalon (право-центр)
-        top: 38%;
-        left: 76%;
-      }
-
-      &:nth-child(8) {
-        // wafi (лево-низ-центр)
-        top: 52%;
-        left: 8%;
-      }
-
-      &:nth-child(9) {
-        // forma (право-низ-центр)
-        top: 52%;
-        left: 70%;
-      }
-
-      &:nth-child(10) {
-        // galc (лево-низ)
-        top: 66%;
-        left: 6%;
-      }
-
-      &:nth-child(11) {
-        // veren (право-низ)
-        top: 66%;
-        left: 74%;
-      }
-
-      &:nth-child(12) {
-        // ingrad (низ слева, ближе к центру)
-        top: 80%;
-        left: 20%;
-      }
-
-      &:nth-child(13) {
-        // snegiri (низ справа, ближе к центру)
-        top: 82%;
-        left: 60%;
-      }
-    }
-  }
-
-  // Переопределяем ключевые кадры для мобильной ширины, чтобы конечная точка была на 49%
-  @keyframes flowAndRecede {
-    0% {
-      opacity: 1;
-      filter: blur(10px);
-      scale: 2;
-    }
-
-    20% {
-      filter: blur(0px);
-      transform: translatex(0) translatey(0);
-      scale: 1;
-    }
-
-    80% {
-      filter: blur(0px);
-      scale: 0.5;
-    }
-
-    100% {
-      opacity: 0;
-      top: 50%;
-      left: 49%;
-      transform: translate(-50%, -50%) scale(0.3) translateZ(-1000px);
-      filter: blur(5px);
-    }
-  }
-}

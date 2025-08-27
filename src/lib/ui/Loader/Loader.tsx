@@ -4,6 +4,7 @@ import React, { type JSX } from 'react';
 import { SpriteIcon } from '@/lib/ui';
 import { useLoaderAnimation } from '@/lib/hooks/useLoaderAnimation';
 import styles from './Loader.module.scss';
+import { div } from 'three/examples/jsm/nodes/Nodes.js';
 
 const SPRITE_PATH = '/preloader-icons/sprite-preloader.svg';
 
@@ -26,21 +27,23 @@ const COMPANY_ICONS: ReadonlyArray<IconDef> = [
 
 function PreloaderContent(): JSX.Element {
   return (
-    <div className={styles['preloader__content']}>
-      <SpriteIcon name="logo" width={160} height={160} className={styles['preloader__logo']} />
-      {COMPANY_ICONS.map(({ name, width, height }) => (
-        <SpriteIcon
-          key={name}
-          className={styles['preloader__company-icon']}
-          name={name}
-          sprite={SPRITE_PATH}
-          width={width}
-          height={height}
-          aria-hidden
-        />
-      ))}
-      <div className={styles['preloader__progress']}>
-        <div className={styles['preloader__progress-bar']} data-preloader-progress />
+    <div className={styles['preloader__wrapper']}>
+      <div className={styles['preloader__content']}>
+        <SpriteIcon name="logo" width={160} height={160} className={styles['preloader__logo']} />
+        {COMPANY_ICONS.map(({ name, width, height }) => (
+          <SpriteIcon
+            key={name}
+            className={styles['preloader__company-icon']}
+            name={name}
+            sprite={SPRITE_PATH}
+            width={width}
+            height={height}
+            aria-hidden
+          />
+        ))}
+        <div className={styles['preloader__progress']}>
+          <div className={styles['preloader__progress-bar']} data-preloader-progress />
+        </div>
       </div>
     </div>
   );
