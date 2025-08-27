@@ -174,7 +174,12 @@ src/
 - Wait for preloader to complete before asserting animations:
 
 ```ts
-await page.waitForEvent('console', { predicate: (m) => m.text().includes('preloader:complete'), timeout: 0 }).catch(() => {});
+await page
+  .waitForEvent('console', {
+    predicate: (m) => m.text().includes('preloader:complete'),
+    timeout: 0,
+  })
+  .catch(() => {});
 await page.waitForFunction(() => !!document.querySelector('[data-preloader-root]') === false);
 ```
 
@@ -183,7 +188,8 @@ await page.waitForFunction(() => !!document.querySelector('[data-preloader-root]
 ```ts
 await page.waitForFunction(() => {
   const smoother = (window as any).ScrollSmoother?.get?.();
-  const wrapper = document.querySelector('.portfolio__wrapper') || document.querySelector('#smooth-content');
+  const wrapper =
+    document.querySelector('.portfolio__wrapper') || document.querySelector('#smooth-content');
   const hasPinSpacer = wrapper?.parentElement?.querySelector('.pin-spacer');
   return Boolean(smoother) && Boolean(hasPinSpacer);
 });

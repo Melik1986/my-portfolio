@@ -9,23 +9,41 @@ export function navigateToSection(
     | ((target: string | number | Element, smooth?: boolean, position?: string) => void)
     | null,
 ): void {
+  // Small helper to ensure smoother and triggers are ready before moving
+  const ensureReady = async () => {
+    if (!isReady) {
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    try {
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      ScrollTrigger.refresh();
+    } catch {}
+    await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+  };
+
   const cardIndex = animationController.getCardIndexBySectionId(sectionId);
 
-  if (cardIndex !== -1 && animationController.isReady()) {
-    animationController.navigateToCard(cardIndex);
+  if (cardIndex !== -1) {
+    // Ensure master is initialized if user navigates very early
+    if (!animationController.isReady()) {
+      animationController.initializeMaster();
+    }
+    void animationController.navigateToCardAsync(cardIndex);
     return;
   }
 
   const element = document.getElementById(sectionId);
   if (!element) return;
 
-  if (isReady && smoother && scrollTo) {
-    try {
-      scrollTo(element, true, 'top top');
-    } catch {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Fallback smooth scroll with readiness guard
+  (async () => {
+    await ensureReady();
+    if (smoother && scrollTo) {
+      try {
+        scrollTo(element, true, 'top top');
+        return;
+      } catch {}
     }
-  } else {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  })();
 }

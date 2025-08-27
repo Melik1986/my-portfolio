@@ -7,6 +7,13 @@
 @use '../styles/_visually-hidden' as *;
 @use '../styles/_animations' as *;
 
+/* Scroll lock for preloader */
+html.preload-lock,
+body.preload-lock {
+  overflow: hidden !important;
+  height: 100%;
+}
+
 /* Theme variables */
 :root[data-theme='light'] {
   @include light-theme-variables;

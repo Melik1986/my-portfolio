@@ -13,5 +13,3 @@ export function getSuccessContent(type: 'client' | 'company'): SuccessContent {
       'Thank you for your inquiry. I will review your project details and contact you shortly!',
   };
 }
-
-

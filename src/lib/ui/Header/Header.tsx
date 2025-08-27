@@ -30,11 +30,14 @@ export function Header() {
   };
 
   const handleButtonClick = () => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      toggleMobileNav();
-    } else {
-      handleNavigate('contact-section');
+    if (typeof window !== 'undefined') {
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) {
+        toggleMobileNav();
+        return;
+      }
     }
+    handleNavigate('contact-section');
   };
 
   // клики по документу и внутри дропдауна обрабатываются в хукe useMobileNavigation
@@ -60,6 +63,7 @@ export function Header() {
         />
         <ContactButton
           className={styles['header__contact-button']}
+          data-testid="header-contact-button"
           data-animation="slide-right"
           data-duration="1.0"
           data-ease="power2.out"
@@ -80,6 +84,7 @@ export function Header() {
           <button
             type="button"
             className={styles.header__overlay}
+            data-testid="header-overlay"
             aria-label="Close navigation"
             onClick={closeMobileNav}
           />

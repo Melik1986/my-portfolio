@@ -40,6 +40,33 @@ export class AnimationController {
   private masterTimeline: gsap.core.Timeline | null = null;
   private activeCardIndex = 0;
   private isInitialized = false;
+  private totalCardsCount: number | null = null;
+  private pendingCardIndex: number | null = null;
+  private whenReadyPromise: Promise<void> | null = null;
+  private resolveWhenReady: (() => void) | null = null;
+
+  private waitForMasterReady(): void {
+    if (!this.masterTimeline) return;
+    const tryNotify = () => {
+      const hasTrigger = Boolean(this.masterTimeline && this.masterTimeline.scrollTrigger);
+      if (hasTrigger) {
+        if (this.pendingCardIndex !== null) {
+          const toGo = this.pendingCardIndex;
+          this.pendingCardIndex = null;
+          this.navigateToCard(toGo);
+        }
+        // resolve readiness promise
+        if (this.resolveWhenReady) {
+          this.resolveWhenReady();
+          this.whenReadyPromise = null;
+          this.resolveWhenReady = null;
+        }
+        return;
+      }
+      requestAnimationFrame(tryNotify);
+    };
+    tryNotify();
+  }
 
   /**
    * Инициализация мастер-анимации (только для Hero секции)
@@ -70,6 +97,14 @@ export class AnimationController {
     });
 
     this.isInitialized = true;
+    this.totalCardsCount = items.length;
+    // Wait until ScrollTrigger is attached, then process any pending navigation
+    if (!this.whenReadyPromise) {
+      this.whenReadyPromise = new Promise<void>((resolve) => {
+        this.resolveWhenReady = resolve;
+      });
+    }
+    this.waitForMasterReady();
     return this.masterTimeline;
   }
 
@@ -156,22 +191,31 @@ export class AnimationController {
   /**
    * Программная навигация к карточке по индексу
    */
-  navigateToCard(cardIndex: number): void {
+  navigateToCard(cardIndex: number): boolean {
     if (!this.isInitialized || !this.masterTimeline) {
       console.warn('AnimationController not initialized');
-      return;
+      return false;
     }
 
     if (!this.sections.has(cardIndex)) {
       console.warn(`Card with index ${cardIndex} not found`);
-      return;
+      return false;
     }
 
     // Получаем ScrollTrigger из мастер timeline
     const scrollTrigger = this.masterTimeline.scrollTrigger;
     if (!scrollTrigger) {
-      console.warn('ScrollTrigger not found in master timeline');
-      return;
+      console.debug('ScrollTrigger not found in master timeline');
+      // Попробуем освежить ScrollTrigger и повторить один раз
+      try {
+        void import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+          ScrollTrigger.refresh();
+          setTimeout(() => ScrollTrigger.refresh(), 50);
+        });
+      } catch {}
+      // Запомним намерение навигации и выполним, когда ScrollTrigger станет доступен
+      this.pendingCardIndex = cardIndex;
+      return false;
     }
 
     // Для первой карточки просто прокручиваем к началу секции
@@ -184,11 +228,12 @@ export class AnimationController {
         },
         ease: 'power2.inOut',
       });
-      return;
+      return true;
     }
 
     // Для остальных карточек вычисляем позицию
-    const progress = cardIndex / Math.max(1, this.sections.size - 1);
+    const denominator = Math.max(1, (this.totalCardsCount ?? this.sections.size) - 1);
+    const progress = cardIndex / denominator;
 
     // Вычисляем позицию по фактическому диапазону ScrollTrigger
     const startPos = scrollTrigger.start;
@@ -204,6 +249,24 @@ export class AnimationController {
       },
       ease: 'power2.inOut',
     });
+    return true;
+  }
+
+  async navigateToCardAsync(cardIndex: number): Promise<boolean> {
+    if (!this.isInitialized || !this.masterTimeline) {
+      this.initializeMaster();
+    }
+    // wait until scrollTrigger attaches
+    if (this.whenReadyPromise) {
+      await this.whenReadyPromise;
+    }
+    // As an extra guard, rAF and refresh
+    await new Promise<void>((r) => requestAnimationFrame(() => r()));
+    try {
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      ScrollTrigger.refresh();
+    } catch {}
+    return this.navigateToCard(cardIndex);
   }
 
   /**
@@ -262,6 +325,10 @@ export class AnimationController {
    */
   isReady(): boolean {
     return Boolean(this.masterTimeline);
+  }
+
+  getTotalCardsCount(): number | null {
+    return this.totalCardsCount;
   }
 }
 
