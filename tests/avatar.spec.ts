@@ -17,4 +17,3 @@ test('3D Avatar container renders and canvas is present', async ({ page }) => {
   const canvas = container.locator('canvas');
   await expect(canvas).toHaveCount(1);
 });
-
