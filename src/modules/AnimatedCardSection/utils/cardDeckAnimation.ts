@@ -147,6 +147,17 @@ function createDesktopTimeline(
       end: () => `+=${(items.length - 1) * 100}%`,
       scrub: 1,
       invalidateOnRefresh: true,
+      // Снапим прогресс к ближайшей карточке (устраняет недоезд последней на 768–1023)
+      snap: {
+        snapTo: (value: number) => {
+          const steps = Math.max(1, items.length - 1);
+          const step = 1 / steps;
+          return Math.round(value / step) * step;
+        },
+        duration: 0.2,
+        delay: 0,
+        ease: 'power1.inOut',
+      },
       markers: false,
     },
   });

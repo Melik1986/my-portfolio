@@ -59,7 +59,7 @@ export function useProjectsAnimation(totalCards: number) {
 
     const isMobile =
       typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
+      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
 
     cardsRef.current.forEach((cardRef, index) => {
       // На мобилке — строгий каскад вверх и назад (без смещения по X)
@@ -128,7 +128,7 @@ export function useProjectsAnimation(totalCards: number) {
     // Мобильная базовая позиция должна совпадать с expandFan (лестница вверх/назад, X=0)
     const isMobile =
       typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
+      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
 
     const baseX = isMobile ? 0 : index * ANIMATION_CONFIG.xStep;
     const baseY = -index * Math.abs(ANIMATION_CONFIG.yStep) * (isMobile ? 0.7 : 1);
