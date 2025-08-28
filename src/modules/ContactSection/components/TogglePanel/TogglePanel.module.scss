@@ -273,6 +273,53 @@
   }
 }
 
+// Mobile content sync with vertical panel movement
+@include vp-768 {
+  // Smooth appearance/disappearance for inner content
+  .toggle-panel__title,
+  .toggle-panel__text,
+  .toggle-panel__btn {
+    transition: transform 0.6s ease, opacity 0.6s ease;
+    will-change: transform, opacity;
+  }
+
+  // Default (company side active): left panel visible, right panel content hidden
+  .toggle-panel--left .toggle-panel__title,
+  .toggle-panel--left .toggle-panel__text,
+  .toggle-panel--left .toggle-panel__btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .toggle-panel--right .toggle-panel__title,
+  .toggle-panel--right .toggle-panel__text,
+  .toggle-panel--right .toggle-panel__btn {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  // When client side active: swap visibility with a vertical shift
+  [data-active='true'] .toggle-panel--left .toggle-panel__title,
+  [data-active='true'] .toggle-panel--left .toggle-panel__text,
+  [data-active='true'] .toggle-panel--left .toggle-panel__btn {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  [data-active='true'] .toggle-panel--right .toggle-panel__title,
+  [data-active='true'] .toggle-panel--right .toggle-panel__text,
+  [data-active='true'] .toggle-panel--right .toggle-panel__btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Ensure interactivity follows the visible panel
+  .toggle-panel--left { pointer-events: auto; }
+  .toggle-panel--right { pointer-events: none; }
+  [data-active='true'] .toggle-panel--left { pointer-events: none; }
+  [data-active='true'] .toggle-panel--right { pointer-events: auto; }
+}
+
 [data-active='true'] .toggle-panel--left {
   left: -50%;
   transition-delay: 0.6s;
