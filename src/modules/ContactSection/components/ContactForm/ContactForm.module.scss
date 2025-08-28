@@ -2,7 +2,7 @@
 @use '@/app/styles/_mixins.scss' as *;
 @use '@/app/styles/_typography.scss' as typo;
 
-// Form
+// Form with responsive design
 .form {
   width: 100%;
   height: 100%;
@@ -11,50 +11,169 @@
   gap: 20px;
   justify-content: space-between;
 
+  // Tablet adjustments
+  @include vp-1024 {
+    gap: 18px;
+  }
+
+  @include vp-tablet {
+    gap: 16px;
+  }
+
+  // Mobile adjustments
+  @include vp-mobile {
+    gap: 14px;
+    justify-content: flex-start;
+  }
+
+  @include vp-375 {
+    gap: 12px;
+  }
+
+  @include vp-360 {
+    gap: 10px;
+  }
+
   &__title {
     font-family: $font-family-poppins;
     @include typo.type-h3;
     margin: -10px 0;
+
+    // Tablet adjustments
+    @include vp-1024 {
+      font-size: 28px;
+      margin: -8px 0;
+    }
+
+    @include vp-tablet {
+      font-size: 26px;
+      margin: -6px 0;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      font-size: 24px;
+      margin: -4px 0 8px 0;
+    }
+
+    @include vp-375 {
+      font-size: 22px;
+    }
+
+    @include vp-360 {
+      font-size: 20px;
+    }
   }
 
   &__social-text {
     margin-top: 15px;
     @include typo.type-small;
+
+    // Mobile adjustments
+    @include vp-mobile {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
+    @include vp-375 {
+      margin-top: 8px;
+    }
+
+    @include vp-360 {
+      margin-top: 6px;
+      font-size: 11px;
+    }
   }
 }
 
-// Form box
+// Form box with responsive design
 .form-box {
   position: absolute;
   right: 0;
   width: 50%;
   height: 100%;
-  background: var(--card-bg);
+  background: var(--card-bg, #ffffff);
   display: flex;
   align-items: center;
-  color: var(--color-text-primary);
+  color: var(--color-text-primary, #292929);
   text-align: center;
   padding: 40px;
   z-index: 1;
   transition:
     0.6s ease-in-out 1.2s,
     visibility 0s 1s;
+  box-sizing: border-box;
+
+  // Tablet landscape adjustments
+  @include vp-1024 {
+    width: 50%;
+    padding: 35px 30px;
+  }
+
+  // Tablet portrait adjustments  
+  @include vp-tablet {
+    width: 50%;
+    padding: 30px 25px;
+  }
+
+  // Mobile landscape adjustments
+  @include vp-768 {
+    width: 50%;
+    padding: 25px 20px;
+  }
+
+  // Mobile portrait - switch to full width layout
+  @include vp-mobile {
+    bottom: 0;
+    width: 100%;
+    height: 64%;
+    padding: 20px 16px;
+    right: 0;
+  }
+
+  // Small mobile adjustments
+  @include vp-375 {
+    width: 100%;
+    padding: 18px 14px;
+    height: 66%;
+  }
+
+  // Extra small mobile adjustments
+  @include vp-360 {
+    width: 100%;
+    padding: 16px 12px;
+    height: 68%;
+  }
 
   &--freelance {
     visibility: hidden;
   }
 
   &--company {
-    // Company form specific styles
+    // Company form is visible by default
+    visibility: visible;
   }
 }
 
-// Inputs
+// Inputs with responsive design
 .input-box {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  // Mobile adjustments
+  @include vp-mobile {
+    gap: 6px;
+  }
+
+  @include vp-375 {
+    gap: 5px;
+  }
+
+  @include vp-360 {
+    gap: 4px;
+  }
 
   &__input-wrapper {
     position: relative;
@@ -63,17 +182,52 @@
   &__input {
     width: 100%;
     padding: 13px 50px 13px 20px;
-    background: var(--color-bg-surface);
+    background: var(--color-bg-surface, #f4f3f2);
     border-radius: 8px;
     border: none;
     outline: none;
     @include typo.type-body;
-    color: var(--color-text-primary);
+    color: var(--color-text-primary, #292929);
     font-weight: 500;
     resize: none;
 
+    // Tablet landscape adjustments
+    @include vp-1024 {
+      padding: 12px 45px 12px 18px;
+      font-size: 15px;
+    }
+
+    // Tablet portrait adjustments
+    @include vp-tablet {
+      padding: 11px 40px 11px 16px;
+      font-size: 14px;
+    }
+
+    // Mobile landscape adjustments
+    @include vp-768 {
+      padding: 10px 35px 10px 15px;
+      font-size: 14px;
+    }
+
+    // Mobile portrait adjustments
+    @include vp-mobile {
+      padding: 12px 40px 12px 16px;
+      font-size: 16px; // Better for mobile UX
+      border-radius: 6px;
+    }
+
+    // Small mobile adjustments
+    @include vp-375 {
+      padding: 11px 35px 11px 14px;
+    }
+
+    // Extra small mobile adjustments
+    @include vp-360 {
+      padding: 10px 32px 10px 12px;
+    }
+
     &::placeholder {
-      color: var(--color-text-muted);
+      color: var(--color-text-muted, #999999);
       font-weight: 400;
     }
 
@@ -82,6 +236,33 @@
       border-radius: 8px;
       padding: 13px 50px 13px 20px;
       line-height: 1.5;
+
+      // Responsive textarea adjustments
+      @include vp-1024 {
+        min-height: 110px;
+        padding: 12px 45px 12px 18px;
+      }
+
+      @include vp-tablet {
+        min-height: 100px;
+        padding: 11px 40px 11px 16px;
+      }
+
+      @include vp-mobile {
+        min-height: 90px;
+        padding: 12px 40px 12px 16px;
+        border-radius: 6px;
+      }
+
+      @include vp-375 {
+        min-height: 85px;
+        padding: 11px 35px 11px 14px;
+      }
+
+      @include vp-360 {
+        min-height: 80px;
+        padding: 10px 32px 10px 12px;
+      }
     }
 
     &--error {
@@ -101,8 +282,40 @@
     height: 20px;
     fill: currentColor;
     margin-right: 10px;
-    color: var(--color-accent-primary);
+    color: var(--color-accent-primary, #29abe2);
     z-index: 1;
+
+    // Tablet adjustments
+    @include vp-1024 {
+      right: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    @include vp-tablet {
+      right: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      right: 16px;
+      width: 18px;
+      height: 18px;
+    }
+
+    @include vp-375 {
+      right: 14px;
+      width: 16px;
+      height: 16px;
+    }
+
+    @include vp-360 {
+      right: 12px;
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .social-icon {
@@ -110,6 +323,22 @@
     height: 20px;
     fill: currentColor;
     transition: fill 0.3s ease;
+
+    // Mobile adjustments
+    @include vp-mobile {
+      width: 18px;
+      height: 18px;
+    }
+
+    @include vp-375 {
+      width: 16px;
+      height: 16px;
+    }
+
+    @include vp-360 {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 
@@ -123,7 +352,7 @@
   }
 }
 
-// Social icons
+// Social icons with responsive design
 .social-icons {
   display: flex;
   justify-content: center;
@@ -131,20 +360,70 @@
   gap: 14px;
   flex-wrap: wrap;
 
+  // Tablet adjustments
+  @include vp-1024 {
+    gap: 12px;
+  }
+
+  @include vp-tablet {
+    gap: 10px;
+  }
+
+  // Mobile adjustments
+  @include vp-mobile {
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  @include vp-375 {
+    gap: 10px;
+  }
+
+  @include vp-360 {
+    gap: 8px;
+  }
+
   &__link {
     max-width: 32px;
     max-height: 32px;
     display: inline-flex;
     font-size: clamp(16px, 1.2vw + 12px, 22px);
-    color: var(--color-text-primary);
+    color: var(--color-text-primary, #292929);
     cursor: pointer;
+
+    // Tablet adjustments
+    @include vp-1024 {
+      max-width: 30px;
+      max-height: 30px;
+    }
+
+    @include vp-tablet {
+      max-width: 28px;
+      max-height: 28px;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      max-width: 30px;
+      max-height: 30px;
+    }
+
+    @include vp-375 {
+      max-width: 28px;
+      max-height: 28px;
+    }
+
+    @include vp-360 {
+      max-width: 26px;
+      max-height: 26px;
+    }
 
     &:hover,
     &:focus-visible {
-      color: var(--color-accent-primary);
+      color: var(--color-accent-primary, #29abe2);
 
       :root[data-theme='dark'] & {
-        color: var(--color-accent-secondary);
+        color: var(--color-accent-secondary, #63dafc);
       }
     }
   }
@@ -158,15 +437,66 @@
   transition:
     color 0.2s ease,
     fill 0.2s ease;
+
+  // Tablet adjustments
+  @include vp-1024 {
+    max-width: 22px;
+    max-height: 22px;
+  }
+
+  @include vp-tablet {
+    max-width: 20px;
+    max-height: 20px;
+  }
+
+  // Mobile adjustments
+  @include vp-mobile {
+    max-width: 22px;
+    max-height: 22px;
+  }
+
+  @include vp-375 {
+    max-width: 20px;
+    max-height: 20px;
+  }
+
+  @include vp-360 {
+    max-width: 18px;
+    max-height: 18px;
+  }
 }
 
-// Buttons group and buttons
+// Buttons group with responsive design
 .btn__group {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
   margin-top: 6px;
+
+  // Tablet adjustments
+  @include vp-1024 {
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  @include vp-tablet {
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  // Mobile portrait - stack buttons vertically
+  @include vp-mobile {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  @include vp-375 {
+    gap: 8px;
+    margin-top: 10px;
+  }
 }
 
 .btn__form {
@@ -174,8 +504,8 @@
   align-items: center;
   justify-content: center;
   padding: 12px 22px;
-  background: var(--button-bg);
-  color: var(--button-text);
+  background: var(--button-bg, #29abe2);
+  color: var(--button-text, #ffffff);
   font-weight: 600;
   @include typo.type-small;
   border: none;
@@ -186,10 +516,47 @@
     transform 0.1s ease,
     box-shadow 0.2s ease;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  min-width: 120px;
+
+  // Tablet landscape adjustments
+  @include vp-1024 {
+    padding: 11px 20px;
+    font-size: 13px;
+    min-width: 110px;
+  }
+
+  // Tablet portrait adjustments
+  @include vp-tablet {
+    padding: 10px 18px;
+    font-size: 13px;
+    min-width: 100px;
+  }
+
+  // Mobile adjustments
+  @include vp-mobile {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    min-width: auto;
+  }
+
+  @include vp-375 {
+    padding: 11px 18px;
+    font-size: 13px;
+    max-width: 260px;
+  }
+
+  @include vp-360 {
+    padding: 10px 16px;
+    font-size: 13px;
+    max-width: 240px;
+  }
 
   &:hover {
-    background: var(--button-hover-bg);
-    color: var(--button-hover-text);
+    background: var(--button-hover-bg, #1e8bb8);
+    color: var(--button-hover-text, #ffffff);
   }
 
   &:active {
@@ -206,31 +573,23 @@
   text-align: left;
 }
 
-// Responsive for form-box
-@media screen and (max-width: 650px) {
-  .form-box {
-    bottom: 0;
-    width: 100%;
-    height: 64%;
-    padding: 16px 12px;
-  }
-
-  // Active state on mobile mirrors original behavior
-  [data-active='true'] .form-box {
-    right: 0;
-    bottom: 36%;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .form-box {
-    padding: 16px 12px;
-  }
-}
-
 // Active state driven by data attribute on container
 [data-active='true'] .form-box {
   right: 50%;
+
+  // Mobile portrait active state adjustments
+  @include vp-mobile {
+    right: 0;
+    bottom: 36%;
+  }
+
+  @include vp-375 {
+    bottom: 34%;
+  }
+
+  @include vp-360 {
+    bottom: 32%;
+  }
 }
 
 [data-active='true'] .form-box--freelance {

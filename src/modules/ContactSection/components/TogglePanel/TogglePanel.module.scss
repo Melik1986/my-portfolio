@@ -24,7 +24,7 @@
   }
 }
 
-// Toggle panel
+// Toggle panel with responsive design
 .toggle-panel {
   position: absolute;
   width: 50%;
@@ -40,9 +40,52 @@
   z-index: 2; // above forms (forms have z-index: 1)
   transition: 0.6s ease-in-out;
 
+  // Tablet landscape adjustments
+  @include vp-1024 {
+    padding: 25px 20px;
+  }
+
+  // Tablet portrait adjustments
+  @include vp-tablet {
+    padding: 20px 15px;
+  }
+
+  // Mobile landscape adjustments
+  @include vp-768 {
+    padding: 18px 12px;
+  }
+
+  // Mobile portrait - switch to horizontal layout
+  @include vp-mobile {
+    top: 0;
+    width: 100%;
+    height: 30%;
+    padding: 20px;
+    border-radius: 0;
+  }
+
+  // Small mobile adjustments
+  @include vp-375 {
+    padding: 18px 15px;
+    height: 32%;
+  }
+
+  // Extra small mobile adjustments
+  @include vp-360 {
+    padding: 15px 12px;
+    height: 34%;
+  }
+
   &--left {
     left: 0;
     transition-delay: 1.2s;
+
+    // Mobile portrait adjustments
+    @include vp-mobile {
+      left: 0;
+      right: auto;
+      top: 0;
+    }
   }
 
   // default state: hidden half on the right side; active state sets right: 0
@@ -50,6 +93,22 @@
     right: -50%;
     left: auto;
     transition-delay: 0.6s;
+
+    // Mobile portrait adjustments
+    @include vp-mobile {
+      right: 0;
+      left: auto;
+      top: 78%;
+      bottom: auto;
+    }
+
+    @include vp-375 {
+      top: 77%;
+    }
+
+    @include vp-360 {
+      top: 66%;
+    }
   }
 
   &__title {
@@ -57,6 +116,32 @@
     font-size: 36px;
     line-height: 1;
     margin: 0 0 10px 0;
+
+    // Tablet landscape adjustments
+    @include vp-1024 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    // Tablet portrait adjustments
+    @include vp-tablet {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    @include vp-375 {
+      font-size: 22px;
+    }
+
+    @include vp-360 {
+      font-size: 20px;
+    }
   }
 
   &__text {
@@ -64,6 +149,36 @@
     padding: 0 30px;
     line-height: 1.5;
     margin-bottom: 20px;
+
+    // Tablet adjustments
+    @include vp-1024 {
+      font-size: 15px;
+      padding: 0 25px;
+      margin-bottom: 18px;
+    }
+
+    @include vp-tablet {
+      font-size: 14px;
+      padding: 0 20px;
+      margin-bottom: 16px;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      font-size: 13px;
+      padding: 0 20px;
+      margin-bottom: 15px;
+    }
+
+    @include vp-375 {
+      font-size: 12px;
+      padding: 0 15px;
+    }
+
+    @include vp-360 {
+      font-size: 12px;
+      padding: 0 12px;
+    }
   }
 
   &__btn {
@@ -72,12 +187,46 @@
     border: 2px solid $color-white;
     width: 130px;
     height: 41px;
-
     font-size: 14px;
     color: $color-white;
     border-radius: 12px;
     cursor: pointer;
     transition: 0.3s ease;
+
+    // Tablet adjustments
+    @include vp-1024 {
+      width: 120px;
+      height: 38px;
+      font-size: 13px;
+      margin: 30px 0;
+    }
+
+    @include vp-tablet {
+      width: 110px;
+      height: 36px;
+      font-size: 13px;
+      margin: 25px 0;
+    }
+
+    // Mobile adjustments
+    @include vp-mobile {
+      margin: 20px 0;
+      width: 110px;
+      height: 35px;
+      font-size: 13px;
+    }
+
+    @include vp-375 {
+      width: 105px;
+      height: 34px;
+      font-size: 12px;
+    }
+
+    @include vp-360 {
+      width: 100px;
+      height: 32px;
+      font-size: 12px;
+    }
 
     &:hover {
       background: $color-white;
@@ -105,110 +254,63 @@
   }
 }
 
-// Active state driven by data attribute on container (matches original behavior)
+// Active state driven by data attribute on container
 [data-active='true'] .toggle-box::before {
   left: 50%;
+
+  // Mobile portrait active state
+  @include vp-mobile {
+    left: 0;
+    top: 70%;
+  }
+
+  @include vp-375 {
+    top: 68%;
+  }
+
+  @include vp-360 {
+    top: 66%;
+  }
 }
 
 [data-active='true'] .toggle-panel--left {
   left: -50%;
   transition-delay: 0.6s;
+
+  // Mobile portrait active state
+  @include vp-mobile {
+    left: 0;
+    top: -30%;
+  }
+
+  @include vp-375 {
+    top: -32%;
+  }
+
+  @include vp-360 {
+    top: -34%;
+  }
 }
 
 [data-active='true'] .toggle-panel--right {
   right: 0;
   transition-delay: 1.2s;
+
+  // Mobile portrait active state
+  @include vp-mobile {
+    bottom: 0;
+    top: auto;
+  }
 }
 
-// Responsive for toggle elements (matches original)
-@media screen and (max-width: 650px) {
-  .toggle-panel {
-    top: 0;
-    width: 100%;
-    height: 30%;
-    padding: 20px;
-    border-radius: 0;
-
-    &--left {
-      left: 0;
-      right: auto;
-      top: 0;
-    }
-
-    &--right {
-      right: 0;
-      left: auto;
-      top: 70%;
-      bottom: auto;
-    }
-
-    &__title {
-      font-size: 24px;
-    }
-
-    &__text {
-      font-size: 13px;
-      padding: 0 20px;
-    }
-
-    &__btn {
-      margin: 20px 0;
-      width: 110px;
-      height: 35px;
-      font-size: 13px;
-    }
-  }
-
-  // Mobile background sweep shape
-  .toggle-box::before {
+// Mobile background sweep shape adjustments
+.toggle-box::before {
+  // Mobile portrait adjustments
+  @include vp-mobile {
     left: 0;
     top: -270%;
     width: 100%;
     height: 300%;
     border-radius: 20vw;
-  }
-
-  [data-active='true'] .toggle-box::before {
-    left: 0;
-    top: 70%;
-  }
-
-  // Panels movement on mobile
-  .toggle-panel {
-    &--right {
-      bottom: -30%;
-      top: auto;
-    }
-  }
-
-  [data-active='true'] .toggle-panel--left {
-    left: 0;
-    top: -30%;
-  }
-
-  [data-active='true'] .toggle-panel--right {
-    bottom: 0;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .toggle-panel {
-    padding: 15px;
-
-    &__title {
-      font-size: 30px;
-    }
-
-    &__text {
-      font-size: 12px;
-      padding: 0 15px;
-      margin-bottom: 20px;
-    }
-
-    &__btn {
-      width: 100px;
-      height: 32px;
-      font-size: 12px;
-    }
   }
 }

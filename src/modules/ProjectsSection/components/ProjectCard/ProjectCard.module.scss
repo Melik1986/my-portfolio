@@ -31,6 +31,8 @@
   @include vp-768 {
     width: 80vw;
     height: clamp(260px, 48vh, 480px);
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   @include vp-375 {
     width: 80vw;
