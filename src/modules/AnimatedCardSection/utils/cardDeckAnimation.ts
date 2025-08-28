@@ -83,8 +83,18 @@ function waitForPinSpacer(section: HTMLElement, timeoutMs = 1000): Promise<void>
  * @param onCardActivate - callback для синхронизации с элементными анимациями
  * @returns gsap.core.Timeline
  */
-function initPositions(items: HTMLElement[]): void {
+function initPositions(items: HTMLElement[], verticalOnly = false): void {
   items.forEach((item, index) => {
+    if (verticalOnly) {
+      if (index === 0) {
+        gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
+      } else {
+        gsap.set(item, { yPercent: 100, xPercent: 0, opacity: 0, zIndex: 1 });
+      }
+      return;
+    }
+
+    // Смешанная раскладка по умолчанию (первые 3 — вертикаль, остальные — справа)
     if (index === 0) {
       gsap.set(item, { yPercent: 0, xPercent: 0, opacity: 1, zIndex: 10 });
     } else if (index <= 2) {
@@ -100,7 +110,8 @@ function createMobileTimeline(
   items: HTMLElement[],
   onCardActivate?: ElementAnimationCallback,
 ): gsap.core.Timeline {
-  // Keep mixed layout, no reinit
+  // Вертикальная раскладка и анимация только по Y на мобилке
+  initPositions(items, true);
   const tl = gsap.timeline({
     id: 'card-deck-timeline-mobile',
     scrollTrigger: {
@@ -113,7 +124,7 @@ function createMobileTimeline(
       markers: false,
     },
   });
-  createCardAnimation(tl, items, onCardActivate);
+  createCardAnimation(tl, items, onCardActivate, { verticalOnly: true });
   waitForPinSpacer(section).then(() => {
     ScrollTrigger.refresh();
     setTimeout(() => ScrollTrigger.refresh(), 100);
@@ -126,6 +137,7 @@ function createDesktopTimeline(
   items: HTMLElement[],
   onCardActivate?: ElementAnimationCallback,
 ): gsap.core.Timeline {
+  initPositions(items, false);
   const tl = gsap.timeline({
     id: 'card-deck-timeline-desktop',
     scrollTrigger: {
@@ -152,7 +164,6 @@ export function initCardDeckScroll(
   onCardActivate?: ElementAnimationCallback,
 ): gsap.core.Timeline {
   let timeline: gsap.core.Timeline;
-  initPositions(items);
   const mm = gsap.matchMedia();
 
   mm.add('(max-width: 767px)', () => {

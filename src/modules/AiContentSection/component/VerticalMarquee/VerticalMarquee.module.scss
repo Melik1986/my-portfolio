@@ -123,12 +123,12 @@
   }
 }
 
-@include vp-360 {
+@include vp-375 {
   .ai-content__horizontal-vertical {
     min-height: 360px;
   }
   .ai-content__image {
-    width: 140px;
+    width: 80px;
     height: 180px;
   }
 }

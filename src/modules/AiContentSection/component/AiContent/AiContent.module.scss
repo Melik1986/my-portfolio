@@ -1,4 +1,5 @@
 @use '@/app/styles/_variables.scss' as *;
+@use '@/app/styles/_mixins.scss' as *;
 @use '@/app/styles/_typography.scss' as typo;
 
 .ai-content__content {
@@ -17,12 +18,22 @@
   font-family: $font-family-chango;
   @include typo.type-h2;
   color: var(--ai-heading-color, var(--color-text-heading));
+
+  @include vp-375 {
+    @include typo.type-h3;
+    text-align: center;
+  }
 }
 
 .ai-content__content-paragraph {
   @include typo.type-body;
   font-family: $font-family-roboto;
   color: var(--ai-text-color, var(--color-text-primary));
+
+  @include vp-375 {
+    @include typo.type-h4;
+    text-align: center;
+  }
 }
 
 .ai-content__content-small {
