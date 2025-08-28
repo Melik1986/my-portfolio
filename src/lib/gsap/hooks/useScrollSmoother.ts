@@ -180,20 +180,39 @@ const useSmootherInitialization = (config: SmootherInitConfig) => {
       return;
     }
 
-    const timer = setTimeout(() => {
-      if (checkDOMReady(wrapper, content)) {
-        initScrollSmoother({
-          wrapper,
-          content,
-          options: { smooth, effects, normalizeScroll },
-          smootherRef,
-          isInitializingRef,
-          onReady: () => setIsReady(true),
-        });
-      }
-    }, 50);
+    const isPreloaderActive = () =>
+      document.documentElement.classList.contains('preload-lock') ||
+      document.body.classList.contains('preload-lock');
 
-    return () => clearTimeout(timer);
+    let cleanupListener: (() => void) | null = null;
+
+    const tryInit = () => {
+      if (!checkDOMReady(wrapper, content)) return;
+      initScrollSmoother({
+        wrapper,
+        content,
+        options: { smooth, effects, normalizeScroll },
+        smootherRef,
+        isInitializingRef,
+        onReady: () => setIsReady(true),
+      });
+    };
+
+    if (isPreloaderActive()) {
+      const onPreloaderDone = () => {
+        tryInit();
+        document.removeEventListener('preloader:complete', onPreloaderDone);
+      };
+      document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+      cleanupListener = () => document.removeEventListener('preloader:complete', onPreloaderDone);
+    } else {
+      const timer = setTimeout(tryInit, 50);
+      cleanupListener = () => clearTimeout(timer);
+    }
+
+    return () => {
+      if (cleanupListener) cleanupListener();
+    };
   }, [
     wrapper,
     content,
