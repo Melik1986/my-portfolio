@@ -43,7 +43,7 @@
     &-desktop {
       display: block;
 
-      @include vp-768 {
+      @include vp-1024 {
         display: none;
       }
     }
@@ -51,7 +51,7 @@
     &-mobile {
       display: none;
 
-      @include vp-768 {
+      @include vp-1024 {
         display: block;
       }
     }

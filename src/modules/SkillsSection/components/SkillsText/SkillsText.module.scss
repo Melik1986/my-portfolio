@@ -14,6 +14,11 @@
     color: var(--skills-text-color, var(--color-text-primary));
     @include typo.type-body;
 
+    @include vp-1024 {
+      line-height: 1.5;
+      margin: 0;
+    }
+
     @include vp-768 {
       line-height: 1.2;
     }
@@ -26,7 +31,7 @@
     &-desktop {
       display: block;
 
-      @include vp-768 {
+      @include vp-1024 {
         display: none;
       }
     }
@@ -34,7 +39,7 @@
     &-mobile {
       display: none;
 
-      @include vp-768 {
+      @include vp-1024 {
         display: block;
       }
     }
