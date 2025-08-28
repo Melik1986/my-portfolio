@@ -57,26 +57,30 @@ export function useProjectsAnimation(totalCards: number) {
     const tl = gsap.timeline();
     mainTimelineRef.current = tl;
 
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
+
     cardsRef.current.forEach((cardRef, index) => {
-      // Диагональный веер влево-вверх как ступеньки
-      const position = {
-        x: index * ANIMATION_CONFIG.xStep, // Небольшое смещение влево
-        y: -index * Math.abs(ANIMATION_CONFIG.yStep), // Смещение вверх (отрицательное Y = вверх)
-        z: index * ANIMATION_CONFIG.zStep, // Глубина назад
-        zIndex: index,
-        filter: `hue-rotate(${index * 30}deg)`,
-      };
+      // На мобилке — строгий каскад вверх и назад (без смещения по X)
+      const x = isMobile ? 0 : index * ANIMATION_CONFIG.xStep;
+      const y = -index * Math.abs(ANIMATION_CONFIG.yStep) * (isMobile ? 0.7 : 1);
+      const z = index * ANIMATION_CONFIG.zStep * (isMobile ? 1.2 : 1);
 
       tl.to(
         cardRef.element,
         {
           duration: ANIMATION_CONFIG.fanDuration,
-          ...position,
+          x,
+          y,
+          z,
+          zIndex: index,
+          filter: `hue-rotate(${index * 30}deg)`,
           ease: 'power2.out',
           force3D: true,
         },
-        index * 0.05,
-      ); // Stagger delay
+        index * (isMobile ? 0.07 : 0.05),
+      );
     });
   }, []);
 
@@ -121,17 +125,22 @@ export function useProjectsAnimation(totalCards: number) {
     // Убиваем индивидуальный tween карточки
     cardRef.tween?.kill();
 
-    const position = {
-      x: index * ANIMATION_CONFIG.xStep,
-      y: -index * Math.abs(ANIMATION_CONFIG.yStep), // Вверх = отрицательное Y
-      z: index * ANIMATION_CONFIG.zStep,
-    };
+    // Мобильная базовая позиция должна совпадать с expandFan (лестница вверх/назад, X=0)
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
+
+    const baseX = isMobile ? 0 : index * ANIMATION_CONFIG.xStep;
+    const baseY = -index * Math.abs(ANIMATION_CONFIG.yStep) * (isMobile ? 0.7 : 1);
+    const baseZ = index * ANIMATION_CONFIG.zStep * (isMobile ? 1.2 : 1);
+    const hoverXShift = isMobile ? 24 : 120; // мобайл: сильно уменьшаем сдвиг вправо
+    const hoverLift = isMobile ? ANIMATION_CONFIG.hoverLift * 1.25 : ANIMATION_CONFIG.hoverLift; // мобайл: поднимаем чуть сильнее
 
     cardRef.tween = gsap.to(cardRef.element, {
       duration: ANIMATION_CONFIG.hoverDuration,
-      x: position.x + (isHovering ? 120 : 0), // Увеличенное смещение вправо при наведении
-      y: position.y + (isHovering ? ANIMATION_CONFIG.hoverLift : 0),
-      z: position.z + (isHovering ? Math.abs(ANIMATION_CONFIG.zStep) * 0.5 : 0),
+      x: baseX + (isHovering ? hoverXShift : 0), // мобайл: ограниченный сдвиг вправо
+      y: baseY + (isHovering ? hoverLift : 0),
+      z: baseZ + (isHovering ? Math.abs(ANIMATION_CONFIG.zStep) * 0.5 : 0),
       boxShadow: isHovering ? ANIMATION_CONFIG.hoverShadow : ANIMATION_CONFIG.cardShadow,
       zIndex: isHovering ? 10000 : index,
       ease: 'power2.out',

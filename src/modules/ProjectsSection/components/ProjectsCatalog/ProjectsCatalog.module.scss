@@ -33,3 +33,12 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .projects-catalog {
+    &__container {
+      transform: translate(-50%, -50%); // убираем наклон, чтобы каскад шёл строго вверх/назад
+      perspective: 1200px;
+    }
+  }
+}
