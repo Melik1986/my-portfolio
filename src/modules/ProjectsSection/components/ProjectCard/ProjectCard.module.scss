@@ -29,12 +29,13 @@
     height: clamp(280px, 50vh, 520px);
   }
   @include vp-768 {
-    width: 90vw;
+    width: 80vw;
     height: clamp(260px, 48vh, 480px);
   }
-  @include vp-360 {
-    width: 95vw;
+  @include vp-375 {
+    width: 80vw;
     height: clamp(240px, 46vh, 440px);
+    top: 70%;
   }
 }
 

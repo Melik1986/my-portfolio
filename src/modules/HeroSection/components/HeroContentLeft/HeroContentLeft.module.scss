@@ -18,11 +18,11 @@
     }
 
     @include vp-1024 {
-      align-items: center;
       padding-bottom: 50px;
     }
+
     @include vp-768 {
-      align-items: center;
+      padding-bottom: 30px;
     }
 
     @include vp-375 {
@@ -68,7 +68,7 @@
       @include vp-375 {
         width: 290px;
         height: 44px;
-        margin-left: -10px;
+        margin-bottom: 8px;
       }
     }
 
