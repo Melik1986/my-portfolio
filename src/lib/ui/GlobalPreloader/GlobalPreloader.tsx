@@ -22,7 +22,6 @@ export function GlobalPreloader() {
 
     const onComplete = () => {
       // Уведомляем Smooth/ScrollTrigger не стартовать пока блокировка активна
-      const eventName = 'preloader:complete';
       setIsLoading(false);
       // Снимаем блокировку скролла
       try {

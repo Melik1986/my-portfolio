@@ -149,81 +149,62 @@ const cleanupScrollTrigger = async (): Promise<void> => {
   }
 };
 
-// Вынос инициализации в отдельный хук, чтобы уменьшить размер основного хука
-type SmootherInitConfig = {
-  wrapper: string;
-  content: string;
-  smooth: number;
-  effects: boolean;
-  normalizeScroll: boolean;
-  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
-  isInitializingRef: React.RefObject<boolean>;
-  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
-};
+// (deprecated) useSmootherInitialization removed in favor of createSmootherEffect
 
-const useSmootherInitialization = (config: SmootherInitConfig) => {
-  const {
-    wrapper,
-    content,
-    smooth,
-    effects,
-    normalizeScroll,
-    smootherRef,
-    isInitializingRef,
-    setIsReady,
-  } = config;
-  useEffect(() => {
-    const existingSmoother = ScrollSmoother.get();
-    if (existingSmoother) {
-      smootherRef.current = existingSmoother;
-      setIsReady(true);
-      return;
-    }
+function createSmootherEffect(
+  config: {
+    wrapper: string;
+    content: string;
+    smooth: number;
+    effects: boolean;
+    normalizeScroll: boolean;
+    smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+    isInitializingRef: React.RefObject<boolean>;
+    setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+  },
+): () => void {
+  const { wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady } = config;
+  const existingSmoother = ScrollSmoother.get();
+  if (existingSmoother) {
+    smootherRef.current = existingSmoother as unknown as ScrollSmootherInstance;
+    setIsReady(true);
+    return () => {};
+  }
 
-    const isPreloaderActive = () =>
-      document.documentElement.classList.contains('preload-lock') ||
-      document.body.classList.contains('preload-lock');
+  const isPreloaderActive = () =>
+    document.documentElement.classList.contains('preload-lock') ||
+    document.body.classList.contains('preload-lock');
 
-    let cleanupListener: (() => void) | null = null;
+  let cleanup: (() => void) | null = null;
 
-    const tryInit = () => {
-      if (!checkDOMReady(wrapper, content)) return;
-      initScrollSmoother({
-        wrapper,
-        content,
-        options: { smooth, effects, normalizeScroll },
-        smootherRef,
-        isInitializingRef,
-        onReady: () => setIsReady(true),
-      });
+  const tryInit = () => {
+    if (!checkDOMReady(wrapper, content)) return;
+    initScrollSmoother({
+      wrapper,
+      content,
+      options: { smooth, effects, normalizeScroll },
+      smootherRef,
+      isInitializingRef,
+      onReady: () => setIsReady(true),
+    });
+  };
+
+  if (isPreloaderActive()) {
+    const onPreloaderDone = () => {
+      tryInit();
+      document.removeEventListener('preloader:complete', onPreloaderDone);
     };
+    document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+    cleanup = () => document.removeEventListener('preloader:complete', onPreloaderDone);
+  } else {
+    const timer = setTimeout(tryInit, 50);
+    cleanup = () => clearTimeout(timer);
+  }
 
-    if (isPreloaderActive()) {
-      const onPreloaderDone = () => {
-        tryInit();
-        document.removeEventListener('preloader:complete', onPreloaderDone);
-      };
-      document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
-      cleanupListener = () => document.removeEventListener('preloader:complete', onPreloaderDone);
-    } else {
-      const timer = setTimeout(tryInit, 50);
-      cleanupListener = () => clearTimeout(timer);
-    }
-
-    return () => {
-      if (cleanupListener) cleanupListener();
-    };
-  }, [
-    wrapper,
-    content,
-    smooth,
-    effects,
-    normalizeScroll,
-    smootherRef,
-    isInitializingRef,
-    setIsReady,
-  ]);
-};
+  return () => {
+    cleanup?.();
+  };
+}
 
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const smootherRef = useRef<ScrollSmootherInstance | null>(null);
@@ -237,16 +218,18 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
-  useSmootherInitialization({
-    wrapper,
-    content,
-    smooth,
-    effects,
-    normalizeScroll,
-    smootherRef,
-    isInitializingRef,
-    setIsReady,
-  });
+  useEffect(() =>
+    createSmootherEffect({
+      wrapper,
+      content,
+      smooth,
+      effects,
+      normalizeScroll,
+      smootherRef,
+      isInitializingRef,
+      setIsReady,
+    }),
+  [wrapper, content, smooth, effects, normalizeScroll]);
 
   const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
     smootherRef.current?.scrollTo(target, smooth, position);
