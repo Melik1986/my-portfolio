@@ -50,8 +50,10 @@ export const resizeCharts = (
     legend: {
       textStyle: { fontSize: legendFontSize },
       show:
-        (typeof window === 'undefined' ? designWidth : window.innerWidth) >=
-        RESPONSIVE_BREAKPOINTS.desktop,
+        (typeof window === 'undefined' ? designWidth : window.innerWidth) >= 768,
+      orient: 'horizontal',
+      bottom: 0,
+      left: 'center',
     },
     series: [{ radius: [0, radius] }],
   });

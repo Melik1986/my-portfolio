@@ -169,6 +169,18 @@
   }
 }
 
+/* Диапазон 481–768px: дополнительно ужимаем высоту/паддинги, чтобы всё помещалось */
+@media (min-width: 481px) and (max-width: 768px) {
+  .skills-charts__container {
+    gap: 12px;
+  }
+  .chart-wrapper {
+    min-height: 320px;
+    height: 320px;
+    padding: 12px;
+  }
+}
+
 @media (max-width: 480px) {
   .skills-charts__container {
     gap: 10px;
