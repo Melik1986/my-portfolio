@@ -76,8 +76,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --color-shadow-accent: rgba(78, 116, 171, 0.15);
 
   /* Градиенты */
-  --gradient-primary: linear-gradient(to right, #a0e5d9, #f9f7ec);
-  --gradient-secondary: linear-gradient(135deg, #89cff0, #adebff);
+  --gradient-secondary: linear-gradient(to right, #a0e5d9, #f9f7ec);
+  --gradient-hero: linear-gradient(135deg, #1A4759 0%, #489FB9 25%, #98CED8 50%, #38545B 75%, #C7D3D6 100%);
   --gradient-accent: linear-gradient(45deg, #4e74ab, #a0e5d9);
 
   /* Градиент для body */
@@ -162,7 +162,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --color-shadow-accent: rgba(99, 218, 252, 0.2);
 
   /* Градиенты */
-  --gradient-primary: linear-gradient(#082026, #134d80, #97dde8);
+  --gradient-hero: linear-gradient(#082026, #134d80, #97dde8);
   --gradient-secondary: linear-gradient(135deg, #1d719d, #63dafc);
   --gradient-accent: linear-gradient(45deg, #2c394c, #63dafc);
 
