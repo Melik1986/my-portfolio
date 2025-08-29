@@ -18,7 +18,7 @@ interface ProjectsSectionProps {
 export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const { t } = useI18n();
   return (
-    <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="5.5">
+    <section className={styles['projects-catalog']} id="projects-catalog" data-group-delay="6.0">
       <h2 className={`${styles['projects__title']} visually-hidden`}>
         {t('section.projects.title')}
       </h2>
