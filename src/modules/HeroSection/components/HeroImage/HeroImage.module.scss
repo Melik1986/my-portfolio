@@ -4,37 +4,21 @@
 .hero {
   &__image-container {
     position: absolute;
-    top: 76%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    anchor-name: --hero-image;
+    position-anchor: --hero-content;
+    inset-area: bottom center;
+    /* Центрируем содержимое контейнера */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: flex-end;
     z-index: 1;
 
-    @include vp-1440 {
-      top: 77%;
-    }
-
-    @media (max-width: 1440px) {
-      top: 77%;
-    }
-
-    @include vp-1304 {
-      top: 77%;
-    }
-
-    @include vp-1024 {
-      top: 77%;
-    }
-
-    @include vp-768 {
-      top: 76%;
-    }
-
-    @include vp-375 {
-      top: 89%;
+    /* Fallback позиционирование для браузеров без поддержки Anchor API */
+    @supports not (inset-area: bottom center) {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 
