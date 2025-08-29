@@ -151,4 +151,21 @@
       transform: rotateY(0deg) scale(1.11, 1) skewY(6deg);
     }
   }
+
+  /* Диапазон 769–850px: уменьшаем промежутки и размеры букв, сохраняя пропорции */
+  @media (min-width: 769px) and (max-width: 850px) {
+    &__container-letters {
+      gap: 16px;
+    }
+
+    &__text:nth-child(1) { font-size: 6.1rem; }
+    &__text:nth-child(2) { font-size: 5.3rem; }
+    &__text:nth-child(3) { font-size: 4.6rem; }
+    &__text:nth-child(4) { font-size: 4.1rem; }
+    &__text:nth-child(5) { font-size: 3.6rem; }
+    &__text:nth-child(6) { font-size: 4.1rem; }
+    &__text:nth-child(7) { font-size: 4.6rem; }
+    &__text:nth-child(8) { font-size: 5.3rem; }
+    &__text:nth-child(9) { font-size: 6.1rem; }
+  }
 }
