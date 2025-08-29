@@ -54,12 +54,18 @@
 }
 
 .tooltip {
+  // when rendered inside the section keep default absolute fallback
   position: absolute;
   top: 60px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
-  pointer-events: none;
+  z-index: 9999; // tooltip portal uses fixed positioning; high z without touching section z-index
+  pointer-events: auto; // allow interactions on tooltip
+
+  // visual polish
+  box-shadow: 0 6px 18px rgba(9, 10, 12, 0.36);
+  border-radius: 10px;
+  overflow: visible;
 
   &--visible {
     opacity: 1;
