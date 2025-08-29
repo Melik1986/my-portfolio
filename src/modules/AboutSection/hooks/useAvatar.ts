@@ -428,7 +428,13 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
         avatarConfig.modelPath,
         (gltf) => {
           console.log('[useAvatar] Model loaded successfully!', gltf);
-          handleModelLoaded(gltf, scene);
+          console.log('[useAvatar] handleModelLoaded function:', handleModelLoaded);
+          console.log('[useAvatar] Scene object:', scene);
+          if (handleModelLoaded) {
+            handleModelLoaded(gltf, scene);
+          } else {
+            console.error('[useAvatar] handleModelLoaded is not defined!');
+          }
         },
         (progress) => {
           if (progress.total > 0) {
