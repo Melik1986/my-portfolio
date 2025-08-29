@@ -400,16 +400,33 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
 
   const loadModel = useCallback(
     (scene: AvatarScene): void => {
+      console.log('[useAvatar] Starting model load...');
+      console.log('[useAvatar] Model path:', avatarConfig.modelPath);
+      
       const loader = new GLTFLoader();
       // Set cross-origin to anonymous to avoid tainting canvas for models on CDN
       try {
         (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
       } catch {}
+      
       loader.load(
         avatarConfig.modelPath,
-        (gltf) => handleModelLoaded(gltf, scene),
-        undefined,
-        (error) => console.error('Error loading model:', error),
+        (gltf) => {
+          console.log('[useAvatar] Model loaded successfully!', gltf);
+          handleModelLoaded(gltf, scene);
+        },
+        (progress) => {
+          const percent = (progress.loaded / progress.total * 100).toFixed(2);
+          console.log(`[useAvatar] Loading progress: ${percent}%`);
+        },
+        (error) => {
+          console.error('[useAvatar] Error loading model:', error);
+          console.error('[useAvatar] Error details:', {
+            message: error.message,
+            stack: error.stack,
+            modelPath: avatarConfig.modelPath
+          });
+        },
       );
     },
     [handleModelLoaded],
@@ -481,6 +498,8 @@ const useCleanup = (ctx: CleanupContext) => {
 
 // eslint-disable-next-line max-lines-per-function
 export const useAvatar = () => {
+  console.log('[useAvatar] Hook initialized');
+  
   const refs = useRef<AvatarRefs>({ container: null });
   const sceneRef = useRef<AvatarScene | null>(null);
   const assetsRef = useRef<AvatarAssets | null>(null);
@@ -526,9 +545,14 @@ export const useAvatar = () => {
   // eslint-disable-next-line max-lines-per-function
   useEffect(() => {
     const container = refs.current.container;
-    if (!container) return;
+    console.log('[useAvatar] useEffect triggered, container:', container);
+    if (!container) {
+      console.log('[useAvatar] No container, exiting useEffect');
+      return;
+    }
 
     try {
+      console.log('[useAvatar] Creating Three.js scene...');
       const renderer = createRenderer(container);
       const { camera, controls } = createCameraAndControls(renderer);
       const scene = new THREE.Scene();

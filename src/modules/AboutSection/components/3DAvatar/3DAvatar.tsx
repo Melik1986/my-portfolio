@@ -115,10 +115,16 @@ function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
 }
 
 export function Avatar() {
+  console.log('[Avatar] Component rendering');
   const refs = useAvatar();
   const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
   const isLoading = useAvatarLoading(containerEl);
   const tooltipState = useAvatarTooltip(containerEl);
+  
+  React.useEffect(() => {
+    console.log('[Avatar] Container element:', containerEl);
+    console.log('[Avatar] refs.current:', refs.current);
+  }, [containerEl, refs]);
 
   return (
     <>
