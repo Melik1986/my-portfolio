@@ -31,7 +31,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/modules/AboutSection/hooks/useAuroraAnimation.ts"
+    "src/modules/AboutSection/hooks/useAuroraAnimation.ts",
+    "tests/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
