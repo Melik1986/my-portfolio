@@ -375,24 +375,39 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
 
   const handleModelLoaded = useCallback(
     (gltf: GLTF, scene: AvatarScene): void => {
-      if (stateRef.current.isDisposed) return;
+      console.log('[useAvatar] handleModelLoaded called');
+      if (stateRef.current.isDisposed) {
+        console.log('[useAvatar] Model disposed, exiting');
+        return;
+      }
       const avatar = gltf.scene;
+      console.log('[useAvatar] Setting up mesh properties');
       setupMeshProperties(avatar);
       const assets = createAssets(gltf, avatar, createGround, setupAnimations);
       if (!assets.waveAction && !assets.stumbleAction) {
-        console.warn('No animations found in model');
-        return;
+        console.warn('[useAvatar] No animations found in model');
       }
+      console.log('[useAvatar] Adding model to scene');
       try {
         centerModelAndFitCamera(avatar, scene);
-      } catch {}
+      } catch (e) {
+        console.error('[useAvatar] Error centering camera:', e);
+      }
       scene.scene.add(avatar, assets.groundMesh);
       assetsRef.current = assets;
       updateRefsAfterLoad(refs, assets);
-      const container = refs.current.container!;
+      const container = refs.current.container;
+      if (!container) {
+        console.error('[useAvatar] No container found!');
+        return;
+      }
+      console.log('[useAvatar] Applying initial sizing');
       try {
         applyInitialSizing(container, scene, assets, calculateScale);
-      } catch {}
+      } catch (e) {
+        console.error('[useAvatar] Error applying sizing:', e);
+      }
+      console.log('[useAvatar] Dispatching modelLoaded event');
       container.dispatchEvent(new CustomEvent('modelLoaded'));
     },
     [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],
@@ -416,8 +431,10 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
           handleModelLoaded(gltf, scene);
         },
         (progress) => {
-          const percent = (progress.loaded / progress.total * 100).toFixed(2);
-          console.log(`[useAvatar] Loading progress: ${percent}%`);
+          if (progress.total > 0) {
+            const percent = (progress.loaded / progress.total * 100).toFixed(2);
+            console.log(`[useAvatar] Loading progress: ${percent}%`);
+          }
         },
         (error) => {
           console.error('[useAvatar] Error loading model:', error);
@@ -450,7 +467,9 @@ const useAnimationLoop = (
 
     requestAnimationFrame(animate);
 
-    assets?.mixer.update(scene.clock.getDelta());
+    if (assets?.mixer) {
+      assets.mixer.update(scene.clock.getDelta());
+    }
     scene.controls.update();
     scene.renderer.render(scene.scene, scene.camera);
   }, [sceneRef, assetsRef, stateRef]);
@@ -576,6 +595,7 @@ export const useAvatar = () => {
       sceneRef.current = sceneData;
 
       setupLighting(scene);
+      console.log('[useAvatar] Scene initialized, loading model...');
       loadModel(sceneData);
 
       // Observe theme changes to update podium color dynamically
