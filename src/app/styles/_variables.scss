@@ -1,19 +1,34 @@
-// --- Commonly used project variables ---
+// ============================================================================
+// Design tokens and theme variables
+// - цель: аккуратно структурировать токены, не удаляя существующие переменные
+// - сохранить обратную совместимость: оригинальные переменные оставлены
+// - добавить семантические alias'ы и UI/UX палитру для простого использования
+// ============================================================================
+
+// -------------------------
+// Raw color tokens (backwards compatible)
+// -------------------------
 $color-bg-white: #ffffff;
 $color-bg-white-light: #f9f9f7;
 $color-bg-dark: #292929;
 $color-bg-dark-light: #4e74ab; // #3668b1
 $color-bg-light: #f4f3f2;
+
 $color-accent: #29abe2;
 $color-accent-dark: #494a51;
 $color-accent-yellow: #e0b363;
+
 $color-text-main: #292929;
 $color-text-light: #fff;
 $color-text-grey: #999;
+
 $color-shadow: rgba(0, 0, 0, 0.25);
 $color-shadow-light: rgba(0, 0, 0, 0.08);
+
 $color-border: #d7cfcb;
 $color-white: #fff;
+
+// Gradients (raw)
 $background-gradient-body-light: linear-gradient(
   90deg,
   rgba(125, 205, 240, 1) 0%,
@@ -26,71 +41,50 @@ $background-gradient-body-light: linear-gradient(
 $background-gradient-body-dark: linear-gradient(
   90deg,
   rgba(29, 113, 157, 0.6) 0%,
-  /* Полупрозрачный акцентный */ rgba(44, 57, 76, 0.8) 25%,
-  /* Более плотный цвет поверхности */ rgba(2, 0, 8, 1) 50%,
-  /* Непрозрачный основной фон в центре */ rgba(44, 57, 76, 0.8) 75%,
-  /* Снова цвет поверхности */ rgba(29, 113, 157, 0.6) 100% /* Снова полупрозрачный акцентный */
+  rgba(44, 57, 76, 0.8) 25%,
+  rgba(2, 0, 8, 1) 50%,
+  rgba(44, 57, 76, 0.8) 75%,
+  rgba(29, 113, 157, 0.6) 100%
 );
 
-// Цвета для темной темы #020008 #2C394C #1D719D #63DAFC #908388 #795238 #959595
-// Цвета для светлой темы #f9f9f7 #4e74ab #89CFF0 #CBCAC6 #A0E5D9 #F0FBFA #ADEBFF
-// Цвета для темной темы градиенты linear-gradient(#082026, #134D80, #97DDE8);
-// Цвета для светлой темы градиенты linear-gradient(to right, #a0e5d9, #f9f7ec);
-
-// Градиенты (пример)
 $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
-// =============================================================================
-// ТЕМОВЫЕ МИКСИНЫ
-// =============================================================================
-
-// Миксин для светлой темы
+// -------------------------
+// Theme mixins (CSS custom properties)
+// -------------------------
+// Light theme: exposes semantic CSS custom properties used across components.
 @mixin light-theme-variables {
-  /* Основные цвета фона */
-  --color-bg-primary: #f9f9f7; /* Основной фон - Кремовый */
-  --color-bg-surface: #f0fbfa; /* Поверхность - Облачный */
-  --color-bg-card: #ffffff; /* Карточки - Белый */
+  --color-bg-primary: #f9f9f7; /* creamy */
+  --color-bg-surface: #f0fbfa; /* airy surface */
+  --color-bg-card: #ffffff;
   --color-bg-overlay: rgba(255, 255, 255, 0.9);
 
-  /* Цвета акцентов */
-  --color-accent-primary: #4e74ab; /* Основной акцент - Стальной синий */
-  --color-accent-secondary: #89cff0; /* Вторичный акцент - Небесно-голубой */
-  --color-accent-highlight: #a0e5d9; /* Яркий акцент - Мятный */
-  --color-accent-ice: #adebff; /* Дополнительный голубой - Ледяной синий */
+  --color-accent-primary: #4e74ab;
+  --color-accent-secondary: #89cff0;
+  --color-accent-highlight: #a0e5d9;
+  --color-accent-ice: #adebff;
 
-  /* Цвета текста */
-  --color-text-primary: #333333; /* Основной текст - Темно-серый */
-  --color-text-secondary: #4e74ab; /* Вторичный текст - Стальной синий */
-  --color-text-heading: #4e74ab; /* Заголовки - Стальной синий */
-  --color-text-muted: #666666; /* Приглушенный текст */
-  --color-text-inverse: #ffffff; /* Инвертированный текст */
+  --color-text-primary: #333333;
+  --color-text-secondary: #4e74ab;
+  --color-text-heading: #4e74ab;
+  --color-text-muted: #666666;
+  --color-text-inverse: #ffffff;
 
-  /* Цвета границ и разделителей */
-  --color-border-primary: #cbcac6; /* Границы - Серебристый */
-  --color-border-secondary: #e0e0e0; /* Вторичные границы */
-  --color-border-accent: #a0e5d9; /* Акцентные границы - Мятный */
+  --color-border-primary: #cbcac6;
+  --color-border-secondary: #e0e0e0;
+  --color-border-accent: #a0e5d9;
 
-  /* Цвета теней */
   --color-shadow-primary: rgba(0, 0, 0, 0.08);
   --color-shadow-secondary: rgba(0, 0, 0, 0.12);
   --color-shadow-accent: rgba(78, 116, 171, 0.15);
 
-  /* Градиенты */
   --gradient-secondary: linear-gradient(to right, #a0e5d9, #f9f7ec);
   --gradient-hero: linear-gradient(135deg, #1A4759 0%, #489FB9 25%, #98CED8 50%, #38545B 75%, #C7D3D6 100%);
   --gradient-accent: linear-gradient(45deg, #4e74ab, #a0e5d9);
 
-  /* Градиент для body */
-  --background-gradient-body: linear-gradient(
-    90deg,
-    rgba(125, 205, 240, 1) 0%,
-    rgba(206, 225, 237, 1) 25%,
-    rgba(228, 245, 245, 1) 50%,
-    rgba(206, 225, 237, 1) 75%,
-    rgba(125, 205, 240, 1) 100%
-  );
+  --background-gradient-body: #{$background-gradient-body-light};
 
-  /* Универсальные цвета */
+  /* semantic tokens */
   --section-bg: var(--color-bg-primary);
   --card-bg: var(--color-bg-card);
   --button-bg: var(--color-accent-primary);
@@ -98,83 +92,64 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-primary);
 
-    /* Специфичные для секций */
   --hero-left-bg: var(--color-bg-primary);
   --hero-right-bg: var(--color-bg-surface);
   --hero-title: var(--color-text-heading);
 
-
-  /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface);
   --about-right-bg: var(--color-bg-card);
-  /* About canvas background */
   --about-canvas-bg: #ffffff;
 
-  /* Project section backgrounds */
   --project-bg: var(--color-bg-surface);
 
-  /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
 
-  /* Цвета логотипа */
-  --logo-color: #292929; /* белый в тёмной теме */
+  --logo-color: #292929;
   --logo-color-hover: var(--color-accent-secondary);
 
-  /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(78, 116, 171, 0.35), 0 0 6px rgba(78, 116, 171, 0.25);
   --focus-text-shadow: 0 0 4px rgba(78, 116, 171, 0.35), 0 1px 0 rgba(0, 0, 0, 0.15);
 
-  /* Charts backgrounds and text */
   --charts-canvas-bg: var(--color-bg-surface);
   --charts-text-color: #333333;
 
-  /* Avatar podium */
   --avatar-podium-color: #e0e0e0;
 }
 
-// Миксин для темной темы
 @mixin dark-theme-variables {
-  /* Основные цвета фона */
-  --color-bg-primary: #020008; /* Основной фон - Полночный синий */
-  --color-bg-surface: #2c394c; /* Поверхность - Графитовый синий */
-  --color-bg-card: #1a1b1c; /* Карточки - Темный */
+  --color-bg-primary: #020008;
+  --color-bg-surface: #2c394c;
+  --color-bg-card: #1a1b1c;
   --color-bg-overlay: rgba(2, 0, 8, 0.9);
 
-  /* Цвета акцентов */
-  --color-accent-primary: #1d719d; /* Основной акцент - Глубокий синий */
-  --color-accent-secondary: #63dafc; /* Вторичный акцент - Неоновый голубой */
-  --color-accent-highlight: #97dde8; /* Яркий акцент - Светло-голубой */
-  --color-accent-neutral1: #908388; /* Нейтральный акцент 1 - Пыльная роза */
-  --color-accent-neutral2: #795238; /* Нейтральный акцент 2 - Кофейный */
+  --color-accent-primary: #1d719d;
+  --color-accent-secondary: #63dafc;
+  --color-accent-highlight: #97dde8;
+  --color-accent-neutral1: #908388;
+  --color-accent-neutral2: #795238;
 
-  /* Цвета текста */
-  --color-text-primary: #959595; /* Основной текст - Светло-серый */
-  --color-text-secondary: #63dafc; /* Вторичный текст - Неоновый голубой */
-  --color-text-heading: #e5e5e5; /* Заголовки - Почти белый */
-  --color-text-muted: #666666; /* Приглушенный текст */
-  --color-text-inverse: #020008; /* Инвертированный текст */
+  --color-text-primary: #959595;
+  --color-text-secondary: #63dafc;
+  --color-text-heading: #e5e5e5;
+  --color-text-muted: #666666;
+  --color-text-inverse: #020008;
 
-  /* Цвета границ и разделителей */
-  --color-border-primary: #2c394c; /* Границы - Графитовый синий */
-  --color-border-secondary: #1d719d; /* Вторичные границы - Глубокий синий */
-  --color-border-accent: #63dafc; /* Акцентные границы - Неоновый голубой */
+  --color-border-primary: #2c394c;
+  --color-border-secondary: #1d719d;
+  --color-border-accent: #63dafc;
 
-  /* Цвета теней */
   --color-shadow-primary: rgba(0, 0, 0, 0.3);
   --color-shadow-secondary: rgba(0, 0, 0, 0.5);
   --color-shadow-accent: rgba(99, 218, 252, 0.2);
 
-  /* Градиенты */
   --gradient-hero: linear-gradient(#082026, #134d80, #97dde8);
   --gradient-secondary: linear-gradient(135deg, #1d719d, #63dafc);
   --gradient-accent: linear-gradient(45deg, #2c394c, #63dafc);
 
-  /* Градиент для body */
-  --background-gradient-body: linear-gradient(180deg, #5a5a5a 0%, #2c2c2c 50%, #0f0f0f 100%);
+  --background-gradient-body: #{$background-gradient-body-dark};
   --background-body: #0f1220;
 
-  /* Универсальные цвета */
   --section-bg: var(--color-bg-primary);
   --card-bg: var(--color-bg-card);
   --button-bg: var(--color-accent-primary);
@@ -182,61 +157,76 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-inverse);
 
-    /* Специфичные для секций */
   --hero-left-bg: var(--color-bg-primary);
   --hero-right-bg: var(--color-bg-surface);
   --hero-title: var(--color-text-heading);
 
-  /* About section backgrounds */
-  --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
-  --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
-  /* About canvas background */
+  --about-left-bg: var(--color-bg-surface);
+  --about-right-bg: var(--color-bg-card);
   --about-canvas-bg: #020008;
 
-    /* Project section backgrounds */
-    --project-bg: var(--about-canvas-bg);
+  --project-bg: var(--about-canvas-bg);
 
-  /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
 
-  /* Цвета логотипа */
   --logo-color: #ffffff;
   --logo-color-hover: var(--color-accent-secondary);
 
-  /* Фокусные подсветки (умеренные для глобальных элементов) */
   --focus-ring-shadow: 0 0 0 2px rgba(99, 218, 252, 0.35), 0 0 8px rgba(29, 113, 157, 0.3);
   --focus-text-shadow: 0 0 5px rgba(99, 218, 252, 0.45), 0 1px 0 rgba(0, 0, 0, 0.35);
 
-  /* Navigation text shadows - Dark theme overrides */
   --nav-link-shadow: 
     0 0 6px rgba(99, 218, 252, 0.25),
     0 0 12px rgba(99, 218, 252, 0.2),
     0 1px 0 rgba(0, 0, 0, 0.4),
     0 2px 4px rgba(0, 0, 0, 0.35);
-  
+
   --nav-link-shadow-hover: 
     0 0 10px rgba(99, 218, 252, 0.6),
     0 0 18px rgba(99, 218, 252, 0.45),
     0 0 32px rgba(29, 113, 157, 0.4),
     0 2px 6px rgba(0, 0, 0, 0.4);
 
-  /* Charts backgrounds and text */
   --charts-canvas-bg: #0f1220;
   --charts-text-color: #e5e5e5;
 
-  /* Avatar podium */
   --avatar-podium-color: #2c394c;
 }
 
-// Typography
+// -------------------------
+// Semantic CSS-variable aliases (SASS wrappers pointing to CSS custom properties)
+// Use these in components when you want theme-aware colors at runtime.
+// Example: color: $ui-text-primary;  => compiles to color: var(--color-text-primary);
+// -------------------------
+$ui-bg: var(--color-bg-primary);
+$ui-surface: var(--color-bg-surface);
+$ui-card: var(--card-bg);
+$ui-accent: var(--color-accent-primary);
+$ui-accent-2: var(--color-accent-secondary);
+$ui-text: var(--color-text-primary);
+$ui-text-inverse: var(--color-text-inverse);
+$ui-border: var(--color-border-primary);
+$ui-shadow: var(--color-shadow-primary);
+
+// Easy palette tokens (UI/UX oriented)
+$palette-primary: var(--color-accent-primary);
+$palette-secondary: var(--color-accent-secondary);
+$palette-info: var(--color-accent-highlight);
+$palette-success: #37b24d; // neutral success color - can be adjusted
+$palette-warning: $color-accent-yellow;
+$palette-danger: #e04e4e;
+$palette-muted: var(--color-text-muted);
+
+// -------------------------
+// Typography (kept, organized)
+// -------------------------
 $font-family-chango: var(--font-chango), Arial, sans-serif;
 $font-family-roboto: var(--font-roboto), Arial, sans-serif;
 $font-family-poppins: var(--font-poppins), Arial, sans-serif;
 $font-family-okinawa: var(--font-okinawa), Arial, sans-serif;
 $font-family-leckerli: var(--font-leckerli), Arial, sans-serif;
 
-// Часто используемые font комбинации
 $font-h1: bold 48px/1.2 $font-family-chango;
 $font-h2: bold 32px/1.2 $font-family-chango;
 $font-h3: bold 24px/1.2 $font-family-chango;
@@ -247,29 +237,36 @@ $font-p: normal 16px/1.5 $font-family-roboto;
 $font-p-small: normal 14px/1.4 $font-family-roboto;
 $font-p-x-small: normal 12px/1.3 $font-family-roboto;
 
-// Viewport
+// -------------------------
+// Viewport breakpoints
+// -------------------------
 $vp-desktop: 1304px;
 $vp-tablet: 1023px;
 $vp-mobile: 767px;
 
-// Transitions
+// -------------------------
+// Transitions & transforms
+// -------------------------
 $transition-base: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 $transition-fast: all 0.3s ease;
 
-// Transforms
 $skew-card2: -15deg;
 $skewY-card: -15deg;
 $skewY-card2: 45deg;
 $scale-hover: 1.08;
 $rotate-card: 8deg;
 
+// -------------------------
 // Preloader
+// -------------------------
 $preloader-bg: #0f1220;
 $preloader-progress-bg: rgba(255, 255, 255, 0.2);
 $preloader-bar-color: $color-accent;
 $progress-duration: 15s;
 
-// Carousel
+// -------------------------
+// Carousel / Marquee tokens
+// -------------------------
 $carousel-left-position: 15%;
 $carousel-transition-time: 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 $carousel-shadow: rgba(0, 0, 0, 0.7);

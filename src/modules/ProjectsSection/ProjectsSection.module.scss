@@ -8,7 +8,7 @@
   min-height: 100vh;
   width: 100vw;
   max-width: 100%;
-  background: var(--project-bg);
+  background: var(--section-bg, #f9f9f7);
   perspective: 2500px;
   overflow: hidden;
   position: relative;
