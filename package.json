@@ -58,17 +58,5 @@
     "prettier": "^3.6.2",
     "sass": "^1.89.2",
     "typescript": "^5"
-  },
-  "jest": {
-    "testEnvironment": "jest-environment-jsdom",
-    "transform": {
-      "^.+\\.(t|j)sx?$": [
-        "@swc/jest"
-      ]
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1",
-      "\\.(css|scss|sass)$": "identity-obj-proxy"
-    }
   }
 }

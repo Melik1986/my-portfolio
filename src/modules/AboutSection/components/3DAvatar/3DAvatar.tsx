@@ -81,6 +81,7 @@ function AvatarContainer({
       id="avaturn-container"
       ref={(el) => onContainerRef(el)}
       className={styles['avatar-container']}
+      data-testid="avaturn-container"
       data-animation="slide-right"
       data-delay="0.5"
       data-duration="0.8"
