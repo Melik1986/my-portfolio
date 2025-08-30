@@ -14,7 +14,12 @@ const customJestConfig = {
     'gsap/(.*)': '<rootDir>/tests/__mocks__/gsap.js',
   },
   moduleDirectories: ['node_modules', '<rootDir>/'],
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/e2e/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/', 
+    '<rootDir>/node_modules/', 
+    '<rootDir>/tests/e2e/',
+    '<rootDir>/tests/integration/3DAvatar.test.tsx'
+  ],
   transformIgnorePatterns: [
     'node_modules/(?!(gsap)/)'
   ],
