@@ -12,17 +12,27 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^three/examples/jsm/controls/OrbitControls$': '<rootDir>/tests/__mocks__/OrbitControls.js',
   },
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(three|three/examples)/)',
+    '/node_modules/(?!(three|three/examples|three/examples/jsm)/)',
+    'node_modules/three/examples/jsm/controls/OrbitControls.js'
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   testMatch: [
     '**/__tests__/**/*.test.(ts|tsx)',
-    '**/*.spec.(ts|tsx)',
+    '**/tests/unit/**/*.test.(ts|tsx)',
+    '**/tests/integration/**/*.test.(ts|tsx)',
+    '!**/tests/e2e/**/*.spec.ts',
+    '!**/*.spec.ts'
+  ],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/tests/e2e/'
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

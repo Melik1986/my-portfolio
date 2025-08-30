@@ -11,9 +11,12 @@
     "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true next build",
     "test": "jest --runInBand",
+    "test:unit": "jest --testPathPatterns=tests/unit --runInBand",
+    "test:integration": "jest --testPathPatterns=tests/integration --runInBand",
     "test:e2e": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug"
+    "test:debug": "playwright test --debug",
+    "test:all": "npm run test && npm run test:e2e"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
