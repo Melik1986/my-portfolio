@@ -12,7 +12,7 @@
 
 .ai-content__horizontal-center {
   height: 60px;
-  background-color: $color-bg-dark;
+  background-color: var(--ai-horizontal-center-bg);
   justify-content: flex-start;
   align-items: center;
 }

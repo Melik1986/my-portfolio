@@ -122,6 +122,9 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
     /* Background for AI content wrapper (left block) - light theme specific */
   --ai-content-wrapper-bg: rgb(214, 235, 243);
 
+  /* Background for AI horizontal center block */
+  --ai-horizontal-center-bg: rgb(214, 235, 243);
+
 
   --logo-color: #292929;
   --logo-color-hover: var(--color-accent-secondary);
@@ -192,7 +195,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
     /* Background for AI content wrapper (left block) - light theme specific */
-  --ai-content-wrapper-bg: #adebff;
+  --ai-content-wrapper-bg: #2c394c;
+  --ai-horizontal-center-bg: #2c394c;
 
   --logo-color: #ffffff;
   --logo-color-hover: var(--color-accent-secondary);
