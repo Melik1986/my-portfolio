@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import Script from 'next/script';
 import { I18nProvider } from '@/i18n';
 import type { SupportedLocale } from '@/i18n';
 import { Roboto_Serif, Poppins } from 'next/font/google';
@@ -13,6 +14,7 @@ import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
 import LanguageSwitcher from '@/lib/ui/LanguageSwitcher/LanguageSwitcher';
 import { getRequestLocale } from './seo/getRequestLocale';
 import { buildMetadataForLocale } from './seo/buildMetadata';
+import { PreloadGate } from './preload-gate';
 
 // Локальные шрифты
 const chango = localFont({
@@ -90,28 +92,46 @@ export default async function RootLayout({
 
   return (
     <html lang={htmlLang} suppressHydrationWarning>
+      <head>
+        {/* Early inline CSS to prevent FOUC while allowing preloader visibility */}
+        <style
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html:
+              "html.fouc-block body{opacity:1!important}" +
+              "html.fouc-block body>*{opacity:0!important}" +
+              "html.fouc-block [data-preloader-root=\"true\"]{opacity:1!important}",
+          }}
+        />
+        {/* Add the class as early as possible before any hydration */}
+        <Script id="fouc-blocker" strategy="beforeInteractive">
+          {"document.documentElement.classList.add('fouc-block')"}
+        </Script>
+      </head>
       <body
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
-        <AppThemeProvider>
-          <I18nProvider locale={htmlLang as SupportedLocale}>
-            <main className="portfolio" id="smooth-wrapper">
-              <div className="portfolio__section" id="smooth-content">
-                <Container>
-                  {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
-                  <GlobalPreloader />
-                  <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
-                </Container>
-              </div>
-              <AnchorButton />
-              <div className="portfolio__floating-lang">
-                <LanguageSwitcher />
-              </div>
-              {/* Optional theme toggle, can be removed later */}
-              {/* <ThemeToggle /> */}
-            </main>
-          </I18nProvider>
-        </AppThemeProvider>
+        <PreloadGate>
+          <AppThemeProvider>
+            <I18nProvider locale={htmlLang as SupportedLocale}>
+              <main className="portfolio" id="smooth-wrapper">
+                <div className="portfolio__section" id="smooth-content">
+                  <Container>
+                    {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
+                    <GlobalPreloader />
+                    <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+                  </Container>
+                </div>
+                <AnchorButton />
+                <div className="portfolio__floating-lang">
+                  <LanguageSwitcher />
+                </div>
+                {/* Optional theme toggle, can be removed later */}
+                {/* <ThemeToggle /> */}
+              </main>
+            </I18nProvider>
+          </AppThemeProvider>
+        </PreloadGate>
       </body>
     </html>
   );
