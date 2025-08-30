@@ -394,8 +394,11 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
     (gltf: GLTF, scene: AvatarScene): void => {
       console.log('[handleModelLoaded] Starting to process loaded model');
       
-      if (stateRef.current.isDisposed) {
-        console.warn('[handleModelLoaded] State is disposed, aborting');
+      // Reset disposed state when model loads
+      stateRef.current.isDisposed = false;
+      
+      if (!refs.current.container || !sceneRef.current) {
+        console.warn('[handleModelLoaded] Container or scene not available');
         return;
       }
       
@@ -523,8 +526,8 @@ interface CleanupContext {
 const useCleanup = (ctx: CleanupContext) => {
   const { stateRef, sceneRef, assetsRef } = ctx;
   const cleanup = useCallback((): void => {
-    stateRef.current.isDisposed = true;
-
+    console.log('[cleanup] Starting cleanup');
+    
     const scene = sceneRef.current;
     const assets = assetsRef.current;
 
@@ -545,6 +548,10 @@ const useCleanup = (ctx: CleanupContext) => {
 
     sceneRef.current = null;
     assetsRef.current = null;
+    
+    // Set disposed only at the very end
+    stateRef.current.isDisposed = true;
+    console.log('[cleanup] Cleanup complete');
   }, [stateRef, sceneRef, assetsRef]);
 
   return { cleanup };
@@ -560,6 +567,7 @@ export const useAvatar = () => {
     isStumbling: false,
     isDisposed: false,
   });
+  const isInitializedRef = useRef(false);
 
   const { createRenderer, createCameraAndControls, setupLighting } = useSceneSetup();
   const { createGround, setupAnimations, setupMeshProperties } = useModelLoader();
@@ -596,13 +604,23 @@ export const useAvatar = () => {
 
   // eslint-disable-next-line max-lines-per-function
   useEffect(() => {
-    console.log('[useAvatar] Effect starting');
+    console.log('[useAvatar] Effect starting, initialized:', isInitializedRef.current);
+    
+    // Prevent double initialization in StrictMode
+    if (isInitializedRef.current) {
+      console.log('[useAvatar] Already initialized, skipping');
+      return;
+    }
     
     const container = refs.current.container;
     if (!container) {
       console.warn('[useAvatar] No container element');
       return;
     }
+    
+    // Mark as initialized
+    isInitializedRef.current = true;
+    stateRef.current.isDisposed = false;
     
     console.log('[useAvatar] Container found:', {
       id: container.id,
@@ -696,6 +714,7 @@ export const useAvatar = () => {
       animate();
 
       return () => {
+        console.log('[useAvatar] Effect cleanup called');
         window.removeEventListener('resize', onResizeFrame);
         if (container) {
           container.removeEventListener('mousedown', handleMouseClickWrapper);
@@ -706,6 +725,10 @@ export const useAvatar = () => {
         try {
           themeObserver.disconnect();
         } catch {}
+        
+        // Reset initialization flag for next mount
+        isInitializedRef.current = false;
+        
         cleanup();
       };
     } catch (error) {
