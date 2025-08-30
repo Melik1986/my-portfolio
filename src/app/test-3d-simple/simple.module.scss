@@ -1,0 +1,61 @@
+.page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
+
+.info {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+
+  p {
+    margin: 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.avatarContainer {
+  width: 600px;
+  height: 600px;
+  border: 2px solid #444;
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.instructions {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  border-radius: 8px;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 0.5rem 0;
+      &::before {
+        content: '→ ';
+        color: #666;
+      }
+    }
+  }
+}
