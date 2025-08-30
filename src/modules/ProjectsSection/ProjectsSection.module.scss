@@ -13,6 +13,10 @@
   overflow: hidden;
   position: relative;
 
+  :root[data-theme='dark'] & {
+    background: var(--about-canvas-bg);
+  }
+
   // Глобальные стили для состояния загрузки
   :global(.projects-loading) {
     width: 100%;
@@ -43,13 +47,16 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: var(--card-bg, transparent);
+    background: transparent;
+
     @include vp-1024 {
       padding: 1.5rem;
     }
+
     @include vp-768 {
       padding: 1rem;
     }
+
     @include vp-360 {
       padding: 0.75rem;
     }

@@ -10,7 +10,7 @@ export function SkillsSection() {
   const { t } = useI18n();
 
   return (
-    <section ref={sectionRef} className={styles.skills} id="skills" data-group-delay="4.0">
+    <section ref={sectionRef} className={styles.skills} id="skills" data-group-delay="5.0">
       <h2 className={`${styles.skills__title} visually-hidden`}>{t('section.skills.title')}</h2>
       <div className={`${styles['skills__content']} ${styles['skills__content-left']}`}>
         <SkillsContent />

@@ -147,10 +147,33 @@ export class AnimationController {
    */
   private activateCard(cardIndex: number): void {
     // Деактивируем предыдущую карточку
-    const prevController = this.sections.get(this.activeCardIndex);
+    const prevIndex = this.activeCardIndex;
+    const prevController = this.sections.get(prevIndex);
     if (prevController && prevController.isActive) {
-      prevController.timeline.reverse();
-      prevController.isActive = false;
+      const st = this.masterTimeline?.scrollTrigger;
+      // Для hero (prevIndex === 0) или отсутствия ScrollTrigger — реверс сразу (как раньше)
+      if (!st || prevIndex === 0 || this.totalCardsCount === null || cardIndex <= prevIndex) {
+        prevController.timeline.reverse();
+        prevController.isActive = false;
+      } else {
+        // Отложим реверс предыдущей секции до 25% следующего шага
+        const steps = Math.max(1, this.totalCardsCount - 1);
+        const step = 1 / steps;
+        const reverseThreshold = Math.min(1, prevIndex * step + 0.25 * step);
+
+        let last = st.progress;
+        const onTick = () => {
+          const cur = st.progress;
+          const forward = cur >= last;
+          last = cur;
+          if (forward && cur >= reverseThreshold) {
+            prevController.timeline.reverse();
+            prevController.isActive = false;
+            gsap.ticker.remove(onTick);
+          }
+        };
+        gsap.ticker.add(onTick);
+      }
     }
 
     // Активируем новую карточку

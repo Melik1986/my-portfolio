@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useAvatar } from '../../hooks/useAvatar';
 import { GlassCard } from '@/lib/ui';
 import styles from './Avatar.module.scss';
@@ -94,11 +95,30 @@ function AvatarContainer({
   );
 }
 
-function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
+function AvatarTooltip({
+  isVisible,
+  position,
+}: {
+  isVisible: boolean;
+  position?: { x: number; y: number } | null;
+}) {
   const { t } = useI18n();
   if (!isVisible) return null;
-  return (
-    <div className={`${styles.tooltip} ${styles['tooltip--visible']}`}>
+
+  // position is in client coordinates; render tooltip in a portal to avoid
+  // being clipped/overlapped by other sections without changing section z-index
+  const style: React.CSSProperties = position
+    ? {
+        position: 'fixed',
+        left: position.x,
+        top: position.y - 12, // lift tooltip slightly above cursor
+        transform: 'translate(-50%, -100%)',
+        pointerEvents: 'auto',
+      }
+    : { position: 'fixed', left: '50%', top: 60, transform: 'translateX(-50%)' };
+
+  const node = (
+    <div className={`${styles.tooltip} ${styles['tooltip--visible']}`} style={style}>
       <GlassCard>
         <div className={styles.tooltip__content}>
           <h3>{t('section.about.avatar.title')}</h3>
@@ -112,6 +132,8 @@ function AvatarTooltip({ isVisible }: { isVisible: boolean }) {
       </GlassCard>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(node, document.body) : node;
 }
 
 export function Avatar() {

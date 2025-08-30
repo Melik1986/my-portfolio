@@ -11,7 +11,7 @@ export function ContactSection() {
       id="contact-content"
       className={styles.contact}
       data-section-index="7"
-      data-group-delay="2.5"
+      data-group-delay="7.2"
     >
       <h2 className="visually-hidden">{t('section.contact.title')}</h2>
       <div

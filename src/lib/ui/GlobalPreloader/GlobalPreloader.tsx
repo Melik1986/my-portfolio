@@ -21,6 +21,7 @@ export function GlobalPreloader() {
     }
 
     const onComplete = () => {
+      // Уведомляем Smooth/ScrollTrigger не стартовать пока блокировка активна
       setIsLoading(false);
       // Снимаем блокировку скролла
       try {
@@ -31,20 +32,19 @@ export function GlobalPreloader() {
       }
 
       // После размонтирования прелоадера обновим ScrollTrigger для корректных размеров
-      try {
-        // import динамический, чтобы не тянуть плагин раньше времени
-        import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-          if (ScrollTrigger?.refresh) {
-            // Выполним после кадра, чтобы DOM успел обновиться после размонтирования
-            requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try {
+          // import динамический, чтобы не тянуть плагин раньше времени
+          import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+            if (ScrollTrigger?.refresh) {
               ScrollTrigger.refresh();
-              setTimeout(() => ScrollTrigger.refresh(), 100);
-            });
-          }
-        });
-      } catch {
-        // ignore
-      }
+              setTimeout(() => ScrollTrigger.refresh(), 120);
+            }
+          });
+        } catch {
+          // ignore
+        }
+      });
     };
 
     const onPreloaderComplete = () => onComplete();

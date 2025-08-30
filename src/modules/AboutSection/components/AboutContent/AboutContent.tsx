@@ -38,7 +38,7 @@ export function AboutContent() {
         data-animation="slide-left"
         data-duration="1.0"
         data-ease="power2.out"
-        data-delay="0"
+        data-delay="0.2"
       >
         {t('section.about.heading')}
       </h3>
@@ -47,7 +47,7 @@ export function AboutContent() {
         data-animation="text-reveal"
         data-duration="1.2"
         data-ease="power2.out"
-        data-delay="0.5"
+        data-delay="1"
       >
         <AboutTextDesktop />
         <AboutTextMobile />
@@ -57,7 +57,7 @@ export function AboutContent() {
         data-animation="fade-up"
         data-duration="0.8"
         data-ease="power2.out"
-        data-delay="0.6"
+        data-delay="2"
       >
         <Suspense fallback={<div className={styles['about__animation-placeholder']} />}>
           <AboutAnimationLazy />

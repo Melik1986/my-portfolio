@@ -104,7 +104,7 @@ export default async function RootLayout({
                 </Container>
               </div>
               <AnchorButton />
-              <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 1000 }}>
+              <div className="portfolio__floating-lang">
                 <LanguageSwitcher />
               </div>
               {/* Optional theme toggle, can be removed later */}

@@ -58,6 +58,9 @@ export function cleanupSplitTextInstances(container: HTMLElement): void {
 }
 
 const parseElements = (elements: Element[], container: HTMLElement) => {
+  const containerGroupDelayAttr = container.getAttribute('data-group-delay');
+  const containerGroupDelay = containerGroupDelayAttr ? parseFloat(containerGroupDelayAttr) : 0;
+
   return elements
     .map((element) => {
       const config = parseAnimationData(element);
@@ -70,7 +73,7 @@ const parseElements = (elements: Element[], container: HTMLElement) => {
         element,
         config,
         delay: config?.delay ?? 0,
-        groupDelay: config?.groupDelay ?? 0,
+        groupDelay: config?.groupDelay ?? containerGroupDelay,
         stagger: config?.stagger ?? 0,
         sectionId,
       };

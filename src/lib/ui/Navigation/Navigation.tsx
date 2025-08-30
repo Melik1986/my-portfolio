@@ -14,6 +14,7 @@ function buildDefaultItems(t: (k: string) => string) {
     { href: '#about', label: t('nav.about'), sectionId: 'about-section' },
     { href: '#skills', label: t('nav.skills'), sectionId: 'skills-section' },
     { href: '#projects', label: t('nav.projects'), sectionId: 'projects-section' },
+    { href: '#ai-content-section', label: t('nav.ai'), sectionId: 'ai-content-section' },
     { href: '#contact', label: t('nav.contacts'), sectionId: 'contact-section' },
   ];
 }

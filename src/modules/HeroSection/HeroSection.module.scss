@@ -8,7 +8,7 @@
   display: flex;
   margin: 0 auto;
   box-shadow: 0 4px 20px var(--color-shadow-primary);
-  background: var(--gradient-primary);
+  background: var(--gradient-hero);
 
   &__title {
     font-family: $font-family-leckerli;
@@ -19,6 +19,7 @@
 
   &__content {
     position: relative;
+    anchor-name: --hero-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,7 +58,41 @@
     }
   }
 
-  &__content-right {
-    // background: var(--gradient-primary);
+  // &__content-right {
+  //   // background: var(--gradient-primary);
+  // }
+
+  /* CSS Anchor Positioning API fallback container */
+  &__image-anchor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 0;
+    anchor-name: --hero-image-anchor;
   }
+}
+
+/* NEAT integration: position the canvas as background without layout shifts */
+.hero[data-neat-active='true'] {
+  background: transparent; // let the canvas show through
+}
+
+.hero canvas[data-neat-canvas='true'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; // bring above background, below content
+  pointer-events: none;
+}
+
+/* Hide NEAT watermark link if injected */
+.hero a[href*="neat.firecms.co"],
+.hero a:where(:link, :visited):not([href]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

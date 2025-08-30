@@ -4,8 +4,8 @@
 .projects-card {
   display: flex;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 65%;
+  left: 55%;
   transform: translate(-50%, -50%);
   transform-style: preserve-3d;
   width: clamp(260px, 72vw, 820px);
@@ -25,16 +25,19 @@
     height: clamp(300px, 52vh, 560px);
   }
   @include vp-1024 {
+    left: 50%;
     width: clamp(220px, 80vw, 700px);
     height: clamp(280px, 50vh, 520px);
   }
   @include vp-768 {
-    width: 90vw;
+    width: 80vw;
     height: clamp(260px, 48vh, 480px);
+    transform: translate(-50%, -50%);
   }
-  @include vp-360 {
-    width: 95vw;
+  @include vp-375 {
+    width: 80vw;
     height: clamp(240px, 46vh, 440px);
+    top: 75%;
   }
 }
 
