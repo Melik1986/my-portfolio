@@ -7,7 +7,7 @@ coverage/
 playwright-report/
 blob-report/
 test-results/
-tests/
+# tests/  # Commented out to allow test files in repo
 src/i18n/__tests__/
 
 # Env
