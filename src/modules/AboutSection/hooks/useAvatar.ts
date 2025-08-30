@@ -464,20 +464,22 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
       loader.load(
         avatarConfig.modelPath,
         (gltf) => {
-          console.log('[useAvatar] Model loaded successfully:', gltf);
+          console.log('[useAvatar] Model loaded successfully');
+          console.log('[useAvatar] Scene children:', gltf.scene.children.length);
+          console.log('[useAvatar] Animations:', gltf.animations.length);
           handleModelLoaded(gltf, scene);
         },
         (xhr) => {
-          const percentComplete = (xhr.loaded / xhr.total) * 100;
-          console.log('[useAvatar] Loading progress:', percentComplete + '%');
+          if (xhr.total > 0) {
+            const percentComplete = (xhr.loaded / xhr.total) * 100;
+            console.log('[useAvatar] Loading progress:', percentComplete.toFixed(2) + '%');
+          }
         },
         (error) => {
-          console.error('[useAvatar] Error loading model:', error);
-          console.error('[useAvatar] Error details:', {
-            message: error.message,
-            stack: error.stack,
-            type: error.type
-          });
+          console.error('[useAvatar] Error loading model:', error.message || error);
+          if (error.stack) {
+            console.error('[useAvatar] Stack trace:', error.stack);
+          }
         }
       );
     },

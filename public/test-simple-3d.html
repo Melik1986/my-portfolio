@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple 3D Test</title>
+    <script src="https://unpkg.com/three@0.169.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.169.0/examples/js/loaders/GLTFLoader.js"></script>
+    <style>
+        body { margin: 0; padding: 20px; font-family: monospace; background: #1a1a1a; color: #fff; }
+        canvas { display: block; border: 2px solid #444; margin: 20px 0; }
+        #log { background: #000; padding: 10px; border-radius: 4px; max-height: 300px; overflow: auto; }
+        .success { color: #4caf50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>Simple Three.js Model Load Test</h1>
+    <p id="status">Initializing...</p>
+    <canvas id="canvas"></canvas>
+    <div id="log"></div>
+
+    <script>
+        const log = (msg, type = '') => {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logEl.appendChild(entry);
+            console.log(msg);
+        };
+
+        const init = async () => {
+            log('Starting initialization...');
+            
+            // Setup
+            const canvas = document.getElementById('canvas');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+            log('Scene created');
+            
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            camera.position.set(0, 1, 3);
+            log('Camera positioned');
+            
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(600, 600);
+            renderer.shadowMap.enabled = true;
+            log('Renderer created');
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+            log('Lights added');
+            
+            // Test cube
+            const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+            const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.position.y = 1;
+            scene.add(cube);
+            log('Red test cube added');
+            
+            // Ground
+            const groundGeometry = new THREE.CylinderGeometry(1, 1, 0.1, 32);
+            const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x29abe2 });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.position.y = -0.05;
+            scene.add(ground);
+            log('Ground added');
+            
+            // Load model
+            log('Creating GLTFLoader...');
+            const loader = new THREE.GLTFLoader();
+            
+            const modelPath = '/model/avatar.glb';
+            log(`Loading model from: ${modelPath}`);
+            
+            // First check if file exists
+            try {
+                const response = await fetch(modelPath);
+                log(`Fetch response: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log(`Cannot fetch model: ${error.message}`, 'error');
+            }
+            
+            loader.load(
+                modelPath,
+                (gltf) => {
+                    log('Model loaded successfully!', 'success');
+                    log(`Scene children: ${gltf.scene.children.length}`);
+                    log(`Animations: ${gltf.animations.length}`);
+                    
+                    // Add to scene
+                    scene.add(gltf.scene);
+                    gltf.scene.scale.setScalar(0.5);
+                    
+                    document.getElementById('status').textContent = 'Model loaded successfully!';
+                    document.getElementById('status').className = 'success';
+                },
+                (xhr) => {
+                    if (xhr.lengthComputable) {
+                        const percentComplete = (xhr.loaded / xhr.total) * 100;
+                        log(`Progress: ${percentComplete.toFixed(2)}%`);
+                    }
+                },
+                (error) => {
+                    log(`Error loading model: ${error}`, 'error');
+                    document.getElementById('status').textContent = 'Error loading model!';
+                    document.getElementById('status').className = 'error';
+                }
+            );
+            
+            // Animate
+            const animate = () => {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            };
+            animate();
+            log('Animation started');
+        };
+        
+        init();
+    </script>
+</body>
+</html>

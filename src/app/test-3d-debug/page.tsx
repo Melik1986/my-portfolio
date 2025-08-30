@@ -69,20 +69,13 @@ export default function Test3DDebugPage() {
         if (canvas) {
           setLogs(prev => [...prev, `[CHECK] Canvas found. Size: ${canvas.width}x${canvas.height}`]);
           
-          // Check if canvas has content
-          const ctx = canvas.getContext('webgl') || canvas.getContext('webgl2');
-          if (ctx) {
-            const pixels = new Uint8Array(4);
-            (ctx as WebGLRenderingContext).readPixels(
-              canvas.width / 2, 
-              canvas.height / 2, 
-              1, 1, 
-              (ctx as WebGLRenderingContext).RGBA, 
-              (ctx as WebGLRenderingContext).UNSIGNED_BYTE, 
-              pixels
-            );
-            const hasContent = pixels.some(p => p > 0);
-            setLogs(prev => [...prev, `[CHECK] Canvas has content: ${hasContent} (center pixel: ${Array.from(pixels).join(',')})`]);
+          // Check if canvas has content - but don't create new context
+          try {
+            const dataURL = canvas.toDataURL();
+            const hasContent = dataURL.length > 100; // basic check
+            setLogs(prev => [...prev, `[CHECK] Canvas has content: ${hasContent}`]);
+          } catch (e) {
+            setLogs(prev => [...prev, `[CHECK] Cannot read canvas: ${e.message}`]);
           }
         } else {
           setLogs(prev => [...prev, '[CHECK] No canvas found in container']);
