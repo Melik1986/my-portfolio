@@ -15,6 +15,11 @@ jest.mock('three/examples/jsm/loaders/GLTFLoader', () => ({
   })),
 }))
 
+// Mock для GSAP инициализации
+jest.mock('@/lib/gsap/core/GSAPInitializer', () => ({
+  ensureGSAPRegistered: jest.fn(),
+}))
+
 // Global mocks
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
