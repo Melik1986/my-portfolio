@@ -90,11 +90,6 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
     rgba(125, 205, 240, 1) 100%
   );
 
-  /* Специфичные для секций */
-  --hero-left-bg: var(--color-bg-primary);
-  --hero-right-bg: var(--color-bg-surface);
-  --hero-title: var(--color-text-heading);
-
   /* Универсальные цвета */
   --section-bg: var(--color-bg-primary);
   --card-bg: var(--color-bg-card);
@@ -103,11 +98,20 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-primary);
 
+    /* Специфичные для секций */
+  --hero-left-bg: var(--color-bg-primary);
+  --hero-right-bg: var(--color-bg-surface);
+  --hero-title: var(--color-text-heading);
+
+
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface);
   --about-right-bg: var(--color-bg-card);
   /* About canvas background */
   --about-canvas-bg: #ffffff;
+
+  /* Project section backgrounds */
+  --project-bg: var(--color-bg-surface);
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
@@ -122,7 +126,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --focus-text-shadow: 0 0 4px rgba(78, 116, 171, 0.35), 0 1px 0 rgba(0, 0, 0, 0.15);
 
   /* Charts backgrounds and text */
-  --charts-canvas-bg: #ffffff;
+  --charts-canvas-bg: var(--color-bg-surface);
   --charts-text-color: #333333;
 
   /* Avatar podium */
@@ -170,11 +174,6 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --background-gradient-body: linear-gradient(180deg, #5a5a5a 0%, #2c2c2c 50%, #0f0f0f 100%);
   --background-body: #0f1220;
 
-  /* Специфичные для секций */
-  --hero-left-bg: var(--color-bg-primary);
-  --hero-right-bg: var(--color-bg-surface);
-  --hero-title: var(--color-text-heading);
-
   /* Универсальные цвета */
   --section-bg: var(--color-bg-primary);
   --card-bg: var(--color-bg-card);
@@ -183,11 +182,19 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --button-hover-bg: var(--color-accent-secondary);
   --button-hover-text: var(--color-text-inverse);
 
+    /* Специфичные для секций */
+  --hero-left-bg: var(--color-bg-primary);
+  --hero-right-bg: var(--color-bg-surface);
+  --hero-title: var(--color-text-heading);
+
   /* About section backgrounds */
   --about-left-bg: var(--color-bg-surface); /* мягкий серый/графитовый */
   --about-right-bg: var(--color-bg-card); /* тёмный оттенок почти чёрный */
   /* About canvas background */
   --about-canvas-bg: #020008;
+
+    /* Project section backgrounds */
+    --project-bg: var(--about-canvas-bg);
 
   /* AI Content section backgrounds */
   --ai-left-bg: var(--color-bg-surface);
