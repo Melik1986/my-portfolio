@@ -386,7 +386,7 @@ const updateRefsAfterLoad = (refs: React.RefObject<AvatarRefs>, assets: AvatarAs
   refs.current.mixer = assets.mixer;
 };
 
-const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
+const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext, sceneRef: React.RefObject<AvatarScene | null>) => {
   const { setupMeshProperties, createGround, setupAnimations } = deps;
   const { calculateScale, assetsRef, stateRef, refs } = ctx;
 
@@ -397,8 +397,8 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
       // Reset disposed state when model loads
       stateRef.current.isDisposed = false;
       
-      if (!refs.current.container || !sceneRef.current) {
-        console.warn('[handleModelLoaded] Container or scene not available');
+      if (!refs.current.container) {
+        console.warn('[handleModelLoaded] Container not available');
         return;
       }
       
@@ -449,7 +449,7 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
       container.dispatchEvent(new CustomEvent('modelLoaded'));
       console.log('[handleModelLoaded] Model loaded event dispatched');
     },
-    [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],
+    [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs, sceneRef],
   );
 
   const loadModel = useCallback(
@@ -579,6 +579,7 @@ export const useAvatar = () => {
   const { loadModel } = useModelHandler(
     { setupMeshProperties, createGround, setupAnimations },
     { calculateScale, assetsRef, stateRef, refs },
+    sceneRef
   );
   const { animate } = useAnimationLoop(sceneRef, assetsRef, stateRef);
   const { cleanup } = useCleanup({ stateRef, sceneRef, assetsRef, refs });
