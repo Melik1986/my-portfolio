@@ -22,7 +22,7 @@ $color-danger: #e74c3c;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.03);
-  color: $color-text-main;
+  color: $ui-text;
   font-family: inherit;
   font-size: 14px;
   transition:
@@ -31,7 +31,7 @@ $color-danger: #e74c3c;
 
   &:focus {
     outline: none;
-    border-color: $color-accent;
+  border-color: $ui-accent;
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -59,7 +59,7 @@ $color-danger: #e74c3c;
   right: 12px;
   width: 20px;
   height: 20px;
-  color: $color-accent;
+  color: $ui-accent;
   pointer-events: none;
   z-index: 1;
 }

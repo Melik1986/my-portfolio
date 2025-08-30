@@ -3,7 +3,7 @@
 
 .ai-content {
   font-family: $font-family-roboto;
-  background: var(--section-bg, #f9f9f7);
+  background: var(--section-bg);
   color: var(--color-text-primary);
   width: 100%;
   position: relative;
@@ -69,6 +69,7 @@
     /* Left/Right halves background via CSS vars */
     --ai-heading-color: var(--color-text-heading);
     --ai-text-color: var(--color-text-primary);
+    background: var(--ai-content-wrapper-bg);
   }
 
   &__wrapper {
@@ -77,10 +78,6 @@
     gap: 40px;
     justify-content: center;
     align-items: center;
-    /* Light-theme only background (dark theme unchanged) */
-    :root:not([data-theme='dark']) & {
-      background: #f0fbfa;
-    }
   }
 
   &__horizontal-vertical {

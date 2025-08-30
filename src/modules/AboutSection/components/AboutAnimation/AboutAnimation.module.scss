@@ -37,5 +37,6 @@
   width: 100%;
   height: 100%;
   background: var(--about-canvas-bg);
+  /* Note: visible canvas background fully controlled via CSS variables */
   border-radius: inherit;
 }

@@ -5,7 +5,8 @@
 import { readCssVar } from '../../../lib/utils/css-vars';
 
 export const getBaseChartStyles = () => ({
-  backgroundColor: readCssVar('--charts-canvas-bg', '#ffffff'),
+  // Canvas background should be transparent; container (.chart-wrapper) provides the visible background
+  backgroundColor: 'transparent',
   textStyle: { color: readCssVar('--charts-text-color', '#333333') },
   grid: {
     left: '8%',

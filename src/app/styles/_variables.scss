@@ -79,13 +79,23 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --color-shadow-accent: rgba(78, 116, 171, 0.15);
 
   --gradient-secondary: linear-gradient(to right, #a0e5d9, #f9f7ec);
-  --gradient-hero: linear-gradient(135deg, #1A4759 0%, #489FB9 25%, #98CED8 50%, #38545B 75%, #C7D3D6 100%);
+  /* Gradient updated to match provided palette (top → bottom):
+     #011023, #042558, #507ca9, #547eb0, #7c9dc6, #c2e8ff */
+  --gradient-hero: linear-gradient(180deg,
+    #011023 0%,
+    #042558 20%,
+    #507ca9 40%,
+    #547eb0 60%,
+    #7c9dc6 80%,
+    #c2e8ff 100%
+  );
   --gradient-accent: linear-gradient(45deg, #4e74ab, #a0e5d9);
 
   --background-gradient-body: #{$background-gradient-body-light};
 
   /* semantic tokens */
-  --section-bg: var(--color-bg-primary);
+  --section-bg-left: #90E0EF;
+  --section-bg: #f0fbfa;
   --card-bg: var(--color-bg-card);
   --button-bg: var(--color-accent-primary);
   --button-text: var(--color-text-inverse);
@@ -99,11 +109,19 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --about-left-bg: var(--color-bg-surface);
   --about-right-bg: var(--color-bg-card);
   --about-canvas-bg: #ffffff;
+  // Prefer semantic section background so components inherit the same light surface
+  --about-canvas-bg: var(--section-bg);
 
   --project-bg: var(--color-bg-surface);
 
+  /* Preloader background for light theme */
+  --preloader-bg: #90e0ef;
+
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
+    /* Background for AI content wrapper (left block) - light theme specific */
+  --ai-content-wrapper-bg: rgb(214, 235, 243);
+
 
   --logo-color: #292929;
   --logo-color-hover: var(--color-accent-secondary);
@@ -151,6 +169,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --background-body: #0f1220;
 
   --section-bg: var(--color-bg-primary);
+  --section-bg-left: var(--color-bg-surface);
   --card-bg: var(--color-bg-card);
   --button-bg: var(--color-accent-primary);
   --button-text: var(--color-text-heading);
@@ -167,8 +186,13 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
   --project-bg: var(--about-canvas-bg);
 
+  /* Preloader background for dark theme */
+  --preloader-bg: #0f1220;
+
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
+    /* Background for AI content wrapper (left block) - light theme specific */
+  --ai-content-wrapper-bg: #adebff;
 
   --logo-color: #ffffff;
   --logo-color-hover: var(--color-accent-secondary);

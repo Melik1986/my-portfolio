@@ -7,17 +7,12 @@ import {
   Points,
   Clock,
   Material,
-  Color,
 } from 'three';
 import type { AuroraConfig } from '@/modules/AboutSection/types/about.types';
 import { ShaderAnimationModule } from './ShaderAnimationModule';
 import { CameraController } from './CameraController';
 
-function readCssVarColor(varName: string, fallback: string = '#000000'): string {
-  if (typeof window === 'undefined') return fallback;
-  const val = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-  return val || fallback;
-}
+// Background for canvas is now controlled purely by CSS variables.
 
 interface ControllerState {
   isInitialized: boolean;
@@ -60,29 +55,7 @@ export class ParticleWaveController {
       shouldUpdateCamera: false,
     };
 
-    // Set initial clear color based on theme var
-    const bg = readCssVarColor('--about-canvas-bg', '#000000');
-    try {
-      this.renderer.setClearColor(new Color(bg), 1);
-    } catch {
-      this.renderer.setClearColor(0x000000, 1);
-    }
-
-    // Observe theme changes (data-theme on :root)
-    if (typeof window !== 'undefined') {
-      this.themeObserver = new MutationObserver(() => {
-        const clr = readCssVarColor('--about-canvas-bg', '#000000');
-        try {
-          this.renderer.setClearColor(new Color(clr), 1);
-        } catch {
-          this.renderer.setClearColor(0x000000, 1);
-        }
-      });
-      this.themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme'],
-      });
-    }
+  // Renderer clear color left transparent — CSS controls the visible canvas background.
   }
 
   /**
@@ -244,7 +217,7 @@ export class ParticleWaveController {
    */
   private createRenderer(): WebGLRenderer {
     const renderer = new WebGLRenderer({
-      alpha: false,
+      alpha: true,
       antialias: true,
       powerPreference: 'high-performance',
     });
@@ -256,6 +229,12 @@ export class ParticleWaveController {
     renderer.setSize(width, height, false);
 
     this.container.appendChild(renderer.domElement);
+    // Ensure the WebGL clear color is transparent so CSS background is visible
+    try {
+      renderer.setClearColor(0x000000, 0);
+    } catch {
+      // ignore
+    }
     try {
       const canvas = renderer.domElement as HTMLCanvasElement;
       canvas.style.width = '';

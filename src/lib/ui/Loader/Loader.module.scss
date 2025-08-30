@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $preloader-bg;
+  background-color: var(--preloader-bg);
   z-index: 9999;
   opacity: 1;
   animation: loaderFadeIn 0.6s ease-in forwards $progress-duration;

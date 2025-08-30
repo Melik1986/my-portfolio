@@ -54,13 +54,14 @@
   }
 }
 
+// ...existing code...
 .chart-wrapper {
   flex: 1 1;
   min-height: 520px;
   width: 50%;
   height: 520px;
   padding: 24px;
-  background: var(--charts-canvas-bg);
+  background: var(--section-bg-left);
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
   position: relative; // нужен для абсолютного позиционирования дочернего chart
@@ -113,7 +114,7 @@
     will-change: transform;
     pointer-events: auto;
     margin-bottom: 20px; /* Отступ от легенды */
-    background: var(--charts-canvas-bg);
+  background: transparent; /* canvas должен быть прозрачным, фон задаёт .chart-wrapper */
   }
 
   // Отключение wheel событий для ECharts контейнеров

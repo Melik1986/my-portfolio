@@ -47,7 +47,7 @@
   }
 
   &__content-left {
-    background: var(--about-left-bg);
+  background: var(--section-bg-left);
     height: 100%;
     /* Text tokens for inner content */
     color: var(--color-text-primary);
@@ -56,7 +56,7 @@
   }
 
   &__content-right {
-    background: var(--about-right-bg);
+  background: var(--section-bg);
     height: 100%;
     justify-content: stretch;
     /* Text tokens for inner content */

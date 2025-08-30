@@ -14,7 +14,7 @@ import { SELECTORS } from '../config/skillsCharts.config';
 import { getDevChartOptions } from '../config/devChartOptions';
 import { getDesignChartOptions } from '../config/designChartOptions';
 import { playAnimation, hideCharts, resetAnimation } from '../utils/animationUtils';
-import { readCssVar } from '../../../lib/utils/css-vars';
+// readCssVar removed: canvas background is handled by CSS container variables
 import { resizeCharts } from '../utils/resizeUtils';
 
 // Флаг для отслеживания регистрации ECharts компонентов
@@ -63,7 +63,6 @@ const validateChartElements = () => {
 /**
  * Создает экземпляры графиков
  */
-// eslint-disable-next-line max-lines-per-function
 const createChartInstances = (
   devChartRef: { current: echarts.ECharts | null },
   designChartRef: { current: echarts.ECharts | null },
@@ -81,9 +80,8 @@ const createChartInstances = (
     designChartRef.current.dispose();
   }
 
-  const bg = readCssVar('--charts-canvas-bg', '#ffffff');
-
-  // Инициализация с отключением wheel событий для улучшения производительности
+  // Цвет фона теперь контролируется контейнером .chart-wrapper через CSS переменные.
+  // Не задаём background на сам элемент/канвас — оставляем canvas прозрачным.
   devChartRef.current = echarts.init(devChartElement, null, {
     renderer: 'canvas',
     useDirtyRect: false,
@@ -92,8 +90,7 @@ const createChartInstances = (
     width: 'auto',
     height: 'auto',
   });
-  // Apply background via container
-  devChartElement.style.background = bg;
+  // container background must be controlled via CSS; keep canvas transparent
 
   designChartRef.current = echarts.init(designChartElement, null, {
     renderer: 'canvas',
@@ -103,8 +100,7 @@ const createChartInstances = (
     width: 'auto',
     height: 'auto',
   });
-  // Apply background via container
-  designChartElement.style.background = bg;
+  // container background must be controlled via CSS; keep canvas transparent
 
   // Отключаем wheel события для предотвращения passive listener warnings
   if (devChartRef.current) {
@@ -197,10 +193,7 @@ export const useSkillsCharts = () => {
       // Re-init (simplest) to apply new backgroundColor; ECharts lacks live update for init bg
       createChartInstances(devChartRef, designChartRef, devChartElement, designChartElement);
       configureChartOptions(devChartRef, designChartRef, devChartElement, designChartElement);
-      // update container background on theme change
-      const bg = readCssVar('--charts-canvas-bg', '#ffffff');
-      devChartElement.style.background = bg;
-      designChartElement.style.background = bg;
+  // Background is controlled by CSS on .chart-wrapper; no runtime DOM background assignment here.
       // re-run animation after theme change
       playAnimation(devChartRef.current, designChartRef.current);
     });

@@ -2,7 +2,7 @@
 @use '@/app/styles/_variables.scss' as *;
 
 .btn {
-  color: $color-text-main;
+  color: $ui-text;
   background-color: transparent;
   padding: 13px 10px;
   width: 170px;
@@ -77,7 +77,7 @@
 
   &__icon_path {
     fill: none;
-    stroke: $color-text-main;
+  stroke: $ui-text;
     stroke-width: 1;
     stroke-dasharray: 500, 0;
     transition-property: all;
@@ -95,7 +95,7 @@
   &:hover,
   &:focus-visible {
     outline: none;
-    color: $color-accent;
+  color: $ui-accent;
     text-shadow: var(--button-text-shadow-hover);
 
     :root[data-theme='dark'] & {
@@ -108,7 +108,7 @@
     }
 
     .btn__icon_path {
-      stroke: $color-accent;
+  stroke: $ui-accent;
       stroke-dasharray: 30, 310;
       stroke-dashoffset: 290;
       transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);

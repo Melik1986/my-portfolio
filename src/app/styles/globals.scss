@@ -73,6 +73,10 @@ body.preload-lock {
 
   /* Default section backgrounds (fallbacks when data-theme is not present) */
   --project-bg: var(--color-bg-surface);
+  /* Default preloader background fallback (used before theme is applied) */
+  --preloader-bg: #90e0ef;
+  /* Default AI content wrapper background fallback */
+  --ai-content-wrapper-bg: #c2e8ff;
 
 }
 

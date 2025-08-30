@@ -13,19 +13,19 @@
   height: 28px;
   align-items: center;
   justify-content: center;
-  color: $color-text-main;
+  color: $ui-text;
   transition:
     color 0.2s ease,
     transform 0.2s ease;
   border-radius: 6px;
 
   &:hover {
-    color: $color-accent;
+  color: $ui-accent;
     transform: translateY(-2px);
   }
 
   &:focus {
-    outline: 2px solid $color-accent;
+  outline: 2px solid $ui-accent;
     outline-offset: 2px;
   }
 

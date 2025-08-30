@@ -49,21 +49,20 @@
   }
 
   &__content-left {
-    position: relative;
-    z-index: 1;
-    background: var(--about-left-bg);
+  position: relative;
+  z-index: 1;
+  background: var(--section-bg-left);
     color: var(--color-text-primary);
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);
   }
 
   &__content-right {
-    background: var(--about-right-bg);
+    background: var(--section-bg);
     justify-content: center;
     color: var(--color-text-primary);
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);
-
     :root[data-theme='dark'] & {
       background: var(--about-canvas-bg);
     }
