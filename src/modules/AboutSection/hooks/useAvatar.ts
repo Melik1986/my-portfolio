@@ -317,21 +317,38 @@ interface ModelHandlerContext {
 
 // Вспомогательные функции для сокращения тела колбэков
 const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void => {
+  console.log('[centerModelAndFitCamera] Starting');
+  
   const box = new THREE.Box3().setFromObject(avatar);
   const size = new THREE.Vector3();
   const center = new THREE.Vector3();
   box.getSize(size);
   box.getCenter(center);
+  
+  console.log('[centerModelAndFitCamera] Model bounds:', {
+    size: { x: size.x, y: size.y, z: size.z },
+    center: { x: center.x, y: center.y, z: center.z }
+  });
+  
   avatar.position.sub(center);
   const boxAfter = new THREE.Box3().setFromObject(avatar);
   const minY = boxAfter.min.y;
   avatar.position.y -= minY;
+  
   const fov = (scene.camera.fov * Math.PI) / 180;
   const maxDim = Math.max(size.x, size.y, size.z);
   const distance = maxDim / (2 * Math.tan(fov / 2)) + 0.6;
+  
+  console.log('[centerModelAndFitCamera] Camera positioning:', {
+    distance,
+    position: { x: 0.6, y: size.y * 0.7 + 0.4, z: distance }
+  });
+  
   scene.camera.position.set(0.6, size.y * 0.7 + 0.4, distance);
   scene.controls.target.set(0, size.y * 0.5, 0);
   scene.controls.update();
+  
+  console.log('[centerModelAndFitCamera] Complete');
 };
 
 const createAssets = (
@@ -375,25 +392,59 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
 
   const handleModelLoaded = useCallback(
     (gltf: GLTF, scene: AvatarScene): void => {
-      if (stateRef.current.isDisposed) return;
-      const avatar = gltf.scene;
-      setupMeshProperties(avatar);
-      const assets = createAssets(gltf, avatar, createGround, setupAnimations);
-      if (!assets.waveAction && !assets.stumbleAction) {
-        console.warn('No animations found in model');
+      console.log('[handleModelLoaded] Starting to process loaded model');
+      
+      if (stateRef.current.isDisposed) {
+        console.warn('[handleModelLoaded] State is disposed, aborting');
         return;
       }
+      
+      const avatar = gltf.scene;
+      console.log('[handleModelLoaded] Avatar scene:', avatar);
+      console.log('[handleModelLoaded] Avatar children count:', avatar.children.length);
+      
+      setupMeshProperties(avatar);
+      const assets = createAssets(gltf, avatar, createGround, setupAnimations);
+      
+      console.log('[handleModelLoaded] Assets created:', {
+        hasAvatar: !!assets.avatar,
+        hasGround: !!assets.groundMesh,
+        hasMixer: !!assets.mixer,
+        hasWaveAction: !!assets.waveAction,
+        hasStumbleAction: !!assets.stumbleAction
+      });
+      
+      if (!assets.waveAction && !assets.stumbleAction) {
+        console.warn('[handleModelLoaded] No animations found in model');
+      }
+      
       try {
         centerModelAndFitCamera(avatar, scene);
-      } catch {}
+        console.log('[handleModelLoaded] Camera positioned');
+      } catch (e) {
+        console.error('[handleModelLoaded] Error centering camera:', e);
+      }
+      
       scene.scene.add(avatar, assets.groundMesh);
+      console.log('[handleModelLoaded] Added to scene. Total objects:', scene.scene.children.length);
+      
+      // Debug render
+      scene.renderer.render(scene.scene, scene.camera);
+      console.log('[handleModelLoaded] Test render completed');
+      
       assetsRef.current = assets;
       updateRefsAfterLoad(refs, assets);
+      
       const container = refs.current.container!;
       try {
         applyInitialSizing(container, scene, assets, calculateScale);
-      } catch {}
+        console.log('[handleModelLoaded] Sizing applied');
+      } catch (e) {
+        console.error('[handleModelLoaded] Error applying sizing:', e);
+      }
+      
       container.dispatchEvent(new CustomEvent('modelLoaded'));
+      console.log('[handleModelLoaded] Model loaded event dispatched');
     },
     [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],
   );
@@ -405,11 +456,26 @@ const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
       try {
         (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
       } catch {}
+      console.log('[useAvatar] Starting model load from:', avatarConfig.modelPath);
+      
       loader.load(
         avatarConfig.modelPath,
-        (gltf) => handleModelLoaded(gltf, scene),
-        undefined,
-        (error) => console.error('Error loading model:', error),
+        (gltf) => {
+          console.log('[useAvatar] Model loaded successfully:', gltf);
+          handleModelLoaded(gltf, scene);
+        },
+        (xhr) => {
+          const percentComplete = (xhr.loaded / xhr.total) * 100;
+          console.log('[useAvatar] Loading progress:', percentComplete + '%');
+        },
+        (error) => {
+          console.error('[useAvatar] Error loading model:', error);
+          console.error('[useAvatar] Error details:', {
+            message: error.message,
+            stack: error.stack,
+            type: error.type
+          });
+        }
       );
     },
     [handleModelLoaded],
@@ -436,6 +502,11 @@ const useAnimationLoop = (
     assets?.mixer.update(scene.clock.getDelta());
     scene.controls.update();
     scene.renderer.render(scene.scene, scene.camera);
+    
+    // Log once in a while
+    if (Math.random() < 0.001) {
+      console.log('[animate] Rendering frame. Scene children:', scene.scene.children.length);
+    }
   }, [sceneRef, assetsRef, stateRef]);
 
   return { animate };
@@ -525,11 +596,23 @@ export const useAvatar = () => {
 
   // eslint-disable-next-line max-lines-per-function
   useEffect(() => {
+    console.log('[useAvatar] Effect starting');
+    
     const container = refs.current.container;
-    if (!container) return;
+    if (!container) {
+      console.warn('[useAvatar] No container element');
+      return;
+    }
+    
+    console.log('[useAvatar] Container found:', {
+      id: container.id,
+      width: container.clientWidth,
+      height: container.clientHeight
+    });
 
     try {
       const renderer = createRenderer(container);
+      console.log('[useAvatar] Renderer created');
       const { camera, controls } = createCameraAndControls(renderer);
       const scene = new THREE.Scene();
       // Ensure renderer is sized to container immediately
@@ -551,7 +634,21 @@ export const useAvatar = () => {
 
       sceneRef.current = sceneData;
 
+      // Add background to see if scene renders
+      scene.background = new THREE.Color(0x222222);
+      console.log('[useAvatar] Scene background set to dark gray');
+
       setupLighting(scene);
+      console.log('[useAvatar] Lighting setup complete');
+      
+      // Add a test cube to verify rendering
+      const testGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+      const testMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      const testCube = new THREE.Mesh(testGeometry, testMaterial);
+      testCube.position.set(0, 0.5, 0);
+      scene.add(testCube);
+      console.log('[useAvatar] Added red test cube at (0, 0.5, 0)');
+      
       loadModel(sceneData);
 
       // Observe theme changes to update podium color dynamically
