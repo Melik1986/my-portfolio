@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+// three/examples: use type-only imports and dynamic import for runtime to optimize bundle
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { avatarConfig, avatarControls } from '../config/avatar3d.config';
 import { AvatarRefs } from '../types/about.types';
@@ -54,7 +55,10 @@ const useSceneSetup = () => {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    container.appendChild(renderer.domElement);
+    // Не трогаем детей контейнера, управляемых React. Просто добавляем наш canvas, если он ещё не добавлен
+    if (!container.contains(renderer.domElement)) {
+      container.appendChild(renderer.domElement);
+    }
     return renderer;
   }, []);
 
@@ -234,24 +238,49 @@ const useScaleManager = () => {
   return { calculateScale, updateSize };
 };
 
+// Вспомогательные функции для работы с мышью и рейкастингом (сокращают тело useMouseHandler)
+const getNDCFromMouse = (event: MouseEvent, rect: DOMRect): THREE.Vector2 => {
+  return new THREE.Vector2(
+    ((event.clientX - rect.left) / rect.width) * 2 - 1,
+    -((event.clientY - rect.top) / rect.height) * 2 + 1,
+  );
+};
+
+const getIntersections = (ndc: THREE.Vector2, scene: AvatarScene): THREE.Intersection[] => {
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(ndc, scene.camera);
+  return raycaster.intersectObjects(scene.scene.children, true);
+};
+
+const isHoveringAvatar = (
+  intersects: THREE.Intersection[],
+  groundMesh?: THREE.Mesh,
+): boolean => {
+  return intersects.some((i) => i.object !== groundMesh);
+};
+
+const dispatchAvatarHover = (container: HTMLElement, rect: DOMRect): void => {
+  const centerX = rect.left + rect.width / 2;
+  const y = rect.top + 60;
+  container.dispatchEvent(
+    new CustomEvent('avatarHover', {
+      detail: { x: centerX, y },
+    }),
+  );
+};
+
+const dispatchAvatarLeave = (container: HTMLElement): void => {
+  container.dispatchEvent(new CustomEvent('avatarLeave'));
+};
+
 // Хук для обработки событий мыши
 const useMouseHandler = (handleAvatarClick: () => void) => {
   const handleMouseClick = useCallback(
     (event: MouseEvent, container: HTMLElement, scene: AvatarScene): void => {
       const rect = container.getBoundingClientRect();
-      const coords = new THREE.Vector2(
-        ((event.clientX - rect.left) / rect.width) * 2 - 1,
-        -((event.clientY - rect.top) / rect.height) * 2 + 1,
-      );
-
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(coords, scene.camera);
-
-      const intersects = raycaster.intersectObjects(scene.scene.children, true);
-
-      if (intersects.length > 0) {
-        handleAvatarClick();
-      }
+      const ndc = getNDCFromMouse(event, rect);
+      const intersects = getIntersections(ndc, scene);
+      if (intersects.length > 0) handleAvatarClick();
     },
     [handleAvatarClick],
   );
@@ -264,30 +293,11 @@ const useMouseHandler = (handleAvatarClick: () => void) => {
       assetsRef: React.RefObject<AvatarAssets | null>,
     ): void => {
       const rect = container.getBoundingClientRect();
-      const coords = new THREE.Vector2(
-        ((event.clientX - rect.left) / rect.width) * 2 - 1,
-        -((event.clientY - rect.top) / rect.height) * 2 + 1,
-      );
-
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(coords, scene.camera);
-
-      const intersects = raycaster.intersectObjects(scene.scene.children, true);
-
-      // Проверяем наведение именно на аватар (не на groundMesh)
-      const avatarIntersection = intersects.find(
-        (intersect) => intersect.object !== assetsRef.current?.groundMesh,
-      );
-
-      if (avatarIntersection) {
-        container.dispatchEvent(
-          new CustomEvent('avatarHover', {
-            detail: { x: event.clientX, y: event.clientY },
-          }),
-        );
-      } else {
-        container.dispatchEvent(new CustomEvent('avatarLeave'));
-      }
+      const ndc = getNDCFromMouse(event, rect);
+      const intersects = getIntersections(ndc, scene);
+      const hovering = isHoveringAvatar(intersects, assetsRef.current?.groundMesh);
+      if (hovering) dispatchAvatarHover(container, rect);
+      else dispatchAvatarLeave(container);
     },
     [],
   );
@@ -369,51 +379,85 @@ const updateRefsAfterLoad = (refs: React.RefObject<AvatarRefs>, assets: AvatarAs
   refs.current.mixer = assets.mixer;
 };
 
-const useModelHandler = (deps: ModelHandlerDeps, ctx: ModelHandlerContext) => {
+// Вспомогательные функции для загрузки/замены модели (сокращают тело useModelHandler)
+const disposeAssets = (scene: AvatarScene, prev?: AvatarAssets | null): void => {
+  if (!prev) return;
+  try {
+    prev.mixer.stopAllAction();
+    scene.scene.remove(prev.avatar);
+    scene.scene.remove(prev.groundMesh);
+    prev.groundMesh.geometry.dispose();
+    (prev.groundMesh.material as THREE.Material).dispose();
+  } catch {}
+};
+
+const handleModelLoadedImpl = (
+  gltf: GLTF,
+  deps: ModelHandlerDeps,
+  ctx: ModelHandlerContext,
+  scene: AvatarScene,
+): void => {
+  if (ctx.stateRef.current.isDisposed) return;
+
+  // удалить предыдущее состояние, если было
+  disposeAssets(scene, ctx.assetsRef.current);
+
+  const avatar = gltf.scene;
+  deps.setupMeshProperties(avatar);
+  const assets = createAssets(gltf, avatar, deps.createGround, deps.setupAnimations);
+
+  try {
+    centerModelAndFitCamera(avatar, scene);
+  } catch {}
+
+  scene.scene.add(avatar, assets.groundMesh);
+  ctx.assetsRef.current = assets;
+  updateRefsAfterLoad(ctx.refs, assets);
+
+  const container = ctx.refs.current.container;
+  if (container) {
+    try {
+      applyInitialSizing(container, scene, assets, ctx.calculateScale);
+    } catch {}
+    container.dispatchEvent(new CustomEvent('modelLoaded'));
+  }
+};
+
+const useModelHandler = (
+  deps: ModelHandlerDeps,
+  ctx: ModelHandlerContext,
+  sceneRef: React.RefObject<AvatarScene | null>,
+) => {
   const { setupMeshProperties, createGround, setupAnimations } = deps;
-  const { calculateScale, assetsRef, stateRef, refs } = ctx;
 
   const handleModelLoaded = useCallback(
-    (gltf: GLTF, scene: AvatarScene): void => {
-      if (stateRef.current.isDisposed) return;
-      const avatar = gltf.scene;
-      setupMeshProperties(avatar);
-      const assets = createAssets(gltf, avatar, createGround, setupAnimations);
-      if (!assets.waveAction && !assets.stumbleAction) {
-        console.warn('No animations found in model');
-        return;
-      }
-      try {
-        centerModelAndFitCamera(avatar, scene);
-      } catch {}
-      scene.scene.add(avatar, assets.groundMesh);
-      assetsRef.current = assets;
-      updateRefsAfterLoad(refs, assets);
-      const container = refs.current.container!;
-      try {
-        applyInitialSizing(container, scene, assets, calculateScale);
-      } catch {}
-      container.dispatchEvent(new CustomEvent('modelLoaded'));
-    },
-    [setupMeshProperties, createGround, setupAnimations, calculateScale, assetsRef, stateRef, refs],
-  );
-
-  const loadModel = useCallback(
-    (scene: AvatarScene): void => {
-      const loader = new GLTFLoader();
-      // Set cross-origin to anonymous to avoid tainting canvas for models on CDN
-      try {
-        (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
-      } catch {}
-      loader.load(
-        avatarConfig.modelPath,
-        (gltf) => handleModelLoaded(gltf, scene),
-        undefined,
-        (error) => console.error('Error loading model:', error),
+    (gltf: GLTF): void => {
+      const scene = sceneRef.current;
+      if (!scene || ctx.stateRef.current.isDisposed) return;
+      handleModelLoadedImpl(
+        gltf,
+        { setupMeshProperties, createGround, setupAnimations },
+        ctx,
+        scene,
       );
     },
-    [handleModelLoaded],
+    [setupMeshProperties, createGround, setupAnimations, ctx, sceneRef],
   );
+
+  const loadModel = useCallback(async (): Promise<void> => {
+    if (ctx.assetsRef.current) return; // модель уже загружена
+    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+    const loader = new GLTFLoader();
+    try {
+      (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
+    } catch {}
+    loader.load(
+      avatarConfig.modelPath,
+      handleModelLoaded,
+      undefined,
+      (error) => console.error('Error loading model:', error),
+    );
+  }, [handleModelLoaded, ctx.assetsRef]);
 
   return { loadModel };
 };
@@ -452,34 +496,353 @@ interface CleanupContext {
 const useCleanup = (ctx: CleanupContext) => {
   const { stateRef, sceneRef, assetsRef } = ctx;
   const cleanup = useCallback((): void => {
-    stateRef.current.isDisposed = true;
-
     const scene = sceneRef.current;
     const assets = assetsRef.current;
 
+    // Остановка анимаций
     if (assets?.mixer) {
       assets.mixer.stopAllAction();
+      assets.mixer.uncacheRoot(assets.mixer.getRoot());
     }
 
+    // Очистка сцены и всех объектов
     if (scene) {
-      scene.renderer.dispose();
-      scene.renderer.domElement.remove();
+      // Рекурсивная очистка всех объектов в сцене
+      scene.scene.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          if (object.geometry) {
+            object.geometry.dispose();
+          }
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach((material) => material.dispose());
+            } else {
+              (object.material as THREE.Material).dispose();
+            }
+          }
+        }
+      });
+
+      // Очистка сцены
+      scene.scene.clear();
+
+      // Очистка контролов
       scene.controls.dispose();
+
+      // Удаление canvas из DOM
+      const canvas = scene.renderer.domElement;
+      const parent = canvas.parentElement;
+      if (parent) {
+        parent.removeChild(canvas);
+      }
+
+      // Принудительная очистка WebGL контекста
+      scene.renderer.forceContextLoss();
+      scene.renderer.dispose();
     }
 
-    if (assets?.groundMesh) {
-      assets.groundMesh.geometry.dispose();
-      (assets.groundMesh.material as THREE.Material).dispose();
-    }
-
+    // Очистка ссылок
     sceneRef.current = null;
     assetsRef.current = null;
+    stateRef.current.isDisposed = true;
   }, [stateRef, sceneRef, assetsRef]);
 
   return { cleanup };
 };
 
-// eslint-disable-next-line max-lines-per-function
+// Инициализация сцены, камеры, контролов и запуска анимационного цикла как отдельный хук
+const useInitializationEffect = (ctx: {
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  stateRef: React.RefObject<AvatarState>;
+  createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
+  createCameraAndControls: (
+    renderer: THREE.WebGLRenderer,
+  ) => { camera: THREE.PerspectiveCamera; controls: OrbitControls };
+  setupLighting: (scene: THREE.Scene) => void;
+  animate: () => void;
+  cleanup: () => void;
+  isInitializedRef: React.MutableRefObject<boolean>;
+}): void => {
+  const { refs, sceneRef, stateRef, createRenderer, createCameraAndControls, setupLighting, animate, cleanup, isInitializedRef } = ctx;
+   useEffect(() => {
+    const container = refs.current.container;
+    if (!container) return;
+    if (isInitializedRef.current) return;
+    isInitializedRef.current = true;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const renderer = createRenderer(container);
+        const { clientWidth, clientHeight } = container;
+        if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
+
+        const { camera, controls } = createCameraAndControls(renderer);
+        if (cancelled) return;
+
+        const scene = new THREE.Scene();
+        const clock = new THREE.Clock();
+
+        const sceneData: AvatarScene = { renderer, camera, scene, controls, clock };
+        sceneRef.current = sceneData;
+        stateRef.current.isDisposed = false;
+
+        setupLighting(scene);
+
+        refs.current.renderer = renderer;
+        refs.current.camera = camera;
+        refs.current.scene = scene;
+        refs.current.clock = clock;
+        refs.current.controls = controls;
+
+        animate();
+      } catch (error) {
+        console.error('Failed to initialize avatar:', error);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      cleanup();
+      isInitializedRef.current = false;
+    };
+  }, [createRenderer, createCameraAndControls, setupLighting, animate, cleanup, refs, sceneRef, stateRef, isInitializedRef]);
+};
+
+// Слушатели мыши и ресайза как отдельный хук
+const bindMouseHandlers = ({
+  container,
+  sceneData,
+  assetsRef,
+  handleMouseClickWrapper,
+  handleMouseMove,
+}: {
+  container: HTMLElement;
+  sceneData: AvatarScene;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  handleMouseClickWrapper: (e: MouseEvent) => void;
+  handleMouseMove: (
+    event: MouseEvent,
+    container: HTMLElement,
+    scene: AvatarScene,
+    assetsRef: React.RefObject<AvatarAssets | null>,
+  ) => void;
+}): (() => void) => {
+  const mouseMoveHandler = (event: MouseEvent) =>
+    handleMouseMove(event, container, sceneData, assetsRef);
+
+  container.addEventListener('mousedown', handleMouseClickWrapper);
+  container.addEventListener('mousemove', mouseMoveHandler);
+
+  return () => {
+    container.removeEventListener('mousedown', handleMouseClickWrapper);
+    container.removeEventListener('mousemove', mouseMoveHandler);
+  };
+};
+
+const bindResizeHandlers = ({
+  container,
+  handleResize,
+}: {
+  container: HTMLElement;
+  handleResize: () => void;
+}): (() => void) => {
+  let rafId = 0;
+  let resizeTimeout: NodeJS.Timeout | null = null;
+
+  const onWindowResize = (): void => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => handleResize());
+  };
+
+  const onContainerResize = (): void => {
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => handleResize());
+    }, 16);
+  };
+
+  window.addEventListener('resize', onWindowResize);
+  const resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) {
+        onContainerResize();
+        break;
+      }
+    }
+  });
+  resizeObserver.observe(container);
+
+  return () => {
+    window.removeEventListener('resize', onWindowResize);
+    resizeObserver.disconnect();
+    if (rafId) cancelAnimationFrame(rafId);
+    if (resizeTimeout) clearTimeout(resizeTimeout);
+  };
+};
+
+const bindAvatarEventListeners = ({
+  container,
+  sceneData,
+  assetsRef,
+  handleMouseClickWrapper,
+  handleMouseMove,
+  handleResize,
+}: {
+  container: HTMLElement;
+  sceneData: AvatarScene;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  handleMouseClickWrapper: (e: MouseEvent) => void;
+  handleMouseMove: (
+    event: MouseEvent,
+    container: HTMLElement,
+    scene: AvatarScene,
+    assetsRef: React.RefObject<AvatarAssets | null>,
+  ) => void;
+  handleResize: () => void;
+}): (() => void) => {
+  const unbindMouse = bindMouseHandlers({
+    container,
+    sceneData,
+    assetsRef,
+    handleMouseClickWrapper,
+    handleMouseMove,
+  });
+
+  const unbindResize = bindResizeHandlers({ container, handleResize });
+
+  return () => {
+    unbindMouse();
+    unbindResize();
+  };
+};
+
+const useEventBindingsEffect = (ctx: {
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  handleMouseClickWrapper: (e: MouseEvent) => void;
+  handleMouseMove: (
+    event: MouseEvent,
+    container: HTMLElement,
+    scene: AvatarScene,
+    assetsRef: React.RefObject<AvatarAssets | null>,
+  ) => void;
+  handleResize: () => void;
+}): void => {
+  const { refs, sceneRef, assetsRef, handleMouseClickWrapper, handleMouseMove, handleResize } = ctx;
+  useEffect(() => {
+    const container = refs.current.container;
+    const sceneData = sceneRef.current;
+    if (!container || !sceneData) return;
+
+    const unbind = bindAvatarEventListeners({
+      container,
+      sceneData,
+      assetsRef,
+      handleMouseClickWrapper,
+      handleMouseMove,
+      handleResize,
+    });
+
+    return () => {
+      unbind();
+    };
+  }, [handleMouseClickWrapper, handleMouseMove, handleResize, refs, sceneRef, assetsRef]);
+};
+
+
+// Отдельный хук для загрузки модели (без повторной загрузки)
+const useLoadModelEffect = (
+  sceneRef: React.RefObject<AvatarScene | null>,
+  stateRef: React.RefObject<AvatarState>,
+  assetsRef: React.RefObject<AvatarAssets | null>,
+  loadModel: () => Promise<void>,
+): void => {
+  useEffect(() => {
+    if (!sceneRef.current || stateRef.current.isDisposed) return;
+    if (assetsRef.current) return;
+    void loadModel();
+  }, [sceneRef, stateRef, assetsRef, loadModel]);
+};
+
+// Отдельный хук наблюдения за темой для обновления цвета подиума
+const useThemeObserverEffect = (assetsRef: React.RefObject<AvatarAssets | null>): void => {
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const assets = assetsRef.current;
+      if (assets?.groundMesh) {
+        const color = getComputedStyle(document.documentElement)
+          .getPropertyValue('--avatar-podium-color')
+          .trim();
+        try {
+          (assets.groundMesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(
+            color || '#e0e0e0',
+          );
+          (assets.groundMesh.material as THREE.MeshStandardMaterial).needsUpdate = true;
+        } catch {}
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+
+    return () => observer.disconnect();
+  }, [assetsRef]);
+};
+
+// Небольшие хелперы-обёртки для коллбеков, чтобы сократить размер основного хука
+const useHandleMouseClickWrapper = (
+  refs: React.RefObject<AvatarRefs>,
+  sceneRef: React.RefObject<AvatarScene | null>,
+  handleMouseClick: (event: MouseEvent, container: HTMLElement, scene: AvatarScene) => void,
+): ((e: MouseEvent) => void) =>
+  useCallback(
+    (event: MouseEvent): void => {
+      const container = refs.current.container;
+      const scene = sceneRef.current;
+      if (!container || !scene) return;
+      handleMouseClick(event, container, scene);
+    },
+    [handleMouseClick, refs, sceneRef],
+  );
+
+const useHandleResize = ({
+  refs,
+  sceneRef,
+  assetsRef,
+  updateSize,
+  calculateScale,
+}: {
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  updateSize: (
+    container: HTMLElement,
+    scene: AvatarScene,
+    assets: AvatarAssets | null,
+    calculateScale: (w: number, h: number) => number,
+  ) => void;
+  calculateScale: (w: number, h: number) => number;
+}): (() => void) =>
+  useCallback((): void => {
+    const container = refs.current.container;
+    const scene = sceneRef.current;
+    if (!container || !scene) return;
+
+    const { clientWidth, clientHeight } = container;
+    if (!clientWidth || !clientHeight) return;
+
+    const assets = assetsRef.current;
+    updateSize(container, scene, assets, calculateScale);
+  }, [updateSize, calculateScale, refs, sceneRef, assetsRef]);
+
 export const useAvatar = () => {
   const refs = useRef<AvatarRefs>({ container: null });
   const sceneRef = useRef<AvatarScene | null>(null);
@@ -489,6 +852,7 @@ export const useAvatar = () => {
     isStumbling: false,
     isDisposed: false,
   });
+  const isInitializedRef = useRef(false);
 
   const { createRenderer, createCameraAndControls, setupLighting } = useSceneSetup();
   const { createGround, setupAnimations, setupMeshProperties } = useModelLoader();
@@ -498,133 +862,32 @@ export const useAvatar = () => {
   const { loadModel } = useModelHandler(
     { setupMeshProperties, createGround, setupAnimations },
     { calculateScale, assetsRef, stateRef, refs },
+    sceneRef,
   );
   const { animate } = useAnimationLoop(sceneRef, assetsRef, stateRef);
   const { cleanup } = useCleanup({ stateRef, sceneRef, assetsRef, refs });
 
-  const handleMouseClickWrapper = useCallback(
-    (event: MouseEvent): void => {
-      const container = refs.current.container;
-      const scene = sceneRef.current;
+  const handleMouseClickWrapper = useHandleMouseClickWrapper(refs, sceneRef, handleMouseClick);
+  const handleResize = useHandleResize({ refs, sceneRef, assetsRef, updateSize, calculateScale });
 
-      if (!container || !scene) return;
-
-      handleMouseClick(event, container, scene);
-    },
-    [handleMouseClick],
-  );
-
-  const handleResize = useCallback((): void => {
-    const container = refs.current.container;
-    const scene = sceneRef.current;
-    const assets = assetsRef.current;
-
-    if (!container || !scene) return;
-    updateSize(container, scene, assets, calculateScale);
-  }, [updateSize, calculateScale]);
-
-  // eslint-disable-next-line max-lines-per-function
-  useEffect(() => {
-    const container = refs.current.container;
-    if (!container) return;
-
-    try {
-      const renderer = createRenderer(container);
-      const { camera, controls } = createCameraAndControls(renderer);
-      const scene = new THREE.Scene();
-      // Ensure renderer is sized to container immediately
-      try {
-        const { clientWidth, clientHeight } = container;
-        if (clientWidth && clientHeight) {
-          renderer.setSize(clientWidth, clientHeight);
-        }
-      } catch {}
-      const clock = new THREE.Clock();
-
-      const sceneData: AvatarScene = {
-        renderer,
-        camera,
-        scene,
-        controls,
-        clock,
-      };
-
-      sceneRef.current = sceneData;
-
-      setupLighting(scene);
-      loadModel(sceneData);
-
-      // Observe theme changes to update podium color dynamically
-      const themeObserver = new MutationObserver(() => {
-        const assets = assetsRef.current;
-        if (assets?.groundMesh) {
-          const color = getComputedStyle(document.documentElement)
-            .getPropertyValue('--avatar-podium-color')
-            .trim();
-          try {
-            (assets.groundMesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(
-              color || '#e0e0e0',
-            );
-            (assets.groundMesh.material as THREE.MeshStandardMaterial).needsUpdate = true;
-          } catch {
-            // noop
-          }
-        }
-      });
-      themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme'],
-      });
-
-      container.addEventListener('mousedown', handleMouseClickWrapper);
-      const mouseMoveHandler = (event: MouseEvent) =>
-        handleMouseMove(event, container, sceneData, assetsRef);
-      container.addEventListener('mousemove', mouseMoveHandler);
-      let rafId = 0;
-      const onResizeFrame = (): void => {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(() => handleResize());
-      };
-      window.addEventListener('resize', onResizeFrame);
-
-      const resizeObserver = new ResizeObserver(onResizeFrame);
-      resizeObserver.observe(container);
-
-      refs.current.renderer = renderer;
-      refs.current.camera = camera;
-      refs.current.scene = scene;
-      refs.current.clock = clock;
-      refs.current.controls = controls;
-
-      animate();
-
-      return () => {
-        window.removeEventListener('resize', onResizeFrame);
-        if (container) {
-          container.removeEventListener('mousedown', handleMouseClickWrapper);
-          container.removeEventListener('mousemove', mouseMoveHandler);
-        }
-        resizeObserver.disconnect();
-        if (rafId) cancelAnimationFrame(rafId);
-        try {
-          themeObserver.disconnect();
-        } catch {}
-        cleanup();
-      };
-    } catch (error) {
-      console.error('Failed to initialize avatar:', error);
-    }
-  }, [
+  useInitializationEffect({
+    refs,
+    sceneRef,
+    stateRef,
     createRenderer,
     createCameraAndControls,
     setupLighting,
-    loadModel,
-    handleMouseClickWrapper,
-    handleResize,
-    handleMouseMove,
     animate,
     cleanup,
-  ]);
+    isInitializedRef,
+  });
+
+  useEventBindingsEffect(
+    { refs, sceneRef, assetsRef, handleMouseClickWrapper, handleMouseMove, handleResize },
+  );
+
+  useLoadModelEffect(sceneRef, stateRef, assetsRef, loadModel);
+  useThemeObserverEffect(assetsRef);
 
   return refs;
 };
