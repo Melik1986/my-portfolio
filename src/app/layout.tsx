@@ -10,6 +10,7 @@ import Container from '../lib/ui/Container/Container';
 import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
 import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
+import { AppReadyEmitter } from '../lib/ui/AppReadyEmitter';
 import LanguageSwitcher from '@/lib/ui/LanguageSwitcher/LanguageSwitcher';
 import { getRequestLocale } from './seo/getRequestLocale';
 import { buildMetadataForLocale } from './seo/buildMetadata';
@@ -47,29 +48,27 @@ const leckerliOne = localFont({
       style: 'normal',
     },
   ],
+  // В SCSS используется var(--font-leckerli)
   variable: '--font-leckerli',
   display: 'swap',
 });
 
-// Google Fonts
 const robotoSerif = Roboto_Serif({
-  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  subsets: ['latin', 'cyrillic'],
+  // В SCSS используется var(--font-roboto)
   variable: '--font-roboto',
   display: 'swap',
 });
 
 const poppins = Poppins({
+  weight: ['400', '500', '600', '700', '800'],
   subsets: ['latin'],
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
   variable: '--font-poppins',
   display: 'swap',
 });
 
-/**
- * Метаданные для SEO оптимизации
- * Определяет заголовок и описание страницы для поисковых систем
- */
+// Корректный способ генерации метаданных на сервере
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return buildMetadataForLocale(locale);
@@ -93,13 +92,16 @@ export default async function RootLayout({
       <body
         className={`${chango.variable} ${okinawa.variable} ${leckerliOne.variable} ${robotoSerif.variable} ${poppins.variable}`}
       >
+        {/* Важно: прелоадер монтируется на уровне body, чтобы не попадать под скрытие main */}
+        <GlobalPreloader />
         <AppThemeProvider>
           <I18nProvider locale={htmlLang as SupportedLocale}>
             <main className="portfolio" id="smooth-wrapper">
               <div className="portfolio__section" id="smooth-content">
                 <Container>
-                  {/* Важно: прелоадер монтируется до ScrollSmootherProvider */}
-                  <GlobalPreloader />
+                  {/* AppReadyEmitter отслеживает готовность ресурсов */}
+                  <AppReadyEmitter />
+                  {/* Прелоадер перенесен на уровень body */}
                   <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
                 </Container>
               </div>

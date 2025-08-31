@@ -206,6 +206,56 @@ function createSmootherEffect(
   };
 }
 
+/**
+ * Управляет CSS-классами готовности для ScrollSmoother
+ */
+const useSmootherReadyState = (isReady: boolean) => {
+  useEffect(() => {
+    if (!isReady) return;
+    try {
+      document.documentElement.classList.add('smoother-ready');
+      document.dispatchEvent(new Event('smoother:ready'));
+    } catch {
+      // ignore
+    }
+    return () => {
+      try {
+        document.documentElement.classList.remove('smoother-ready');
+      } catch {
+        // ignore
+      }
+    };
+  }, [isReady]);
+};
+
+/**
+ * Создает методы управления скроллом
+ */
+const createScrollMethods = (smootherRef: React.RefObject<ScrollSmootherInstance | null>) => {
+  const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
+    smootherRef.current?.scrollTo(target, smooth, position);
+  };
+
+  const scrollTop = (value?: number) => smootherRef.current?.scrollTop(value) ?? 0;
+
+  const kill = () => {
+    if (smootherRef.current) {
+      // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
+      cleanupScrollTrigger();
+
+      smootherRef.current.kill();
+      smootherRef.current = null;
+      try {
+        document.documentElement.classList.remove('smoother-ready');
+      } catch {
+        // ignore
+      }
+    }
+  };
+
+  return { scrollTo, scrollTop, kill };
+};
+
 export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
   const smootherRef = useRef<ScrollSmootherInstance | null>(null);
   const isInitializingRef = useRef(false);
@@ -231,21 +281,8 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     }),
   [wrapper, content, smooth, effects, normalizeScroll]);
 
-  const scrollTo = (target: string | number | Element, smooth?: boolean, position?: string) => {
-    smootherRef.current?.scrollTo(target, smooth, position);
-  };
-
-  const scrollTop = (value?: number) => smootherRef.current?.scrollTop(value) ?? 0;
-
-  const kill = () => {
-    if (smootherRef.current) {
-      // ИСПРАВЛЕНИЕ: Очищаем связанные ScrollTrigger перед уничтожением
-      cleanupScrollTrigger();
-
-      smootherRef.current.kill();
-      smootherRef.current = null;
-    }
-  };
+  useSmootherReadyState(isReady);
+  const { scrollTo, scrollTop, kill } = createScrollMethods(smootherRef);
 
   return {
     smoother: smootherRef.current,

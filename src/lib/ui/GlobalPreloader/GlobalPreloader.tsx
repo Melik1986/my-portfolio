@@ -27,6 +27,8 @@ export function GlobalPreloader() {
       try {
         document.documentElement.classList.remove(lockClass);
         document.body.classList.remove(lockClass);
+        // Добавляем класс для показа основного контента (предотвращение FOUC)
+        document.documentElement.classList.add('preloader-ready');
       } catch {
         // ignore
       }

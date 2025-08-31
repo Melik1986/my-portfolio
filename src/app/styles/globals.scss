@@ -14,6 +14,26 @@ body.preload-lock {
   height: 100%;
 }
 
+/* FOUC Prevention: Hide content until preloader and smoother are ready */
+html:not(.preloader-ready) main,
+html:not(.preloader-ready) .ai-content-wrapper,
+html:not(.preloader-ready) .portfolio__section,
+html.preloader-ready:not(.smoother-ready) main,
+html.preloader-ready:not(.smoother-ready) .ai-content-wrapper,
+html.preloader-ready:not(.smoother-ready) .portfolio__section {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Show content only when both ready flags are set */
+html.preloader-ready.smoother-ready main,
+html.preloader-ready.smoother-ready .ai-content-wrapper,
+html.preloader-ready.smoother-ready .portfolio__section {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: opacity 0.3s ease-out;
+}
+
 /* Theme variables */
 :root[data-theme='light'] {
   @include light-theme-variables;

@@ -23,6 +23,26 @@ const triggerPreloaderComplete = (target?: Document) => {
   }
 };
 
+const waitForAppReady = (): Promise<void> => {
+  try {
+    const w = window as unknown as { __app_ready__?: boolean };
+    if (w.__app_ready__) return Promise.resolve();
+  } catch {
+    // ignore
+  }
+
+  return new Promise<void>((resolve) => {
+    const onReady = () => resolve();
+    try {
+      document.addEventListener('app:ready', onReady as EventListener, { once: true });
+    } catch {
+      resolve();
+    }
+
+    if (isAutomationBrowser()) setTimeout(resolve, 0);
+  });
+};
+
 const setupProgressListeners = (el: HTMLElement): (() => void) => {
   let done = false;
   let timerId: number | null = null;
@@ -32,7 +52,8 @@ const setupProgressListeners = (el: HTMLElement): (() => void) => {
     done = true;
     try {
       const target = el.ownerDocument ?? document;
-      triggerPreloaderComplete(target);
+      // Ждём готовность приложения, затем завершаем прелоадер
+      void waitForAppReady().then(() => triggerPreloaderComplete(target));
     } catch {
       // ignore
     }
