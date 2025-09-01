@@ -3,6 +3,7 @@
 import React, { useMemo, useState, useTransition } from 'react';
 import { ProjectCard } from '@/modules/ProjectsSection/components/index';
 import { useProjectsAnimation } from '../../hooks/useProjectsAnimation';
+import { useVisibilityAnimation } from '../../hooks/useVisibilityAnimation';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
 import styles from './ProjectsCatalog.module.scss';
 
@@ -14,6 +15,7 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const [isPending] = useTransition();
   const [activeFullscreenIndex, setActiveFullscreenIndex] = useState<number | null>(null);
   const animation = useProjectsAnimation(projects.length);
+  
   const mountHandlers = useMemo(
     () => projects.map((_, i) => (el: HTMLElement) => animation.registerCard(el, i)),
     [animation, projects],
@@ -23,11 +25,15 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
     [animation, projects],
   );
 
+  const containerRef = useVisibilityAnimation({
+    onVisible: () => animation.expandFan(),
+    onHidden: () => animation.collapseFan(),
+  });
+
   return (
     <div
+      ref={containerRef}
       className={`${styles['projects-catalog__container']} ${isPending ? styles['loading'] : ''} ${activeFullscreenIndex !== null ? styles['projects-catalog__container--fullscreen'] : ''}`}
-      onMouseEnter={() => animation.expandFan()}
-      onMouseLeave={() => animation.collapseFan()}
     >
       {projects.map((project, index) => (
         <ProjectCard
