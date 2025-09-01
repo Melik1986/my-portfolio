@@ -34,11 +34,13 @@ export function HeroAvatar() {
       <Image
         className={styles['hero__image']}
         id="avatar"
-        src="/images/avatar.webp"
+        src="/images/avatar.png"
         alt={t('section.hero.avatarAlt')}
-        width={500}
-        height={400}
-        style={{ height: 'auto' }}
+        width={1920}
+        height={1080}
+        sizes='(max-width: 768px) 100vw, 50vw,
+        (max-width: 1024px) 80vw,
+        60vw'
         priority
         fill={false}
         data-animation="zoom-in"

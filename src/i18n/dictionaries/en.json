@@ -96,5 +96,10 @@
   "mail.name": "Name",
   "mail.email": "Email",
   "mail.message": "Message",
-  "mail.noMessage": "(no message)"
+  "mail.noMessage": "(no message)",
+  "section.about.avatar.title": "Hi, I'm Melik",
+  "section.about.avatar.subtitle": "39-year-old developer from Germany, father of two.",
+  "section.about.avatar.list.1": "Crafting clean and scalable solutions",
+  "section.about.avatar.list.2": "Focused on great UX and performance",
+  "section.about.avatar.list.3": "Click the model and I'll greet you!"
 }

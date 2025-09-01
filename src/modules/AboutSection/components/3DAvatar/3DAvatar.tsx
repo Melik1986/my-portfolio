@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { createPortal } from 'react-dom';
 import { useAvatar } from '../../hooks/useAvatar';
 import { GlassCard } from '@/lib/ui';
 import styles from './Avatar.module.scss';
@@ -34,46 +33,39 @@ function useAvatarLoading(container: HTMLDivElement | null) {
   return isLoading;
 }
 
-function useAvatarTooltip(container: HTMLDivElement | null) {
-  const [tooltipState, setTooltipState] = React.useState({
-    isVisible: false,
-    position: { x: 0, y: 0 },
-  });
+function useAvatarTooltip(container: HTMLDivElement | null, wrapper: HTMLDivElement | null) {
+  const [isInView, setIsInView] = React.useState(false);
+  const [hasModelLoaded, setHasModelLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    const handleAvatarHover = (event: CustomEvent) => {
-      setTooltipState({
-        isVisible: true,
-        position: { x: event.detail.x, y: event.detail.y },
-      });
-    };
+    if (!wrapper) return;
+    const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), {
+      root: null,
+      threshold: 0.2,
+    });
+    observer.observe(wrapper);
+    return () => observer.disconnect();
+  }, [wrapper]);
 
-    const handleAvatarLeave = () => {
-      setTooltipState((prev) => ({ ...prev, isVisible: false }));
-    };
-
-    if (container) {
-      container.addEventListener('avatarHover', handleAvatarHover as unknown as EventListener);
-      container.addEventListener('avatarLeave', handleAvatarLeave);
-    }
-
+  React.useEffect(() => {
+    const onLoaded = () => setHasModelLoaded(true);
+    if (container) container.addEventListener('modelLoaded', onLoaded);
     return () => {
-      if (container) {
-        container.removeEventListener('avatarHover', handleAvatarHover as unknown as EventListener);
-        container.removeEventListener('avatarLeave', handleAvatarLeave);
-      }
+      if (container) container.removeEventListener('modelLoaded', onLoaded);
     };
   }, [container]);
 
-  return tooltipState;
+  return { isVisible: isInView || hasModelLoaded, position: { x: 0, y: 0 } };
 }
 
 function AvatarContainer({
   onContainerRef,
   isLoading,
+  children,
 }: {
   onContainerRef: (el: HTMLDivElement | null) => void;
   isLoading: boolean;
+  children: React.ReactNode;
 }) {
   const { t } = useI18n();
   return (
@@ -81,6 +73,7 @@ function AvatarContainer({
       id="avaturn-container"
       ref={(el) => onContainerRef(el)}
       className={styles['avatar-container']}
+      data-testid="avaturn-container"
       data-animation="slide-right"
       data-delay="0.5"
       data-duration="0.8"
@@ -91,67 +84,70 @@ function AvatarContainer({
           {t('common.loading')}
         </div>
       )}
+      {children}
     </div>
   );
 }
 
 function AvatarTooltip({
   isVisible,
-  position,
+  containerRef,
 }: {
   isVisible: boolean;
-  position?: { x: number; y: number } | null;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const { t } = useI18n();
-  if (!isVisible) return null;
+  if (!containerRef.current) return null;
 
-  // position is in client coordinates; render tooltip in a portal to avoid
-  // being clipped/overlapped by other sections without changing section z-index
-  const style: React.CSSProperties = position
-    ? {
-        position: 'fixed',
-        left: position.x,
-        top: position.y - 12, // lift tooltip slightly above cursor
-        transform: 'translate(-50%, -100%)',
-        pointerEvents: 'auto',
-      }
-    : { position: 'fixed', left: '50%', top: 60, transform: 'translateX(-50%)' };
-
-  const node = (
-    <div className={`${styles.tooltip} ${styles['tooltip--visible']}`} style={style}>
+  return (
+    <div
+      className={`${styles.tooltip} ${isVisible ? styles['tooltip--visible'] : ''}`}
+    >
       <GlassCard>
         <div className={styles.tooltip__content}>
           <h3>{t('section.about.avatar.title')}</h3>
           <p>{t('section.about.avatar.subtitle')}</p>
           <ul>
-            <li>{t('section.about.avatar.features.greeting')}</li>
-            <li>{t('section.about.avatar.features.reactivity')}</li>
-            <li>{t('section.about.avatar.features.scaling')}</li>
+            <li>{t('section.about.avatar.list.1')}</li>
+            <li>{t('section.about.avatar.list.2')}</li>
+            <li>{t("section.about.avatar.list.3")}</li>
           </ul>
         </div>
       </GlassCard>
     </div>
   );
-
-  return typeof document !== 'undefined' ? createPortal(node, document.body) : node;
 }
 
 export function Avatar() {
   const refs = useAvatar();
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
-  const isLoading = useAvatarLoading(containerEl);
-  const tooltipState = useAvatarTooltip(containerEl);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const [containerNode, setContainerNode] = React.useState<HTMLDivElement | null>(null);
+  const wrapperRef = React.useRef<HTMLDivElement | null>(null);
+
+  const setContainerRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        refs.current.container = node;
+        containerRef.current = node;
+        setContainerNode(node);
+      }
+    },
+    [refs],
+  );
+
+  const isLoading = useAvatarLoading(containerNode);
+  const tooltipState = useAvatarTooltip(containerNode, wrapperRef.current);
 
   return (
-    <>
-      <AvatarContainer
-        onContainerRef={(el) => {
-          setContainerEl(el);
-          refs.current.container = el;
-        }}
-        isLoading={isLoading}
-      />
-      <AvatarTooltip isVisible={tooltipState.isVisible} />
-    </>
+    <div ref={wrapperRef} className={styles['avatar-wrapper']}>
+      <AvatarContainer onContainerRef={setContainerRef} isLoading={isLoading}>
+        {/* 3D Avatar will be rendered here via useAvatar hook */}
+        <></>
+        <AvatarTooltip
+          isVisible={tooltipState.isVisible}
+          containerRef={containerRef}
+        />
+      </AvatarContainer>
+    </div>
   );
 }

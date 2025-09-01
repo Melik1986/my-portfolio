@@ -96,5 +96,10 @@
   "mail.name": "Имя",
   "mail.email": "Email",
   "mail.message": "Сообщение",
-  "mail.noMessage": "(без сообщения)"
+  "mail.noMessage": "(без сообщения)",
+  "section.about.avatar.title": "Привет, я Мелик",
+  "section.about.avatar.subtitle": "39‑летний разработчик из Германии, отец двоих детей.",
+  "section.about.avatar.list.1": "Создаю чистые и масштабируемые решения",
+  "section.about.avatar.list.2": "Фокус на отличном UX и производительности",
+  "section.about.avatar.list.3": "Кликните по модели — я вас поприветствую!"
 }

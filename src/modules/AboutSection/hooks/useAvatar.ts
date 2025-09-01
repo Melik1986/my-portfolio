@@ -33,9 +33,11 @@ interface AvatarState {
 
 // Константы конфигурации
 const CONFIG = {
-  BASE_SIZE: 800,
-  MIN_SCALE: 0.3,
-  MAX_SCALE: 1.5,
+  BASE_SIZE: 580, // Base size for scaling
+  MIN_SCALE: 0.5, // Minimum scale factor
+  MAX_SCALE: 1.5, // Maximum scale factor
+  CAMERA_FOV: 25,
+  CAMERA_NEAR: 0.1,
   CROSS_FADE_DURATION: 0.3,
   STUMBLE_DURATION: 4000,
   RECOVERY_DURATION: 1000,
