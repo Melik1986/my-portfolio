@@ -29,11 +29,12 @@ interface AvatarState {
   isAnimationPlaying: boolean;
   isStumbling: boolean;
   isDisposed: boolean;
+  isVisible: boolean;
 }
 
 // Константы конфигурации
 const CONFIG = {
-  BASE_SIZE: 580, // Base size for scaling
+  BASE_SIZE: 660, // Base size for scaling (увеличено на 10% с 580 до 638 для уменьшения модели)
   MIN_SCALE: 0.5, // Minimum scale factor
   MAX_SCALE: 1.5, // Maximum scale factor
   CAMERA_FOV: 25,
@@ -327,7 +328,47 @@ interface ModelHandlerContext {
   refs: React.RefObject<AvatarRefs>;
 }
 
-// Вспомогательные функции для сокращения тела колбэков
+// Глобальный кэш загрузки модели (переживает размонтирование StrictMode)
+let sharedModelPromise: Promise<GLTF> | null = null;
+let sharedModelGLTF: GLTF | null = null;
+
+const loadGLTFViaLoader = async (url: string): Promise<GLTF> => {
+  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+  const loader = new GLTFLoader();
+  try {
+    (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
+  } catch {}
+  return await new Promise<GLTF>((resolve, reject) => {
+    loader.load(url, resolve, undefined, reject);
+  });
+};
+
+const fetchModelOnce = async (): Promise<GLTF> => {
+  if (sharedModelGLTF) {
+    return sharedModelGLTF;
+  }
+  if (!sharedModelPromise) {
+    sharedModelPromise = loadGLTFViaLoader(avatarConfig.modelPath)
+      .then((gltf) => {
+        sharedModelGLTF = gltf;
+        return gltf;
+      })
+      .finally(() => {
+        sharedModelPromise = null;
+      });
+  } else {
+  }
+  return (await (sharedModelGLTF ? Promise.resolve(sharedModelGLTF) : sharedModelPromise!)) as GLTF;
+};
+
+const cloneForScene = async (gltf: GLTF): Promise<GLTF> => {
+  const mod = await import('three/examples/jsm/utils/SkeletonUtils.js');
+  const utils: unknown = (mod as unknown as { SkeletonUtils?: unknown; default?: unknown }).SkeletonUtils ?? (mod as unknown as { default?: unknown }).default ?? mod;
+  // @ts-expect-error — динамическое извлечение утилиты с методом clone
+  const cloner: ((obj: THREE.Object3D) => THREE.Object3D) | undefined = utils && (utils as { clone?: (o: THREE.Object3D) => THREE.Object3D }).clone;
+  const scene = cloner ? (cloner(gltf.scene) as THREE.Group) : (gltf.scene.clone(true) as THREE.Group);
+  return { ...gltf, scene } as GLTF;
+};
 const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void => {
   const box = new THREE.Box3().setFromObject(avatar);
   const size = new THREE.Vector3();
@@ -381,6 +422,8 @@ const updateRefsAfterLoad = (refs: React.RefObject<AvatarRefs>, assets: AvatarAs
   refs.current.mixer = assets.mixer;
 };
 
+let isModelLoading = false;
+
 // Вспомогательные функции для загрузки/замены модели (сокращают тело useModelHandler)
 const disposeAssets = (scene: AvatarScene, prev?: AvatarAssets | null): void => {
   if (!prev) return;
@@ -431,35 +474,44 @@ const useModelHandler = (
   sceneRef: React.RefObject<AvatarScene | null>,
 ) => {
   const { setupMeshProperties, createGround, setupAnimations } = deps;
+  const { assetsRef, stateRef, refs, calculateScale } = ctx;
 
   const handleModelLoaded = useCallback(
     (gltf: GLTF): void => {
       const scene = sceneRef.current;
-      if (!scene || ctx.stateRef.current.isDisposed) return;
+      if (!scene || stateRef.current.isDisposed) return;
       handleModelLoadedImpl(
         gltf,
         { setupMeshProperties, createGround, setupAnimations },
-        ctx,
+        { calculateScale, assetsRef, stateRef, refs },
         scene,
       );
     },
-    [setupMeshProperties, createGround, setupAnimations, ctx, sceneRef],
+    [setupMeshProperties, createGround, setupAnimations, sceneRef, stateRef, assetsRef, refs, calculateScale],
   );
 
   const loadModel = useCallback(async (): Promise<void> => {
-    if (ctx.assetsRef.current) return; // модель уже загружена
-    const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
-    const loader = new GLTFLoader();
+    if (assetsRef.current || isModelLoading) return;
+    isModelLoading = true;
+
     try {
-      (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
-    } catch {}
-    loader.load(
-      avatarConfig.modelPath,
-      handleModelLoaded,
-      undefined,
-      (error) => console.error('Error loading model:', error),
-    );
-  }, [handleModelLoaded, ctx.assetsRef]);
+      const base = await fetchModelOnce();
+      if (stateRef.current.isDisposed) {
+        return;
+      }
+
+      const gltf = await cloneForScene(base);
+      if (stateRef.current.isDisposed) {
+        return;
+      }
+
+      handleModelLoaded(gltf);
+    } catch (error) {
+      console.error('Error loading model:', error);
+    } finally {
+      isModelLoading = false;
+    }
+  }, [assetsRef, handleModelLoaded, stateRef]);
 
   return { loadModel };
 };
@@ -475,11 +527,19 @@ const useAnimationLoop = (
     const assets = assetsRef.current;
     const state = stateRef.current;
 
-    if (state.isDisposed || !scene) return;
+    if (state.isDisposed || !scene) {
+      return;
+    }
+
+    // Останавливаем цикл, если компонент не видим
+    if (!state.isVisible) {
+      return;
+    }
 
     requestAnimationFrame(animate);
 
-    assets?.mixer.update(scene.clock.getDelta());
+    const delta = scene.clock.getDelta();
+    assets?.mixer.update(delta);
     scene.controls.update();
     scene.renderer.render(scene.scene, scene.camera);
   }, [sceneRef, assetsRef, stateRef]);
@@ -569,13 +629,12 @@ const useInitializationEffect = (ctx: {
   const { refs, sceneRef, stateRef, createRenderer, createCameraAndControls, setupLighting, animate, cleanup, isInitializedRef } = ctx;
    useEffect(() => {
     const container = refs.current.container;
-    if (!container) return;
-    if (isInitializedRef.current) return;
+    if (!container || isInitializedRef.current) return;
     isInitializedRef.current = true;
 
     let cancelled = false;
 
-    (async () => {
+    const init = async () => {
       try {
         const renderer = createRenderer(container);
         const { clientWidth, clientHeight } = container;
@@ -603,7 +662,9 @@ const useInitializationEffect = (ctx: {
       } catch (error) {
         console.error('Failed to initialize avatar:', error);
       }
-    })();
+    };
+
+    init();
 
     return () => {
       cancelled = true;
@@ -845,6 +906,44 @@ const useHandleResize = ({
     updateSize(container, scene, assets, calculateScale);
   }, [updateSize, calculateScale, refs, sceneRef, assetsRef]);
 
+// Эффект подписки на кастомное событие видимости, чтобы ставить/снимать паузу у RAF
+const useVisibilityEventsEffect = (
+  refs: React.RefObject<AvatarRefs>,
+  stateRef: React.RefObject<AvatarState>,
+  assetsRef: React.RefObject<AvatarAssets | null>,
+  animate: () => void,
+): void => {
+  useEffect(() => {
+    const container = refs.current.container;
+    if (!container) return;
+
+    const onVisibility = (e: Event) => {
+      try {
+        const detail = (e as CustomEvent<{ isVisible: boolean }>).detail;
+        const isVisible = !!detail?.isVisible;
+        const prev = stateRef.current.isVisible;
+        stateRef.current.isVisible = isVisible;
+        if (isVisible) {
+          // Перезапускаем цикл анимации при появлении
+          animate();
+        } else {
+          // Останавливаем и сбрасываем анимацию при скрытии
+          const assets = assetsRef.current;
+          const state = stateRef.current;
+          if (assets?.waveAction && state.isAnimationPlaying) {
+            assets.waveAction.stop();
+            state.isAnimationPlaying = false;
+          }
+        }
+      } catch {}
+    };
+
+    container.addEventListener('avatarVisibility', onVisibility as EventListener);
+    return () => {
+      container.removeEventListener('avatarVisibility', onVisibility as EventListener);
+    };
+  }, [refs, stateRef, assetsRef, animate]);
+};
 export const useAvatar = () => {
   const refs = useRef<AvatarRefs>({ container: null });
   const sceneRef = useRef<AvatarScene | null>(null);
@@ -853,6 +952,7 @@ export const useAvatar = () => {
     isAnimationPlaying: false,
     isStumbling: false,
     isDisposed: false,
+    isVisible: true,
   });
   const isInitializedRef = useRef(false);
 
@@ -887,6 +987,9 @@ export const useAvatar = () => {
   useEventBindingsEffect(
     { refs, sceneRef, assetsRef, handleMouseClickWrapper, handleMouseMove, handleResize },
   );
+
+  // Подписка на событие видимости от компонента 3DAvatar
+  useVisibilityEventsEffect(refs, stateRef, assetsRef, animate);
 
   useLoadModelEffect(sceneRef, stateRef, assetsRef, loadModel);
   useThemeObserverEffect(assetsRef);

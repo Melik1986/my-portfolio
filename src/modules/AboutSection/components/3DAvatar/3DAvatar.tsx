@@ -5,22 +5,23 @@ import { useAvatar } from '../../hooks/useAvatar';
 import { GlassCard } from '@/lib/ui';
 import styles from './Avatar.module.scss';
 import { useI18n } from '@/i18n';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ensureGSAPRegistered } from '@/lib/gsap/core/GSAPInitializer';
+
+// Централизованная регистрация GSAP и плагинов
+ensureGSAPRegistered();
 
 function useAvatarLoading(container: HTMLDivElement | null) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const handleModelLoaded = () => {
-      setIsLoading(false);
-    };
+    const handleModelLoaded = () => setIsLoading(false);
 
     if (container) {
       container.addEventListener('modelLoaded', handleModelLoaded);
     }
 
-    const fallbackTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    const fallbackTimer = setTimeout(() => setIsLoading(false), 3000);
 
     return () => {
       if (container) {
@@ -33,18 +34,38 @@ function useAvatarLoading(container: HTMLDivElement | null) {
   return isLoading;
 }
 
+function setupTooltipScrollTrigger(
+  wrapper: HTMLDivElement,
+  setIsInView: (isInView: boolean) => void,
+) {
+  const st = ScrollTrigger.create({
+    trigger: wrapper,
+    start: 'top 95%',
+    end: 'bottom 5%',
+    onEnter: () => setIsInView(true),
+    onEnterBack: () => setIsInView(true),
+    onLeave: () => setIsInView(false),
+    onLeaveBack: () => setIsInView(false),
+    invalidateOnRefresh: true,
+    fastScrollEnd: true,
+  });
+
+  // Инициализируем состояние сразу после создания
+  setIsInView(st.isActive);
+
+  return () => {
+    st.kill();
+  };
+}
+
 function useAvatarTooltip(container: HTMLDivElement | null, wrapper: HTMLDivElement | null) {
   const [isInView, setIsInView] = React.useState(false);
   const [hasModelLoaded, setHasModelLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    if (!wrapper) return;
-    const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), {
-      root: null,
-      threshold: 0.2,
-    });
-    observer.observe(wrapper);
-    return () => observer.disconnect();
+    if (!wrapper || typeof window === 'undefined') return;
+    const cleanup = setupTooltipScrollTrigger(wrapper, setIsInView);
+    return cleanup;
   }, [wrapper]);
 
   React.useEffect(() => {
@@ -56,6 +77,80 @@ function useAvatarTooltip(container: HTMLDivElement | null, wrapper: HTMLDivElem
   }, [container]);
 
   return { isVisible: isInView || hasModelLoaded, position: { x: 0, y: 0 } };
+}
+
+function useAvatarVisibilityBridge(
+  wrapperRef: React.RefObject<HTMLDivElement | null>,
+  containerNode: HTMLDivElement | null,
+): void {
+  React.useEffect(() => {
+    const target = containerNode ?? wrapperRef.current;
+    if (!target || typeof window === 'undefined') return;
+
+    const dispatch = (isVisible: boolean) => {
+      if (containerNode) {
+        containerNode.dispatchEvent(
+          new CustomEvent('avatarVisibility', { detail: { isVisible } }),
+        );
+      }
+    };
+
+    const st = ScrollTrigger.create({
+      trigger: target,
+      start: 'top 95%',
+      end: 'bottom 5%',
+      onEnter: () => dispatch(true),
+      onEnterBack: () => dispatch(true),
+      onLeave: () => dispatch(false),
+      onLeaveBack: () => dispatch(false),
+      invalidateOnRefresh: true,
+      fastScrollEnd: true,
+    });
+
+    // Сразу диспатчим текущее состояние видимости
+    dispatch(st.isActive);
+
+    return () => {
+      st.kill();
+    };
+  }, [wrapperRef, containerNode]);
+}
+
+export function Avatar() {
+  const refs = useAvatar();
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const [containerNode, setContainerNode] = React.useState<HTMLDivElement | null>(null);
+  const wrapperRef = React.useRef<HTMLDivElement | null>(null);
+
+  const setContainerRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        refs.current.container = node;
+        containerRef.current = node;
+        setContainerNode(node);
+      }
+    },
+    [refs],
+  );
+
+  // Подписка на видимость через ScrollTrigger (интеграция со ScrollSmoother)
+  useAvatarVisibilityBridge(wrapperRef, containerNode);
+
+  const isLoading = useAvatarLoading(containerNode);
+  const tooltipState = useAvatarTooltip(containerNode, wrapperRef.current);
+
+  return (
+    <div ref={wrapperRef} className={styles['avatar-wrapper']}>
+      <AvatarContainer onContainerRef={setContainerRef} isLoading={isLoading}>
+        {/* 3D Avatar will be rendered here via useAvatar hook */}
+        <></>
+        <AvatarTooltip
+          isVisible={tooltipState.isVisible}
+          containerRef={containerRef}
+        />
+      </AvatarContainer>
+    </div>
+  );
 }
 
 function AvatarContainer({
@@ -114,40 +209,6 @@ function AvatarTooltip({
           </ul>
         </div>
       </GlassCard>
-    </div>
-  );
-}
-
-export function Avatar() {
-  const refs = useAvatar();
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const [containerNode, setContainerNode] = React.useState<HTMLDivElement | null>(null);
-  const wrapperRef = React.useRef<HTMLDivElement | null>(null);
-
-  const setContainerRef = React.useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node) {
-        refs.current.container = node;
-        containerRef.current = node;
-        setContainerNode(node);
-      }
-    },
-    [refs],
-  );
-
-  const isLoading = useAvatarLoading(containerNode);
-  const tooltipState = useAvatarTooltip(containerNode, wrapperRef.current);
-
-  return (
-    <div ref={wrapperRef} className={styles['avatar-wrapper']}>
-      <AvatarContainer onContainerRef={setContainerRef} isLoading={isLoading}>
-        {/* 3D Avatar will be rendered here via useAvatar hook */}
-        <></>
-        <AvatarTooltip
-          isVisible={tooltipState.isVisible}
-          containerRef={containerRef}
-        />
-      </AvatarContainer>
     </div>
   );
 }
