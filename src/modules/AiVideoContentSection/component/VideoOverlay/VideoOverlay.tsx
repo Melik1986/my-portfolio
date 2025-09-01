@@ -11,6 +11,16 @@ export interface VideoOverlayProps {
 }
 
 export function VideoOverlay({ isOpen, src, onClose, videoRef }: VideoOverlayProps) {
+  // Закрытие по клавише Esc только когда оверлей открыт
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !src) return null;
   return (
     <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true">
@@ -18,6 +28,14 @@ export function VideoOverlay({ isOpen, src, onClose, videoRef }: VideoOverlayPro
         className={styles.overlayContent}
         onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
       >
+        <button
+          type="button"
+          className={styles.overlayClose}
+          aria-label="Close video"
+          onClick={onClose}
+        >
+          ×
+        </button>
         <video
           ref={videoRef as React.RefObject<HTMLVideoElement>}
           src={src}
