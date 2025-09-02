@@ -28,8 +28,9 @@
     }
 
     @include vp-768 {
-      min-width: 450px;
-      max-height: 400px;
+      width: 450px;
+      min-height: 400px;
+      bottom: -3%;
     }
 
     @include vp-375 {

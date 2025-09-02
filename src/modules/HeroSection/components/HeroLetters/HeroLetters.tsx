@@ -3,6 +3,14 @@
 import styles from './HeroLetters.module.scss';
 import React, { useRef, useEffect, useDeferredValue, useMemo } from 'react';
 import { createElementTimeline } from '@/lib/gsap/hooks/useElementTimeline';
+import { Poppins } from 'next/font/google';
+
+const heroBold = Poppins({
+  subsets: ['latin'],
+  weight: '900',
+  display: 'swap',
+  variable: '--font-hero-bold',
+});
 
 function Letter({ letter }: { letter: string }) {
   return (
@@ -40,7 +48,7 @@ export function HeroLetters() {
   return (
     <div
       ref={containerRef}
-      className={styles['hero__container-letters']}
+      className={`${styles['hero__container-letters']} ${heroBold.variable}`}
       data-animation="slide-down"
       data-duration="0.8"
       data-ease="power2.out"

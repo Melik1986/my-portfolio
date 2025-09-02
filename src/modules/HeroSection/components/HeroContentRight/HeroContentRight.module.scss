@@ -29,6 +29,7 @@
 
     @include vp-768 {
       max-width: 300px;
+      margin-left: -50px;
       @include typo.type-h4;
     }
 
@@ -49,9 +50,11 @@
     @include vp-1024 {
       margin-left: 24px;
     }
+
     @include vp-768 {
-      margin-left: 16px;
+      margin-left: -160px;
     }
+
     @include vp-375 {
       margin-left: -100px;
     }
@@ -68,9 +71,11 @@
       @include vp-1024 {
         @include typo.type-h4;
       }
+
       @include vp-768 {
         @include typo.type-h4;
       }
+
       @include vp-375 {
         @include typo.type-small;
       }
@@ -88,10 +93,12 @@
       width: 210px;
       height: 32px;
     }
+
     @include vp-768 {
       width: 180px;
       height: 28px;
     }
+
     @include vp-375 {
       width: 160px;
       height: 24px;
