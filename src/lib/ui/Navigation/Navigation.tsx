@@ -63,7 +63,7 @@ export function Navigation({
   const { t } = useI18n();
   const navItems = items ?? buildDefaultItems(t);
   return (
-    <ul className={`${styles.nav__list} ${className}`.trim()} {...rest}>
+    <ul className={`${styles.nav__list} ${className}`.trim()} {...rest} translate="no">
       {navItems.map(({ href, label, sectionId }) => (
         <NavigationItem
           key={href}

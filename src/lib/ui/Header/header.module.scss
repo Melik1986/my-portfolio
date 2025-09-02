@@ -11,19 +11,19 @@
 
   /* Responsive paddings without changing existing defaults */
   @include vp-1304 {
-    padding: 8px 16px;
+    padding: 8px 0;
   }
 
   @include vp-1024 {
-    padding: 8px 12px;
+    padding: 8px 0;
   }
 
   @include vp-768 {
-    padding: 6px 10px;
+    padding: 6px 0;
   }
 
   @include vp-360 {
-    padding: 4px 8px;
+    padding: 4px 0;
   }
 
   &__content {

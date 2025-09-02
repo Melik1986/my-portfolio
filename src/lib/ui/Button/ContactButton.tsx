@@ -38,6 +38,7 @@ export function ContactButton({
       className={`${styles.btn} ${styles.header__btn} ${className}`.trim()}
       aria-label={t('header.contactMe')}
       data-target="#contact-section"
+      translate="no"
       {...rest}
     >
       <ContactIcon iconClassName={iconClassName} />

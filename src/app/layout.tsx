@@ -11,7 +11,6 @@ import { AnchorButton } from '../lib/ui/AnchorButton/AnchorButton';
 import { ScrollSmootherProvider } from '../lib/gsap/components/ScrollSmootherProvider';
 import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
 import { AppReadyEmitter } from '../lib/ui/AppReadyEmitter';
-import LanguageSwitcher from '@/lib/ui/LanguageSwitcher/LanguageSwitcher';
 import { getRequestLocale } from './seo/getRequestLocale';
 import { buildMetadataForLocale } from './seo/buildMetadata';
 
@@ -106,9 +105,6 @@ export default async function RootLayout({
                 </Container>
               </div>
               <AnchorButton />
-              <div className="portfolio__floating-lang">
-                <LanguageSwitcher />
-              </div>
               {/* Optional theme toggle, can be removed later */}
               {/* <ThemeToggle /> */}
             </main>

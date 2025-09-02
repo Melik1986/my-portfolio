@@ -6,7 +6,9 @@ import type { LoaderHookResult, PreloaderConfig } from '@/lib/types/loader.types
 // Helpers extracted to keep hook concise
 const isAutomationBrowser = (): boolean => {
   try {
+    // Проверка typeof window добавлена для предотвращения ошибок гидратации
     return (
+      typeof window !== 'undefined' &&
       typeof navigator !== 'undefined' &&
       (navigator as unknown as { webdriver?: boolean }).webdriver === true
     );
@@ -68,18 +70,23 @@ const setupProgressListeners = (el: HTMLElement): (() => void) => {
     return v.trim().endsWith('ms') ? n : n * 1000;
   };
 
-  const cs = window.getComputedStyle(el);
-  const durs = cs.animationDuration.split(',').map((s) => toMs(s.trim()));
-  const dels = cs.animationDelay.split(',').map((s) => toMs(s.trim()));
-  const maxDur = Math.max(0, ...durs);
-  const maxDel = Math.max(0, ...dels);
-  const fallbackMs = Math.max(maxDur + maxDel + 800, 4000);
+  // Проверка typeof window для предотвращения ошибок гидратации
+  if (typeof window !== 'undefined') {
+    const cs = window.getComputedStyle(el);
+    const durs = cs.animationDuration.split(',').map((s) => toMs(s.trim()));
+    const dels = cs.animationDelay.split(',').map((s) => toMs(s.trim()));
+    const maxDur = Math.max(0, ...durs);
+    const maxDel = Math.max(0, ...dels);
+    const fallbackMs = Math.max(maxDur + maxDel + 800, 4000);
 
-  timerId = window.setTimeout(complete, fallbackMs);
+    timerId = window.setTimeout(complete, fallbackMs);
+  }
 
   return () => {
     el.removeEventListener('animationend', handleAnimationEnd as EventListener);
-    if (timerId) window.clearTimeout(timerId);
+    if (timerId && typeof window !== 'undefined') {
+      window.clearTimeout(timerId);
+    }
   };
 };
 

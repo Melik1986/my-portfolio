@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import en from './dictionaries/en.json';
 import ru from './dictionaries/ru.json';
 
@@ -26,14 +26,25 @@ type I18nProviderProps = {
 };
 
 export function I18nProvider({ children, locale = 'en' }: I18nProviderProps) {
-  const messages = dictionaries[locale] ?? dictionaries.en;
+  const [currentLocale, setCurrentLocale] = useState<SupportedLocale>('en');
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // Синхронизируем locale после гидратации
+    setCurrentLocale(locale);
+    setIsHydrated(true);
+  }, [locale]);
+
+  // Используем дефолтный locale до гидратации
+  const activeLocale = isHydrated ? currentLocale : 'en';
+  const messages = dictionaries[activeLocale] ?? dictionaries.en;
 
   const value = useMemo<I18nContextValue>(
     () => ({
-      locale,
+      locale: activeLocale,
       t: (key: string) => messages[key] ?? key,
     }),
-    [locale, messages],
+    [activeLocale, messages],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

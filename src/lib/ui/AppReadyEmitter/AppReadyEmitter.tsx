@@ -29,10 +29,14 @@ export function AppReadyEmitter() {
     const checkReadiness = async () => {
       try {
         // Проверяем автоматизированный браузер (E2E тесты)
-        const isAutomation = (
-          typeof navigator !== 'undefined' &&
-          (navigator as unknown as { webdriver?: boolean }).webdriver === true
-        );
+        // Проверка перенесена в useEffect для предотвращения ошибок гидратации
+        let isAutomation = false;
+        if (typeof window !== 'undefined') {
+          isAutomation = (
+            typeof navigator !== 'undefined' &&
+            (navigator as unknown as { webdriver?: boolean }).webdriver === true
+          );
+        }
 
         if (isAutomation) {
           // В E2E тестах сразу помечаем готовым

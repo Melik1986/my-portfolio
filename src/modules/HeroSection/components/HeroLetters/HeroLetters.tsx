@@ -46,6 +46,7 @@ export function HeroLetters() {
       data-ease="power2.out"
       data-delay="0"
       data-stagger="0.08"
+      translate="no"
     >
       {deferredLetters.map((letter, index) => (
         <Letter key={index} letter={letter} />

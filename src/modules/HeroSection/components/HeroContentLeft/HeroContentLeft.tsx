@@ -53,6 +53,7 @@ export function HeroContentLeft() {
         data-duration="1.0"
         data-ease="power2.out"
         data-delay="0.4"
+        translate="no"
       >
         <HeroImage id="melik" src="/images/melik.svg" alt={t('section.hero.melikAlt')} />
         <HeroImage id="musinian" src="/images/musinian.svg" alt={t('section.hero.musinianAlt')} />

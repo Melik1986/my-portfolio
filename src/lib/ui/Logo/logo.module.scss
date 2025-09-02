@@ -36,9 +36,11 @@
     }
     @include vp-768 {
       width: 88px;
+      height: 40px;
     }
     @include vp-360 {
       width: 76px;
+      height: 40px;
     }
   }
 }
