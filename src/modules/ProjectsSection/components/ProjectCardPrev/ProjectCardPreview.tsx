@@ -14,17 +14,16 @@ export function ProjectCardPreview({ number, previewImage, title }: ProjectCardP
   return (
     <>
       <span className={styles['projects-card__number']}>{number}</span>
-      <div className={styles['projects-card__img-wrapper']}>
-        <Image
-          className={styles['projects-card__img']}
-          src={previewImage}
-          alt={title}
-          fill
-          priority={number <= 3}
-          sizes="(max-width: 480px) 100vw, (max-width: 768px) 280px, 300px"
-          loading={number <= 3 ? 'eager' : 'lazy'}
-        />
-      </div>
+      <Image
+        className={styles['projects-card__img']}
+        src={previewImage}
+        alt={title}
+        width={300}
+        height={200}
+        priority={number <= 3} // Приоритет для первых 3 изображений
+        sizes="(max-width: 480px) 100vw, (max-width: 768px) 280px, 300px"
+        loading={number <= 3 ? 'eager' : 'lazy'}
+      />
     </>
   );
 }

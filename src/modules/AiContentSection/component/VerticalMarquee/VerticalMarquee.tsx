@@ -23,16 +23,14 @@ function VerticalImage({
 }) {
   const { t } = useI18n();
   return (
-    <div className={styles['ai-content__image-wrapper']}>
-      <Image
-        className={styles['ai-content__image']}
-        src={src}
-        alt={`${t('section.ai.posterAlt')} ${index + 1}`}
-        fill
-        sizes="(max-width: 375px) 80px, (max-width: 768px) 160px, (max-width: 1024px) 162px, 210px"
-        loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
-      />
-    </div>
+    <Image
+      className={styles['ai-content__image']}
+      src={src}
+      alt={`${t('section.ai.posterAlt')} ${index + 1}`}
+      width={210}
+      height={280}
+      loading={eagerFirst && index === 0 ? 'eager' : 'lazy'}
+    />
   );
 }
 
