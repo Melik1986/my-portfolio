@@ -74,7 +74,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 
   // Надежное позиционирование над головой модели
   left: 50%;
@@ -119,8 +121,6 @@
       }
     }
   }
-
-
 
   // На планшетах и ниже — смещаем тултип влево от аватара и не перекрываем его
   @include vp-768 {

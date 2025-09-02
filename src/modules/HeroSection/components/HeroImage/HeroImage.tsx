@@ -38,9 +38,9 @@ export function HeroAvatar() {
         alt={t('section.hero.avatarAlt')}
         width={1920}
         height={1080}
-        sizes='(max-width: 768px) 100vw, 10vw,
+        sizes="(max-width: 768px) 100vw, 10vw,
         (max-width: 1024px) 80vw,
-        60vw'
+        60vw"
         priority
         fill={false}
         data-animation="zoom-in"

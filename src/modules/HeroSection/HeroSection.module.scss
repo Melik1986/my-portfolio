@@ -89,7 +89,7 @@
 }
 
 /* Hide NEAT watermark link if injected */
-.hero a[href*="neat.firecms.co"],
+.hero a[href*='neat.firecms.co'],
 .hero a:where(:link, :visited):not([href]) {
   display: none !important;
   visibility: hidden !important;

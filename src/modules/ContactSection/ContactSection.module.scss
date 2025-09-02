@@ -61,7 +61,7 @@
     margin: 15px auto;
   }
 
-  // Tablet landscape adjustments  
+  // Tablet landscape adjustments
   @include vp-1024 {
     min-width: 680px;
     min-height: 480px;
@@ -100,7 +100,7 @@
   @include vp-375 {
     min-width: 280px;
   }
-  
+
   // Extra small mobile adjustments
   @include vp-360 {
     min-width: 240px;

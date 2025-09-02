@@ -49,9 +49,9 @@
   }
 
   &__content-left {
-  position: relative;
-  z-index: 1;
-  background: var(--section-bg-left);
+    position: relative;
+    z-index: 1;
+    background: var(--section-bg-left);
     color: var(--color-text-primary);
     --skills-heading-color: var(--color-text-heading);
     --skills-text-color: var(--color-text-primary);

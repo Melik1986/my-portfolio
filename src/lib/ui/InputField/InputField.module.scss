@@ -31,7 +31,7 @@ $color-danger: #e74c3c;
 
   &:focus {
     outline: none;
-  border-color: $ui-accent;
+    border-color: $ui-accent;
     background: rgba(255, 255, 255, 0.05);
   }
 

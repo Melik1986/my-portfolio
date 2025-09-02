@@ -81,7 +81,8 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --gradient-secondary: linear-gradient(to right, #a0e5d9, #f9f7ec);
   /* Gradient updated to match provided palette (top → bottom):
      #011023, #042558, #507ca9, #547eb0, #7c9dc6, #c2e8ff */
-  --gradient-hero: linear-gradient(180deg,
+  --gradient-hero: linear-gradient(
+    180deg,
     #011023 0%,
     #042558 20%,
     #507ca9 40%,
@@ -94,7 +95,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --background-gradient-body: #{$background-gradient-body-light};
 
   /* semantic tokens */
-  --section-bg-left: #90E0EF;
+  --section-bg-left: #90e0ef;
   --section-bg: #f0fbfa;
   --card-bg: var(--color-bg-card);
   --button-bg: var(--color-accent-primary);
@@ -119,12 +120,11 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
-    /* Background for AI content wrapper (left block) - light theme specific */
+  /* Background for AI content wrapper (left block) - light theme specific */
   --ai-content-wrapper-bg: rgb(214, 235, 243);
 
   /* Background for AI horizontal center block */
   --ai-horizontal-center-bg: rgb(214, 235, 243);
-
 
   --logo-color: #292929;
   --logo-color-hover: var(--color-accent-secondary);
@@ -194,7 +194,7 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
 
   --ai-left-bg: var(--color-bg-surface);
   --ai-right-bg: var(--color-bg-card);
-    /* Background for AI content wrapper (left block) - light theme specific */
+  /* Background for AI content wrapper (left block) - light theme specific */
   --ai-content-wrapper-bg: #2c394c;
   --ai-horizontal-center-bg: #2c394c;
 
@@ -204,17 +204,13 @@ $gradient-blue: linear-gradient(90deg, #02abff 0%, #3e3f46 100%);
   --focus-ring-shadow: 0 0 0 2px rgba(99, 218, 252, 0.35), 0 0 8px rgba(29, 113, 157, 0.3);
   --focus-text-shadow: 0 0 5px rgba(99, 218, 252, 0.45), 0 1px 0 rgba(0, 0, 0, 0.35);
 
-  --nav-link-shadow: 
-    0 0 6px rgba(99, 218, 252, 0.25),
-    0 0 12px rgba(99, 218, 252, 0.2),
-    0 1px 0 rgba(0, 0, 0, 0.4),
+  --nav-link-shadow:
+    0 0 6px rgba(99, 218, 252, 0.25), 0 0 12px rgba(99, 218, 252, 0.2), 0 1px 0 rgba(0, 0, 0, 0.4),
     0 2px 4px rgba(0, 0, 0, 0.35);
 
-  --nav-link-shadow-hover: 
-    0 0 10px rgba(99, 218, 252, 0.6),
-    0 0 18px rgba(99, 218, 252, 0.45),
-    0 0 32px rgba(29, 113, 157, 0.4),
-    0 2px 6px rgba(0, 0, 0, 0.4);
+  --nav-link-shadow-hover:
+    0 0 10px rgba(99, 218, 252, 0.6), 0 0 18px rgba(99, 218, 252, 0.45),
+    0 0 32px rgba(29, 113, 157, 0.4), 0 2px 6px rgba(0, 0, 0, 0.4);
 
   --charts-canvas-bg: #0f1220;
   --charts-text-color: #e5e5e5;
@@ -305,5 +301,3 @@ $carousel-animation-ease: ease-in-out;
 $carousel-animation-duration: 0.5s;
 $carousel-animation-delay: 0.3s;
 $carousel-time-running: 7s;
-
-

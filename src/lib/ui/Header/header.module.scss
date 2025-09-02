@@ -170,7 +170,7 @@
     z-index: 120;
     animation: headerDropIn 220ms ease-out both;
 
-        // Overlay for mobile dropdown
+    // Overlay for mobile dropdown
     &::before {
       content: '';
       position: fixed;

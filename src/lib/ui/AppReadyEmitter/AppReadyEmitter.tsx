@@ -18,7 +18,7 @@ export function AppReadyEmitter() {
       try {
         // Устанавливаем глобальный флаг
         (window as unknown as { __app_ready__?: boolean }).__app_ready__ = true;
-        
+
         // Диспатчим событие для useLoaderAnimation
         document.dispatchEvent(new CustomEvent('app:ready'));
       } catch {
@@ -32,10 +32,9 @@ export function AppReadyEmitter() {
         // Проверка перенесена в useEffect для предотвращения ошибок гидратации
         let isAutomation = false;
         if (typeof window !== 'undefined') {
-          isAutomation = (
+          isAutomation =
             typeof navigator !== 'undefined' &&
-            (navigator as unknown as { webdriver?: boolean }).webdriver === true
-          );
+            (navigator as unknown as { webdriver?: boolean }).webdriver === true;
         }
 
         if (isAutomation) {
@@ -62,7 +61,7 @@ export function AppReadyEmitter() {
         // Ждем все ресурсы с общим таймаутом
         await Promise.race([
           Promise.all([windowLoadPromise, fontsPromise, imagesPromise]),
-          new Promise<void>((resolve) => setTimeout(resolve, 8000)) // Fallback 8 сек
+          new Promise<void>((resolve) => setTimeout(resolve, 8000)), // Fallback 8 сек
         ]);
 
         markAppReady();
@@ -89,14 +88,14 @@ function waitForCriticalImages(timeoutMs = 5000): Promise<void> {
         '[data-critical-image]',
         '.hero__avatar img',
         '.about__image img',
-        'img[priority="true"]'
+        'img[priority="true"]',
       ];
 
       const images: HTMLImageElement[] = [];
-      
-      criticalSelectors.forEach(selector => {
+
+      criticalSelectors.forEach((selector) => {
         const elements = document.querySelectorAll(selector);
-        elements.forEach(el => {
+        elements.forEach((el) => {
           if (el instanceof HTMLImageElement) {
             images.push(el);
           }
@@ -118,7 +117,7 @@ function waitForCriticalImages(timeoutMs = 5000): Promise<void> {
         }
       };
 
-      images.forEach(img => {
+      images.forEach((img) => {
         if (img.complete && img.naturalHeight > 0) {
           checkComplete();
         } else {

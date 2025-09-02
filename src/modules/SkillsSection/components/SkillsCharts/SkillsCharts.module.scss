@@ -114,7 +114,7 @@
     will-change: transform;
     pointer-events: auto;
     margin-bottom: 20px; /* Отступ от легенды */
-  background: transparent; /* canvas должен быть прозрачным, фон задаёт .chart-wrapper */
+    background: transparent; /* canvas должен быть прозрачным, фон задаёт .chart-wrapper */
   }
 
   // Отключение wheel событий для ECharts контейнеров

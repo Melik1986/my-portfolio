@@ -20,12 +20,12 @@
   border-radius: 6px;
 
   &:hover {
-  color: $ui-accent;
+    color: $ui-accent;
     transform: translateY(-2px);
   }
 
   &:focus {
-  outline: 2px solid $ui-accent;
+    outline: 2px solid $ui-accent;
     outline-offset: 2px;
   }
 

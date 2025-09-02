@@ -151,19 +151,26 @@ const cleanupScrollTrigger = async (): Promise<void> => {
 
 // (deprecated) useSmootherInitialization removed in favor of createSmootherEffect
 
-function createSmootherEffect(
-  config: {
-    wrapper: string;
-    content: string;
-    smooth: number;
-    effects: boolean;
-    normalizeScroll: boolean;
-    smootherRef: React.RefObject<ScrollSmootherInstance | null>;
-    isInitializingRef: React.RefObject<boolean>;
-    setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
-  },
-): () => void {
-  const { wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady } = config;
+function createSmootherEffect(config: {
+  wrapper: string;
+  content: string;
+  smooth: number;
+  effects: boolean;
+  normalizeScroll: boolean;
+  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+  isInitializingRef: React.RefObject<boolean>;
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+}): () => void {
+  const {
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  } = config;
   const existingSmoother = ScrollSmoother.get();
   if (existingSmoother) {
     smootherRef.current = existingSmoother as unknown as ScrollSmootherInstance;
@@ -268,18 +275,20 @@ export const useScrollSmoother = (options: UseScrollSmootherOptions = {}) => {
     normalizeScroll = true,
   } = options;
 
-  useEffect(() =>
-    createSmootherEffect({
-      wrapper,
-      content,
-      smooth,
-      effects,
-      normalizeScroll,
-      smootherRef,
-      isInitializingRef,
-      setIsReady,
-    }),
-  [wrapper, content, smooth, effects, normalizeScroll]);
+  useEffect(
+    () =>
+      createSmootherEffect({
+        wrapper,
+        content,
+        smooth,
+        effects,
+        normalizeScroll,
+        smootherRef,
+        isInitializingRef,
+        setIsReady,
+      }),
+    [wrapper, content, smooth, effects, normalizeScroll],
+  );
 
   useSmootherReadyState(isReady);
   const { scrollTo, scrollTop, kill } = createScrollMethods(smootherRef);

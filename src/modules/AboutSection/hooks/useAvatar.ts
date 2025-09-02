@@ -109,18 +109,13 @@ const useScaleManager = () => {
   return { calculateScale, updateSize };
 };
 
- 
-
 const getIntersections = (ndc: THREE.Vector2, scene: AvatarScene): THREE.Intersection[] => {
   const raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(ndc, scene.camera);
   return raycaster.intersectObjects(scene.scene.children, true);
 };
 
-const isHoveringAvatar = (
-  intersects: THREE.Intersection[],
-  groundMesh?: THREE.Mesh,
-): boolean => {
+const isHoveringAvatar = (intersects: THREE.Intersection[], groundMesh?: THREE.Mesh): boolean => {
   return intersects.some((i) => i.object !== groundMesh);
 };
 
@@ -225,10 +220,16 @@ const fetchModelOnce = async (): Promise<GLTF> => {
 
 const cloneForScene = async (gltf: GLTF): Promise<GLTF> => {
   const mod = await import('three/examples/jsm/utils/SkeletonUtils.js');
-  const utils: unknown = (mod as unknown as { SkeletonUtils?: unknown; default?: unknown }).SkeletonUtils ?? (mod as unknown as { default?: unknown }).default ?? mod;
+  const utils: unknown =
+    (mod as unknown as { SkeletonUtils?: unknown; default?: unknown }).SkeletonUtils ??
+    (mod as unknown as { default?: unknown }).default ??
+    mod;
   // @ts-expect-error — динамическое извлечение утилиты с методом clone
-  const cloner: ((obj: THREE.Object3D) => THREE.Object3D) | undefined = utils && (utils as { clone?: (o: THREE.Object3D) => THREE.Object3D }).clone;
-  const scene = cloner ? (cloner(gltf.scene) as THREE.Group) : (gltf.scene.clone(true) as THREE.Group);
+  const cloner: ((obj: THREE.Object3D) => THREE.Object3D) | undefined =
+    utils && (utils as { clone?: (o: THREE.Object3D) => THREE.Object3D }).clone;
+  const scene = cloner
+    ? (cloner(gltf.scene) as THREE.Group)
+    : (gltf.scene.clone(true) as THREE.Group);
   return { ...gltf, scene } as GLTF;
 };
 const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void => {
@@ -349,7 +350,16 @@ const useModelHandler = (
         scene,
       );
     },
-    [setupMeshProperties, createGround, setupAnimations, sceneRef, stateRef, assetsRef, refs, calculateScale],
+    [
+      setupMeshProperties,
+      createGround,
+      setupAnimations,
+      sceneRef,
+      stateRef,
+      assetsRef,
+      refs,
+      calculateScale,
+    ],
   );
 
   const loadModel = useCallback(async (): Promise<void> => {
@@ -480,16 +490,27 @@ const useInitializationEffect = (ctx: {
   sceneRef: React.RefObject<AvatarScene | null>;
   stateRef: React.RefObject<AvatarState>;
   createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
-  createCameraAndControls: (
-    renderer: THREE.WebGLRenderer,
-  ) => { camera: THREE.PerspectiveCamera; controls: OrbitControls };
+  createCameraAndControls: (renderer: THREE.WebGLRenderer) => {
+    camera: THREE.PerspectiveCamera;
+    controls: OrbitControls;
+  };
   setupLighting: (scene: THREE.Scene) => void;
   animate: () => void;
   cleanup: () => void;
   isInitializedRef: React.MutableRefObject<boolean>;
 }): void => {
-  const { refs, sceneRef, stateRef, createRenderer, createCameraAndControls, setupLighting, animate, cleanup, isInitializedRef } = ctx;
-   useEffect(() => {
+  const {
+    refs,
+    sceneRef,
+    stateRef,
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    animate,
+    cleanup,
+    isInitializedRef,
+  } = ctx;
+  useEffect(() => {
     const container = refs.current.container;
     if (!container || isInitializedRef.current) return;
     isInitializedRef.current = true;
@@ -533,7 +554,17 @@ const useInitializationEffect = (ctx: {
       cleanup();
       isInitializedRef.current = false;
     };
-  }, [createRenderer, createCameraAndControls, setupLighting, animate, cleanup, refs, sceneRef, stateRef, isInitializedRef]);
+  }, [
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    animate,
+    cleanup,
+    refs,
+    sceneRef,
+    stateRef,
+    isInitializedRef,
+  ]);
 };
 
 // Слушатели мыши и ресайза как отдельный хук
@@ -680,7 +711,6 @@ const useEventBindingsEffect = (ctx: {
   }, [handleMouseClickWrapper, handleMouseMove, handleResize, refs, sceneRef, assetsRef]);
 };
 
-
 // Отдельный хук для загрузки модели (без повторной загрузки)
 const useLoadModelEffect = (
   sceneRef: React.RefObject<AvatarScene | null>,
@@ -818,9 +848,14 @@ export const useAvatar = () => {
     isInitializedRef,
   });
 
-  useEventBindingsEffect(
-    { refs, sceneRef, assetsRef, handleMouseClickWrapper, handleMouseMove, handleResize },
-  );
+  useEventBindingsEffect({
+    refs,
+    sceneRef,
+    assetsRef,
+    handleMouseClickWrapper,
+    handleMouseMove,
+    handleResize,
+  });
 
   // Подписка на событие видимости от компонента 3DAvatar
   useVisibilityEventsEffect(refs, stateRef, assetsRef, animate);

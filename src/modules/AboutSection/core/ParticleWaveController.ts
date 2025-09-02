@@ -55,7 +55,7 @@ export class ParticleWaveController {
       shouldUpdateCamera: false,
     };
 
-  // Renderer clear color left transparent — CSS controls the visible canvas background.
+    // Renderer clear color left transparent — CSS controls the visible canvas background.
   }
 
   /**

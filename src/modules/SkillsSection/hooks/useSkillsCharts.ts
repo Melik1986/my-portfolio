@@ -193,7 +193,7 @@ export const useSkillsCharts = () => {
       // Re-init (simplest) to apply new backgroundColor; ECharts lacks live update for init bg
       createChartInstances(devChartRef, designChartRef, devChartElement, designChartElement);
       configureChartOptions(devChartRef, designChartRef, devChartElement, designChartElement);
-  // Background is controlled by CSS on .chart-wrapper; no runtime DOM background assignment here.
+      // Background is controlled by CSS on .chart-wrapper; no runtime DOM background assignment here.
       // re-run animation after theme change
       playAnimation(devChartRef.current, designChartRef.current);
     });

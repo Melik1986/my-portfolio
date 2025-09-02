@@ -89,9 +89,7 @@ function useAvatarVisibilityBridge(
 
     const dispatch = (isVisible: boolean) => {
       if (containerNode) {
-        containerNode.dispatchEvent(
-          new CustomEvent('avatarVisibility', { detail: { isVisible } }),
-        );
+        containerNode.dispatchEvent(new CustomEvent('avatarVisibility', { detail: { isVisible } }));
       }
     };
 
@@ -144,10 +142,7 @@ export function Avatar() {
       <AvatarContainer onContainerRef={setContainerRef} isLoading={isLoading}>
         {/* 3D Avatar will be rendered here via useAvatar hook */}
         <></>
-        <AvatarTooltip
-          isVisible={tooltipState.isVisible}
-          containerRef={containerRef}
-        />
+        <AvatarTooltip isVisible={tooltipState.isVisible} containerRef={containerRef} />
       </AvatarContainer>
     </div>
   );
@@ -195,9 +190,7 @@ function AvatarTooltip({
   if (!containerRef.current) return null;
 
   return (
-    <div
-      className={`${styles.tooltip} ${isVisible ? styles['tooltip--visible'] : ''}`}
-    >
+    <div className={`${styles.tooltip} ${isVisible ? styles['tooltip--visible'] : ''}`}>
       <GlassCard>
         <div className={styles.tooltip__content}>
           <h3>{t('section.about.avatar.title')}</h3>
@@ -205,7 +198,7 @@ function AvatarTooltip({
           <ul>
             <li>{t('section.about.avatar.list.1')}</li>
             <li>{t('section.about.avatar.list.2')}</li>
-            <li>{t("section.about.avatar.list.3")}</li>
+            <li>{t('section.about.avatar.list.3')}</li>
           </ul>
         </div>
       </GlassCard>
