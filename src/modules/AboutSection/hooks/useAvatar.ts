@@ -5,32 +5,12 @@ import * as THREE from 'three';
 // three/examples: use type-only imports and dynamic import for runtime to optimize bundle
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { avatarConfig, avatarControls } from '../config/avatar3d.config';
+import { avatarConfig } from '../config/avatar3d.config';
 import { AvatarRefs } from '../types/about.types';
-
-// Строгая типизация для внутренней работы хука
-interface AvatarScene {
-  renderer: THREE.WebGLRenderer;
-  camera: THREE.PerspectiveCamera;
-  scene: THREE.Scene;
-  controls: OrbitControls;
-  clock: THREE.Clock;
-}
-
-interface AvatarAssets {
-  avatar: THREE.Group;
-  groundMesh: THREE.Mesh;
-  mixer: THREE.AnimationMixer;
-  waveAction: THREE.AnimationAction | null;
-  stumbleAction: THREE.AnimationAction | null;
-}
-
-interface AvatarState {
-  isAnimationPlaying: boolean;
-  isStumbling: boolean;
-  isDisposed: boolean;
-  isVisible: boolean;
-}
+import { AvatarAssets, AvatarScene, AvatarState } from '../types/avatar.types';
+import { getNDCFromMouse } from '../utils/avatar.utils';
+import { useModelLoader, useThemeObserverEffect } from './useAvatarModel';
+import { useSceneSetup } from './useAvatarScene';
 
 // Константы конфигурации
 const CONFIG = {
@@ -43,118 +23,6 @@ const CONFIG = {
   STUMBLE_DURATION: 4000,
   RECOVERY_DURATION: 1000,
 } as const;
-
-// Хук для создания Three.js сцены
-const useSceneSetup = () => {
-  const createRenderer = useCallback((container: HTMLElement): THREE.WebGLRenderer => {
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
-
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    // Не трогаем детей контейнера, управляемых React. Просто добавляем наш canvas, если он ещё не добавлен
-    if (!container.contains(renderer.domElement)) {
-      container.appendChild(renderer.domElement);
-    }
-    return renderer;
-  }, []);
-
-  const createCameraAndControls = useCallback(
-    (
-      renderer: THREE.WebGLRenderer,
-    ): { camera: THREE.PerspectiveCamera; controls: OrbitControls } => {
-      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-      camera.position.set(0.2, 0.5, 1);
-
-      const controls = new OrbitControls(camera, renderer.domElement);
-      Object.assign(controls, avatarControls);
-      controls.update();
-
-      return { camera, controls };
-    },
-    [],
-  );
-
-  const setupLighting = useCallback((scene: THREE.Scene): void => {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    const spotLight = new THREE.SpotLight(0xffffff, 20, 8, 1);
-    spotLight.penumbra = 0.5;
-    spotLight.position.set(0, 4, 2);
-    spotLight.castShadow = true;
-    scene.add(spotLight);
-
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2);
-    keyLight.position.set(1, 1, 2);
-    keyLight.lookAt(0, 0, 0);
-    scene.add(keyLight);
-  }, []);
-
-  return { createRenderer, createCameraAndControls, setupLighting };
-};
-
-// Хук для работы с 3D моделью
-const useModelLoader = () => {
-  const readCssVar = (name: string, fallback: string): string => {
-    if (typeof window === 'undefined') return fallback;
-    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    return v || fallback;
-  };
-
-  const createGround = useCallback((): THREE.Mesh => {
-    const geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.1, 64);
-    const podiumColor = readCssVar('--avatar-podium-color', '#e0e0e0');
-    const material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(podiumColor),
-    });
-    const mesh = new THREE.Mesh(geometry, material);
-
-    mesh.receiveShadow = true;
-    mesh.position.y = -0.05;
-
-    return mesh;
-  }, []);
-
-  const setupAnimations = useCallback(
-    (
-      gltf: GLTF,
-      mixer: THREE.AnimationMixer,
-    ): {
-      waveAction: THREE.AnimationAction | null;
-      stumbleAction: THREE.AnimationAction | null;
-    } => {
-      const waveClip =
-        THREE.AnimationClip.findByName(gltf.animations, 'Waving') || gltf.animations[0];
-      const stumbleClip =
-        THREE.AnimationClip.findByName(gltf.animations, 'Stagger') || gltf.animations[1];
-
-      return {
-        waveAction: waveClip ? mixer.clipAction(waveClip) : null,
-        stumbleAction: stumbleClip ? mixer.clipAction(stumbleClip) : null,
-      };
-    },
-    [],
-  );
-
-  const setupMeshProperties = useCallback((avatar: THREE.Group): void => {
-    avatar.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-      }
-    });
-  }, []);
-
-  return { createGround, setupAnimations, setupMeshProperties };
-};
 
 // Хук для анимационной логики
 const useAnimationControl = (
@@ -241,13 +109,7 @@ const useScaleManager = () => {
   return { calculateScale, updateSize };
 };
 
-// Вспомогательные функции для работы с мышью и рейкастингом (сокращают тело useMouseHandler)
-const getNDCFromMouse = (event: MouseEvent, rect: DOMRect): THREE.Vector2 => {
-  return new THREE.Vector2(
-    ((event.clientX - rect.left) / rect.width) * 2 - 1,
-    -((event.clientY - rect.top) / rect.height) * 2 + 1,
-  );
-};
+ 
 
 const getIntersections = (ndc: THREE.Vector2, scene: AvatarScene): THREE.Intersection[] => {
   const raycaster = new THREE.Raycaster();
@@ -833,33 +695,6 @@ const useLoadModelEffect = (
   }, [sceneRef, stateRef, assetsRef, loadModel]);
 };
 
-// Отдельный хук наблюдения за темой для обновления цвета подиума
-const useThemeObserverEffect = (assetsRef: React.RefObject<AvatarAssets | null>): void => {
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const assets = assetsRef.current;
-      if (assets?.groundMesh) {
-        const color = getComputedStyle(document.documentElement)
-          .getPropertyValue('--avatar-podium-color')
-          .trim();
-        try {
-          (assets.groundMesh.material as THREE.MeshStandardMaterial).color = new THREE.Color(
-            color || '#e0e0e0',
-          );
-          (assets.groundMesh.material as THREE.MeshStandardMaterial).needsUpdate = true;
-        } catch {}
-      }
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-
-    return () => observer.disconnect();
-  }, [assetsRef]);
-};
-
 // Небольшие хелперы-обёртки для коллбеков, чтобы сократить размер основного хука
 const useHandleMouseClickWrapper = (
   refs: React.RefObject<AvatarRefs>,
@@ -921,7 +756,6 @@ const useVisibilityEventsEffect = (
       try {
         const detail = (e as CustomEvent<{ isVisible: boolean }>).detail;
         const isVisible = !!detail?.isVisible;
-        const prev = stateRef.current.isVisible;
         stateRef.current.isVisible = isVisible;
         if (isVisible) {
           // Перезапускаем цикл анимации при появлении
