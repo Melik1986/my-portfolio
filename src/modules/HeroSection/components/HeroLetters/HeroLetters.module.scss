@@ -27,118 +27,130 @@
     @include vp-375 {
       gap: 5px;
     }
+  }
 
-    @include vp-360 {
-      gap: 4px;
+  // Desktop base sizes - semi-oval effect (first and last largest, middle smallest)
+  &__text:nth-child(1) { font-size: 7.2rem; }
+  &__text:nth-child(2) { font-size: 6.2rem; }
+  &__text:nth-child(3) { font-size: 5.4rem; }
+  &__text:nth-child(4) { font-size: 4.8rem; }
+  &__text:nth-child(5) { font-size: 4.2rem; } // Middle - smallest
+  &__text:nth-child(6) { font-size: 4.8rem; }
+  &__text:nth-child(7) { font-size: 5.4rem; }
+  &__text:nth-child(8) { font-size: 6.2rem; }
+  &__text:nth-child(9) { font-size: 7.2rem; }
+
+  // Tablet (769-1024px) - proportional scaling
+  @media (min-width: 769px) and (max-width: 1024px) {
+    &__container-letters { gap: 16px; }
+    
+    &__text:nth-child(1) { font-size: 6.1rem; }
+    &__text:nth-child(2) { font-size: 5.3rem; }
+    &__text:nth-child(3) { font-size: 4.6rem; }
+    &__text:nth-child(4) { font-size: 4.1rem; }
+    &__text:nth-child(5) { font-size: 3.6rem; }
+    &__text:nth-child(6) { font-size: 4.1rem; }
+    &__text:nth-child(7) { font-size: 4.6rem; }
+    &__text:nth-child(8) { font-size: 5.3rem; }
+    &__text:nth-child(9) { font-size: 6.1rem; }
+  }
+
+  // Mobile (375-768px) - golden ratio with 1.5% increase and semi-oval
+  @include vp-768 {
+    &__text:nth-child(1) { font-size: calc(3.66rem * 1.015); } // 3.71rem
+    &__text:nth-child(2) { font-size: calc(3.22rem * 1.015); } // 3.27rem
+    &__text:nth-child(3) { font-size: calc(2.88rem * 1.015); } // 2.92rem
+    &__text:nth-child(4) { font-size: calc(2.64rem * 1.015); } // 2.68rem
+    &__text:nth-child(5) { font-size: calc(2.40rem * 1.015); } // 2.44rem - middle smallest
+    &__text:nth-child(6) { font-size: calc(2.64rem * 1.015); } // 2.68rem
+    &__text:nth-child(7) { font-size: calc(2.88rem * 1.015); } // 2.92rem
+    &__text:nth-child(8) { font-size: calc(3.22rem * 1.015); } // 3.27rem
+    &__text:nth-child(9) { font-size: calc(3.66rem * 1.015); } // 3.71rem
+  }
+
+  // Small mobile (375px and below)
+  @include vp-375 {
+    &__text:nth-child(1) { font-size: 3.2rem; }
+    &__text:nth-child(2) { font-size: 2.8rem; }
+    &__text:nth-child(3) { font-size: 2.5rem; }
+    &__text:nth-child(4) { font-size: 2.3rem; }
+    &__text:nth-child(5) { font-size: 2.1rem; }
+    &__text:nth-child(6) { font-size: 2.3rem; }
+    &__text:nth-child(7) { font-size: 2.5rem; }
+    &__text:nth-child(8) { font-size: 2.8rem; }
+    &__text:nth-child(9) { font-size: 3.2rem; }
+  }
+
+  // Landscape orientation adjustments
+  @media (orientation: landscape) {
+    &__container-letters {
+      gap: 35px;
+      
+      @include vp-768 {
+        gap: 15px;
+      }
+    }
+
+    // Landscape mobile - slightly larger sizes for better visibility
+    @media (max-width: 768px) {
+      &__text:nth-child(1) { font-size: 4.0rem; }
+      &__text:nth-child(2) { font-size: 3.5rem; }
+      &__text:nth-child(3) { font-size: 3.1rem; }
+      &__text:nth-child(4) { font-size: 2.8rem; }
+      &__text:nth-child(5) { font-size: 2.5rem; }
+      &__text:nth-child(6) { font-size: 2.8rem; }
+      &__text:nth-child(7) { font-size: 3.1rem; }
+      &__text:nth-child(8) { font-size: 3.5rem; }
+      &__text:nth-child(9) { font-size: 4.0rem; }
     }
   }
 
-  &__text:nth-child(1) {
-    font-size: 7.2rem;
-
-    @include vp-375 {
-      font-size: 3.2rem;
+  // Portrait orientation adjustments
+  @media (orientation: portrait) and (max-width: 768px) {
+    &__container-letters {
+      gap: 8px;
     }
+    
+    // Maintain semi-oval with adjusted proportions for portrait
+    &__text:nth-child(1) { font-size: 3.8rem; }
+    &__text:nth-child(2) { font-size: 3.3rem; }
+    &__text:nth-child(3) { font-size: 2.95rem; }
+    &__text:nth-child(4) { font-size: 2.7rem; }
+    &__text:nth-child(5) { font-size: 2.45rem; }
+    &__text:nth-child(6) { font-size: 2.7rem; }
+    &__text:nth-child(7) { font-size: 2.95rem; }
+    &__text:nth-child(8) { font-size: 3.3rem; }
+    &__text:nth-child(9) { font-size: 3.8rem; }
+  }
 
-    @include vp-360 {
-      font-size: 2.9rem;
+  // Aspect ratio specific adjustments
+  @media (aspect-ratio: 16/9) and (max-width: 768px) {
+    &__container-letters {
+      gap: 12px;
     }
   }
 
-  &__text:nth-child(2) {
-    font-size: 6.2rem;
-
-    @include vp-375 {
-      font-size: 2.8rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.5rem;
+  @media (aspect-ratio: 4/3) and (max-width: 768px) {
+    &__container-letters {
+      gap: 10px;
     }
   }
 
-  &__text:nth-child(3) {
-    font-size: 5.4rem;
-
-    @include vp-375 {
-      font-size: 2.6rem;
+  // Ultra-wide screens
+  @media (aspect-ratio > 2) and (max-width: 768px) {
+    &__container-letters {
+      gap: 18px;
     }
-
-    @include vp-360 {
-      font-size: 2.35rem;
-    }
-  }
-
-  &__text:nth-child(4) {
-    font-size: 4.8rem;
-
-    @include vp-375 {
-      font-size: 2.4rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.2rem;
-    }
-  }
-
-  &__text:nth-child(5) {
-    font-size: 4.2rem;
-
-    @include vp-375 {
-      font-size: 2.2rem;
-    }
-
-    @include vp-360 {
-      font-size: 2rem;
-    }
-  }
-
-  &__text:nth-child(6) {
-    font-size: 4.8rem;
-
-    @include vp-375 {
-      font-size: 2.4rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.2rem;
-    }
-  }
-
-  &__text:nth-child(7) {
-    font-size: 5.4rem;
-
-    @include vp-375 {
-      font-size: 2.6rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.35rem;
-    }
-  }
-
-  &__text:nth-child(8) {
-    font-size: 6.2rem;
-
-    @include vp-375 {
-      font-size: 2.8rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.5rem;
-    }
-  }
-
-  &__text:nth-child(9) {
-    font-size: 7.2rem;
-
-    @include vp-375 {
-      font-size: 3.2rem;
-    }
-
-    @include vp-360 {
-      font-size: 2.9rem;
-    }
+    
+    &__text:nth-child(1) { font-size: 3.5rem; }
+    &__text:nth-child(2) { font-size: 3.1rem; }
+    &__text:nth-child(3) { font-size: 2.8rem; }
+    &__text:nth-child(4) { font-size: 2.5rem; }
+    &__text:nth-child(5) { font-size: 2.3rem; }
+    &__text:nth-child(6) { font-size: 2.5rem; }
+    &__text:nth-child(7) { font-size: 2.8rem; }
+    &__text:nth-child(8) { font-size: 3.1rem; }
+    &__text:nth-child(9) { font-size: 3.5rem; }
   }
 
   &__text {
@@ -153,12 +165,12 @@
     perspective: 400px;
     perspective-origin: left;
 
-    @include vp-375 {
-      font-size: 2.4rem;
+    @include vp-768 {
+      font-size: 2.8rem;
     }
 
-    @include vp-360 {
-      font-size: 2.2rem;
+    @include vp-375 {
+      font-size: 2.4rem;
     }
 
     &::before {
@@ -194,263 +206,6 @@
 
     &:hover::after {
       transform: rotateY(0deg) scale(1.11, 1) skewY(6deg);
-    }
-  }
-
-  /* Диапазон 769–850px: уменьшаем промежутки и размеры букв, сохраняя пропорции */
-  @media (min-width: 769px) and (max-width: 850px) {
-    &__container-letters {
-      gap: 16px;
-    }
-
-    &__text:nth-child(1) {
-      font-size: 6.1rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 5.3rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 4.6rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 3.6rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 4.6rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 5.3rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 6.1rem;
-    }
-  }
-
-  /* Диапазон 376–480px: чуть крупнее чем 360/375, но меньше десктопных */
-  @media (min-width: 376px) and (max-width: 480px) {
-    &__container-letters {
-      gap: 8px;
-    }
-    &__text:nth-child(1) {
-      font-size: 3.4rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 3rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 2.8rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 2.6rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 2.4rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 2.6rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 2.8rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 3rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 3.4rem;
-    }
-    &__text {
-      font-size: 2.6rem;
-    }
-  }
-
-  /* Диапазон 601–765px: умеренно уменьшаем шрифты и промежутки */
-  @media (min-width: 601px) and (max-width: 765px) {
-    &__container-letters {
-      gap: 12px;
-    }
-    &__text:nth-child(1) {
-      font-size: 5.4rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 4.7rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 3.6rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 3.2rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 3.6rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 4.7rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 5.4rem;
-    }
-    &__text {
-      font-size: 3.4rem;
-    }
-  }
-
-  /* Диапазон 576–600px: чуть сильнее уменьшаем, перекрывая 601–765 */
-  @media (min-width: 576px) and (max-width: 600px) {
-    &__container-letters {
-      gap: 11px;
-    }
-    &__text:nth-child(1) {
-      font-size: 5.2rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 4.6rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 4rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 3.5rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 3.1rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 3.5rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 4rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 4.6rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 5.2rem;
-    }
-    &__text {
-      font-size: 3.3rem;
-    }
-  }
-
-  /* Диапазон 480–575px: ещё компактнее, чтобы не выходило из секции */
-  @media (min-width: 480px) and (max-width: 575px) {
-    &__container-letters {
-      gap: 8px;
-    }
-    &__text:nth-child(1) {
-      font-size: 4.6rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 3.6rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 3.2rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 2.8rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 3.2rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 3.6rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 4.1rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 4.6rem;
-    }
-    &__text {
-      font-size: 3rem;
-    }
-  }
-
-  /* Диапазон 376–433px: дополнительное сжатие для узкого окна */
-  @media (min-width: 376px) and (max-width: 433px) {
-    &__container-letters {
-      gap: 7px;
-    }
-    &__text:nth-child(1) {
-      font-size: 3.2rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 2.8rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 2.6rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 2.4rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 2.2rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 2.4rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 2.6rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 2.8rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 3.2rem;
-    }
-    &__text {
-      font-size: 2.5rem;
-    }
-  }
-
-  /* ≤375px: тонкая корректировка базовых значений */
-  @media (max-width: 375px) {
-    &__container-letters {
-      gap: 4px;
-    }
-    &__text:nth-child(1) {
-      font-size: 3.1rem;
-    }
-    &__text:nth-child(2) {
-      font-size: 2.7rem;
-    }
-    &__text:nth-child(3) {
-      font-size: 2.5rem;
-    }
-    &__text:nth-child(4) {
-      font-size: 2.3rem;
-    }
-    &__text:nth-child(5) {
-      font-size: 2.1rem;
-    }
-    &__text:nth-child(6) {
-      font-size: 2.3rem;
-    }
-    &__text:nth-child(7) {
-      font-size: 2.5rem;
-    }
-    &__text:nth-child(8) {
-      font-size: 2.7rem;
-    }
-    &__text:nth-child(9) {
-      font-size: 3.1rem;
-    }
-    &__text {
-      font-size: 2.3rem;
     }
   }
 }
