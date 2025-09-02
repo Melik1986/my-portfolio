@@ -107,28 +107,19 @@
   .ai-content__horizontal-vertical {
     min-height: 480px;
   }
-  .ai-content__image {
-    width: 162px;
-    height: 240px;
-  }
+  .ai-content__image { width: 162px; height: 240px; }
 }
 
 @include vp-768 {
   .ai-content__horizontal-vertical {
     min-height: 420px;
   }
-  .ai-content__image {
-    width: 160px;
-    height: 210px;
-  }
+  .ai-content__image { width: 160px; height: 210px; }
 }
 
 @include vp-375 {
   .ai-content__horizontal-vertical {
     min-height: 360px;
   }
-  .ai-content__image {
-    width: 80px;
-    height: 180px;
-  }
+  .ai-content__image { width: 80px; height: 180px; }
 }

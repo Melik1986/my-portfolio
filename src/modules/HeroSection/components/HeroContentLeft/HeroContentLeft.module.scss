@@ -13,6 +13,12 @@
     will-change: transform;
     opacity: 0;
 
+    /* Контейнер соотношения сторон по ориентации без изменения заданных размеров */
+    aspect-ratio: 16 / 9;
+    @media (orientation: portrait) {
+      aspect-ratio: 4 / 5;
+    }
+
     @include vp-1304 {
       padding-bottom: 70px;
     }
@@ -33,6 +39,9 @@
 
   &__image {
     position: relative;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
 
     &--musinian {
       max-width: 220px;
