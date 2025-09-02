@@ -16,12 +16,6 @@
     @include vp-1024 {
       gap: 16px;
     }
-    @include vp-768 {
-      gap: 12px;
-    }
-    @include vp-360 {
-      gap: 10px;
-    }
   }
 
   &__link {
@@ -48,6 +42,21 @@
         0 0 12px rgba(99, 218, 252, 0.2),
         0 1px 0 rgba(0, 0, 0, 0.4),
         0 2px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    // Mobile: enhanced glow effect like on hover
+    @include vp-768 {
+      // Light theme: glowing cyan shadow on mobile
+      text-shadow: var(--nav-link-shadow-hover);
+
+      // Dark theme: enhanced glowing effect on mobile
+      :root[data-theme='dark'] & {
+        text-shadow:
+          0 0 6px rgba(99, 218, 252, 0.6),
+          0 0 12px rgba(99, 218, 252, 0.45),
+          0 0 22px rgba(29, 113, 157, 0.4),
+          0 2px 6px rgba(0, 0, 0, 0.4);
+      }
     }
   }
 

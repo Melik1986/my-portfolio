@@ -151,6 +151,7 @@
     background: rgba(0, 0, 0, 0.15);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
+    border-radius: 16px 16px 0 0;
     border: none;
     padding: 0;
     margin: 0;
@@ -165,8 +166,22 @@
     right: 0;
     top: 0;
     padding: 8px 0 0;
+    border-radius: 16px;
     z-index: 120;
     animation: headerDropIn 220ms ease-out both;
+
+        // Overlay for mobile dropdown
+    &::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(70px);
+      border-radius: 16px;
+      z-index: 1; // Place it behind all dropdown elements
+      cursor: pointer;
+    }
   }
 
   &__dropdownCard {

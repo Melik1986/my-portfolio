@@ -36,14 +36,11 @@ export function useMobileNavigation() {
     }
     if (isMobileNavOpen) {
       document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
     } else {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
     };
   }, [isMobileNavOpen, closeMobileNav]);
 
