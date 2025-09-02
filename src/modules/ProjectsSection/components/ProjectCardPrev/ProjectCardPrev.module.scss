@@ -3,6 +3,20 @@
 @use '@/app/styles/_typography.scss' as typo;
 
 .projects-card {
+  &__img-wrapper {
+    position: relative;
+    width: 100%;
+    /* Default ratio; can be overridden by modifiers */
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  /* Portrait modifier forces 2:3 and landscape forces 16:9 */
+  &__img-wrapper--portrait { aspect-ratio: 2 / 3; }
+  &__img-wrapper--landscape { aspect-ratio: 16 / 9; }
+  &__img-wrapper--square { aspect-ratio: 1 / 1; }
+
   &__number {
     position: absolute;
     top: 10px;
@@ -14,8 +28,8 @@
   }
 
   &__img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 0;
     object-fit: cover;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
