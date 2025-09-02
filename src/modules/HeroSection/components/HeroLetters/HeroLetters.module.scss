@@ -16,12 +16,22 @@
     z-index: 2;
     opacity: 0;
 
+    // Landscape orientation - adjust top position to stay within bounds
+    @media (orientation: landscape) {
+      top: 20%;
+      
+      @media (max-width: 768px) {
+        top: 25%;
+      }
+    }
+
     @include vp-1024 {
       gap: 20px;
     }
 
     @include vp-768 {
       gap: 10px;
+      top: 15%;
     }
 
     @include vp-375 {
@@ -84,24 +94,24 @@
   // Landscape orientation adjustments
   @media (orientation: landscape) {
     &__container-letters {
-      gap: 35px;
+      gap: 25px;
       
       @include vp-768 {
-        gap: 15px;
+        gap: 12px;
       }
     }
 
-    // Landscape mobile - slightly larger sizes for better visibility
+    // Landscape mobile - adjusted sizes to fit within section
     @media (max-width: 768px) {
-      &__text:nth-child(1) { font-size: 4.0rem; }
-      &__text:nth-child(2) { font-size: 3.5rem; }
-      &__text:nth-child(3) { font-size: 3.1rem; }
-      &__text:nth-child(4) { font-size: 2.8rem; }
-      &__text:nth-child(5) { font-size: 2.5rem; }
-      &__text:nth-child(6) { font-size: 2.8rem; }
-      &__text:nth-child(7) { font-size: 3.1rem; }
-      &__text:nth-child(8) { font-size: 3.5rem; }
-      &__text:nth-child(9) { font-size: 4.0rem; }
+      &__text:nth-child(1) { font-size: 3.2rem; }
+      &__text:nth-child(2) { font-size: 2.9rem; }
+      &__text:nth-child(3) { font-size: 2.6rem; }
+      &__text:nth-child(4) { font-size: 2.4rem; }
+      &__text:nth-child(5) { font-size: 2.2rem; }
+      &__text:nth-child(6) { font-size: 2.4rem; }
+      &__text:nth-child(7) { font-size: 2.6rem; }
+      &__text:nth-child(8) { font-size: 2.9rem; }
+      &__text:nth-child(9) { font-size: 3.2rem; }
     }
   }
 
