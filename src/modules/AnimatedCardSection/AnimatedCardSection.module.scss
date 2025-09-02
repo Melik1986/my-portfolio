@@ -19,6 +19,10 @@
     border-radius: 4px;
     box-shadow: rgb(149, 157, 165, 0.2) 0px 8px 24px;
     overflow: hidden;
+
+    @include vp-768 {
+      height: 200dvh;
+    }
   }
 
   /* Only the first portfolio item shorter */
