@@ -151,40 +151,50 @@ const cleanupScrollTrigger = async (): Promise<void> => {
 
 // (deprecated) useSmootherInitialization removed in favor of createSmootherEffect
 
-function createSmootherEffect(config: {
-  wrapper: string;
-  content: string;
-  smooth: number;
-  effects: boolean;
-  normalizeScroll: boolean;
-  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
-  isInitializingRef: React.RefObject<boolean>;
-  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
-}): () => void {
-  const {
-    wrapper,
-    content,
-    smooth,
-    effects,
-    normalizeScroll,
-    smootherRef,
-    isInitializingRef,
-    setIsReady,
-  } = config;
+// Проверка наличия существующего экземпляра ScrollSmoother
+const checkExistingSmoother = (
+  smootherRef: React.RefObject<ScrollSmootherInstance | null>,
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>,
+): boolean => {
   const existingSmoother = ScrollSmoother.get();
   if (existingSmoother) {
     smootherRef.current = existingSmoother as unknown as ScrollSmootherInstance;
     setIsReady(true);
-    return () => {};
+    return true;
   }
+  return false;
+};
 
-  const isPreloaderActive = () =>
-    document.documentElement.classList.contains('preload-lock') ||
-    document.body.classList.contains('preload-lock');
+// Проверка активности прелоадера
+const isPreloaderActive = (): boolean =>
+  document.documentElement.classList.contains('preload-lock') ||
+  document.body.classList.contains('preload-lock');
 
-  let cleanup: (() => void) | null = null;
+// Настройка слушателя прелоадера
+const setupPreloaderListener = (tryInit: () => void): (() => void) => {
+  const onPreloaderDone = () => {
+    tryInit();
+    document.removeEventListener('preloader:complete', onPreloaderDone);
+  };
+  document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+  return () => document.removeEventListener('preloader:complete', onPreloaderDone);
+};
 
-  const tryInit = () => {
+// Создание функции инициализации
+const createInitializer = (
+  config: {
+    wrapper: string;
+    content: string;
+    smooth: number;
+    effects: boolean;
+    normalizeScroll: boolean;
+    smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+    isInitializingRef: React.RefObject<boolean>;
+    setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+  },
+): (() => void) => {
+  const { wrapper, content, smooth, effects, normalizeScroll, smootherRef, isInitializingRef, setIsReady } = config;
+  return () => {
     if (!checkDOMReady(wrapper, content)) return;
     initScrollSmoother({
       wrapper,
@@ -195,22 +205,35 @@ function createSmootherEffect(config: {
       onReady: () => setIsReady(true),
     });
   };
+};
+
+function createSmootherEffect(config: {
+  wrapper: string;
+  content: string;
+  smooth: number;
+  effects: boolean;
+  normalizeScroll: boolean;
+  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+  isInitializingRef: React.RefObject<boolean>;
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+}): () => void {
+  const { smootherRef, setIsReady } = config;
+  
+  if (checkExistingSmoother(smootherRef, setIsReady)) {
+    return () => {};
+  }
+
+  const tryInit = createInitializer(config);
+  let cleanup: (() => void) | null = null;
 
   if (isPreloaderActive()) {
-    const onPreloaderDone = () => {
-      tryInit();
-      document.removeEventListener('preloader:complete', onPreloaderDone);
-    };
-    document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
-    cleanup = () => document.removeEventListener('preloader:complete', onPreloaderDone);
+    cleanup = setupPreloaderListener(tryInit);
   } else {
     const timer = setTimeout(tryInit, 50);
     cleanup = () => clearTimeout(timer);
   }
 
-  return () => {
-    cleanup?.();
-  };
+  return () => cleanup?.();
 }
 
 /**
