@@ -56,7 +56,7 @@ export function HeroLetters() {
       data-animation="slide-down"
       data-duration="0.8"
       data-ease="power2.out"
-      data-delay="0"
+      data-delay="0.4"
       data-stagger="0.08"
       translate="no"
     >

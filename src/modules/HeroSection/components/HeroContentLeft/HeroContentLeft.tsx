@@ -57,7 +57,7 @@ export function HeroContentLeft() {
         data-animation="slide-left"
         data-duration="1.0"
         data-ease="power2.out"
-        data-delay="0.4"
+        data-delay="0.8"
         translate="no"
       >
         <HeroImage id="melik" src="/images/melik.svg" alt={t('section.hero.melikAlt')} />

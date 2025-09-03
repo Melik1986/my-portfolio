@@ -48,7 +48,7 @@ export function HeroAvatar() {
         data-animation="zoom-in"
         data-duration="1.2"
         data-ease="back.out(1.7)"
-        data-delay="1.2"
+        data-delay="0"
       />
     </div>
   );
