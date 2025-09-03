@@ -4,6 +4,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 ensureGSAPRegistered();
 
+// Проверка на мобильное устройство
+const isMobile = (): boolean => {
+  return typeof window !== 'undefined' && window.innerWidth <= 768;
+};
+
 /**
  * Callback для синхронизации анимаций элементов с master timeline
  */
@@ -153,7 +158,8 @@ function createDesktopTimeline(
       pin: true,
       start: 'top top',
       end: () => `+=${(items.length - 1) * 100}%`,
-      scrub: 1,
+      // Уменьшаем scrub для мобильных - делает скролл менее чувствительным
+      scrub: isMobile() ? 0.5 : 1,
       invalidateOnRefresh: true,
       // Снапим прогресс к ближайшей карточке (устраняет недоезд последней на 768–1023)
       snap: {
@@ -162,9 +168,12 @@ function createDesktopTimeline(
           const step = 1 / steps;
           return Math.round(value / step) * step;
         },
-        duration: 0.2,
-        delay: 0,
+        // Увеличиваем duration и delay для мобильных устройств для более сильного магнита
+        duration: isMobile() ? 0.5 : 0.2,
+        delay: isMobile() ? 0.1 : 0,
         ease: 'power1.inOut',
+        // Уменьшаем инерцию на мобильных для более быстрой остановки
+        inertia: isMobile() ? false : true,
       },
       markers: false,
     },
