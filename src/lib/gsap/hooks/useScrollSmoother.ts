@@ -151,6 +151,25 @@ const cleanupScrollTrigger = async (): Promise<void> => {
 
 // (deprecated) useSmootherInitialization removed in favor of createSmootherEffect
 
+// Helper functions to reduce createSmootherEffect size
+const isPreloaderActive = (): boolean =>
+  document.documentElement.classList.contains('preload-lock') ||
+  document.body.classList.contains('preload-lock');
+
+const setupPreloaderListener = (tryInit: () => void): (() => void) => {
+  const onPreloaderDone = () => {
+    tryInit();
+    document.removeEventListener('preloader:complete', onPreloaderDone);
+  };
+  document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+  return () => document.removeEventListener('preloader:complete', onPreloaderDone);
+};
+
+const setupDelayedInit = (tryInit: () => void): (() => void) => {
+  const timer = setTimeout(tryInit, 50);
+  return () => clearTimeout(timer);
+};
+
 function createSmootherEffect(config: {
   wrapper: string;
   content: string;
@@ -171,18 +190,13 @@ function createSmootherEffect(config: {
     isInitializingRef,
     setIsReady,
   } = config;
+  
   const existingSmoother = ScrollSmoother.get();
   if (existingSmoother) {
     smootherRef.current = existingSmoother as unknown as ScrollSmootherInstance;
     setIsReady(true);
     return () => {};
   }
-
-  const isPreloaderActive = () =>
-    document.documentElement.classList.contains('preload-lock') ||
-    document.body.classList.contains('preload-lock');
-
-  let cleanup: (() => void) | null = null;
 
   const tryInit = () => {
     if (!checkDOMReady(wrapper, content)) return;
@@ -196,21 +210,11 @@ function createSmootherEffect(config: {
     });
   };
 
-  if (isPreloaderActive()) {
-    const onPreloaderDone = () => {
-      tryInit();
-      document.removeEventListener('preloader:complete', onPreloaderDone);
-    };
-    document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
-    cleanup = () => document.removeEventListener('preloader:complete', onPreloaderDone);
-  } else {
-    const timer = setTimeout(tryInit, 50);
-    cleanup = () => clearTimeout(timer);
-  }
+  const cleanup = isPreloaderActive()
+    ? setupPreloaderListener(tryInit)
+    : setupDelayedInit(tryInit);
 
-  return () => {
-    cleanup?.();
-  };
+  return () => cleanup();
 }
 
 /**
