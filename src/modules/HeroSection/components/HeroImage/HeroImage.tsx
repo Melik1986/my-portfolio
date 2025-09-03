@@ -40,8 +40,8 @@ export function HeroAvatar() {
         id="avatar"
         src="/images/avatar.png"
         alt={t('section.hero.avatarAlt')}
-        width={1920}
-        height={1080}
+        width={4096}
+        height={2989}
         sizes="(max-width: 768px) 90vw, 50vw"
         priority
         fill={false}
