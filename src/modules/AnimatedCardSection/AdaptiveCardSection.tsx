@@ -26,7 +26,7 @@ function useMobileDetection() {
     setIsClient(true);
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
-    
+
     const handleResize = () => checkMobile();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -36,24 +36,24 @@ function useMobileDetection() {
 }
 
 // Компонент для рендеринга разделенных карточек
-function SplitCards({ 
-  id, 
-  title, 
-  sectionIndex, 
-  mobileConfig 
+function SplitCards({
+  id,
+  title,
+  sectionIndex,
+  mobileConfig,
 }: Pick<AdaptiveCardSectionProps, 'id' | 'title' | 'sectionIndex' | 'mobileConfig'>) {
   return (
     <>
-      <AnimatedCardSection 
-        id={`${id}-left`} 
-        title={mobileConfig?.leftTitle || `${title} Content`} 
+      <AnimatedCardSection
+        id={`${id}-left`}
+        title={mobileConfig?.leftTitle || `${title} Content`}
         sectionIndex={sectionIndex + 0.1}
       >
         {mobileConfig?.leftContent}
       </AnimatedCardSection>
-      <AnimatedCardSection 
-        id={`${id}-right`} 
-        title={mobileConfig?.rightTitle || `${title} Visual`} 
+      <AnimatedCardSection
+        id={`${id}-right`}
+        title={mobileConfig?.rightTitle || `${title} Visual`}
         sectionIndex={sectionIndex + 0.2}
       >
         {mobileConfig?.rightContent}
@@ -81,5 +81,7 @@ export function AdaptiveCardSection({
   }
 
   // Для мобильной версии с разделением
-  return <SplitCards id={id} title={title} sectionIndex={sectionIndex} mobileConfig={mobileConfig} />;
+  return (
+    <SplitCards id={id} title={title} sectionIndex={sectionIndex} mobileConfig={mobileConfig} />
+  );
 }

@@ -24,7 +24,7 @@ export function navigateToSection(
   // На мобильных устройствах преобразуем ID секций
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   let targetSectionId = sectionId;
-  
+
   if (isMobile) {
     // Для мобильных устройств используем левую часть разделенных секций
     const mobileMapping: Record<string, string> = {

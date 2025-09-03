@@ -180,8 +180,6 @@ export function createElementTimeline(
 ): gsap.core.Timeline {
   const elements = Array.from(container.querySelectorAll(selector));
 
-
-
   if (elements.length === 0) {
     return gsap.timeline({ paused: true });
   }

@@ -26,7 +26,7 @@
 
     @include vp-768 {
       height: 100dvh;
-      
+
       // На мобильных все карточки занимают полную высоту
       &:first-child {
         height: 100dvh;
@@ -37,7 +37,7 @@
   /* Only the first portfolio item shorter on desktop */
   &__item:first-child {
     height: 80vh;
-    
+
     @include vp-768 {
       height: 100dvh;
     }

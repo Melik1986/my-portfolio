@@ -41,23 +41,19 @@ export function ResponsiveCardWrapper({
 
   // Для мобильных устройств разделяем контент
   const childrenArray = React.Children.toArray(children);
-  
+
   // Предполагаем, что у нас есть компонент с двумя частями контента
   const leftContent = childrenArray[0];
   const rightContent = childrenArray[1];
 
   return (
     <>
-      <AnimatedCardSection 
-        id={`${id}-left`} 
-        title={`${title} Content`} 
-        sectionIndex={sectionIndex}
-      >
+      <AnimatedCardSection id={`${id}-left`} title={`${title} Content`} sectionIndex={sectionIndex}>
         {leftContent}
       </AnimatedCardSection>
-      <AnimatedCardSection 
-        id={`${id}-right`} 
-        title={`${title} Visual`} 
+      <AnimatedCardSection
+        id={`${id}-right`}
+        title={`${title} Visual`}
         sectionIndex={sectionIndex + 0.5} // Используем дробный индекс для второй части
       >
         {rightContent}

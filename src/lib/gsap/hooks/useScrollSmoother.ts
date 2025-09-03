@@ -190,7 +190,7 @@ function createSmootherEffect(config: {
     isInitializingRef,
     setIsReady,
   } = config;
-  
+
   const existingSmoother = ScrollSmoother.get();
   if (existingSmoother) {
     smootherRef.current = existingSmoother as unknown as ScrollSmootherInstance;
@@ -210,9 +210,7 @@ function createSmootherEffect(config: {
     });
   };
 
-  const cleanup = isPreloaderActive()
-    ? setupPreloaderListener(tryInit)
-    : setupDelayedInit(tryInit);
+  const cleanup = isPreloaderActive() ? setupPreloaderListener(tryInit) : setupDelayedInit(tryInit);
 
   return () => cleanup();
 }

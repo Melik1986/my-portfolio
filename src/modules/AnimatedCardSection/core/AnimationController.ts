@@ -117,10 +117,12 @@ export class AnimationController {
       console.warn(`[AnimationController] Section ${sectionIndex} already registered, skipping`);
       return this.sections.get(sectionIndex)!.timeline;
     }
-    
+
     // Debug для мобильных
     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      console.log(`[AnimationController] Registering section ${sectionIndex}, wrapper id: ${wrapper.id}`);
+      console.log(
+        `[AnimationController] Registering section ${sectionIndex}, wrapper id: ${wrapper.id}`,
+      );
     }
 
     // Создаём timeline элементов для секции
@@ -293,12 +295,13 @@ export class AnimationController {
 
     // Для остальных карточек
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    const totalCards = isMobile 
-      ? document.querySelectorAll('li[data-section-index]').length 
+    const totalCards = isMobile
+      ? document.querySelectorAll('li[data-section-index]').length
       : (this.totalCardsCount ?? this.sections.size);
     const progress = cardIndex / Math.max(1, totalCards - 1);
-    const targetPosition = scrollTrigger.start + (scrollTrigger.end - scrollTrigger.start) * progress;
-    
+    const targetPosition =
+      scrollTrigger.start + (scrollTrigger.end - scrollTrigger.start) * progress;
+
     this.scrollToPosition(targetPosition);
     return true;
   }
@@ -326,15 +329,15 @@ export class AnimationController {
   getCardIndexBySectionId(sectionId: string): number {
     // На мобильных устройствах нужно учитывать разделенные секции
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    
+
     if (isMobile) {
       // Находим все карточки в DOM по data-section-index
       const allCards = document.querySelectorAll('li[data-section-index]');
       let targetIndex = -1;
-      
+
       console.log('[Navigation] Looking for section:', sectionId);
       console.log('[Navigation] Total cards found:', allCards.length);
-      
+
       allCards.forEach((card, index) => {
         console.log(`[Navigation] Card ${index}: id="${card.id}"`);
         // Проверяем ID самой карточки
@@ -342,19 +345,19 @@ export class AnimationController {
           targetIndex = index;
         }
       });
-      
+
       if (targetIndex !== -1) {
         console.log('[Navigation] Found card at index:', targetIndex);
         return targetIndex;
       }
-      
+
       // Fallback маппинг для мобильных
       const mobileSectionMapping: Record<string, number> = {
         'hero-section': 0,
         'about-section': 1, // Будет преобразовано в about-section-left
         'about-section-left': 1,
         'about-section-right': 2,
-        'skills-section': 3, // Будет преобразовано в skills-section-left  
+        'skills-section': 3, // Будет преобразовано в skills-section-left
         'skills-section-left': 3,
         'skills-section-right': 4,
         'projects-section': 5,
@@ -362,11 +365,11 @@ export class AnimationController {
         'ai-video-section': 7,
         'contact-section': 8,
       };
-      
+
       console.log('[Navigation] Using fallback mapping, result:', mobileSectionMapping[sectionId]);
       return mobileSectionMapping[sectionId] ?? -1;
     }
-    
+
     // Для десктопа используем обычный маппинг
     const sectionMapping: Record<string, number> = {
       'hero-section': 0,

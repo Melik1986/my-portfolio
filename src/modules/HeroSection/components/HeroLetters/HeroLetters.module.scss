@@ -19,7 +19,7 @@
     // Landscape orientation - adjust top position to stay within bounds
     @media (orientation: landscape) {
       top: 10%;
-      
+
       @media (max-width: 768px) {
         top: 25%;
       }
@@ -40,62 +40,136 @@
   }
 
   // Desktop base sizes - semi-oval effect (first and last largest, middle smallest)
-  &__text:nth-child(1) { font-size: 7.2rem; }
-  &__text:nth-child(2) { font-size: 6.2rem; }
-  &__text:nth-child(3) { font-size: 5.4rem; }
-  &__text:nth-child(4) { font-size: 4.8rem; }
-  &__text:nth-child(5) { font-size: 4.2rem; } // Middle - smallest
-  &__text:nth-child(6) { font-size: 4.8rem; }
-  &__text:nth-child(7) { font-size: 5.4rem; }
-  &__text:nth-child(8) { font-size: 6.2rem; }
-  &__text:nth-child(9) { font-size: 7.2rem; }
+  &__text:nth-child(1) {
+    font-size: 7.2rem;
+  }
+  &__text:nth-child(2) {
+    font-size: 6.2rem;
+  }
+  &__text:nth-child(3) {
+    font-size: 5.4rem;
+  }
+  &__text:nth-child(4) {
+    font-size: 4.8rem;
+  }
+  &__text:nth-child(5) {
+    font-size: 4.2rem;
+  } // Middle - smallest
+  &__text:nth-child(6) {
+    font-size: 4.8rem;
+  }
+  &__text:nth-child(7) {
+    font-size: 5.4rem;
+  }
+  &__text:nth-child(8) {
+    font-size: 6.2rem;
+  }
+  &__text:nth-child(9) {
+    font-size: 7.2rem;
+  }
 
   // Tablet (769-1024px) - proportional scaling
   @media (min-width: 769px) and (max-width: 1024px) {
-    &__container-letters { gap: 16px; }
-    
-    &__text:nth-child(1) { font-size: 6.1rem; }
-    &__text:nth-child(2) { font-size: 5.3rem; }
-    &__text:nth-child(3) { font-size: 4.6rem; }
-    &__text:nth-child(4) { font-size: 4.1rem; }
-    &__text:nth-child(5) { font-size: 3.6rem; }
-    &__text:nth-child(6) { font-size: 4.1rem; }
-    &__text:nth-child(7) { font-size: 4.6rem; }
-    &__text:nth-child(8) { font-size: 5.3rem; }
-    &__text:nth-child(9) { font-size: 6.1rem; }
+    &__container-letters {
+      gap: 16px;
+    }
+
+    &__text:nth-child(1) {
+      font-size: 6.1rem;
+    }
+    &__text:nth-child(2) {
+      font-size: 5.3rem;
+    }
+    &__text:nth-child(3) {
+      font-size: 4.6rem;
+    }
+    &__text:nth-child(4) {
+      font-size: 4.1rem;
+    }
+    &__text:nth-child(5) {
+      font-size: 3.6rem;
+    }
+    &__text:nth-child(6) {
+      font-size: 4.1rem;
+    }
+    &__text:nth-child(7) {
+      font-size: 4.6rem;
+    }
+    &__text:nth-child(8) {
+      font-size: 5.3rem;
+    }
+    &__text:nth-child(9) {
+      font-size: 6.1rem;
+    }
   }
 
   // Mobile (375-768px) - golden ratio with 1.5% increase and semi-oval
   @include vp-768 {
-    &__text:nth-child(1) { font-size: calc(3.66rem * 1.015); } // 3.71rem
-    &__text:nth-child(2) { font-size: calc(3.22rem * 1.015); } // 3.27rem
-    &__text:nth-child(3) { font-size: calc(2.88rem * 1.015); } // 2.92rem
-    &__text:nth-child(4) { font-size: calc(2.64rem * 1.015); } // 2.68rem
-    &__text:nth-child(5) { font-size: calc(2.40rem * 1.015); } // 2.44rem - middle smallest
-    &__text:nth-child(6) { font-size: calc(2.64rem * 1.015); } // 2.68rem
-    &__text:nth-child(7) { font-size: calc(2.88rem * 1.015); } // 2.92rem
-    &__text:nth-child(8) { font-size: calc(3.22rem * 1.015); } // 3.27rem
-    &__text:nth-child(9) { font-size: calc(3.66rem * 1.015); } // 3.71rem
+    &__text:nth-child(1) {
+      font-size: calc(3.66rem * 1.015);
+    } // 3.71rem
+    &__text:nth-child(2) {
+      font-size: calc(3.22rem * 1.015);
+    } // 3.27rem
+    &__text:nth-child(3) {
+      font-size: calc(2.88rem * 1.015);
+    } // 2.92rem
+    &__text:nth-child(4) {
+      font-size: calc(2.64rem * 1.015);
+    } // 2.68rem
+    &__text:nth-child(5) {
+      font-size: calc(2.4rem * 1.015);
+    } // 2.44rem - middle smallest
+    &__text:nth-child(6) {
+      font-size: calc(2.64rem * 1.015);
+    } // 2.68rem
+    &__text:nth-child(7) {
+      font-size: calc(2.88rem * 1.015);
+    } // 2.92rem
+    &__text:nth-child(8) {
+      font-size: calc(3.22rem * 1.015);
+    } // 3.27rem
+    &__text:nth-child(9) {
+      font-size: calc(3.66rem * 1.015);
+    } // 3.71rem
   }
 
   // Small mobile (375px and below)
   @include vp-375 {
-    &__text:nth-child(1) { font-size: 3.2rem; }
-    &__text:nth-child(2) { font-size: 2.8rem; }
-    &__text:nth-child(3) { font-size: 2.5rem; }
-    &__text:nth-child(4) { font-size: 2.3rem; }
-    &__text:nth-child(5) { font-size: 2.1rem; }
-    &__text:nth-child(6) { font-size: 2.3rem; }
-    &__text:nth-child(7) { font-size: 2.5rem; }
-    &__text:nth-child(8) { font-size: 2.8rem; }
-    &__text:nth-child(9) { font-size: 3.2rem; }
+    &__text:nth-child(1) {
+      font-size: 3.2rem;
+    }
+    &__text:nth-child(2) {
+      font-size: 2.8rem;
+    }
+    &__text:nth-child(3) {
+      font-size: 2.5rem;
+    }
+    &__text:nth-child(4) {
+      font-size: 2.3rem;
+    }
+    &__text:nth-child(5) {
+      font-size: 2.1rem;
+    }
+    &__text:nth-child(6) {
+      font-size: 2.3rem;
+    }
+    &__text:nth-child(7) {
+      font-size: 2.5rem;
+    }
+    &__text:nth-child(8) {
+      font-size: 2.8rem;
+    }
+    &__text:nth-child(9) {
+      font-size: 3.2rem;
+    }
   }
 
   // Landscape orientation adjustments
   @media (orientation: landscape) {
     &__container-letters {
       gap: 25px;
-      
+
       @include vp-768 {
         gap: 12px;
       }
@@ -103,15 +177,33 @@
 
     // Landscape mobile - adjusted sizes to fit within section
     @media (max-width: 768px) {
-      &__text:nth-child(1) { font-size: 3.2rem; }
-      &__text:nth-child(2) { font-size: 2.9rem; }
-      &__text:nth-child(3) { font-size: 2.6rem; }
-      &__text:nth-child(4) { font-size: 2.4rem; }
-      &__text:nth-child(5) { font-size: 2.2rem; }
-      &__text:nth-child(6) { font-size: 2.4rem; }
-      &__text:nth-child(7) { font-size: 2.6rem; }
-      &__text:nth-child(8) { font-size: 2.9rem; }
-      &__text:nth-child(9) { font-size: 3.2rem; }
+      &__text:nth-child(1) {
+        font-size: 3.2rem;
+      }
+      &__text:nth-child(2) {
+        font-size: 2.9rem;
+      }
+      &__text:nth-child(3) {
+        font-size: 2.6rem;
+      }
+      &__text:nth-child(4) {
+        font-size: 2.4rem;
+      }
+      &__text:nth-child(5) {
+        font-size: 2.2rem;
+      }
+      &__text:nth-child(6) {
+        font-size: 2.4rem;
+      }
+      &__text:nth-child(7) {
+        font-size: 2.6rem;
+      }
+      &__text:nth-child(8) {
+        font-size: 2.9rem;
+      }
+      &__text:nth-child(9) {
+        font-size: 3.2rem;
+      }
     }
   }
 
@@ -120,17 +212,35 @@
     &__container-letters {
       gap: 8px;
     }
-    
+
     // Maintain semi-oval with adjusted proportions for portrait
-    &__text:nth-child(1) { font-size: 3.8rem; }
-    &__text:nth-child(2) { font-size: 3.3rem; }
-    &__text:nth-child(3) { font-size: 2.95rem; }
-    &__text:nth-child(4) { font-size: 2.7rem; }
-    &__text:nth-child(5) { font-size: 2.45rem; }
-    &__text:nth-child(6) { font-size: 2.7rem; }
-    &__text:nth-child(7) { font-size: 2.95rem; }
-    &__text:nth-child(8) { font-size: 3.3rem; }
-    &__text:nth-child(9) { font-size: 3.8rem; }
+    &__text:nth-child(1) {
+      font-size: 3.8rem;
+    }
+    &__text:nth-child(2) {
+      font-size: 3.3rem;
+    }
+    &__text:nth-child(3) {
+      font-size: 2.95rem;
+    }
+    &__text:nth-child(4) {
+      font-size: 2.7rem;
+    }
+    &__text:nth-child(5) {
+      font-size: 2.45rem;
+    }
+    &__text:nth-child(6) {
+      font-size: 2.7rem;
+    }
+    &__text:nth-child(7) {
+      font-size: 2.95rem;
+    }
+    &__text:nth-child(8) {
+      font-size: 3.3rem;
+    }
+    &__text:nth-child(9) {
+      font-size: 3.8rem;
+    }
   }
 
   // Aspect ratio specific adjustments
@@ -151,16 +261,34 @@
     &__container-letters {
       gap: 18px;
     }
-    
-    &__text:nth-child(1) { font-size: 3.5rem; }
-    &__text:nth-child(2) { font-size: 3.1rem; }
-    &__text:nth-child(3) { font-size: 2.8rem; }
-    &__text:nth-child(4) { font-size: 2.5rem; }
-    &__text:nth-child(5) { font-size: 2.3rem; }
-    &__text:nth-child(6) { font-size: 2.5rem; }
-    &__text:nth-child(7) { font-size: 2.8rem; }
-    &__text:nth-child(8) { font-size: 3.1rem; }
-    &__text:nth-child(9) { font-size: 3.5rem; }
+
+    &__text:nth-child(1) {
+      font-size: 3.5rem;
+    }
+    &__text:nth-child(2) {
+      font-size: 3.1rem;
+    }
+    &__text:nth-child(3) {
+      font-size: 2.8rem;
+    }
+    &__text:nth-child(4) {
+      font-size: 2.5rem;
+    }
+    &__text:nth-child(5) {
+      font-size: 2.3rem;
+    }
+    &__text:nth-child(6) {
+      font-size: 2.5rem;
+    }
+    &__text:nth-child(7) {
+      font-size: 2.8rem;
+    }
+    &__text:nth-child(8) {
+      font-size: 3.1rem;
+    }
+    &__text:nth-child(9) {
+      font-size: 3.5rem;
+    }
   }
 
   &__text {

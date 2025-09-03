@@ -101,11 +101,11 @@ function useAvatarVisibilityBridge(
             dispatch(entry.isIntersecting);
           });
         },
-        { threshold: 0.1, rootMargin: '50px' }
+        { threshold: 0.1, rootMargin: '50px' },
       );
-      
+
       observer.observe(target);
-      
+
       // Проверяем начальную видимость с задержкой для гарантии загрузки
       setTimeout(() => {
         const rect = target.getBoundingClientRect();
@@ -114,7 +114,7 @@ function useAvatarVisibilityBridge(
           dispatch(true);
         }
       }, 100);
-      
+
       return () => {
         observer.disconnect();
       };

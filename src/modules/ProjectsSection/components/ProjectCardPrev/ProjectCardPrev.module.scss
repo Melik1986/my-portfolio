@@ -2,10 +2,7 @@
 @use '@/app/styles/_mixins.scss' as *;
 @use '@/app/styles/_typography.scss' as typo;
 
-
 .projects-card {
-
-
   &__number {
     position: absolute;
     top: 10px;

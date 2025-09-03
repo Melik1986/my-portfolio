@@ -20,16 +20,16 @@ export const revalidate = 86400; // каждые 24 часа
 // Вынесенные компоненты для сокращения основной функции
 function AboutCard() {
   return (
-    <AdaptiveCardSection 
-      id="about-section" 
-      title="About" 
+    <AdaptiveCardSection
+      id="about-section"
+      title="About"
       sectionIndex={1}
       mobileConfig={{
         split: true,
         leftContent: <AboutSectionWrapper isMobile={true} part="content" />,
         rightContent: <AboutSectionWrapper isMobile={true} part="avatar" />,
-        leftTitle: "About Me",
-        rightTitle: "3D Avatar"
+        leftTitle: 'About Me',
+        rightTitle: '3D Avatar',
       }}
     >
       <AboutSectionWrapper isMobile={false} part="full" />
@@ -39,16 +39,16 @@ function AboutCard() {
 
 function SkillsCard() {
   return (
-    <AdaptiveCardSection 
-      id="skills-section" 
-      title="Skills" 
+    <AdaptiveCardSection
+      id="skills-section"
+      title="Skills"
       sectionIndex={2}
       mobileConfig={{
         split: true,
         leftContent: <SkillsSectionWrapper isMobile={true} part="content" />,
         rightContent: <SkillsSectionWrapper isMobile={true} part="charts" />,
-        leftTitle: "Skills Info",
-        rightTitle: "Skills Charts"
+        leftTitle: 'Skills Info',
+        rightTitle: 'Skills Charts',
       }}
     >
       <SkillsSectionWrapper isMobile={false} part="full" />

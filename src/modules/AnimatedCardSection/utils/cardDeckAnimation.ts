@@ -23,7 +23,7 @@ function createCardAnimation(
 
     const startProgress = (index - 1) / (items.length - 1);
     const endProgress = index / (items.length - 1);
-    
+
     // Получаем индекс секции из data-атрибута
     const sectionIndex = parseFloat(item.getAttribute('data-section-index') || String(index));
 
@@ -43,7 +43,9 @@ function createCardAnimation(
         onStart: () => onProgressUpdate?.(sectionIndex, endProgress),
         // Назад: возвращаем активность предыдущей карточке
         onReverseComplete: () => {
-          const prevIndex = parseFloat(items[index - 1]?.getAttribute('data-section-index') || String(index - 1));
+          const prevIndex = parseFloat(
+            items[index - 1]?.getAttribute('data-section-index') || String(index - 1),
+          );
           onProgressUpdate?.(prevIndex, startProgress);
         },
       },
@@ -185,8 +187,14 @@ export function initCardDeckScroll(
 
   mm.add('(max-width: 767px)', () => {
     // На мобильных устройствах пересчитываем количество элементов динамически
-    const currentItems = Array.from(section.querySelectorAll(':scope > ul.portfolio__list > li')) as HTMLElement[];
-    timeline = createMobileTimeline(section, currentItems.length > 0 ? currentItems : items, onCardActivate);
+    const currentItems = Array.from(
+      section.querySelectorAll(':scope > ul.portfolio__list > li'),
+    ) as HTMLElement[];
+    timeline = createMobileTimeline(
+      section,
+      currentItems.length > 0 ? currentItems : items,
+      onCardActivate,
+    );
     return () => timeline.kill();
   });
 
