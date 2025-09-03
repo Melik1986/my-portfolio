@@ -151,6 +151,62 @@ const cleanupScrollTrigger = async (): Promise<void> => {
 
 // (deprecated) useSmootherInitialization removed in favor of createSmootherEffect
 
+// Вынос проверки прелоадера на верхний уровень для сокращения размера функции
+const isPreloaderActive = () =>
+  document.documentElement.classList.contains('preload-lock') ||
+  document.body.classList.contains('preload-lock');
+
+// Фабрика функции инициализации для ScrollSmoother
+const createTryInit = (params: {
+  wrapper: string;
+  content: string;
+  smooth: number;
+  effects: boolean;
+  normalizeScroll: boolean;
+  smootherRef: React.RefObject<ScrollSmootherInstance | null>;
+  isInitializingRef: React.RefObject<boolean>;
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const {
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  } = params;
+  return () => {
+    if (!checkDOMReady(wrapper, content)) return;
+    initScrollSmoother({
+      wrapper,
+      content,
+      options: { smooth, effects, normalizeScroll },
+      smootherRef,
+      isInitializingRef,
+      onReady: () => setIsReady(true),
+    });
+  };
+};
+
+// Планировщик инициализации с учетом прелоадера
+const scheduleInitialization = (
+  preloaderActive: boolean,
+  onReadyToInit: () => void,
+): (() => void) => {
+  if (preloaderActive) {
+    const onPreloaderDone = () => {
+      onReadyToInit();
+      document.removeEventListener('preloader:complete', onPreloaderDone);
+    };
+    document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+    return () => document.removeEventListener('preloader:complete', onPreloaderDone);
+  }
+  const timer = setTimeout(onReadyToInit, 50);
+  return () => clearTimeout(timer);
+};
+
 function createSmootherEffect(config: {
   wrapper: string;
   content: string;
@@ -178,35 +234,18 @@ function createSmootherEffect(config: {
     return () => {};
   }
 
-  const isPreloaderActive = () =>
-    document.documentElement.classList.contains('preload-lock') ||
-    document.body.classList.contains('preload-lock');
+  const tryInit = createTryInit({
+    wrapper,
+    content,
+    smooth,
+    effects,
+    normalizeScroll,
+    smootherRef,
+    isInitializingRef,
+    setIsReady,
+  });
 
-  let cleanup: (() => void) | null = null;
-
-  const tryInit = () => {
-    if (!checkDOMReady(wrapper, content)) return;
-    initScrollSmoother({
-      wrapper,
-      content,
-      options: { smooth, effects, normalizeScroll },
-      smootherRef,
-      isInitializingRef,
-      onReady: () => setIsReady(true),
-    });
-  };
-
-  if (isPreloaderActive()) {
-    const onPreloaderDone = () => {
-      tryInit();
-      document.removeEventListener('preloader:complete', onPreloaderDone);
-    };
-    document.addEventListener('preloader:complete', onPreloaderDone, { once: true });
-    cleanup = () => document.removeEventListener('preloader:complete', onPreloaderDone);
-  } else {
-    const timer = setTimeout(tryInit, 50);
-    cleanup = () => clearTimeout(timer);
-  }
+  const cleanup = scheduleInitialization(isPreloaderActive(), tryInit);
 
   return () => {
     cleanup?.();
