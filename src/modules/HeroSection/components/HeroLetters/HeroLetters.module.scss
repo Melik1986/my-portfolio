@@ -4,7 +4,7 @@
 .hero {
   &__container-letters {
     position: absolute;
-    top: 10%;
+    top: 5%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -18,7 +18,7 @@
 
     // Landscape orientation - adjust top position to stay within bounds
     @media (orientation: landscape) {
-      top: 20%;
+      top: 10%;
       
       @media (max-width: 768px) {
         top: 25%;
