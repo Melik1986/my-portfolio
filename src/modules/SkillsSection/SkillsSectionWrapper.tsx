@@ -33,7 +33,7 @@ export function SkillsSectionWrapper({ isMobile = false, part = 'full' }: Skills
   // Для мобильной версии - только контент
   if (part === 'content') {
     return (
-      <section ref={sectionRef} className={styles.skills} id="skills-content" data-group-delay="0">
+      <section ref={sectionRef} className={styles.skills} id="skills-content" data-section-index="2.1" data-group-delay="0">
         <h2 className={`${styles.skills__title} visually-hidden`}>{t('section.skills.title')}</h2>
         <div className={`${styles['skills__content']} ${styles['skills__content-left']}`} style={{ width: '100%' }} data-animation="fade-up" data-delay="0.2">
           <SkillsContent />
@@ -45,7 +45,7 @@ export function SkillsSectionWrapper({ isMobile = false, part = 'full' }: Skills
   // Для мобильной версии - только графики
   if (part === 'charts') {
     return (
-      <section ref={sectionRef} className={styles.skills} id="skills-charts" data-group-delay="0">
+      <section ref={sectionRef} className={styles.skills} id="skills-charts" data-section-index="2.2" data-group-delay="0">
         <div className={`${styles['skills__content']} ${styles['skills__content-right']}`} style={{ width: '100%', height: '100%' }} data-animation="fade-up" data-delay="0.2">
           <SkillsCharts />
         </div>

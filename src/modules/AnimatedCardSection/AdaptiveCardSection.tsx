@@ -47,14 +47,14 @@ function SplitCards({
       <AnimatedCardSection 
         id={`${id}-left`} 
         title={mobileConfig?.leftTitle || `${title} Content`} 
-        sectionIndex={sectionIndex}
+        sectionIndex={sectionIndex + 0.1}
       >
         {mobileConfig?.leftContent}
       </AnimatedCardSection>
       <AnimatedCardSection 
         id={`${id}-right`} 
         title={mobileConfig?.rightTitle || `${title} Visual`} 
-        sectionIndex={sectionIndex + 0.5}
+        sectionIndex={sectionIndex + 0.2}
       >
         {mobileConfig?.rightContent}
       </AnimatedCardSection>

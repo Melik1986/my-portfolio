@@ -31,7 +31,7 @@ export function AboutSectionWrapper({ isMobile = false, part = 'full' }: AboutSe
   // Для мобильной версии - только контент
   if (part === 'content') {
     return (
-      <section className={styles.about} id="about-content" data-section-index="1" data-group-delay="0">
+      <section className={styles.about} id="about-content" data-section-index="1.1" data-group-delay="0">
         <h2 className={`${styles.about__title} visually-hidden`}>{t('section.about.title')}</h2>
         <div className={`${styles['about__content']} ${styles['about__content-left']}`} style={{ width: '100%' }} data-animation="fade-up" data-delay="0.2">
           <AboutContent />
@@ -43,7 +43,7 @@ export function AboutSectionWrapper({ isMobile = false, part = 'full' }: AboutSe
   // Для мобильной версии - только аватар
   if (part === 'avatar') {
     return (
-      <section className={styles.about} id="about-avatar" data-section-index="1.5" data-group-delay="0">
+      <section className={styles.about} id="about-avatar" data-section-index="1.2" data-group-delay="0">
         <div className={`${styles['about__content']} ${styles['about__content-right']}`} style={{ width: '100%', height: '100%' }} data-animation="fade-up" data-delay="0.2">
           <Avatar />
         </div>

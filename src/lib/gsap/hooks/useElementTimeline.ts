@@ -180,6 +180,15 @@ export function createElementTimeline(
 ): gsap.core.Timeline {
   const elements = Array.from(container.querySelectorAll(selector));
 
+  // Debug для мобильных
+  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+    console.log(`[createElementTimeline] Container: ${container.id}, Found ${elements.length} elements with ${selector}`);
+    elements.forEach((el, i) => {
+      const htmlEl = el as HTMLElement;
+      console.log(`  Element ${i}: ${htmlEl.tagName}, animation: ${htmlEl.dataset.animation}`);
+    });
+  }
+
   if (elements.length === 0) {
     return gsap.timeline({ paused: true });
   }

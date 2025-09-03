@@ -114,7 +114,13 @@ export class AnimationController {
   registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
     // Проверяем, что секция ещё не зарегистрирована
     if (this.sections.has(sectionIndex)) {
+      console.warn(`[AnimationController] Section ${sectionIndex} already registered, skipping`);
       return this.sections.get(sectionIndex)!.timeline;
+    }
+    
+    // Debug для мобильных
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      console.log(`[AnimationController] Registering section ${sectionIndex}, wrapper id: ${wrapper.id}`);
     }
 
     // Создаём timeline элементов для секции
@@ -348,7 +354,7 @@ export class AnimationController {
         'about-section': 1, // Будет преобразовано в about-section-left
         'about-section-left': 1,
         'about-section-right': 2,
-        'skills-section': 3, // Будет преобразовано в skills-section-left
+        'skills-section': 3, // Будет преобразовано в skills-section-left  
         'skills-section-left': 3,
         'skills-section-right': 4,
         'projects-section': 5,
