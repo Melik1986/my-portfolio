@@ -213,7 +213,6 @@ const fetchModelOnce = async (): Promise<GLTF> => {
       .finally(() => {
         sharedModelPromise = null;
       });
-  } else {
   }
   return (await (sharedModelGLTF ? Promise.resolve(sharedModelGLTF) : sharedModelPromise!)) as GLTF;
 };
@@ -238,6 +237,7 @@ const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void 
   const center = new THREE.Vector3();
   box.getSize(size);
   box.getCenter(center);
+  
   avatar.position.sub(center);
   const boxAfter = new THREE.Box3().setFromObject(avatar);
   const minY = boxAfter.min.y;
@@ -245,6 +245,7 @@ const centerModelAndFitCamera = (avatar: THREE.Group, scene: AvatarScene): void 
   const fov = (scene.camera.fov * Math.PI) / 180;
   const maxDim = Math.max(size.x, size.y, size.z);
   const distance = maxDim / (2 * Math.tan(fov / 2)) + 0.6;
+  
   scene.camera.position.set(0.6, size.y * 0.7 + 0.4, distance);
   scene.controls.target.set(0, size.y * 0.5, 0);
   scene.controls.update();
@@ -319,6 +320,7 @@ const handleModelLoadedImpl = (
   } catch {}
 
   scene.scene.add(avatar, assets.groundMesh);
+  
   ctx.assetsRef.current = assets;
   updateRefsAfterLoad(ctx.refs, assets);
 
@@ -326,6 +328,11 @@ const handleModelLoadedImpl = (
   if (container) {
     try {
       applyInitialSizing(container, scene, assets, ctx.calculateScale);
+      
+      // Форсируем рендеринг на мобильных после добавления модели
+      if (window.innerWidth <= 768) {
+        scene.renderer.render(scene.scene, scene.camera);
+      }
     } catch {}
     container.dispatchEvent(new CustomEvent('modelLoaded'));
   }
@@ -365,14 +372,16 @@ const useModelHandler = (
   const loadModel = useCallback(async (): Promise<void> => {
     if (assetsRef.current || isModelLoading) return;
     isModelLoading = true;
-
+    
     try {
       const base = await fetchModelOnce();
+      
       if (stateRef.current.isDisposed) {
         return;
       }
 
       const gltf = await cloneForScene(base);
+      
       if (stateRef.current.isDisposed) {
         return;
       }
@@ -413,6 +422,14 @@ const useAnimationLoop = (
     const delta = scene.clock.getDelta();
     assets?.mixer.update(delta);
     scene.controls.update();
+    
+    // Добавляем проверку для мобильных устройств
+    if (window.innerWidth <= 768 && !assets) {
+      // На мобильных даже без модели рендерим сцену (для отладки)
+      scene.renderer.render(scene.scene, scene.camera);
+      return;
+    }
+    
     scene.renderer.render(scene.scene, scene.camera);
   }, [sceneRef, assetsRef, stateRef]);
 
@@ -491,7 +508,14 @@ const initializeRenderer = (
 ): THREE.WebGLRenderer => {
   const renderer = createRenderer(container);
   const { clientWidth, clientHeight } = container;
-  if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
+  if (clientWidth && clientHeight) {
+    renderer.setSize(clientWidth, clientHeight);
+  } else {
+    // Fallback для мобильных устройств
+    const fallbackWidth = container.offsetWidth || window.innerWidth;
+    const fallbackHeight = container.offsetHeight || 400;
+    renderer.setSize(fallbackWidth, fallbackHeight);
+  }
   return renderer;
 };
 
@@ -504,6 +528,12 @@ const createSceneData = (
 ): AvatarScene => {
   const { camera, controls } = createCameraAndControls(renderer);
   const scene = new THREE.Scene();
+  
+  // Можно добавить фон для мобильных устройств если нужно
+  // if (window.innerWidth <= 768) {
+  //   scene.background = new THREE.Color(0x1a1a1a);
+  // }
+  
   const clock = new THREE.Clock();
   return { renderer, camera, scene, controls, clock };
 };
@@ -750,18 +780,46 @@ const useEventBindingsEffect = (ctx: {
   }, [handleMouseClickWrapper, handleMouseMove, handleResize, refs, sceneRef, assetsRef]);
 };
 
+// Интерфейс для параметров хука загрузки модели
+interface LoadModelEffectParams {
+  sceneRef: React.RefObject<AvatarScene | null>;
+  stateRef: React.RefObject<AvatarState>;
+  assetsRef: React.RefObject<AvatarAssets | null>;
+  loadModel: () => Promise<void>;
+  refs: React.RefObject<AvatarRefs>;
+}
+
 // Отдельный хук для загрузки модели (без повторной загрузки)
-const useLoadModelEffect = (
-  sceneRef: React.RefObject<AvatarScene | null>,
-  stateRef: React.RefObject<AvatarState>,
-  assetsRef: React.RefObject<AvatarAssets | null>,
-  loadModel: () => Promise<void>,
-): void => {
+const useLoadModelEffect = ({
+  sceneRef,
+  stateRef,
+  assetsRef,
+  loadModel,
+  refs,
+}: LoadModelEffectParams): void => {
   useEffect(() => {
     if (!sceneRef.current || stateRef.current.isDisposed) return;
     if (assetsRef.current) return;
+    
     void loadModel();
   }, [sceneRef, stateRef, assetsRef, loadModel]);
+  
+  // Слушаем событие принудительной загрузки
+  useEffect(() => {
+    const container = refs.current.container;
+    if (!container) return;
+    
+    const handleForceLoad = () => {
+      if (!assetsRef.current && sceneRef.current && !stateRef.current.isDisposed) {
+        void loadModel();
+      }
+    };
+    
+    container.addEventListener('forceLoadModel', handleForceLoad);
+    return () => {
+      container.removeEventListener('forceLoadModel', handleForceLoad);
+    };
+  }, [refs, assetsRef, sceneRef, stateRef, loadModel]);
 };
 
 // Небольшие хелперы-обёртки для коллбеков, чтобы сократить размер основного хука
@@ -826,9 +884,24 @@ const useVisibilityEventsEffect = (
         const detail = (e as CustomEvent<{ isVisible: boolean }>).detail;
         const isVisible = !!detail?.isVisible;
         stateRef.current.isVisible = isVisible;
+        
         if (isVisible) {
           // Перезапускаем цикл анимации при появлении
           animate();
+          
+          // На мобильных устройствах также запускаем рендеринг
+          if (window.innerWidth <= 768 && refs.current.renderer) {
+            // Если модель еще не загружена, пытаемся загрузить
+            if (!assetsRef.current) {
+              // Событие для запуска загрузки модели
+              container.dispatchEvent(new CustomEvent('forceLoadModel'));
+            }
+            
+            refs.current.renderer.render(
+              refs.current.scene!,
+              refs.current.camera!
+            );
+          }
         } else {
           // Останавливаем и сбрасываем анимацию при скрытии
           const assets = assetsRef.current;
@@ -899,7 +972,7 @@ export const useAvatar = () => {
   // Подписка на событие видимости от компонента 3DAvatar
   useVisibilityEventsEffect(refs, stateRef, assetsRef, animate);
 
-  useLoadModelEffect(sceneRef, stateRef, assetsRef, loadModel);
+  useLoadModelEffect({ sceneRef, stateRef, assetsRef, loadModel, refs });
   useThemeObserverEffect(assetsRef);
 
   return refs;

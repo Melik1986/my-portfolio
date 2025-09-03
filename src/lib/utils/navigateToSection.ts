@@ -21,7 +21,20 @@ export function navigateToSection(
     await new Promise((r) => requestAnimationFrame(() => r(undefined)));
   };
 
-  const cardIndex = animationController.getCardIndexBySectionId(sectionId);
+  // На мобильных устройствах преобразуем ID секций
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  let targetSectionId = sectionId;
+  
+  if (isMobile) {
+    // Для мобильных устройств используем левую часть разделенных секций
+    const mobileMapping: Record<string, string> = {
+      'about-section': 'about-section-left',
+      'skills-section': 'skills-section-left',
+    };
+    targetSectionId = mobileMapping[sectionId] || sectionId;
+  }
+
+  const cardIndex = animationController.getCardIndexBySectionId(targetSectionId);
 
   if (cardIndex !== -1) {
     // Ensure master is initialized if user navigates very early
@@ -32,7 +45,8 @@ export function navigateToSection(
     return;
   }
 
-  const element = document.getElementById(sectionId);
+  // Fallback: пробуем найти элемент с оригинальным или модифицированным ID
+  const element = document.getElementById(targetSectionId) || document.getElementById(sectionId);
   if (!element) return;
 
   // Fallback smooth scroll with readiness guard

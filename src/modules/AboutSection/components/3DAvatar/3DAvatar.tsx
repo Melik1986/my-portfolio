@@ -93,6 +93,34 @@ function useAvatarVisibilityBridge(
       }
     };
 
+    // Для мобильных используем IntersectionObserver как запасной вариант
+    if (window.innerWidth <= 768) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            dispatch(entry.isIntersecting);
+          });
+        },
+        { threshold: 0.1, rootMargin: '50px' }
+      );
+      
+      observer.observe(target);
+      
+      // Проверяем начальную видимость с задержкой для гарантии загрузки
+      setTimeout(() => {
+        const rect = target.getBoundingClientRect();
+        const isInitiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isInitiallyVisible) {
+          dispatch(true);
+        }
+      }, 100);
+      
+      return () => {
+        observer.disconnect();
+      };
+    }
+
+    // Для десктопа используем ScrollTrigger
     const st = ScrollTrigger.create({
       trigger: target,
       start: 'top 95%',

@@ -12,6 +12,10 @@ function HeroHeading() {
     const el = containerRef.current;
     if (!el) return;
 
+    // На мобильных устройствах не создаем отдельный timeline
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
+
     const tl = createElementTimeline(el);
     const start = () => tl.play();
     const preloaderRoot = document.querySelector('[data-preloader-root]');
@@ -47,6 +51,10 @@ function HeroParagraph() {
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+
+    // На мобильных устройствах не создаем отдельный timeline
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
 
     const tl = createElementTimeline(el);
     const start = () => tl.play();

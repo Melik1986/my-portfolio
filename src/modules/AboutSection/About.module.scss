@@ -81,14 +81,17 @@
 
     &__content {
       width: 100%;
-      flex: 0 0 50%;
+      height: 100%;
+      flex: 1 1 auto;
     }
 
     &__content-left {
       order: 0;
+      height: 100%;
     }
     &__content-right {
       order: 1;
+      height: 100%;
     }
   }
 }

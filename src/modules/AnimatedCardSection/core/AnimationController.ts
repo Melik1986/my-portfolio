@@ -134,9 +134,15 @@ export class AnimationController {
 
     this.sections.set(sectionIndex, controller);
 
-    // Если это Hero секция, активируем её немедленно
+    // Если это Hero секция, активируем её после инициализации
     if (sectionIndex === 0) {
-      this.activateCard(0);
+      // Используем requestAnimationFrame для гарантии готовности DOM
+      requestAnimationFrame(() => {
+        if (controller.timeline) {
+          controller.timeline.play();
+          controller.isActive = true;
+        }
+      });
     }
 
     return elementTimeline;
@@ -212,6 +218,49 @@ export class AnimationController {
   }
 
   /**
+   * Проверка валидности индекса карточки
+   */
+  private validateCardIndex(cardIndex: number): boolean {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    if (isMobile) {
+      const totalCards = document.querySelectorAll('li[data-section-index]').length;
+      if (cardIndex >= totalCards) {
+        console.warn(`Card index ${cardIndex} exceeds total cards ${totalCards}`);
+        return false;
+      }
+    } else if (!this.sections.has(cardIndex)) {
+      console.warn(`Card with index ${cardIndex} not found`);
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Обработка отсутствующего ScrollTrigger
+   */
+  private handleMissingScrollTrigger(cardIndex: number): void {
+    console.debug('ScrollTrigger not found in master timeline');
+    try {
+      void import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
+        ScrollTrigger.refresh();
+        setTimeout(() => ScrollTrigger.refresh(), 50);
+      });
+    } catch {}
+    this.pendingCardIndex = cardIndex;
+  }
+
+  /**
+   * Прокрутка к позиции карточки
+   */
+  private scrollToPosition(position: number): void {
+    gsap.to(window, {
+      duration: 1,
+      scrollTo: { y: position, autoKill: false },
+      ease: 'power2.inOut',
+    });
+  }
+
+  /**
    * Программная навигация к карточке по индексу
    */
   navigateToCard(cardIndex: number): boolean {
@@ -220,58 +269,31 @@ export class AnimationController {
       return false;
     }
 
-    if (!this.sections.has(cardIndex)) {
-      console.warn(`Card with index ${cardIndex} not found`);
+    if (!this.validateCardIndex(cardIndex)) {
       return false;
     }
 
-    // Получаем ScrollTrigger из мастер timeline
     const scrollTrigger = this.masterTimeline.scrollTrigger;
     if (!scrollTrigger) {
-      console.debug('ScrollTrigger not found in master timeline');
-      // Попробуем освежить ScrollTrigger и повторить один раз
-      try {
-        void import('gsap/ScrollTrigger').then(({ ScrollTrigger }) => {
-          ScrollTrigger.refresh();
-          setTimeout(() => ScrollTrigger.refresh(), 50);
-        });
-      } catch {}
-      // Запомним намерение навигации и выполним, когда ScrollTrigger станет доступен
-      this.pendingCardIndex = cardIndex;
+      this.handleMissingScrollTrigger(cardIndex);
       return false;
     }
 
-    // Для первой карточки просто прокручиваем к началу секции
+    // Для первой карточки
     if (cardIndex === 0) {
-      gsap.to(window, {
-        duration: 1,
-        scrollTo: {
-          y: scrollTrigger.start,
-          autoKill: false,
-        },
-        ease: 'power2.inOut',
-      });
+      this.scrollToPosition(scrollTrigger.start);
       return true;
     }
 
-    // Для остальных карточек вычисляем позицию
-    const denominator = Math.max(1, (this.totalCardsCount ?? this.sections.size) - 1);
-    const progress = cardIndex / denominator;
-
-    // Вычисляем позицию по фактическому диапазону ScrollTrigger
-    const startPos = scrollTrigger.start;
-    const totalScrollDistance = scrollTrigger.end - scrollTrigger.start;
-    const targetPosition = startPos + totalScrollDistance * progress;
-
-    // Используем gsap.to для плавной прокрутки к позиции
-    gsap.to(window, {
-      duration: 1,
-      scrollTo: {
-        y: targetPosition,
-        autoKill: false,
-      },
-      ease: 'power2.inOut',
-    });
+    // Для остальных карточек
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const totalCards = isMobile 
+      ? document.querySelectorAll('li[data-section-index]').length 
+      : (this.totalCardsCount ?? this.sections.size);
+    const progress = cardIndex / Math.max(1, totalCards - 1);
+    const targetPosition = scrollTrigger.start + (scrollTrigger.end - scrollTrigger.start) * progress;
+    
+    this.scrollToPosition(targetPosition);
     return true;
   }
 
@@ -296,15 +318,58 @@ export class AnimationController {
    * Получить индекс карточки по ID секции
    */
   getCardIndexBySectionId(sectionId: string): number {
-    // Маппинг ID секций к индексам карточек
+    // На мобильных устройствах нужно учитывать разделенные секции
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    
+    if (isMobile) {
+      // Находим все карточки в DOM по data-section-index
+      const allCards = document.querySelectorAll('li[data-section-index]');
+      let targetIndex = -1;
+      
+      console.log('[Navigation] Looking for section:', sectionId);
+      console.log('[Navigation] Total cards found:', allCards.length);
+      
+      allCards.forEach((card, index) => {
+        console.log(`[Navigation] Card ${index}: id="${card.id}"`);
+        // Проверяем ID самой карточки
+        if (card.id === sectionId) {
+          targetIndex = index;
+        }
+      });
+      
+      if (targetIndex !== -1) {
+        console.log('[Navigation] Found card at index:', targetIndex);
+        return targetIndex;
+      }
+      
+      // Fallback маппинг для мобильных
+      const mobileSectionMapping: Record<string, number> = {
+        'hero-section': 0,
+        'about-section': 1, // Будет преобразовано в about-section-left
+        'about-section-left': 1,
+        'about-section-right': 2,
+        'skills-section': 3, // Будет преобразовано в skills-section-left
+        'skills-section-left': 3,
+        'skills-section-right': 4,
+        'projects-section': 5,
+        'ai-content-section': 6,
+        'ai-video-section': 7,
+        'contact-section': 8,
+      };
+      
+      console.log('[Navigation] Using fallback mapping, result:', mobileSectionMapping[sectionId]);
+      return mobileSectionMapping[sectionId] ?? -1;
+    }
+    
+    // Для десктопа используем обычный маппинг
     const sectionMapping: Record<string, number> = {
-      'hero-section': 0, // Вертикальный скролл
-      'about-section': 1, // Вертикальный скролл
-      'skills-section': 2, // Вертикальный скролл
-      'projects-section': 3, // Горизонтальный скролл
-      'ai-content-section': 4, // Горизонтальный скролл
-      'ai-video-section': 5, // Горизонтальный скролл
-      'contact-section': 6, // Горизонтальный скролл
+      'hero-section': 0,
+      'about-section': 1,
+      'skills-section': 2,
+      'projects-section': 3,
+      'ai-content-section': 4,
+      'ai-video-section': 5,
+      'contact-section': 6,
     };
 
     return sectionMapping[sectionId] ?? -1;

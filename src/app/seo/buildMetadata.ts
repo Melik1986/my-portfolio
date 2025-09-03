@@ -82,6 +82,12 @@ export function buildMetadataForLocale(locale: SupportedLocale): Metadata {
     robots: buildRobots(),
     openGraph: buildOpenGraph(locale),
     twitter: buildTwitter(locale),
+    viewport: {
+      width: 'device-width',
+      initialScale: 1,
+      maximumScale: 5,
+      userScalable: true,
+    },
     other: buildFontsOther(),
   };
 }
