@@ -75,25 +75,3 @@
   }
 }
 
-/* NEAT integration: position the canvas as background without layout shifts */
-.hero[data-neat-active='true'] {
-  background: transparent; // let the canvas show through
-}
-
-.hero canvas[data-neat-canvas='true'] {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0; // bring above background, below content
-  pointer-events: none;
-}
-
-/* Hide NEAT watermark link if injected */
-.hero a[href*='neat.firecms.co'],
-.hero a:where(:link, :visited):not([href]) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
