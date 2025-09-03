@@ -118,7 +118,7 @@ function createMobileTimeline(
       trigger: section,
       pin: true,
       start: 'top top',
-      end: () => `+=${(items.length - 1) * 100}%`,
+      end: () => `+=${(items.length - 1) * 200}%`,
       scrub: 0.5,
       invalidateOnRefresh: true,
       markers: false,

@@ -9,6 +9,10 @@
 
   &__wrapper {
     height: 100vh;
+
+    @include vp-768 {
+      height: 100dvh;
+    }
   }
 
   &__item {
