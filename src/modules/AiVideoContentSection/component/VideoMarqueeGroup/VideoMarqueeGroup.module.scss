@@ -21,6 +21,13 @@
   @include vp-360 {
     gap: 12px;
   }
+
+  // Скрыть третью дорожку видео на мобильных устройствах
+  @include vp-768 {
+    > :nth-child(3) {
+      display: none;
+    }
+  }
 }
 
 .ai-content__overlay-anchor {
