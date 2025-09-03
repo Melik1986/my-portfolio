@@ -485,6 +485,152 @@ const useCleanup = (ctx: CleanupContext) => {
 };
 
 // Инициализация сцены, камеры, контролов и запуска анимационного цикла как отдельный хук
+type CancelFlag = { current: boolean };
+
+const initializeSceneResources = async (params: {
+  container: HTMLElement;
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  stateRef: React.RefObject<AvatarState>;
+  createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
+  createCameraAndControls: (renderer: THREE.WebGLRenderer) => {
+    camera: THREE.PerspectiveCamera;
+    controls: OrbitControls;
+  };
+  setupLighting: (scene: THREE.Scene) => void;
+  animate: () => void;
+  cancelFlag: CancelFlag;
+}): Promise<void> => {
+  const {
+    container,
+    refs,
+    sceneRef,
+    stateRef,
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    animate,
+    cancelFlag,
+  } = params;
+  try {
+    const renderer = createRenderer(container);
+    const { clientWidth, clientHeight } = container;
+    if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
+
+    const { camera, controls } = createCameraAndControls(renderer);
+    if (cancelFlag.current) return;
+
+    const scene = new THREE.Scene();
+    const clock = new THREE.Clock();
+
+    const sceneData: AvatarScene = { renderer, camera, scene, controls, clock };
+    sceneRef.current = sceneData;
+    stateRef.current.isDisposed = false;
+
+    setupLighting(scene);
+
+    refs.current.renderer = renderer;
+    refs.current.camera = camera;
+    refs.current.scene = scene;
+    refs.current.clock = clock;
+    refs.current.controls = controls;
+
+    animate();
+  } catch (error) {
+    console.error('Failed to initialize avatar:', error);
+  }
+};
+
+const getInitializationCleanup = (params: {
+  container: HTMLElement | null | undefined;
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  stateRef: React.RefObject<AvatarState>;
+  createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
+  createCameraAndControls: (renderer: THREE.WebGLRenderer) => {
+    camera: THREE.PerspectiveCamera;
+    controls: OrbitControls;
+  };
+  setupLighting: (scene: THREE.Scene) => void;
+  animate: () => void;
+  cleanup: () => void;
+  isInitializedRef: React.MutableRefObject<boolean>;
+}): void | (() => void) => {
+  const {
+    container,
+    refs,
+    sceneRef,
+    stateRef,
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    animate,
+    cleanup,
+    isInitializedRef,
+  } = params;
+  if (!container || isInitializedRef.current) return;
+  isInitializedRef.current = true;
+  const cancelFlag: CancelFlag = { current: false };
+  initializeSceneResources({
+    container,
+    refs,
+    sceneRef,
+    stateRef,
+    createRenderer,
+    createCameraAndControls,
+    setupLighting,
+    animate,
+    cancelFlag,
+  });
+  return () => {
+    cancelFlag.current = true;
+    cleanup();
+    isInitializedRef.current = false;
+  };
+};
+
+function useAvatarInitializationEffect(ctx: {
+  refs: React.RefObject<AvatarRefs>;
+  sceneRef: React.RefObject<AvatarScene | null>;
+  stateRef: React.RefObject<AvatarState>;
+  createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
+  createCameraAndControls: (renderer: THREE.WebGLRenderer) => {
+    camera: THREE.PerspectiveCamera;
+    controls: OrbitControls;
+  };
+  setupLighting: (scene: THREE.Scene) => void;
+  animate: () => void;
+  cleanup: () => void;
+  isInitializedRef: React.MutableRefObject<boolean>;
+}): void {
+  const { refs } = ctx;
+  useEffect(() => {
+    return getInitializationCleanup({
+      container: refs.current.container,
+      refs: ctx.refs,
+      sceneRef: ctx.sceneRef,
+      stateRef: ctx.stateRef,
+      createRenderer: ctx.createRenderer,
+      createCameraAndControls: ctx.createCameraAndControls,
+      setupLighting: ctx.setupLighting,
+      animate: ctx.animate,
+      cleanup: ctx.cleanup,
+      isInitializedRef: ctx.isInitializedRef,
+    });
+  }, [
+    ctx.createRenderer,
+    ctx.createCameraAndControls,
+    ctx.setupLighting,
+    ctx.animate,
+    ctx.cleanup,
+    ctx.refs,
+    refs,
+    ctx.sceneRef,
+    ctx.stateRef,
+    ctx.isInitializedRef,
+  ]);
+}
+
 const useInitializationEffect = (ctx: {
   refs: React.RefObject<AvatarRefs>;
   sceneRef: React.RefObject<AvatarScene | null>;
@@ -499,72 +645,7 @@ const useInitializationEffect = (ctx: {
   cleanup: () => void;
   isInitializedRef: React.MutableRefObject<boolean>;
 }): void => {
-  const {
-    refs,
-    sceneRef,
-    stateRef,
-    createRenderer,
-    createCameraAndControls,
-    setupLighting,
-    animate,
-    cleanup,
-    isInitializedRef,
-  } = ctx;
-  useEffect(() => {
-    const container = refs.current.container;
-    if (!container || isInitializedRef.current) return;
-    isInitializedRef.current = true;
-
-    let cancelled = false;
-
-    const init = async () => {
-      try {
-        const renderer = createRenderer(container);
-        const { clientWidth, clientHeight } = container;
-        if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
-
-        const { camera, controls } = createCameraAndControls(renderer);
-        if (cancelled) return;
-
-        const scene = new THREE.Scene();
-        const clock = new THREE.Clock();
-
-        const sceneData: AvatarScene = { renderer, camera, scene, controls, clock };
-        sceneRef.current = sceneData;
-        stateRef.current.isDisposed = false;
-
-        setupLighting(scene);
-
-        refs.current.renderer = renderer;
-        refs.current.camera = camera;
-        refs.current.scene = scene;
-        refs.current.clock = clock;
-        refs.current.controls = controls;
-
-        animate();
-      } catch (error) {
-        console.error('Failed to initialize avatar:', error);
-      }
-    };
-
-    init();
-
-    return () => {
-      cancelled = true;
-      cleanup();
-      isInitializedRef.current = false;
-    };
-  }, [
-    createRenderer,
-    createCameraAndControls,
-    setupLighting,
-    animate,
-    cleanup,
-    refs,
-    sceneRef,
-    stateRef,
-    isInitializedRef,
-  ]);
+  useAvatarInitializationEffect(ctx);
 };
 
 // Слушатели мыши и ресайза как отдельный хук
