@@ -484,8 +484,68 @@ const useCleanup = (ctx: CleanupContext) => {
   return { cleanup };
 };
 
-// Инициализация сцены, камеры, контролов и запуска анимационного цикла как отдельный хук
-const useInitializationEffect = (ctx: {
+// Создание сцены и сохранение ссылок
+const createSceneData = (
+  renderer: THREE.WebGLRenderer,
+  camera: THREE.PerspectiveCamera,
+  controls: OrbitControls,
+): AvatarScene => {
+  const scene = new THREE.Scene();
+  const clock = new THREE.Clock();
+  return { renderer, camera, scene, controls, clock };
+};
+
+// Сохранение ссылок на компоненты сцены
+const saveSceneRefs = (
+  refs: React.RefObject<AvatarRefs>,
+  sceneData: AvatarScene,
+): void => {
+  refs.current.renderer = sceneData.renderer;
+  refs.current.camera = sceneData.camera;
+  refs.current.scene = sceneData.scene;
+  refs.current.clock = sceneData.clock;
+  refs.current.controls = sceneData.controls;
+};
+
+// Инициализация 3D сцены
+const initializeScene = async (
+  container: HTMLElement,
+  ctx: {
+    createRenderer: (container: HTMLElement) => THREE.WebGLRenderer;
+    createCameraAndControls: (renderer: THREE.WebGLRenderer) => {
+      camera: THREE.PerspectiveCamera;
+      controls: OrbitControls;
+    };
+    setupLighting: (scene: THREE.Scene) => void;
+    sceneRef: React.RefObject<AvatarScene | null>;
+    stateRef: React.RefObject<AvatarState>;
+    refs: React.RefObject<AvatarRefs>;
+    animate: () => void;
+  },
+  cancelled: { value: boolean },
+): Promise<void> => {
+  try {
+    const renderer = ctx.createRenderer(container);
+    const { clientWidth, clientHeight } = container;
+    if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
+
+    const { camera, controls } = ctx.createCameraAndControls(renderer);
+    if (cancelled.value) return;
+
+    const sceneData = createSceneData(renderer, camera, controls);
+    ctx.sceneRef.current = sceneData;
+    ctx.stateRef.current.isDisposed = false;
+
+    ctx.setupLighting(sceneData.scene);
+    saveSceneRefs(ctx.refs, sceneData);
+    ctx.animate();
+  } catch (error) {
+    console.error('Failed to initialize avatar:', error);
+  }
+};
+
+// Интерфейс для контекста инициализации
+interface InitializationContext {
   refs: React.RefObject<AvatarRefs>;
   sceneRef: React.RefObject<AvatarScene | null>;
   stateRef: React.RefObject<AvatarState>;
@@ -498,7 +558,10 @@ const useInitializationEffect = (ctx: {
   animate: () => void;
   cleanup: () => void;
   isInitializedRef: React.MutableRefObject<boolean>;
-}): void => {
+}
+
+// Инициализация сцены, камеры, контролов и запуска анимационного цикла как отдельный хук
+const useInitializationEffect = (ctx: InitializationContext): void => {
   const {
     refs,
     sceneRef,
@@ -510,47 +573,21 @@ const useInitializationEffect = (ctx: {
     cleanup,
     isInitializedRef,
   } = ctx;
+  
   useEffect(() => {
     const container = refs.current.container;
     if (!container || isInitializedRef.current) return;
     isInitializedRef.current = true;
 
-    let cancelled = false;
-
-    const init = async () => {
-      try {
-        const renderer = createRenderer(container);
-        const { clientWidth, clientHeight } = container;
-        if (clientWidth && clientHeight) renderer.setSize(clientWidth, clientHeight);
-
-        const { camera, controls } = createCameraAndControls(renderer);
-        if (cancelled) return;
-
-        const scene = new THREE.Scene();
-        const clock = new THREE.Clock();
-
-        const sceneData: AvatarScene = { renderer, camera, scene, controls, clock };
-        sceneRef.current = sceneData;
-        stateRef.current.isDisposed = false;
-
-        setupLighting(scene);
-
-        refs.current.renderer = renderer;
-        refs.current.camera = camera;
-        refs.current.scene = scene;
-        refs.current.clock = clock;
-        refs.current.controls = controls;
-
-        animate();
-      } catch (error) {
-        console.error('Failed to initialize avatar:', error);
-      }
-    };
-
-    init();
+    const cancelled = { value: false };
+    void initializeScene(
+      container,
+      { createRenderer, createCameraAndControls, setupLighting, sceneRef, stateRef, refs, animate },
+      cancelled,
+    );
 
     return () => {
-      cancelled = true;
+      cancelled.value = true;
       cleanup();
       isInitializedRef.current = false;
     };
