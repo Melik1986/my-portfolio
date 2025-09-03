@@ -36,7 +36,7 @@ function HeroHeading() {
       ref={containerRef}
       className={styles['hero__heading']}
       data-animation="slide-right"
-      data-duration="1.0"
+      data-duration="1.4"
       data-ease="power2.out"
       data-delay="0.8"
     >
@@ -83,7 +83,7 @@ function HeroParagraphContent() {
     <>
       <span
         data-animation="slide-right"
-        data-duration="0.8"
+        data-duration="1.2"
         data-ease="power2.out"
         data-delay="0.8"
       >
@@ -92,7 +92,7 @@ function HeroParagraphContent() {
       <span
         className={styles['hero__brush-container']}
         data-animation="fade-up"
-        data-duration="0.8"
+        data-duration="1.2"
         data-ease="power2.out"
         data-delay="1.2"
       >

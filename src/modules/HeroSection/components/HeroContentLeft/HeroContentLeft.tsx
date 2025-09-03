@@ -55,7 +55,7 @@ export function HeroContentLeft() {
         ref={containerRef}
         className={styles['hero__container-img']}
         data-animation="slide-left"
-        data-duration="1.0"
+        data-duration="1.4"
         data-ease="power2.out"
         data-delay="0.8"
         translate="no"

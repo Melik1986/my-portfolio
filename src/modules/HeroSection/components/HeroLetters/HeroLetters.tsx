@@ -54,7 +54,7 @@ export function HeroLetters() {
       ref={containerRef}
       className={`${styles['hero__container-letters']} ${heroBold.variable}`}
       data-animation="slide-down"
-      data-duration="0.8"
+      data-duration="1.2"
       data-ease="power2.out"
       data-delay="0.4"
       data-stagger="0.08"
