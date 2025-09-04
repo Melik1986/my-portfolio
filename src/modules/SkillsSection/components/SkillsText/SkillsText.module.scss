@@ -31,17 +31,17 @@
     &-desktop {
       display: block;
 
-      @include vp-1024 {
-        display: none;
-      }
+      // @include vp-1024 {
+      //   display: none;
+      // }
     }
 
-    &-mobile {
-      display: none;
+    // &-mobile {
+    //   display: none;
 
-      @include vp-1024 {
-        display: block;
-      }
-    }
+    //   @include vp-1024 {
+    //     display: block;
+    //   }
+    // }
   }
 }

@@ -13,6 +13,7 @@
 
     @include vp-768 {
       @include typo.type-h3;
+      margin-bottom: 0;
     }
 
     @include vp-375 {
@@ -43,18 +44,18 @@
     &-desktop {
       display: block;
 
-      @include vp-1024 {
-        display: none;
-      }
+      // @include vp-1024 {
+      //   display: none;
+      // }
     }
 
-    &-mobile {
-      display: none;
+    // &-mobile {
+    //   display: none;
 
-      @include vp-1024 {
-        display: block;
-      }
-    }
+    //   @include vp-1024 {
+    //     display: block;
+    //   }
+    // }
   }
 
   &__animation {

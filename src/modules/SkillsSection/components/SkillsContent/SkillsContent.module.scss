@@ -21,6 +21,7 @@
     @include vp-768 {
       max-width: 360px;
       @include typo.type-h3;
+      margin-bottom: 0;
     }
     @include vp-375 {
       max-width: 300px;

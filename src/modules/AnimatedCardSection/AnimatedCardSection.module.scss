@@ -38,6 +38,10 @@
   &__item:first-child {
     height: 80vh;
 
+    @include vp-1024 {
+      border-radius: clamp(16px, 4vw, 32px);
+    }
+
     @include vp-768 {
       height: 95dvh;
     }

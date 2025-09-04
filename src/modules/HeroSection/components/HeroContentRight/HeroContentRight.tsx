@@ -41,7 +41,7 @@ function HeroHeading() {
       data-delay="0.8"
       translate="no"
     >
-      Frontend development
+      Frontend Development
     </h2>
   );
 }
