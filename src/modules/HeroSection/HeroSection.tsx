@@ -14,12 +14,10 @@ export function HeroSection() {
   return (
     <section ref={heroRef} className={styles.hero} id="hero" data-group-delay="1.5">
       <h2 className={`${styles.hero__title} visually-hidden`}>{t('section.hero.title')}</h2>
-      <HeroLetters />
       <HeroAvatar />
-      <div className={`${styles['hero__content']} ${styles['hero__content-left']}`}>
+      <div className={styles['hero__content']}>
+        <HeroLetters />
         <HeroContentLeft />
-      </div>
-      <div className={`${styles['hero__content']} ${styles['hero__content-right']}`}>
         <HeroContentRight />
       </div>
     </section>

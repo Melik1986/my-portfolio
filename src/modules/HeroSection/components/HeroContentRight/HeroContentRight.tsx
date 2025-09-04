@@ -39,6 +39,7 @@ function HeroHeading() {
       data-duration="1.4"
       data-ease="power2.out"
       data-delay="0.8"
+      translate="no"
     >
       Frontend development
     </h2>
@@ -86,6 +87,7 @@ function HeroParagraphContent() {
         data-duration="1.2"
         data-ease="power2.out"
         data-delay="0.8"
+        translate="no"
       >
         and Web Design
       </span>

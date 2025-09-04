@@ -29,6 +29,7 @@
 
     @include vp-768 {
       padding-bottom: 45px;
+      display: none;
     }
 
     @include vp-375 {

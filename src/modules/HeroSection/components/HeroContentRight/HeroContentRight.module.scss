@@ -7,7 +7,7 @@
     font-family: $font-family-chango;
     max-width: 600px;
     height: auto;
-    margin: 0 0 10px 0;
+    margin: 0 auto 10px auto;
     padding: 0;
     @include typo.type-h2;
     letter-spacing: 0.1em;
@@ -24,17 +24,18 @@
     @include vp-1024 {
       max-width: 400px;
       @include typo.type-h3;
-      margin-left: 0;
+      margin: 0 auto 10px auto;
     }
 
     @include vp-768 {
-      max-width: 300px;
-      margin-left: -50px;
+      width: 100%;
+      text-wrap: nowrap;
+      text-align: center;
       @include typo.type-h4;
+      margin: 0 auto 10px auto;
     }
 
     @include vp-375 {
-      margin-left: -90px;
       max-width: 200px;
       @include typo.type-body;
     }

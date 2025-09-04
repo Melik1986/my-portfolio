@@ -44,12 +44,12 @@
   }
 
   @include vp-768 {
-    bottom: 20px;
+    bottom: 0;
     right: 20px;
   }
 
   @include vp-375 {
-    bottom: 20px;
+    bottom: 0;
     right: 20px;
   }
 

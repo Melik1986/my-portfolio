@@ -44,25 +44,6 @@
     }
   }
 
-  &__content-left {
-    // background: var(--gradient-primary);
-    gap: 40px;
-
-    @include vp-1024 {
-      gap: 24px;
-    }
-    @include vp-768 {
-      gap: 20px;
-    }
-    @include vp-360 {
-      gap: 16px;
-    }
-  }
-
-  // &__content-right {
-  //   // background: var(--gradient-primary);
-  // }
-
   /* CSS Anchor Positioning API fallback container */
   &__image-anchor {
     position: absolute;
