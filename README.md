@@ -102,6 +102,10 @@
 <br><strong>VS Code</strong>
 </td>
 <td align="center" width="96">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cursor/cursor-original.svg" width="48" height="48" alt="Cursor" />
+<br><strong>Cursor</strong>
+</td>
+<td align="center" width="96">
 <img src="https://skillicons.dev/icons?i=git" width="48" height="48" alt="Git" />
 <br><strong>Git</strong>
 </td>
