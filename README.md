@@ -102,7 +102,7 @@
 <br><strong>VS Code</strong>
 </td>
 <td align="center" width="96">
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cursor/cursor-original.svg" width="48" height="48" alt="Cursor" />
+<img src="https://cursor.sh/brand/icon.svg" width="48" height="48" alt="Cursor" />
 <br><strong>Cursor</strong>
 </td>
 <td align="center" width="96">
@@ -166,6 +166,146 @@
 ### **🏗️ Feature-Sliced Design (FSD) Structure**
 
 </div>
+
+### **🎯 System Architecture Diagram**
+
+```mermaid
+graph TD
+    User["👤 User<br/>External Actor"]
+    
+    subgraph Frontend["🎭 Frontend Application<br/>Next.js"]
+        subgraph Layout["📱 Application Entry Points & Layout<br/>Next.js/React"]
+            RootLayout["🏠 Root Layout<br/>Next.js/React"]
+            MainPage["📄 Main Page<br/>Next.js/React"]
+            ErrorPage["❌ Error Handling<br/>Next.js/React"]
+            NotFound["🔍 Not Found Page<br/>Next.js/React"]
+            ThemeProvider["🎨 Theme Provider<br/>React"]
+            Middleware["⚙️ Middleware<br/>Next.js"]
+        end
+        
+        subgraph Modules["🎭 Main Content Modules<br/>React"]
+            HeroSection["🚀 Hero Section<br/>React"]
+            AboutSection["👤 About Section<br/>React/Three.js"]
+            ProjectsSection["💼 Projects Section<br/>React"]
+            SkillsSection["🛠️ Skills Section<br/>React"]
+            ContactSection["📧 Contact Section<br/>React"]
+            AiContentSection["🤖 AI Content Section<br/>React"]
+            AiVideoSection["🎥 AI Video Section<br/>React"]
+            AnimatedCard["✨ Animated Card Section<br/>React"]
+        end
+    end
+    
+    subgraph UILib["🧩 UI Components Library<br/>React/SCSS"]
+        Header["🎯 Header<br/>React"]
+        Navigation["🧭 Navigation<br/>React"]
+        Logo["🎨 Logo<br/>React"]
+        Button["🔘 Button<br/>React"]
+        Preloader["⏳ Global Preloader<br/>React"]
+        ThemeToggle["🌓 Theme Toggle<br/>React"]
+        LangSwitcher["🌍 Language Switcher<br/>React"]
+        SocialLinks["🔗 Social Links<br/>React"]
+    end
+    
+    subgraph GSAP["🎬 GSAP Animation System<br/>GSAP/TypeScript"]
+        GSAPInit["⚡ GSAP Initializer<br/>TypeScript"]
+        ScrollSmoother["📜 ScrollSmoother Provider<br/>React/GSAP"]
+        AnimConfig["⚙️ Animation Configuration<br/>TypeScript"]
+        GSAPHooks["🎣 GSAP Hooks<br/>React/GSAP"]
+    end
+    
+    subgraph Styles["🎨 Styling and Assets System<br/>SCSS/Static"]
+        PublicAssets["📂 Public Assets<br/>Static Files"]
+        GlobalStyles["🎨 Global Styles<br/>SCSS"]
+        Variables["📊 Variables<br/>SCSS"]
+        Mixins["🔧 Mixins<br/>SCSS"]
+        Typography["📝 Typography<br/>SCSS"]
+    end
+    
+    subgraph Utils["🛠️ Common Utilities & Hooks<br/>TypeScript/React"]
+        GeneralHooks["🎣 General Hooks<br/>React"]
+        GeneralUtils["🔧 General Utilities<br/>TypeScript"]
+        SharedTypes["📋 Shared Types<br/>TypeScript"]
+    end
+    
+    subgraph I18n["🌍 Internationalization System<br/>TypeScript"]
+        I18nConfig["⚙️ i18n Configuration<br/>TypeScript"]
+        I18nServer["🖥️ Server-side i18n Utilities<br/>TypeScript"]
+        Dictionaries["📚 Dictionaries<br/>JSON"]
+    end
+    
+    subgraph API["🔌 Backend API System<br/>Next.js API Routes"]
+        ContactAPI["📧 Contact API Route<br/>Next.js API"]
+    end
+    
+    %% User interactions
+    User --> Frontend
+    
+    %% Frontend internal connections
+    Layout -.-> Modules
+    MainPage --> Modules
+    Layout --> Preloader
+    
+    %% Frontend to other systems
+    Frontend --> UILib
+    Frontend --> Utils
+    Frontend --> GSAP
+    Frontend --> Styles
+    Frontend --> I18n
+    ContactSection --> ContactAPI
+    
+    %% GSAP internal connections
+    GSAPInit --> ScrollSmoother
+    GSAPInit --> AnimConfig
+    GSAPInit --> GSAPHooks
+    
+    %% Animation usage
+    AboutSection --> GSAP
+    ProjectsSection --> GSAP
+    SkillsSection --> GSAP
+    AnimatedCard --> GSAP
+    Modules --> GSAPHooks
+    
+    %% Header components
+    Header --> Navigation
+    Header --> Logo
+    Header --> LangSwitcher
+    Header --> ThemeToggle
+    
+    %% Theme system
+    ThemeProvider --> ThemeToggle
+    
+    %% Internationalization
+    Middleware --> I18n
+    LangSwitcher --> I18n
+    
+    %% Utilities usage
+    Preloader --> GeneralHooks
+    
+    %% Styling
+    GlobalStyles --> Variables
+    GlobalStyles --> Mixins
+    GlobalStyles --> Typography
+    
+    classDef userClass fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef frontendClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef uiClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef gsapClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef styleClass fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef utilClass fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    classDef i18nClass fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef apiClass fill:#fff8e1,stroke:#ff6f00,stroke-width:2px
+    
+    class User userClass
+    class Frontend,Layout,Modules frontendClass
+    class UILib,Header,Navigation,Logo,Button,Preloader,ThemeToggle,LangSwitcher,SocialLinks uiClass
+    class GSAP,GSAPInit,ScrollSmoother,AnimConfig,GSAPHooks gsapClass
+    class Styles,PublicAssets,GlobalStyles,Variables,Mixins,Typography styleClass
+    class Utils,GeneralHooks,GeneralUtils,SharedTypes utilClass
+    class I18n,I18nConfig,I18nServer,Dictionaries i18nClass
+    class API,ContactAPI apiClass
+```
+
+### **📁 Directory Structure**
 
 ```bash
 📦 my-portfolio/
