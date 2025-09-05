@@ -170,6 +170,10 @@
     z-index: 120;
     animation: headerDropIn 220ms ease-out both;
 
+    @include vp-1024 {
+      border-radius: clamp(28px, 5vw, 40px);
+    }
+
     // Overlay for mobile dropdown
     &::before {
       content: '';
@@ -181,6 +185,10 @@
       border-radius: 16px;
       z-index: 1; // Place it behind all dropdown elements
       cursor: pointer;
+
+      @include vp-1024 {
+        border-radius: clamp(28px, 5vw, 40px);
+      }
     }
   }
 
@@ -189,6 +197,10 @@
     height: auto;
     border-radius: 16px;
     overflow: hidden;
+
+    @include vp-1024 {
+      border-radius: clamp(28px, 5vw, 40px);
+    }
   }
 
   &__dropdownNav {

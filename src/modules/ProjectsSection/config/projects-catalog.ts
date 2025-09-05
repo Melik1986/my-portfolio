@@ -88,15 +88,15 @@ export const PROJECTS_DATA: ProjectData[] = [
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/origin',
   },
   {
-    image: '/images/catalog/project2.png',
-    previewImage: '/images/catalog/project2.png',
+    image: '/images/catalog/project11.png',
+    previewImage: '/images/catalog/project11.png',
     title: 'Проект 2',
     text: 'Описание второго проекта.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/social_media_app-main',
   },
   {
     image: '/images/catalog/project1.png',
-    previewImage: '/images/catalog/project1-mini.png',
+    previewImage: '/images/catalog/project1.png',
     title: 'Проект 1',
     text: 'Описание первого проекта.',
     link: 'https://github.com/Melik1986/Car_Hub',

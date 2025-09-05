@@ -7,8 +7,9 @@
     font-family: $font-family-chango;
     max-width: 600px;
     height: auto;
-    margin: 0 auto 10px auto;
+    margin: 0 0 10px 0;
     padding: 0;
+    align-self: flex-end;
     @include typo.type-h2;
     letter-spacing: 0.1em;
     z-index: 13;
@@ -42,6 +43,7 @@
   }
 
   &__paragraph {
+    align-self: flex-end;
     display: grid;
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: 1fr;

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import bundleAnalyzer from '@next/bundle-analyzer';
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -7,6 +8,8 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP'],
   },
+  // Разрешенные источники для разработки
+  allowedDevOrigins: ['192.168.2.109'],
   // Turbopack настройки (стабильная версия)
   turbopack: {
     rules: {
@@ -22,7 +25,7 @@ const nextConfig: NextConfig = {
   ...(process.env.ANALYZE === 'true' && {
     webpack: (config) => {
       config.plugins.push(
-        new (require('@next/bundle-analyzer')())({
+        bundleAnalyzer({
           enabled: true,
         }),
       );

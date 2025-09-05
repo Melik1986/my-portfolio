@@ -19,12 +19,11 @@
 
   &__content {
     position: relative;
-    anchor-name: --hero-content;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    width: 50%;
+    width: 100%;
     height: 100%;
     padding: 3rem;
 
@@ -41,16 +40,5 @@
     @include vp-360 {
       padding: 1rem;
     }
-  }
-
-  /* CSS Anchor Positioning API fallback container */
-  &__image-anchor {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 0;
-    anchor-name: --hero-image-anchor;
   }
 }
