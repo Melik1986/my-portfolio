@@ -29,6 +29,7 @@
 <td width="50%">
 
 ### 🎭 **Interactive Experience**
+
 - **3D Avatar Integration** - Three.js powered character with realistic animations
 - **Smooth Scroll Animations** - GSAP-driven cinematic transitions
 - **Dynamic Sections** - Hero, About, Skills, Projects with unique interactions
@@ -38,6 +39,7 @@
 <td width="50%">
 
 ### ⚡ **Performance & Tech**
+
 - **Next.js 15** - Latest App Router with SSR/SSG optimization
 - **React 19** - Concurrent features for smooth animations
 - **TypeScript Strict** - 100% type safety and enhanced DX
@@ -134,7 +136,7 @@
   <img src="https://via.placeholder.com/800x450/0a0a0a/00E6FF?text=🚀+Live+Portfolio+Demo+%7C+Click+to+Visit" alt="Portfolio Demo" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 230, 255, 0.3);" />
 </a>
 
-*Click the image above to visit the live portfolio*
+_Click the image above to visit the live portfolio_
 
 </div>
 
@@ -172,7 +174,7 @@
 ```mermaid
 graph TD
     User["👤 User<br/>External Actor"]
-    
+
     subgraph Frontend["🎭 Frontend Application<br/>Next.js"]
         subgraph Layout["📱 Application Entry Points & Layout<br/>Next.js/React"]
             RootLayout["🏠 Root Layout<br/>Next.js/React"]
@@ -182,7 +184,7 @@ graph TD
             ThemeProvider["🎨 Theme Provider<br/>React"]
             Middleware["⚙️ Middleware<br/>Next.js"]
         end
-        
+
         subgraph Modules["🎭 Main Content Modules<br/>React"]
             HeroSection["🚀 Hero Section<br/>React"]
             AboutSection["👤 About Section<br/>React/Three.js"]
@@ -194,7 +196,7 @@ graph TD
             AnimatedCard["✨ Animated Card Section<br/>React"]
         end
     end
-    
+
     subgraph UILib["🧩 UI Components Library<br/>React/SCSS"]
         Header["🎯 Header<br/>React"]
         Navigation["🧭 Navigation<br/>React"]
@@ -205,14 +207,14 @@ graph TD
         LangSwitcher["🌍 Language Switcher<br/>React"]
         SocialLinks["🔗 Social Links<br/>React"]
     end
-    
+
     subgraph GSAP["🎬 GSAP Animation System<br/>GSAP/TypeScript"]
         GSAPInit["⚡ GSAP Initializer<br/>TypeScript"]
         ScrollSmoother["📜 ScrollSmoother Provider<br/>React/GSAP"]
         AnimConfig["⚙️ Animation Configuration<br/>TypeScript"]
         GSAPHooks["🎣 GSAP Hooks<br/>React/GSAP"]
     end
-    
+
     subgraph Styles["🎨 Styling and Assets System<br/>SCSS/Static"]
         PublicAssets["📂 Public Assets<br/>Static Files"]
         GlobalStyles["🎨 Global Styles<br/>SCSS"]
@@ -220,31 +222,31 @@ graph TD
         Mixins["🔧 Mixins<br/>SCSS"]
         Typography["📝 Typography<br/>SCSS"]
     end
-    
+
     subgraph Utils["🛠️ Common Utilities & Hooks<br/>TypeScript/React"]
         GeneralHooks["🎣 General Hooks<br/>React"]
         GeneralUtils["🔧 General Utilities<br/>TypeScript"]
         SharedTypes["📋 Shared Types<br/>TypeScript"]
     end
-    
+
     subgraph I18n["🌍 Internationalization System<br/>TypeScript"]
         I18nConfig["⚙️ i18n Configuration<br/>TypeScript"]
         I18nServer["🖥️ Server-side i18n Utilities<br/>TypeScript"]
         Dictionaries["📚 Dictionaries<br/>JSON"]
     end
-    
+
     subgraph API["🔌 Backend API System<br/>Next.js API Routes"]
         ContactAPI["📧 Contact API Route<br/>Next.js API"]
     end
-    
+
     %% User interactions
     User --> Frontend
-    
+
     %% Frontend internal connections
     Layout -.-> Modules
     MainPage --> Modules
     Layout --> Preloader
-    
+
     %% Frontend to other systems
     Frontend --> UILib
     Frontend --> Utils
@@ -252,40 +254,40 @@ graph TD
     Frontend --> Styles
     Frontend --> I18n
     ContactSection --> ContactAPI
-    
+
     %% GSAP internal connections
     GSAPInit --> ScrollSmoother
     GSAPInit --> AnimConfig
     GSAPInit --> GSAPHooks
-    
+
     %% Animation usage
     AboutSection --> GSAP
     ProjectsSection --> GSAP
     SkillsSection --> GSAP
     AnimatedCard --> GSAP
     Modules --> GSAPHooks
-    
+
     %% Header components
     Header --> Navigation
     Header --> Logo
     Header --> LangSwitcher
     Header --> ThemeToggle
-    
+
     %% Theme system
     ThemeProvider --> ThemeToggle
-    
+
     %% Internationalization
     Middleware --> I18n
     LangSwitcher --> I18n
-    
+
     %% Utilities usage
     Preloader --> GeneralHooks
-    
+
     %% Styling
     GlobalStyles --> Variables
     GlobalStyles --> Mixins
     GlobalStyles --> Typography
-    
+
     classDef userClass fill:#e1f5fe,stroke:#01579b,stroke-width:3px
     classDef frontendClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef uiClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
@@ -294,7 +296,7 @@ graph TD
     classDef utilClass fill:#e0f2f1,stroke:#004d40,stroke-width:2px
     classDef i18nClass fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     classDef apiClass fill:#fff8e1,stroke:#ff6f00,stroke-width:2px
-    
+
     class User userClass
     class Frontend,Layout,Modules frontendClass
     class UILib,Header,Navigation,Logo,Button,Preloader,ThemeToggle,LangSwitcher,SocialLinks uiClass
@@ -366,6 +368,7 @@ graph TD
 <td width="50%">
 
 ### **🎭 HeroSection**
+
 ```typescript
 // Interactive landing experience
 - 🤖 3D Avatar (Three.js)
@@ -375,6 +378,7 @@ graph TD
 ```
 
 ### **👤 AboutSection**
+
 ```typescript
 // Personal information showcase
 - 📝 Dynamic Content
@@ -387,6 +391,7 @@ graph TD
 <td width="50%">
 
 ### **🛠️ SkillsSection**
+
 ```typescript
 // Interactive skills visualization
 - 📊 ECharts Integration
@@ -396,6 +401,7 @@ graph TD
 ```
 
 ### **💼 ProjectsSection**
+
 ```typescript
 // Project showcase gallery
 - 🖼️ Lazy Loading Images
@@ -416,7 +422,7 @@ graph TD
 
 ### **⚡ Quick Setup Guide**
 
-*Get the portfolio running locally in under 2 minutes!*
+_Get the portfolio running locally in under 2 minutes!_
 
 </div>
 
@@ -548,7 +554,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 
 ### **🎉 You're All Set!**
 
-*Your portfolio should now be running at* **[http://localhost:3000](http://localhost:3000)**
+_Your portfolio should now be running at_ **[http://localhost:3000](http://localhost:3000)**
 
 </div>
 
@@ -560,7 +566,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 
 ### **🎭 Design Philosophy**
 
-*Modern • Minimalist • Interactive • Accessible*
+_Modern • Minimalist • Interactive • Accessible_
 
 </div>
 
@@ -569,15 +575,17 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 <td width="50%">
 
 ### **🔤 Typography Stack**
+
 ```css
 🎨 Chango        → Display headings
-✍️ Okinawa       → Decorative elements  
+✍️ Okinawa       → Decorative elements
 🖋️ Leckerli One  → Handwritten style
 📖 Roboto Serif  → Body text
 🔤 Poppins       → UI elements
 ```
 
 ### **🎨 Color Palette**
+
 ```css
 🌙 Dark Theme    → Primary experience
 ☀️ Light Theme   → Alternative mode
@@ -590,6 +598,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 <td width="50%">
 
 ### **✨ Animation Principles**
+
 ```typescript
 🎬 GSAP Timeline → Orchestrated sequences
 📱 Responsive    → Mobile-first approach
@@ -598,6 +607,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 ```
 
 ### **♿ Accessibility Features**
+
 ```typescript
 🔍 Screen Reader → ARIA labels & roles
 ⌨️ Keyboard Nav  → Full keyboard support
@@ -624,6 +634,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 <td width="50%">
 
 ### **📊 Performance Metrics**
+
 ```typescript
 🎯 Lighthouse Score  → 95+ across all metrics
 ⚡ First Paint       → <1.2s
@@ -633,6 +644,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 ```
 
 ### **🔧 Optimization Features**
+
 ```typescript
 📦 Code Splitting    → Dynamic imports
 🖼️ Image Optimization→ WebP/AVIF formats
@@ -645,6 +657,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 <td width="50%">
 
 ### **⚙️ Configuration Highlights**
+
 ```typescript
 🏎️ Turbopack        → Lightning-fast dev
 📱 App Router       → Next.js 15 features
@@ -654,6 +667,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 ```
 
 ### **🌐 Deployment Ready**
+
 ```typescript
 ☁️ Vercel          → One-click deploy
 🐳 Docker          → Containerized
@@ -673,7 +687,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 
 ### **🌟 Join the Development!**
 
-*Contributions, issues, and feature requests are welcome!*
+_Contributions, issues, and feature requests are welcome!_
 
 </div>
 
@@ -721,7 +735,7 @@ NEXT_PUBLIC_DEFAULT_THEME=dark
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-*Feel free to use this project as inspiration for your own portfolio!*
+_Feel free to use this project as inspiration for your own portfolio!_
 
 </div>
 
@@ -734,7 +748,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 <img src="https://via.placeholder.com/150x150/0a0a0a/00E6FF?text=👨‍💻" alt="Developer Avatar" style="border-radius: 50%; border: 3px solid #00E6FF;" />
 
 ### **Melik Musinian**
-*Full-Stack Developer & UI/UX Enthusiast*
+
+_Full-Stack Developer & UI/UX Enthusiast_
 
 [![Portfolio](https://img.shields.io/badge/🌐_Portfolio-Visit_Website-00E6FF?style=for-the-badge)](https://your-portfolio-url.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/your-profile)
@@ -749,7 +764,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### **🌟 Show Your Support**
 
-*If this project helped you, please consider giving it a ⭐ on GitHub!*
+_If this project helped you, please consider giving it a ⭐ on GitHub!_
 
 [![GitHub stars](https://img.shields.io/github/stars/your-username/my-portfolio?style=social)](https://github.com/your-username/my-portfolio/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/your-username/my-portfolio?style=social)](https://github.com/your-username/my-portfolio/network/members)
@@ -759,7 +774,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### **🚀 Built with Modern Web Technologies**
 
-*Crafted with ❤️ using Next.js, TypeScript, GSAP, and Three.js*
+_Crafted with ❤️ using Next.js, TypeScript, GSAP, and Three.js_
 
 **© 2024 Melik Musinian. All rights reserved.**
 

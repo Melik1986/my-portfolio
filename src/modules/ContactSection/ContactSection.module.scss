@@ -42,7 +42,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     // На мобильных устройствах занимает всю доступную область
     @include vp-768 {
       width: 100%;
