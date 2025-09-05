@@ -8,4 +8,6 @@ export type HeroAvatarImage = {
 export type HeroAvatarImages = {
   desktop: HeroAvatarImage;
   mobile: HeroAvatarImage;
+  retina: HeroAvatarImage;
+  ultrawide: HeroAvatarImage;
 };

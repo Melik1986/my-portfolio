@@ -13,4 +13,16 @@ export const HERO_AVATAR_IMAGES: HeroAvatarImages = {
     height: 1920,
     alt: 'Портрет для мобильных устройств',
   },
+  retina: {
+    src: '/images/banner_retina.webp',
+    width: 3840,
+    height: 2160,
+    alt: 'Портрет для ретина экранов',
+  },
+  ultrawide: {
+    src: '/images/banner_ultrawide.webp',
+    width: 2560,
+    height: 1440,
+    alt: 'Портрет для ультраширокие мониторов',
+  },
 };
