@@ -7,9 +7,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-end;
     align-self: flex-start;
-    padding-bottom: 100px;
+    margin-bottom: -220px;
     z-index: 1;
     will-change: transform;
     opacity: 0;
@@ -21,7 +20,7 @@
     }
 
     @include vp-1304 {
-      padding-bottom: 70px;
+      padding-bottom: 0;
     }
 
     @include vp-1024 {

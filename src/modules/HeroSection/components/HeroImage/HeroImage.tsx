@@ -40,7 +40,8 @@ export function HeroAvatar() {
         alt={t('section.hero.avatarAlt')}
         width={image.width}
         height={image.height}
-        sizes={isMobile ? '100vw' : '20vw'}
+        sizes={isMobile ? '100vw' : '(min-width: 1024px) 80vw, 100vw'}
+        quality={95}
         priority
         data-animation="zoom-in"
         data-duration="1.8"

@@ -124,8 +124,7 @@
 
   // На планшетах и ниже — смещаем тултип влево от аватара и не перекрываем его
   @include vp-768 {
-    top: auto;
-    bottom: 0;
+    top: 10%;
     left: 0;
     transform: none;
     max-width: 60%;
@@ -150,7 +149,6 @@
   }
 
   @include vp-360 {
-    max-width: 66%;
     &__content {
       padding: 4px;
     }

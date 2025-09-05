@@ -26,17 +26,12 @@
 
     @include vp-768 {
       height: 100dvh;
-
-      // На мобильных все карточки занимают полную высоту
-      &:first-child {
-        height: 100dvh;
-      }
     }
   }
 
   /* Only the first portfolio item shorter on desktop */
   &__item:first-child {
-    height: 80vh;
+    height: 82vh;
 
     @include vp-1024 {
       border-radius: clamp(28px, 5vw, 40px);
