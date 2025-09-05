@@ -159,7 +159,7 @@ function createDesktopTimeline(
       start: 'top top',
       end: () => `+=${(items.length - 1) * 100}%`,
       // Уменьшаем scrub для мобильных - делает скролл менее чувствительным
-      scrub: isMobile() ? 0.3 : 1,
+      scrub: isMobile() ? 0.2 : 1,
       invalidateOnRefresh: true,
       // Снапим прогресс к ближайшей карточке (устраняет недоезд последней на 768–1023)
       snap: {
@@ -169,8 +169,8 @@ function createDesktopTimeline(
           return Math.round(value / step) * step;
         },
         // Увеличиваем duration и delay для мобильных устройств для более сильного магнита
-        duration: isMobile() ? 0.8 : 0.2,
-        delay: isMobile() ? 0.2 : 0,
+        duration: isMobile() ? 1.0 : 0.6,
+        delay: isMobile() ? 0.6 : 0,
         ease: 'power1.inOut',
         // Уменьшаем инерцию на мобильных для более быстрой остановки
         inertia: isMobile() ? false : true,
