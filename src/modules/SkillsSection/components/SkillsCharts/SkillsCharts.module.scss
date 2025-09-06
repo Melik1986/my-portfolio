@@ -173,7 +173,7 @@
 /* Диапазон 481–768px: дополнительно ужимаем высоту/паддинги, чтобы всё помещалось */
 @media (min-width: 481px) and (max-width: 768px) {
   .skills-charts__container {
-    gap: 12px;
+    gap: 42px;
   }
   .chart-wrapper {
     min-height: 320px;
@@ -184,7 +184,7 @@
 
 @media (max-width: 480px) {
   .skills-charts__container {
-    gap: 10px;
+    gap: 40px;
   }
   .chart-wrapper {
     // Жёстко фиксируем высоту, чтобы исключить влияние vh и inline-стилей

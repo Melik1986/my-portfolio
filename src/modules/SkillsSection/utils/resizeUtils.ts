@@ -49,7 +49,7 @@ export const resizeCharts = (
   designChart.setOption({
     legend: {
       textStyle: { fontSize: legendFontSize },
-      show: (typeof window === 'undefined' ? designWidth : window.innerWidth) >= 768,
+      show: (typeof window === 'undefined' ? designWidth : window.innerWidth) >= 390,
       orient: 'horizontal',
       bottom: 0,
       left: 'center',

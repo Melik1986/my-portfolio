@@ -129,7 +129,7 @@
   // На планшетах и ниже — смещаем тултип влево от аватара и не перекрываем его
   @include vp-768 {
     top: 10%;
-    left: 0;
+    left: 9%;
     transform: none;
     pointer-events: none;
 

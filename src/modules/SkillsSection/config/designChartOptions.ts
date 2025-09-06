@@ -28,9 +28,9 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
 
   return {
     ...getBaseChartStyles(),
-    /** Конфигурация легенды диаграммы: включена только на десктопах (>= 1024, по viewport) */
+    /** Конфигурация легенды диаграммы: включена только на экранах >= 480px */
     legend:
-      viewportWidth >= RESPONSIVE_BREAKPOINTS.desktop
+      viewportWidth >= RESPONSIVE_BREAKPOINTS.mobile
         ? {
             orient: 'horizontal',
             bottom: '0%',
