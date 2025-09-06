@@ -71,6 +71,7 @@
   // Tablet (769-1024px) - proportional scaling
   @media (min-width: 769px) and (max-width: 1024px) {
     &__container-letters {
+      top: 10%;
       gap: 16px;
     }
 

@@ -6,6 +6,20 @@ import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { readCssVar } from '../utils/avatar.utils';
 import { AvatarAssets } from '../types/avatar.types';
 
+// Вспомогательные функции для настройки анимаций
+const configureWaveAction = (waveAction: THREE.AnimationAction, waveClip: THREE.AnimationClip): void => {
+  const originalDuration = waveClip.duration;
+  const targetDuration = 100; // 100 секунд
+  const timeScale = originalDuration / targetDuration;
+  
+  waveAction.setEffectiveTimeScale(timeScale);
+  waveAction.setLoop(THREE.LoopRepeat, Infinity);
+};
+
+const configureStumbleAction = (stumbleAction: THREE.AnimationAction): void => {
+  stumbleAction.setLoop(THREE.LoopOnce, 1);
+};
+
 // Хук для работы с 3D моделью
 export const useModelLoader = () => {
   const createGround = useCallback((): THREE.Mesh => {
@@ -35,10 +49,18 @@ export const useModelLoader = () => {
       const stumbleClip =
         THREE.AnimationClip.findByName(gltf.animations, 'Stagger') || gltf.animations[1];
 
-      return {
-        waveAction: waveClip ? mixer.clipAction(waveClip) : null,
-        stumbleAction: stumbleClip ? mixer.clipAction(stumbleClip) : null,
-      };
+      const waveAction = waveClip ? mixer.clipAction(waveClip) : null;
+      const stumbleAction = stumbleClip ? mixer.clipAction(stumbleClip) : null;
+
+      if (waveAction && waveClip) {
+        configureWaveAction(waveAction, waveClip);
+      }
+
+      if (stumbleAction) {
+        configureStumbleAction(stumbleAction);
+      }
+
+      return { waveAction, stumbleAction };
     },
     [],
   );

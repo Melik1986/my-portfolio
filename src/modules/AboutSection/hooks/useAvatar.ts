@@ -61,11 +61,14 @@ const useAnimationControl = (
       return;
     }
 
-    if (!state.isAnimationPlaying) {
+    // Поскольку анимация теперь запускается автоматически при загрузке,
+    // клик всегда запускает stumble анимацию (если она доступна)
+    if (assets.stumbleAction && state.isAnimationPlaying) {
+      executeStumbleSequence();
+    } else if (!state.isAnimationPlaying) {
+      // Резервный запуск анимации, если по какой-то причине она не запустилась автоматически
       assets.waveAction.reset().play();
       state.isAnimationPlaying = true;
-    } else if (assets.stumbleAction) {
-      executeStumbleSequence();
     }
   }, [executeStumbleSequence, assetsRef, stateRef]);
 
@@ -323,6 +326,12 @@ const handleModelLoadedImpl = (
 
   ctx.assetsRef.current = assets;
   updateRefsAfterLoad(ctx.refs, assets);
+
+  // Автоматически запускаем циклическую анимацию после загрузки модели
+  if (assets.waveAction && !ctx.stateRef.current.isDisposed) {
+    assets.waveAction.reset().play();
+    ctx.stateRef.current.isAnimationPlaying = true;
+  }
 
   const container = ctx.refs.current.container;
   if (container) {
