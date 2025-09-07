@@ -1,6 +1,7 @@
 import * as echarts from 'echarts/core';
 import { SELECTORS, RESPONSIVE_BREAKPOINTS } from '../config/skillsCharts.config';
 import { computeDevResponsiveConfig } from '../config/devChartOptions';
+import { readCssVar } from '../../../lib/utils/css-vars';
 
 /**
  * Изменяет размеры графиков при изменении окна
@@ -45,10 +46,12 @@ export const resizeCharts = (
         ? 11
         : 12;
 
+  const legendTextColor = readCssVar('--charts-text-color', '#333333');
+
   /** Обновление настроек круговой диаграммы */
   designChart.setOption({
     legend: {
-      textStyle: { fontSize: legendFontSize },
+      textStyle: { fontSize: legendFontSize, color: legendTextColor },
       show: (typeof window === 'undefined' ? designWidth : window.innerWidth) >= 390,
       orient: 'horizontal',
       bottom: 0,

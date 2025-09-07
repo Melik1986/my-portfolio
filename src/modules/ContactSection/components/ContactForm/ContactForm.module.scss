@@ -23,7 +23,8 @@
   // Mobile adjustments
   @include vp-mobile {
     gap: 14px;
-    justify-content: flex-start;
+    height: 60%;
+    // justify-content: flex-start;
   }
 
   @include vp-375 {
@@ -119,6 +120,7 @@
   // Mobile landscape adjustments
   @include vp-768 {
     width: 50%;
+    height: 78%;
     padding: 25px 20px;
   }
 
@@ -126,7 +128,6 @@
   @include vp-mobile {
     bottom: 0;
     width: 100%;
-    height: 64%;
     padding: 20px 16px;
     right: 0;
   }
@@ -135,14 +136,12 @@
   @include vp-375 {
     width: 100%;
     padding: 18px 14px;
-    height: 66%;
   }
 
   // Extra small mobile adjustments
   @include vp-360 {
     width: 100%;
     padding: 16px 12px;
-    height: 68%;
   }
 
   &--freelance {
@@ -561,6 +560,13 @@
 
   &:active {
     transform: translateY(1px);
+  }
+
+  // Hide "Client Form" button on screens smaller than 767px
+  @media screen and (max-width: 767px) {
+    &:nth-child(2) {
+      display: none;
+    }
   }
 }
 
