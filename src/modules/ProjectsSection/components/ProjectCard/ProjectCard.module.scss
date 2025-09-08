@@ -44,9 +44,8 @@
 // Стили для полноэкранного режима
 .projects-card.fullscreen,
 .fullscreen {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
+  position: fixed !important;
+  inset: 0;
   transform: none !important;
   width: 100vw !important;
   height: 100vh !important;
