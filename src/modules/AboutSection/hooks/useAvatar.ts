@@ -525,6 +525,8 @@ const initializeRenderer = (
     const fallbackHeight = container.offsetHeight || 400;
     renderer.setSize(fallbackWidth, fallbackHeight);
   }
+  // Добавляем anchor-name для позиционирования tooltip
+  renderer.domElement.style.setProperty('anchor-name', '--avatar-anchor');
   return renderer;
 };
 

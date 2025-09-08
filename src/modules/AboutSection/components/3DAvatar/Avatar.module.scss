@@ -34,7 +34,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  anchor-name: --avatar-anchor;
 }
 
 .avatar-loading {
@@ -64,13 +63,11 @@
 }
 
 .tooltip {
-  position: absolute;
   z-index: 10;
   padding: 8px 12px;
   color: white;
-  border-radius: 4px;
   font-size: 14px;
-  white-space: wrap;
+  white-space: normal; // исправлено с некорректного значения wrap
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -78,10 +75,20 @@
     opacity 0.3s ease,
     visibility 0.3s ease;
 
-  // Надежное позиционирование над головой модели
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
+  @supports (anchor-name: --test) {
+    position: absolute;
+    position-anchor: --avatar-anchor;
+    top: anchor(top);
+    left: anchor(center);
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @supports not (anchor-name: --test) {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%) translateY(0);
+  }
 
   &--visible {
     opacity: 1;
@@ -126,34 +133,48 @@
     }
   }
 
-  // На планшетах и ниже — смещаем тултип влево от аватара и не перекрываем его
   @include vp-768 {
-    top: 10%;
-    left: 9%;
-    transform: none;
+    @supports (anchor-name: --test) {
+      top: anchor(top);
+      left: anchor(center);
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @supports not (anchor-name: --test) {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+    }
+
     pointer-events: none;
 
     &--visible {
-      transform: none;
-    }
+      @supports (anchor-name: --test) {
+        transform: translateX(-50%) translateY(0);
+      }
 
-    &__content {
-      align-items: center;
-      padding: 6px;
-      h3 {
-        font-size: 1rem;
-        text-align: center;
+      @supports not (anchor-name: --test) {
+        transform: translateX(-50%) translateY(0);
       }
-      p {
-        text-align: center;
-        font-size: 0.9rem;
-      }
-      ul {
-        font-size: 0.8rem;
-      }
-      li {
-        text-align: center;
-      }
+    }
+  }
+
+  &__content {
+    align-items: center;
+    padding: 6px;
+    h3 {
+      font-size: 1rem;
+      text-align: center;
+    }
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    ul {
+      font-size: 0.8rem;
+    }
+    li {
+      text-align: center;
     }
   }
 

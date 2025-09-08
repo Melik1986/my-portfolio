@@ -169,8 +169,8 @@ function createDesktopTimeline(
           return Math.round(value / step) * step;
         },
         // Увеличиваем duration и delay для мобильных устройств для более сильного магнита
-        duration: isMobile() ? 1.6 : 0.90,
-        delay: isMobile() ? 0.90 : 0,
+        duration: isMobile() ? 1.8 : 1,
+        delay: isMobile() ? 1 : 0,
         ease: 'power1.inOut',
         // Уменьшаем инерцию на мобильных для более быстрой остановки
         inertia: isMobile() ? false : true,
