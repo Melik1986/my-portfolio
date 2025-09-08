@@ -19,10 +19,10 @@ export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscree
     <>
       <Image
         className={styles['projects-card__img']}
-        src={project.image}
+        src={project.fullImage}
         alt={project.title}
-        width={800}
-        height={600}
+        width={1260}
+        height={1160}
         priority
         sizes="100vw"
         placeholder="blur"

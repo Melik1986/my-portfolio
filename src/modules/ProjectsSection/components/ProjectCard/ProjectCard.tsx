@@ -75,6 +75,21 @@ export function ProjectCard(props: ProjectCardProps) {
     }
   }, [onToggleFullscreen, isFullscreen]);
 
+  const handleTouchStart = useCallback(() => {
+    if (isFullscreen) return;
+    onHoverStart();
+  }, [isFullscreen, onHoverStart]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (isFullscreen) return;
+    onHoverEnd();
+  }, [isFullscreen, onHoverEnd]);
+
+  const handleTouchCancel = useCallback(() => {
+    if (isFullscreen) return;
+    onHoverEnd();
+  }, [isFullscreen, onHoverEnd]);
+
   // Обработка клавиши Escape для выхода из полноэкранного режима
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -105,6 +120,9 @@ export function ProjectCard(props: ProjectCardProps) {
       onClick={handleClick}
       onMouseEnter={isFullscreen ? undefined : onHoverStart}
       onMouseLeave={isFullscreen ? undefined : onHoverEnd}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchCancel}
     >
       {content}
     </div>

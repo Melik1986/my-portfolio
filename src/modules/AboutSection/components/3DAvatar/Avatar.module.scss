@@ -134,6 +134,8 @@
   }
 
   @include vp-768 {
+    pointer-events: none;
+
     @supports (anchor-name: --test) {
       top: anchor(top);
       left: anchor(center);
@@ -145,8 +147,6 @@
       left: 50%;
       transform: translateX(-50%) translateY(0);
     }
-
-    pointer-events: none;
 
     &--visible {
       @supports (anchor-name: --test) {

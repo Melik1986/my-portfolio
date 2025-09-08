@@ -18,8 +18,8 @@ export function ProjectCardPreview({ number, previewImage, title }: ProjectCardP
         className={styles['projects-card__img']}
         src={previewImage}
         alt={title}
-        width={300}
-        height={200}
+        width={766}
+        height={587}
         priority={number <= 3} // Приоритет для первых 3 изображений
         sizes="(max-width: 480px) 100vw, (max-width: 768px) 280px, 300px"
         loading={number <= 3 ? 'eager' : 'lazy'}

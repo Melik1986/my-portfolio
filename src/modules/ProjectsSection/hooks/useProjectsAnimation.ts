@@ -2,7 +2,7 @@
 
 import { useRef, useCallback, useLayoutEffect } from 'react';
 import { gsap } from 'gsap';
-import { ANIMATION_CONFIG } from '../config/projects-catalog';
+import { getAnimationConfig } from '../config/projects-catalog';
 
 type AnimationState = 'stacked' | 'expanded' | 'fullscreen';
 
@@ -57,23 +57,49 @@ export function useProjectsAnimation(totalCards: number) {
     const tl = gsap.timeline();
     mainTimelineRef.current = tl;
 
+    const config = getAnimationConfig();
     const isMobile =
       typeof window !== 'undefined' &&
       (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
 
     cardsRef.current.forEach((cardRef, index) => {
-      // На мобилке — строгий каскад вверх и назад (без смещения по X)
-      const x = isMobile ? 0 : index * ANIMATION_CONFIG.xStep;
-      const y = -index * Math.abs(ANIMATION_CONFIG.yStep) * (isMobile ? 0.7 : 1);
-      const z = index * ANIMATION_CONFIG.zStep * (isMobile ? 1.2 : 1);
+      // Определяем, нужно ли использовать сжатые параметры для последних карточек
+      const isCompactCard = config.compactLastCards && 
+        config.compactStartIndex !== undefined && 
+        index >= config.compactStartIndex;
+      
+      // Выбираем параметры в зависимости от позиции карточки
+      const zStep = isCompactCard && config.compactZStep !== undefined 
+        ? config.compactZStep 
+        : config.zStep;
+      const yStep = isCompactCard && config.compactYStep !== undefined 
+        ? config.compactYStep 
+        : config.yStep;
+      
+      // Масштаб для последних двух карточек
+      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
+        index >= totalCards - 2;
+      const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
+      
+      // На мобилке — веерное расположение с углами поворота
+      const x = isMobile ? 0 : index * config.xStep;
+      const y = -index * Math.abs(yStep) * (isMobile ? 0.7 : 1);
+      const z = index * zStep * (isMobile ? 1.2 : 1);
+      
+      // Веерное расположение для мобильных устройств
+      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
+        ? (index - Math.floor(totalCards / 2)) * config.fanAngleStep 
+        : 0;
 
       tl.to(
         cardRef.element,
         {
-          duration: ANIMATION_CONFIG.fanDuration,
+          duration: config.fanDuration,
           x,
           y,
           z,
+          rotation,
+          scale,
           zIndex: index,
           filter: `hue-rotate(${index * 30}deg)`,
           ease: 'power2.out',
@@ -82,7 +108,7 @@ export function useProjectsAnimation(totalCards: number) {
         index * (isMobile ? 0.07 : 0.05),
       );
     });
-  }, []);
+  }, [totalCards]);
 
   // Сбор в стопку
   const collapseFan = useCallback(() => {
@@ -96,15 +122,17 @@ export function useProjectsAnimation(totalCards: number) {
     const tl = gsap.timeline();
     mainTimelineRef.current = tl;
 
+    const config = getAnimationConfig();
     const cards = Array.from(cardsRef.current.values()).reverse();
     cards.forEach((cardRef, reverseIndex) => {
       tl.to(
         cardRef.element,
         {
-          duration: 0.25,
+          duration: config.fanDuration,
           x: 0,
           y: 0,
           z: 0,
+          rotation: 0, // Сброс угла поворота
           zIndex: totalCards - cardRef.index,
           filter: '',
           ease: 'power2.out',
@@ -125,23 +153,24 @@ export function useProjectsAnimation(totalCards: number) {
     // Убиваем индивидуальный tween карточки
     cardRef.tween?.kill();
 
-    // Мобильная базовая позиция должна совпадать с expandFan (лестница вверх/назад, X=0)
+    // Получаем адаптивную конфигурацию
+    const config = getAnimationConfig();
     const isMobile =
       typeof window !== 'undefined' &&
       (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
 
-    const baseX = isMobile ? 0 : index * ANIMATION_CONFIG.xStep;
-    const baseY = -index * Math.abs(ANIMATION_CONFIG.yStep) * (isMobile ? 0.7 : 1);
-    const baseZ = index * ANIMATION_CONFIG.zStep * (isMobile ? 1.2 : 1);
-    const hoverXShift = isMobile ? 24 : 120; // мобайл: сильно уменьшаем сдвиг вправо
-    const hoverLift = isMobile ? ANIMATION_CONFIG.hoverLift * 1.25 : ANIMATION_CONFIG.hoverLift; // мобайл: поднимаем чуть сильнее
+    const baseX = isMobile ? 0 : index * config.xStep;
+    const baseY = -index * Math.abs(config.yStep) * (isMobile ? 0.7 : 1);
+    const baseZ = index * config.zStep * (isMobile ? 1.2 : 1);
+    const hoverXShift = isMobile ? 80 : 120; // увеличили с 24px до 80px для лучших touch-областей
+    const hoverLift = isMobile ? config.hoverLift * 1.25 : config.hoverLift;
 
     cardRef.tween = gsap.to(cardRef.element, {
-      duration: ANIMATION_CONFIG.hoverDuration,
-      x: baseX + (isHovering ? hoverXShift : 0), // мобайл: ограниченный сдвиг вправо
+      duration: config.hoverDuration,
+      x: baseX + (isHovering ? hoverXShift : 0),
       y: baseY + (isHovering ? hoverLift : 0),
-      z: baseZ + (isHovering ? Math.abs(ANIMATION_CONFIG.zStep) * 0.5 : 0),
-      boxShadow: isHovering ? ANIMATION_CONFIG.hoverShadow : ANIMATION_CONFIG.cardShadow,
+      z: baseZ + (isHovering ? Math.abs(config.zStep) * 0.5 : 0),
+      boxShadow: isHovering ? config.hoverShadow : config.cardShadow,
       zIndex: isHovering ? 10000 : index,
       ease: 'power2.out',
       force3D: true,
@@ -162,6 +191,159 @@ export function useProjectsAnimation(totalCards: number) {
     }
   }, []);
 
+  // Расширение в fullscreen с учетом мобильных устройств
+  const expandToFullscreen = useCallback((index: number) => {
+    const cardRef = cardsRef.current.get(index);
+    if (!cardRef) return;
+
+    const isMobile =
+      typeof window !== 'undefined' &&
+      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
+
+    gsap.to(cardRef.element, {
+      x: 0,
+      y: 0,
+      z: 0,
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      zIndex: 20000,
+      duration: 0.5,
+      ease: 'power2.inOut',
+    });
+
+    // Скрыть остальные карточки
+    cardsRef.current.forEach((otherCardRef, otherIndex) => {
+      if (otherIndex !== index) {
+        gsap.to(otherCardRef.element, {
+          opacity: 0,
+          scale: 0.8,
+          zIndex: isMobile ? 500 + otherIndex : otherIndex,
+          duration: 0.3,
+          ease: 'power2.out',
+        });
+      }
+    });
+  }, []);
+
+  // Swipe навигация - перемещение карточки вперед
+  const swipeCardForward = useCallback(() => {
+    if (stateRef.current !== 'expanded' || cardsRef.current.size === 0) return;
+
+    const config = getAnimationConfig();
+    const cards = Array.from(cardsRef.current.values()).sort((a, b) => a.index - b.index);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1224;
+
+    // Создаем новый порядок: первая карточка идет в конец
+    const reorderedCards = [...cards.slice(1), cards[0]];
+    
+    // Анимируем все карточки одновременно для плавности
+    reorderedCards.forEach((cardRef, newPosition) => {
+      // Определяем, нужно ли использовать сжатые параметры для последних карточек
+      const isCompactCard = config.compactLastCards && 
+        config.compactStartIndex !== undefined && 
+        newPosition >= config.compactStartIndex;
+      
+      // Выбираем параметры в зависимости от позиции карточки
+      const zStep = isCompactCard && config.compactZStep !== undefined 
+        ? config.compactZStep 
+        : config.zStep;
+      const yStep = isCompactCard && config.compactYStep !== undefined 
+        ? config.compactYStep 
+        : config.yStep;
+      
+      // Масштаб для последних двух карточек
+      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
+        newPosition >= totalCards - 2;
+      const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
+      
+      const x = isMobile ? 0 : newPosition * config.xStep;
+      const y = -newPosition * Math.abs(yStep) * (isMobile ? 0.7 : 1);
+      const z = newPosition * zStep * (isMobile ? 1.2 : 1);
+      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
+        ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep 
+        : 0;
+
+      gsap.to(cardRef.element, {
+        duration: config.fanDuration * 0.8, // Немного быстрее для отзывчивости
+        x,
+        y,
+        z,
+        rotation,
+        scale,
+        zIndex: newPosition,
+        opacity: 1,
+        ease: 'power2.inOut',
+      });
+    });
+
+    // Обновляем индексы в Map для корректного отслеживания
+    const newCardsMap = new Map<number, CardRef>();
+    reorderedCards.forEach((cardRef, newPosition) => {
+      newCardsMap.set(newPosition, { ...cardRef, index: newPosition });
+    });
+    cardsRef.current = newCardsMap;
+  }, [totalCards]);
+
+  // Swipe навигация - перемещение карточки назад
+  const swipeCardBackward = useCallback(() => {
+    if (stateRef.current !== 'expanded' || cardsRef.current.size === 0) return;
+
+    const config = getAnimationConfig();
+    const cards = Array.from(cardsRef.current.values()).sort((a, b) => a.index - b.index);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1224;
+
+    // Создаем новый порядок: последняя карточка идет в начало
+    const reorderedCards = [cards[cards.length - 1], ...cards.slice(0, -1)];
+    
+    // Анимируем все карточки одновременно для плавности
+    reorderedCards.forEach((cardRef, newPosition) => {
+      // Определяем, нужно ли использовать сжатые параметры для последних карточек
+      const isCompactCard = config.compactLastCards && 
+        config.compactStartIndex !== undefined && 
+        newPosition >= config.compactStartIndex;
+      
+      // Выбираем параметры в зависимости от позиции карточки
+      const zStep = isCompactCard && config.compactZStep !== undefined 
+        ? config.compactZStep 
+        : config.zStep;
+      const yStep = isCompactCard && config.compactYStep !== undefined 
+        ? config.compactYStep 
+        : config.yStep;
+      
+      // Масштаб для последних двух карточек
+      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
+        newPosition >= totalCards - 2;
+      const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
+      
+      const x = isMobile ? 0 : newPosition * config.xStep;
+      const y = -newPosition * Math.abs(yStep) * (isMobile ? 0.7 : 1);
+      const z = newPosition * zStep * (isMobile ? 1.2 : 1);
+      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
+        ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep 
+        : 0;
+
+      gsap.to(cardRef.element, {
+        duration: config.fanDuration * 0.8, // Немного быстрее для отзывчивости
+        x,
+        y,
+        z,
+        rotation,
+        scale,
+        zIndex: newPosition,
+        opacity: 1,
+        ease: 'power2.inOut',
+      });
+    });
+
+    // Обновляем индексы в Map для корректного отслеживания
+    const newCardsMap = new Map<number, CardRef>();
+    reorderedCards.forEach((cardRef, newPosition) => {
+      newCardsMap.set(newPosition, { ...cardRef, index: newPosition });
+    });
+    cardsRef.current = newCardsMap;
+  }, [totalCards]);
+
   // Cleanup при размонтировании
   useLayoutEffect(() => {
     const currentCards = cardsRef.current;
@@ -181,6 +363,9 @@ export function useProjectsAnimation(totalCards: number) {
     collapseFan,
     hoverCard,
     setFullscreen,
+    expandToFullscreen,
+    swipeCardForward,
+    swipeCardBackward,
     currentState: stateRef.current,
   };
 }

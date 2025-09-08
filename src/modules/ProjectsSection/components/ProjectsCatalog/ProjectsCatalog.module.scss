@@ -13,6 +13,102 @@
     perspective: 1000px;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
+  }
+
+  // Интерактивные стрелки навигации
+  &__arrow-left,
+  &__arrow-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    // Эффект жидкого стекла через псевдоэлемент
+    &::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px) saturate(180%);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.1));
+      z-index: -1;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+      transform: translateY(-50%) scale(1.1);
+      
+      &::after {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px) saturate(200%);
+        border-color: rgba(255, 255, 255, 0.3);
+        filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.15));
+      }
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+      
+      &::after {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px) saturate(150%);
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.2));
+      }
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: translateY(-50%) scale(0.9);
+      
+      &::after {
+        background: rgba(128, 128, 128, 0.1);
+        backdrop-filter: blur(5px);
+      }
+    }
+  }
+
+  // Левая стрелка (переход назад)
+  &__arrow-left {
+    left: 20px;
+    border-width: 15px 20px 15px 0;
+    border-color: transparent var(--lg-text, rgba(255, 255, 255, 0.9)) transparent transparent;
+
+    &:hover {
+      border-color: transparent var(--lg-text, rgba(255, 255, 255, 1)) transparent transparent;
+    }
+
+    @include vp-768 {
+      left: 10px;
+      border-width: 12px 16px 12px 0;
+    }
+  }
+
+  // Правая стрелка (переход вперед)
+  &__arrow-right {
+    right: 20px;
+    border-width: 15px 0 15px 20px;
+    border-color: transparent transparent transparent var(--lg-text, rgba(255, 255, 255, 0.9));
+
+    &:hover {
+      border-color: transparent transparent transparent var(--lg-text, rgba(255, 255, 255, 1));
+    }
+
+    @include vp-768 {
+      right: 10px;
+      border-width: 12px 0 12px 16px;
+    }
+
     &.loading {
       transition: all 0.2s ease-in-out;
       opacity: 0.95;
@@ -39,6 +135,34 @@
     &__container {
       transform: translate(-50%, -50%); // убираем наклон, чтобы каскад шёл строго вверх/назад
       perspective: 1200px;
+
+    }
+
+    // Увеличиваем размер стрелок на мобильных устройствах
+    &__arrow-left {
+      left: 15px;
+      border-width: 16px 24px 16px 0;
+      opacity: 0.5; // Более заметные на мобильных
+    }
+
+    &__arrow-right {
+      right: 15px;
+      border-width: 16px 0 16px 24px;
+      opacity: 0.5;
+    }
+
+    // На мобильных показываем стрелки постоянно
+    &__arrow-left,
+    &__arrow-right {
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:disabled {
+        opacity: 0.1;
+      }
     }
   }
 }
