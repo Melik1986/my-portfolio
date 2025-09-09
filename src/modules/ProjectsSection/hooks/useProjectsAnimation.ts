@@ -13,7 +13,10 @@ interface CardRef {
 }
 
 // eslint-disable-next-line max-lines-per-function
-export function useProjectsAnimation(totalCards: number) {
+export function useProjectsAnimation(
+  totalCards: number,
+  containerRef?: React.RefObject<HTMLDivElement | null>,
+) {
   const cardsRef = useRef<Map<number, CardRef>>(new Map());
   const mainTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const stateRef = useRef<AnimationState>('stacked');
@@ -60,41 +63,40 @@ export function useProjectsAnimation(totalCards: number) {
     const config = getAnimationConfig();
     const isMobile =
       typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
+      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
 
     cardsRef.current.forEach((cardRef, index) => {
       // Определяем, нужно ли использовать сжатые параметры для последних карточек
-      const isCompactCard = config.compactLastCards && 
-        config.compactStartIndex !== undefined && 
+      const isCompactCard =
+        config.compactLastCards &&
+        config.compactStartIndex !== undefined &&
         index >= config.compactStartIndex;
-      
+
       // Выбираем параметры в зависимости от позиции карточки
-      const zStep = isCompactCard && config.compactZStep !== undefined 
-        ? config.compactZStep 
-        : config.zStep;
-      const yStep = isCompactCard && config.compactYStep !== undefined 
-        ? config.compactYStep 
-        : config.yStep;
-      
+      const zStep =
+        isCompactCard && config.compactZStep !== undefined ? config.compactZStep : config.zStep;
+      const yStep =
+        isCompactCard && config.compactYStep !== undefined ? config.compactYStep : config.yStep;
+
       // Масштаб для последних двух карточек
-      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
-        index >= totalCards - 2;
+      const isLastTwoCards = config.lastTwoCardsScale !== undefined && index >= totalCards - 2;
       const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
-      
+
       // На мобилке — веерное расположение с углами поворота
       const x = isMobile ? 0 : index * config.xStep;
       const y = -index * Math.abs(yStep) * (isMobile ? 0.7 : 1);
       const z = index * zStep * (isMobile ? 1.2 : 1);
-      
+
       // Веерное расположение для мобильных устройств
-      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
-        ? (index - Math.floor(totalCards / 2)) * config.fanAngleStep 
-        : 0;
+      const rotation =
+        isMobile && config.fanAngle && config.fanAngleStep
+          ? (index - Math.floor(totalCards / 2)) * config.fanAngleStep
+          : 0;
 
       tl.to(
         cardRef.element,
         {
-          duration: config.fanDuration,
+          duration: config.fastFanDuration || config.fanDuration, // Используем быструю анимацию
           x,
           y,
           z,
@@ -105,7 +107,7 @@ export function useProjectsAnimation(totalCards: number) {
           ease: 'power2.out',
           force3D: true,
         },
-        index * (isMobile ? 0.07 : 0.05),
+        (config.initialDelay || 0) + index * (isMobile ? 0.07 : 0.05), // Добавляем задержку
       );
     });
   }, [totalCards]);
@@ -128,7 +130,7 @@ export function useProjectsAnimation(totalCards: number) {
       tl.to(
         cardRef.element,
         {
-          duration: config.fanDuration,
+          duration: config.fastFanDuration || config.fanDuration, // Используем быструю анимацию
           x: 0,
           y: 0,
           z: 0,
@@ -157,7 +159,7 @@ export function useProjectsAnimation(totalCards: number) {
     const config = getAnimationConfig();
     const isMobile =
       typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
+      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
 
     const baseX = isMobile ? 0 : index * config.xStep;
     const baseY = -index * Math.abs(config.yStep) * (isMobile ? 0.7 : 1);
@@ -198,11 +200,24 @@ export function useProjectsAnimation(totalCards: number) {
 
     const isMobile =
       typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 1224px)').matches || window.innerWidth <= 1224);
+      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
 
+    // Получаем размеры и позицию контейнера
+    let containerRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+    if (containerRef?.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      containerRect = {
+        left: rect.left,
+        top: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
+    }
+
+    // Позиционируем карточку относительно контейнера
     gsap.to(cardRef.element, {
-      x: 0,
-      y: 0,
+      x: -containerRect.left,
+      y: -containerRect.top,
       z: 0,
       rotateX: 0,
       rotateY: 0,
@@ -224,48 +239,48 @@ export function useProjectsAnimation(totalCards: number) {
         });
       }
     });
-  }, []);
+  }, [containerRef]);
 
-  // Swipe навигация - перемещение карточки вперед
-  const swipeCardForward = useCallback(() => {
+  // Навигация стрелками - перемещение карточки вперед
+  const navigateCardForward = useCallback(() => {
     if (stateRef.current !== 'expanded' || cardsRef.current.size === 0) return;
 
     const config = getAnimationConfig();
     const cards = Array.from(cardsRef.current.values()).sort((a, b) => a.index - b.index);
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1224;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
     // Создаем новый порядок: первая карточка идет в конец
     const reorderedCards = [...cards.slice(1), cards[0]];
-    
+
     // Анимируем все карточки одновременно для плавности
     reorderedCards.forEach((cardRef, newPosition) => {
       // Определяем, нужно ли использовать сжатые параметры для последних карточек
-      const isCompactCard = config.compactLastCards && 
-        config.compactStartIndex !== undefined && 
+      const isCompactCard =
+        config.compactLastCards &&
+        config.compactStartIndex !== undefined &&
         newPosition >= config.compactStartIndex;
-      
+
       // Выбираем параметры в зависимости от позиции карточки
-      const zStep = isCompactCard && config.compactZStep !== undefined 
-        ? config.compactZStep 
-        : config.zStep;
-      const yStep = isCompactCard && config.compactYStep !== undefined 
-        ? config.compactYStep 
-        : config.yStep;
-      
+      const zStep =
+        isCompactCard && config.compactZStep !== undefined ? config.compactZStep : config.zStep;
+      const yStep =
+        isCompactCard && config.compactYStep !== undefined ? config.compactYStep : config.yStep;
+
       // Масштаб для последних двух карточек
-      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
-        newPosition >= totalCards - 2;
+      const isLastTwoCards =
+        config.lastTwoCardsScale !== undefined && newPosition >= totalCards - 2;
       const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
-      
+
       const x = isMobile ? 0 : newPosition * config.xStep;
       const y = -newPosition * Math.abs(yStep) * (isMobile ? 0.7 : 1);
       const z = newPosition * zStep * (isMobile ? 1.2 : 1);
-      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
-        ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep 
-        : 0;
+      const rotation =
+        isMobile && config.fanAngle && config.fanAngleStep
+          ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep
+          : 0;
 
       gsap.to(cardRef.element, {
-        duration: config.fanDuration * 0.8, // Немного быстрее для отзывчивости
+        duration: (config.fastFanDuration || config.fanDuration) * 0.8, // Используем быструю анимацию
         x,
         y,
         z,
@@ -285,46 +300,46 @@ export function useProjectsAnimation(totalCards: number) {
     cardsRef.current = newCardsMap;
   }, [totalCards]);
 
-  // Swipe навигация - перемещение карточки назад
-  const swipeCardBackward = useCallback(() => {
+  // Навигация стрелками - перемещение карточки назад
+  const navigateCardBackward = useCallback(() => {
     if (stateRef.current !== 'expanded' || cardsRef.current.size === 0) return;
 
     const config = getAnimationConfig();
     const cards = Array.from(cardsRef.current.values()).sort((a, b) => a.index - b.index);
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1224;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
     // Создаем новый порядок: последняя карточка идет в начало
     const reorderedCards = [cards[cards.length - 1], ...cards.slice(0, -1)];
-    
+
     // Анимируем все карточки одновременно для плавности
     reorderedCards.forEach((cardRef, newPosition) => {
       // Определяем, нужно ли использовать сжатые параметры для последних карточек
-      const isCompactCard = config.compactLastCards && 
-        config.compactStartIndex !== undefined && 
+      const isCompactCard =
+        config.compactLastCards &&
+        config.compactStartIndex !== undefined &&
         newPosition >= config.compactStartIndex;
-      
+
       // Выбираем параметры в зависимости от позиции карточки
-      const zStep = isCompactCard && config.compactZStep !== undefined 
-        ? config.compactZStep 
-        : config.zStep;
-      const yStep = isCompactCard && config.compactYStep !== undefined 
-        ? config.compactYStep 
-        : config.yStep;
-      
+      const zStep =
+        isCompactCard && config.compactZStep !== undefined ? config.compactZStep : config.zStep;
+      const yStep =
+        isCompactCard && config.compactYStep !== undefined ? config.compactYStep : config.yStep;
+
       // Масштаб для последних двух карточек
-      const isLastTwoCards = config.lastTwoCardsScale !== undefined && 
-        newPosition >= totalCards - 2;
+      const isLastTwoCards =
+        config.lastTwoCardsScale !== undefined && newPosition >= totalCards - 2;
       const scale = isLastTwoCards ? config.lastTwoCardsScale : 1;
-      
+
       const x = isMobile ? 0 : newPosition * config.xStep;
       const y = -newPosition * Math.abs(yStep) * (isMobile ? 0.7 : 1);
       const z = newPosition * zStep * (isMobile ? 1.2 : 1);
-      const rotation = isMobile && config.fanAngle && config.fanAngleStep 
-        ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep 
-        : 0;
+      const rotation =
+        isMobile && config.fanAngle && config.fanAngleStep
+          ? (newPosition - Math.floor(totalCards / 2)) * config.fanAngleStep
+          : 0;
 
       gsap.to(cardRef.element, {
-        duration: config.fanDuration * 0.8, // Немного быстрее для отзывчивости
+        duration: (config.fastFanDuration || config.fanDuration) * 0.8, // Используем быструю анимацию
         x,
         y,
         z,
@@ -364,8 +379,8 @@ export function useProjectsAnimation(totalCards: number) {
     hoverCard,
     setFullscreen,
     expandToFullscreen,
-    swipeCardForward,
-    swipeCardBackward,
+    navigateCardForward,
+    navigateCardBackward,
     currentState: stateRef.current,
   };
 }

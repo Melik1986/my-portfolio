@@ -67,6 +67,10 @@
   height: auto;
   min-height: 200px;
 
+  @include vp-768 {
+    min-height: 100px;
+  }
+
   .glass-card__content {
     display: flex;
     flex-direction: column;

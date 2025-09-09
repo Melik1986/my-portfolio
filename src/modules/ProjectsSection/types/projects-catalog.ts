@@ -1,11 +1,20 @@
+// Типы для цветовых тем проектов
+export interface ProjectTheme {
+  textColor?: string; // Цвет основного текста
+  titleColor?: string; // Цвет заголовка
+  closeButtonColor?: string; // Цвет крестика закрытия
+}
+
 // Типы для проектов
 export interface ProjectData {
   image: string;
   previewImage: string;
   fullImage: string;
+  mobileFullImage?: string; // Полноэкранное изображение для мобильных устройств (9:16)
   title: string;
   text: string;
   link: string;
+  theme?: ProjectTheme; // Опциональная цветовая тема для проекта
 }
 
 export interface CardPosition {
@@ -30,7 +39,11 @@ export interface AnimationConfig {
 
   fanAngle?: number; // Угол поворота для веерного расположения
   fanAngleStep?: number; // Шаг угла между карточками
-  
+
+  // Настройки задержки и скорости анимации
+  initialDelay?: number; // Задержка перед началом анимации раскрытия (в секундах)
+  fastFanDuration?: number; // Быстрая длительность анимации раскрытия после задержки
+
   // Настройки для сжатия последних карточек
   compactLastCards?: boolean; // Включить сжатие последних карточек
   compactStartIndex?: number; // Индекс, с которого начинать сжатие

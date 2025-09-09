@@ -11,27 +11,31 @@ interface ProjectsCatalogProps {
   projects: ProjectData[];
 }
 
-// Свайп-жесты удалены: логика pointer обработчиков и выполнение свайпов по жестам отключены. Навигация осуществляется только по стрелкам.
-
 // Хук для обработки fullscreen состояния
 function useFullscreenState(animation: ReturnType<typeof useProjectsAnimation>) {
   const [activeFullscreenIndex, setActiveFullscreenIndex] = useState<number | null>(null);
-  
-  const handleToggleFullscreen = useCallback((index: number, next: boolean) => {
-    if (next) {
-      setActiveFullscreenIndex(index);
-      animation.setFullscreen(index);
-    } else {
-      setActiveFullscreenIndex(null);
-      animation.setFullscreen(null);
-    }
-  }, [animation]);
+
+  const handleToggleFullscreen = useCallback(
+    (index: number, next: boolean) => {
+      if (next) {
+        setActiveFullscreenIndex(index);
+        animation.setFullscreen(index);
+      } else {
+        setActiveFullscreenIndex(null);
+        animation.setFullscreen(null);
+      }
+    },
+    [animation],
+  );
 
   return { activeFullscreenIndex, handleToggleFullscreen };
 }
 
 // Функция для создания обработчиков карточек
-function useCardHandlers(animation: ReturnType<typeof useProjectsAnimation>, projects: ProjectData[]) {
+function useCardHandlers(
+  animation: ReturnType<typeof useProjectsAnimation>,
+  projects: ProjectData[],
+) {
   const mountHandlers = useMemo(
     () => projects.map((_, i) => (el: HTMLElement) => animation.registerCard(el, i)),
     [animation, projects],
@@ -44,21 +48,27 @@ function useCardHandlers(animation: ReturnType<typeof useProjectsAnimation>, pro
 }
 
 // Функция для создания обработчика кликов по стрелкам
-function useArrowClickHandler(animation: ReturnType<typeof useProjectsAnimation>, activeFullscreenIndex: number | null) {
-  return useCallback((direction: 'forward' | 'backward') => {
-    if (activeFullscreenIndex !== null) return;
-    if (direction === 'forward') {
-      animation.swipeCardForward();
-    } else {
-      animation.swipeCardBackward();
-    }
-  }, [animation, activeFullscreenIndex]);
+function useArrowClickHandler(
+  animation: ReturnType<typeof useProjectsAnimation>,
+  activeFullscreenIndex: number | null,
+) {
+  return useCallback(
+    (direction: 'forward' | 'backward') => {
+      if (activeFullscreenIndex !== null) return;
+      if (direction === 'forward') {
+        animation.navigateCardForward();
+      } else {
+        animation.navigateCardBackward();
+      }
+    },
+    [animation, activeFullscreenIndex],
+  );
 }
 
 // Функция для рендеринга стрелок навигации
 function renderNavigationArrows(
   handleArrowClick: (direction: 'forward' | 'backward') => void,
-  activeFullscreenIndex: number | null
+  activeFullscreenIndex: number | null,
 ) {
   return (
     <>
@@ -89,10 +99,10 @@ function renderProjectCards(
     mountHandlers: ((el: HTMLElement) => void)[];
     unmountHandlers: (() => void)[];
   },
-  activeFullscreenIndex: number | null
+  activeFullscreenIndex: number | null,
 ) {
   const { handleToggleFullscreen, animation, mountHandlers, unmountHandlers } = cardProps;
-  
+
   return projects.map((project, index) => (
     <ProjectCard
       key={index}
@@ -122,35 +132,44 @@ function renderCatalogContainer(props: {
   unmountHandlers: (() => void)[];
 }) {
   const {
-    containerRef, isPending, activeFullscreenIndex, handleArrowClick, projects,
-    handleToggleFullscreen, animation, mountHandlers, unmountHandlers
+    containerRef,
+    isPending,
+    activeFullscreenIndex,
+    handleArrowClick,
+    projects,
+    handleToggleFullscreen,
+    animation,
+    mountHandlers,
+    unmountHandlers,
   } = props;
 
   const containerClassName = `${styles['projects-catalog__container']} ${isPending ? styles['loading'] : ''} ${activeFullscreenIndex !== null ? styles['projects-catalog__container--fullscreen'] : ''}`;
 
   return (
-    <div
-      ref={containerRef}
-      className={containerClassName}
-    >
+    <div ref={containerRef} className={containerClassName}>
       {renderNavigationArrows(handleArrowClick, activeFullscreenIndex)}
-      {renderProjectCards(projects, { handleToggleFullscreen, animation, mountHandlers, unmountHandlers }, activeFullscreenIndex)}
+      {renderProjectCards(
+        projects,
+        { handleToggleFullscreen, animation, mountHandlers, unmountHandlers },
+        activeFullscreenIndex,
+      )}
     </div>
   );
 }
 
 export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
   const [isPending] = useTransition();
+
   const animation = useProjectsAnimation(projects.length);
-  const { activeFullscreenIndex, handleToggleFullscreen } = useFullscreenState(animation);
-  // Отключены: useSwipeGestures и usePointerUpHandler — жесты свайпа больше не используются
-  const handleArrowClick = useArrowClickHandler(animation, activeFullscreenIndex);
-  const { mountHandlers, unmountHandlers } = useCardHandlers(animation, projects);
 
   const containerRef = useVisibilityAnimation({
     onVisible: () => animation.expandFan(),
     onHidden: () => animation.collapseFan(),
   });
+
+  const { activeFullscreenIndex, handleToggleFullscreen } = useFullscreenState(animation);
+  const handleArrowClick = useArrowClickHandler(animation, activeFullscreenIndex);
+  const { mountHandlers, unmountHandlers } = useCardHandlers(animation, projects);
 
   return renderCatalogContainer({
     containerRef,
@@ -161,8 +180,6 @@ export function ProjectsCatalog({ projects }: ProjectsCatalogProps) {
     handleToggleFullscreen,
     animation,
     mountHandlers,
-    unmountHandlers
+    unmountHandlers,
   });
 }
-
-// Свайп-жесты удалены. Навигация осуществляется только по стрелкам.

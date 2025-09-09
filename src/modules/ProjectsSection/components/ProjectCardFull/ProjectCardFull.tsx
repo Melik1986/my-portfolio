@@ -1,9 +1,12 @@
 'use client';
 
 import React from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProjectData } from '@/modules/ProjectsSection/types/projects-catalog';
+import { getMobileImage } from '@/modules/ProjectsSection/utils/getMobileImage';
+import { useProjectTheme } from '@/modules/ProjectsSection/hooks/useProjectTheme';
 import styles from './ProjectCardFull.module.scss';
 import { GlassCard } from '@/lib/ui';
 import { useI18n } from '@/i18n';
@@ -15,14 +18,24 @@ interface ProjectCardFullscreenProps {
 
 export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscreenProps) {
   const { t } = useI18n();
-  return (
+  const imageSource = getMobileImage(project);
+  
+  // Применяем цветовую тему проекта
+  useProjectTheme(project.theme);
+
+  // Используем портал для рендера вне трансформированного контейнера
+  if (typeof window === 'undefined') {
+    return null; // SSR защита
+  }
+
+  return createPortal(
     <>
       <Image
         className={styles['projects-card__img']}
-        src={project.fullImage}
+        src={imageSource}
         alt={project.title}
-        width={1260}
-        height={1160}
+        width={1920}
+        height={1080}
         priority
         sizes="100vw"
         placeholder="blur"
@@ -49,6 +62,7 @@ export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscree
           ✕
         </button>
       )}
-    </>
+    </>,
+    document.body,
   );
 }

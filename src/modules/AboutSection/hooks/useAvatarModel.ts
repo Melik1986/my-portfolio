@@ -7,11 +7,14 @@ import { readCssVar } from '../utils/avatar.utils';
 import { AvatarAssets } from '../types/avatar.types';
 
 // Вспомогательные функции для настройки анимаций
-const configureWaveAction = (waveAction: THREE.AnimationAction, waveClip: THREE.AnimationClip): void => {
+const configureWaveAction = (
+  waveAction: THREE.AnimationAction,
+  waveClip: THREE.AnimationClip,
+): void => {
   const originalDuration = waveClip.duration;
   const targetDuration = 100; // 100 секунд
   const timeScale = originalDuration / targetDuration;
-  
+
   waveAction.setEffectiveTimeScale(timeScale);
   waveAction.setLoop(THREE.LoopRepeat, Infinity);
 };

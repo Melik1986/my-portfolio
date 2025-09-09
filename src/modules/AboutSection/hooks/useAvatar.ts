@@ -597,7 +597,7 @@ interface InitEffectContext {
   setupLighting: (scene: THREE.Scene) => void;
   animate: () => void;
   cleanup: () => void;
-  isInitializedRef: React.MutableRefObject<boolean>;
+  isInitializedRef: React.RefObject<boolean>;
 }
 
 // Инициализация сцены, камеры, контролов и запуска анимационного цикла как отдельный хук

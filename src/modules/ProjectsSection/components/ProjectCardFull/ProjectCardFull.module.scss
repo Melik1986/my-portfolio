@@ -4,15 +4,23 @@
 
 .projects-card {
   &__img {
+    // Полноэкранное изображение - занимает весь экран браузера
     width: 100vw;
     height: 100vh;
     object-fit: cover;
+    object-position: center;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 0;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 1000;
+
+    // Убираем любые ограничения от родительских контейнеров
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    max-height: none;
 
     &--small {
       width: 100%;
@@ -22,20 +30,38 @@
   }
 
   &__content {
-    position: absolute;
-    top: 10%;
-    left: 10px;
+    position: fixed;
+    top: 2%;
+    left: 20px;
     width: 40%;
-    z-index: 2;
+    z-index: 1001;
     display: block;
+
+    // Переопределяем стили GlassCard для темного текста
+    :global(.glass-card) {
+      color: var(--project-text-color, #292929);
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--project-title-color, #292929);
+      }
+
+      p {
+        color: var(--project-text-color, #292929);
+      }
+    }
   }
 
   // Стили для заголовка
   &__title {
     padding: 0;
     @include typo.type-h3;
-    margin: 0 0 10px 0;
-    color: $color-white;
+    margin: 0;
+    color: var(--project-title-color, #292929);
     -webkit-text-stroke: none;
   }
 
@@ -43,34 +69,34 @@
   &__text {
     padding: 0;
     @include typo.type-body;
-    color: $color-white;
+    color: var(--project-text-color, #292929);
     -webkit-text-stroke: none;
-    margin: 0 0 10px 0;
+    margin: 0;
   }
 
   // Стили для ссылки
   &__link {
     @include typo.type-small;
     text-decoration: none;
-    color: $color-white;
-    border-bottom: 1px solid $color-white;
+    color: $palette-primary; // Используем акцентный цвет
+    border-bottom: 1px solid $palette-primary;
     transition: all 0.3s ease;
 
     &:hover {
-      color: $color-accent;
-      border-bottom: 1px solid $color-accent;
+      color: $palette-secondary; // Используем вторичный акцентный цвет при наведении
+      border-bottom: 1px solid $palette-secondary;
     }
   }
 
   &__close {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
     width: 40px;
     height: 40px;
     border: none;
     background: rgba(255, 255, 255, 0.2);
-    color: $color-white;
+    color: var(--project-close-color, #292929);
     font-size: 20px;
     border-radius: 50%;
     cursor: pointer;
@@ -81,7 +107,7 @@
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    z-index: 10000;
+    z-index: 1002;
 
     &:hover {
       background: rgba(255, 255, 255, 0.3);
@@ -95,13 +121,32 @@
 }
 
 // Адаптивные стили для мобильных устройств
-@media (max-width: 768px) {
+@include vp-768 {
   .projects-card {
     &__content {
       width: 80%;
       left: 10px;
       right: 10px;
       top: 5%;
+    }
+
+    // Специальные стили для портретной ориентации (9:16)
+    @media (orientation: portrait) {
+      &__content {
+        top: 2%; // Размещаем контент в нижней части для портретных изображений
+        width: 90%;
+        left: 5%;
+        right: 5%;
+      }
+    }
+
+    // Для ландшафтной ориентации оставляем контент сверху
+    @media (orientation: landscape) {
+      &__content {
+        top: 10%;
+        width: 50%;
+        left: 5%;
+      }
     }
 
     &__close {
@@ -117,8 +162,7 @@
 @media (max-width: 480px) {
   .projects-card {
     &__content {
-      width: 90%;
-      padding: 15px;
+      width: 80%;
     }
 
     &__close {
