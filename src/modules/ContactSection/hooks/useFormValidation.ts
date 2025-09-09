@@ -137,6 +137,11 @@ export function useFormValidation<T extends Record<string, string>>(config: Vali
     core.setFormData,
   );
 
+  const setFieldErrorMap = useCallback(
+    (map: Record<string, string>) => core.setFieldErrors(map),
+    [core],
+  );
+
   return {
     errors: core.errors,
     formData: core.formData,
@@ -148,5 +153,6 @@ export function useFormValidation<T extends Record<string, string>>(config: Vali
     getErrorMessage: helpers.getErrorMessage,
     handleInputChange: helpers.handleInputChange,
     handleInputBlur: helpers.handleInputBlur,
+    setFieldErrorMap,
   } as const;
 }

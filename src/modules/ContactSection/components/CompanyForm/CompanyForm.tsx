@@ -1,23 +1,17 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import { useFormValidation } from '../../hooks/useFormValidation';
+import React from 'react';
 import { CompanyFormFields } from '../FormFields/CompanyFormFields';
 import { SocialLinks } from '@/lib/ui';
 import { SuccessModal } from '@/lib/ui/SuccessModal';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
 import { useI18n } from '@/i18n';
+import { useCompanyFormLogic } from '../../hooks/useCompanyFormLogic';
 
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
-const COMPANY_VALIDATION_CONFIG = {
-  companyName: { label: 'form.validation.companyName', required: true },
-  companyEmail: { label: 'form.validation.companyEmail', required: true, email: true },
-  companyDetails: { label: 'form.validation.companyDetails', required: false },
-};
-
 interface CompanyFormViewProps {
   formRef: React.RefObject<HTMLFormElement | null>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  formAction: (formData: FormData) => void;
   formData: CompanyFormData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleInputBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -27,7 +21,7 @@ interface CompanyFormViewProps {
 
 function CompanyFormView({
   formRef,
-  handleSubmit,
+  formAction,
   formData,
   handleInputChange,
   handleInputBlur,
@@ -37,7 +31,7 @@ function CompanyFormView({
   const { t } = useI18n();
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--company']}`}>
-      <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
+      <form ref={formRef} className={formStyles.form} action={formAction} noValidate>
         <h1 className={formStyles['form__title']}>{t('section.contact.company.title')}</h1>
 
         <CompanyFormFields
@@ -68,40 +62,22 @@ function CompanyFormView({
 }
 
 export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const {
+    formRef,
     formData,
     fieldErrors,
-    validateForm,
-    clearErrors,
-    resetFormData,
+    showSuccessModal,
+    formAction,
     handleInputChange,
     handleInputBlur,
-  } = useFormValidation<CompanyFormData>(COMPANY_VALIDATION_CONFIG);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const form = formRef.current;
-    if (!form) return;
-
-    if (validateForm(form)) {
-      clearErrors();
-      form.reset();
-      resetFormData();
-      setShowSuccessModal(true);
-    }
-  };
-
-  const handleCloseModal = (): void => {
-    setShowSuccessModal(false);
-  };
+    handleCloseModal,
+  } = useCompanyFormLogic();
 
   return (
     <>
       <CompanyFormView
         formRef={formRef}
-        handleSubmit={handleSubmit}
+        formAction={formAction}
         formData={formData}
         handleInputChange={handleInputChange}
         handleInputBlur={handleInputBlur}

@@ -1,23 +1,17 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import { useFormValidation } from '../../hooks/useFormValidation';
+import React from 'react';
 import { ClientFormFields } from '../FormFields/ClientFormFields';
 import { SocialLinks } from '@/lib/ui';
 import { SuccessModal } from '@/lib/ui/SuccessModal';
 import type { ClientFormProps, ClientFormData } from '../../types';
 import { useI18n } from '@/i18n';
+import { useClientFormLogic } from '../../hooks/useClientFormLogic';
 
 import formStyles from '../ContactForm/ContactForm.module.scss';
 
-const CLIENT_VALIDATION_CONFIG = {
-  userName: { label: 'form.validation.userName', required: true },
-  userEmail: { label: 'form.validation.userEmail', required: true, email: true },
-  projectDescription: { label: 'form.validation.projectDescription', required: false },
-};
-
 interface ClientFormViewProps {
   formRef: React.RefObject<HTMLFormElement | null>;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  formAction: (formData: FormData) => void;
   formData: ClientFormData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleInputBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -27,7 +21,7 @@ interface ClientFormViewProps {
 
 function ClientFormView({
   formRef,
-  handleSubmit,
+  formAction,
   formData,
   handleInputChange,
   handleInputBlur,
@@ -37,7 +31,7 @@ function ClientFormView({
   const { t } = useI18n();
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--freelance']}`}>
-      <form ref={formRef} className={formStyles.form} onSubmit={handleSubmit} noValidate>
+      <form ref={formRef} className={formStyles.form} action={formAction} noValidate>
         <h1 className={formStyles['form__title']}>{t('section.contact.client.title')}</h1>
 
         <ClientFormFields
@@ -68,40 +62,22 @@ function ClientFormView({
 }
 
 export function ClientForm({ onToggleToCompany }: ClientFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const {
+    formRef,
     formData,
     fieldErrors,
-    validateForm,
-    clearErrors,
-    resetFormData,
+    showSuccessModal,
+    formAction,
     handleInputChange,
     handleInputBlur,
-  } = useFormValidation<ClientFormData>(CLIENT_VALIDATION_CONFIG);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const form = formRef.current;
-    if (!form) return;
-
-    if (validateForm(form)) {
-      clearErrors();
-      form.reset();
-      resetFormData();
-      setShowSuccessModal(true);
-    }
-  };
-
-  const handleCloseModal = (): void => {
-    setShowSuccessModal(false);
-  };
+    handleCloseModal,
+  } = useClientFormLogic();
 
   return (
     <>
       <ClientFormView
         formRef={formRef}
-        handleSubmit={handleSubmit}
+        formAction={formAction}
         formData={formData}
         handleInputChange={handleInputChange}
         handleInputBlur={handleInputBlur}
