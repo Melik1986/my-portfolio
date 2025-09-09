@@ -33,7 +33,7 @@ export function useClientFormLogic() {
       resetFormData();
       setShowSuccessModal(true);
     }
-  }, [state, setFieldErrorMap, clearErrors, resetFormData]);
+  }, [state]);
 
 
 

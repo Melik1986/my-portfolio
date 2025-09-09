@@ -73,3 +73,30 @@ export const getDesignChartOptions = (designWidth: number, designHeight: number)
     },
   } as EChartsOption;
 };
+
+/**
+ * Мемоизированная версия getDesignChartOptions для оптимизации производительности
+ */
+let cachedDesignOptions: EChartsOption | null = null;
+let cachedDesignWidth: number | null = null;
+let cachedDesignHeight: number | null = null;
+
+export const getMemoizedDesignChartOptions = (designWidth: number, designHeight: number): EChartsOption => {
+  if (cachedDesignOptions && cachedDesignWidth === designWidth && cachedDesignHeight === designHeight) {
+    return cachedDesignOptions;
+  }
+  
+  cachedDesignOptions = getDesignChartOptions(designWidth, designHeight);
+  cachedDesignWidth = designWidth;
+  cachedDesignHeight = designHeight;
+  return cachedDesignOptions;
+};
+
+/**
+ * Очищает кэш опций дизайн-графика
+ */
+export const clearDesignChartOptionsCache = (): void => {
+  cachedDesignOptions = null;
+  cachedDesignWidth = null;
+  cachedDesignHeight = null;
+};

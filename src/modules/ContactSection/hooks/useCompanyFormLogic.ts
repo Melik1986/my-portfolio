@@ -33,7 +33,7 @@ export function useCompanyFormLogic() {
       resetFormData();
       setShowSuccessModal(true);
     }
-  }, [state, setFieldErrorMap, clearErrors, resetFormData]);
+  }, [state]);
 
 
 

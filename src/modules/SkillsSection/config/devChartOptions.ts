@@ -129,3 +129,27 @@ export const getDevChartOptions = (containerWidth: number) => {
     series: getSeriesConfig(config.barWidth, config.barGap),
   } as EChartsCoreOption;
 };
+
+/**
+ * Мемоизированная версия getDevChartOptions для оптимизации производительности
+ */
+let cachedOptions: EChartsCoreOption | null = null;
+let cachedWidth: number | null = null;
+
+export const getMemoizedDevChartOptions = (containerWidth: number): EChartsCoreOption => {
+  if (cachedOptions && cachedWidth === containerWidth) {
+    return cachedOptions;
+  }
+  
+  cachedOptions = getDevChartOptions(containerWidth);
+  cachedWidth = containerWidth;
+  return cachedOptions;
+};
+
+/**
+ * Очищает кэш опций графика
+ */
+export const clearDevChartOptionsCache = (): void => {
+  cachedOptions = null;
+  cachedWidth = null;
+};
