@@ -7,7 +7,7 @@ interface ContentSectionProps {
   className?: string;
 }
 
-export function ContentSection({ title, description, className = '' }: ContentSectionProps) {
+export const ContentSection = React.memo(function ContentSection({ title, description, className = '' }: ContentSectionProps) {
   return (
     <div
       className={`${styles['ai-content__content']} ${styles['ai-content__content-small']} ${className}`}
@@ -32,4 +32,4 @@ export function ContentSection({ title, description, className = '' }: ContentSe
       </p>
     </div>
   );
-}
+});
