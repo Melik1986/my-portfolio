@@ -1,14 +1,17 @@
 'use client';
 import React from 'react';
+import { useRef } from 'react';
 import styles from './ContactSection.module.scss';
 import { ContactForm } from './components/ContactForm';
 import { useI18n } from '@/i18n';
 
 export function ContactSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const { t } = useI18n();
   return (
     <section
       id="contact-content"
+      ref={sectionRef}
       className={styles.contact}
       data-section-index="7"
       data-group-delay="7.2"

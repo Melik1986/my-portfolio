@@ -44,6 +44,7 @@ export class AnimationController {
   private pendingCardIndex: number | null = null;
   private whenReadyPromise: Promise<void> | null = null;
   private resolveWhenReady: (() => void) | null = null;
+  private initDebounceTimer: NodeJS.Timeout | null = null;
 
   private waitForMasterReady(): void {
     if (!this.masterTimeline) return;
@@ -114,15 +115,8 @@ export class AnimationController {
   registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
     // Проверяем, что секция ещё не зарегистрирована
     if (this.sections.has(sectionIndex)) {
-      console.warn(`[AnimationController] Section ${sectionIndex} already registered, skipping`);
-      return this.sections.get(sectionIndex)!.timeline;
-    }
-
-    // Debug для мобильных
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      console.log(
-        `[AnimationController] Registering section ${sectionIndex}, wrapper id: ${wrapper.id}`,
-      );
+      console.warn(`[AnimationController] Re-registering section ${sectionIndex}. Cleaning up old one.`);
+      this.cleanupSection(sectionIndex);
     }
 
     // Создаём timeline элементов для секции
@@ -141,6 +135,18 @@ export class AnimationController {
     };
 
     this.sections.set(sectionIndex, controller);
+    
+    // Отложенная инициализация мастер-таймлайна, чтобы собрать все секции
+    if (this.initDebounceTimer) {
+      clearTimeout(this.initDebounceTimer);
+    }
+
+    // Запускаем инициализацию после короткой задержки, чтобы все секции успели зарегистрироваться
+    this.initDebounceTimer = setTimeout(() => {
+      if (!this.isInitialized) {
+        this.initializeMaster();
+      }
+    }, 100); // 100ms - безопасный интервал для сбора всех секций
 
     // Если это Hero секция, активируем её после инициализации
     if (sectionIndex === 0) {
