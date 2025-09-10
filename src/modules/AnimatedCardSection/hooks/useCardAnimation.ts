@@ -17,40 +17,31 @@ export const useCardAnimation = ({
   isHeroSection = false,
 }: UseCardAnimationProps) => {
   const wrapperRef = useRef<HTMLLIElement>(null);
-  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    if (!wrapper || isInitializedRef.current) return;
+    if (!wrapper) return;
+
+    let isCancelled = false;
 
     const initializeAnimation = async () => {
       try {
         // Ждём загрузки шрифтов для корректной работы SplitText
         await waitForFontsReady();
 
+        if (isCancelled) {
+          return;
+        }
+
         if (isHeroSection) {
           animationController.initializeMaster();
         }
 
         animationController.registerSection(sectionIndex, wrapper);
-
-        isInitializedRef.current = true;
       } catch (error) {
         console.warn('Animation initialization failed:', error);
       }
     };
-
-    // Дожидаемся загрузки шрифтов, чтобы SplitText корректно посчитал линии
-    // const ready =
-    //   typeof document !== 'undefined' && 'fonts' in document
-    //     ? (document as Document & { fonts: FontFaceSet }).fonts.ready
-    //     : Promise.resolve();
-
-    // ready
-    //   .catch(() => undefined)
-    //   .finally(() => {
-    //     requestAnimationFrame(initializeAnimation);
-    //   });
 
     // Инициализируем после кадра, дождавшись шрифтов
     requestAnimationFrame(() => {
@@ -58,10 +49,8 @@ export const useCardAnimation = ({
     });
 
     return () => {
-      if (isInitializedRef.current) {
-        animationController.cleanupSection(sectionIndex);
-        isInitializedRef.current = false;
-      }
+      isCancelled = true;
+      animationController.cleanupSection(sectionIndex);
     };
   }, [sectionIndex, isHeroSection]);
 

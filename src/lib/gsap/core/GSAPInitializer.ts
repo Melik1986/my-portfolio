@@ -1,32 +1,29 @@
 'use client';
 
 import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { SplitText as GsapSplitText } from 'gsap/SplitText';
 
 let isRegistered = false;
 
 /**
- * Гарантирует однократную регистрацию всех используемых GSAP плагинов.
+ * Ensures that GSAP plugins are registered only once.
  */
 export function ensureGSAPRegistered(): void {
-  if (isRegistered) return;
-  try {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin, GsapSplitText);
-
-    if (typeof window !== 'undefined') {
-      // Экспортируем ScrollTrigger в window для совместимости со сторонним кодом/отладкой
-      (window as unknown as { ScrollTrigger?: typeof ScrollTrigger }).ScrollTrigger = ScrollTrigger;
-      // Экспортируем gsap и ScrollSmoother для удобной отладки/интеграции
-      (window as unknown as { gsap?: typeof gsap }).gsap = gsap;
-      (window as unknown as { ScrollSmoother?: typeof ScrollSmoother }).ScrollSmoother =
-        ScrollSmoother;
-    }
-
-    isRegistered = true;
-  } catch {
-    // Безопасно игнорируем, если плагины недоступны в текущем окружении
+  if (isRegistered) {
+    return;
   }
+
+  gsap.registerPlugin(
+    useGSAP,
+    ScrollTrigger,
+    ScrollSmoother,
+    ScrollToPlugin,
+    GsapSplitText
+  );
+
+  isRegistered = true;
 }
