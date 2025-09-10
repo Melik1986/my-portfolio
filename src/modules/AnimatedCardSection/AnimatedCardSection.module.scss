@@ -35,6 +35,13 @@
     @include vp-768 {
       height: 100dvh;
     }
+
+    // Специальные стили для горизонтальной ориентации на мобильных
+    @media (max-width: 768px) and (orientation: landscape) {
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+    }
   }
 
   /* Only the first portfolio item shorter on desktop */
@@ -48,6 +55,12 @@
     @include vp-768 {
       margin: 0 -6px 0 -1px;
       height: 92dvh;
+    }
+
+    // Для горизонтальной ориентации на мобильных - полная высота
+    @media (max-width: 768px) and (orientation: landscape) {
+      height: 100vh;
+      margin: 0;
     }
   }
 

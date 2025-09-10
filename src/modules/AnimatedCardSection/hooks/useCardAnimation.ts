@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { animationController } from '../core/AnimationController';
 import { waitForFontsReady } from '@/lib/utils/waitForFontsReady';
+import { useResizeHandler } from '@/lib/hooks/useResizeHandler';
 
 interface UseCardAnimationProps {
   sectionIndex: number;
@@ -17,6 +18,20 @@ export const useCardAnimation = ({
   isHeroSection = false,
 }: UseCardAnimationProps) => {
   const wrapperRef = useRef<HTMLLIElement>(null);
+
+  // Обработчик изменения размера окна
+  const handleResize = useCallback(() => {
+    animationController.handleResize();
+  }, []);
+
+  // Подключаем обработчик resize только для hero секции (избегаем дублирования)
+  useResizeHandler(
+    isHeroSection ? handleResize : () => {}, 
+    {
+      delay: 150,
+      useRAF: true,
+    }
+  );
 
   useEffect(() => {
     const wrapper = wrapperRef.current;

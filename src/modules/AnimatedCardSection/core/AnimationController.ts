@@ -73,40 +73,47 @@ export class AnimationController {
    * Инициализация мастер-анимации (только для Hero секции)
    */
   initializeMaster(): gsap.core.Timeline | null {
-    if (this.isInitialized) return this.masterTimeline;
+    try {
+      if (this.isInitialized) return this.masterTimeline;
 
-    // Корректный выбор обёртки: сначала .portfolio__wrapper, затем запасные варианты
-    const wrapperElement = (document.querySelector('.portfolio__wrapper') ||
-      document.querySelector('.scroll-section') ||
-      document.querySelector('#smooth-content')) as HTMLElement | null;
+      // Корректный выбор обёртки: сначала .portfolio__wrapper, затем запасные варианты
+      const wrapperElement = (document.querySelector('.portfolio__wrapper') ||
+        document.querySelector('.scroll-section') ||
+        document.querySelector('#smooth-content')) as HTMLElement | null;
 
-    if (!wrapperElement) return null;
+      if (!wrapperElement) return null;
 
-    // Выбираем только прямых детей списка секций, чтобы не захватить внутренние li
-    const directCardNodes = wrapperElement.querySelectorAll(':scope > ul.portfolio__list > li');
-    const items = Array.from(
-      (directCardNodes && directCardNodes.length
-        ? directCardNodes
-        : wrapperElement.querySelectorAll('li')) as NodeListOf<HTMLElement>,
-    );
+      // Выбираем только прямых детей списка секций, чтобы не захватить внутренние li
+      const directCardNodes = wrapperElement.querySelectorAll(':scope > ul.portfolio__list > li');
+      const items = Array.from(
+        (directCardNodes && directCardNodes.length
+          ? directCardNodes
+          : wrapperElement.querySelectorAll('li')) as NodeListOf<HTMLElement>,
+      );
 
-    if (items.length === 0) return null;
+      if (items.length === 0) return null;
 
-    // Создаём мастер timeline для колоды карт
-    this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
-      this.activateCard(cardIndex);
-    });
-
-    this.isInitialized = true;
-    this.totalCardsCount = items.length;
-    // Wait until ScrollTrigger is attached, then process any pending navigation
-    if (!this.whenReadyPromise) {
-      this.whenReadyPromise = new Promise<void>((resolve) => {
-        this.resolveWhenReady = resolve;
+      // Создаём мастер timeline для колоды карт
+      this.masterTimeline = initCardDeckScroll(wrapperElement, items, (cardIndex) => {
+        this.activateCard(cardIndex);
       });
+
+      this.isInitialized = true;
+      this.totalCardsCount = items.length;
+      // Wait until ScrollTrigger is attached, then process any pending navigation
+      if (!this.whenReadyPromise) {
+        this.whenReadyPromise = new Promise<void>((resolve) => {
+          this.resolveWhenReady = resolve;
+        });
+      }
+      this.waitForMasterReady();
+      return this.masterTimeline;
+    } catch (error) {
+      console.error('AnimationController initialization failed:', error);
+      // Отправляем событие для перезапуска приложения при критической ошибке
+      window.dispatchEvent(new CustomEvent('animation-critical-error', { detail: error }));
+      return null;
     }
-    this.waitForMasterReady();
-    return this.masterTimeline;
   }
 
   /**
@@ -426,11 +433,39 @@ export class AnimationController {
    * Проверка инициализации
    */
   isReady(): boolean {
-    return Boolean(this.masterTimeline);
+    return this.isInitialized && this.masterTimeline !== null;
   }
 
   getTotalCardsCount(): number | null {
     return this.totalCardsCount;
+  }
+
+  /**
+   * Обработчик изменения размера окна
+   * Обновляет ScrollTrigger и пересчитывает позиции анимаций
+   */
+  handleResize(): void {
+    if (!this.isInitialized || !this.masterTimeline) {
+      return;
+    }
+
+    // Обновляем ScrollTrigger для пересчета позиций
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.refresh();
+    }
+
+    // Пересчитываем позиции для всех секций
+    this.sections.forEach((controller) => {
+      if (controller.timeline && controller.wrapper) {
+        // Обновляем timeline для корректного позиционирования
+        controller.timeline.invalidate();
+      }
+    });
+
+    // Если есть активная карточка, корректируем позицию
+    if (this.activeCardIndex >= 0) {
+      this.activateCard(this.activeCardIndex);
+    }
   }
 }
 

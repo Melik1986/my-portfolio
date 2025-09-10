@@ -1,6 +1,7 @@
 {
   "error.title": "Something went wrong!",
   "error.tryAgain": "Try again",
+  "error.restart": "Restart App",
 
   "notFound.title": "Page not found",
   "notFound.description": "Unfortunately, the requested page does not exist.",
