@@ -2,7 +2,7 @@
 @use '../styles/_mixins' as *;
 @use '../styles/_normalize' as *;
 @use '../styles/_reboot' as *;
-@use '../styles/_fonts' as *;
+// @use '../styles/_fonts' as *; // Отключено: конфликт с Next.js font optimization
 @use '../styles/_container' as *;
 @use '../styles/_visually-hidden' as *;
 @use '../styles/_animations' as *;

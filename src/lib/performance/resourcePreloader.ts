@@ -50,24 +50,14 @@ interface NavigatorWithConnection extends Navigator {
 
 /**
  * Предзагрузка критических шрифтов
+ * ОТКЛЮЧЕНО: Next.js автоматически оптимизирует загрузку шрифтов
  */
 export function preloadCriticalFonts() {
   if (typeof window === 'undefined') return;
 
-  // Предзагружаем основные шрифты проекта
-  const fonts = ['/fonts/Poppins-Regular.woff2', '/fonts/RobotoSerif.woff2'];
-
-  fonts.forEach((fontUrl) => {
-    try {
-      preload(fontUrl, {
-        as: 'font',
-        crossOrigin: 'anonymous',
-        fetchPriority: 'high',
-      });
-    } catch (error) {
-      console.warn(`Failed to preload font: ${fontUrl}`, error);
-    }
-  });
+  // Отключено для избежания конфликта с Next.js font optimization
+  // Next.js автоматически предзагружает шрифты, объявленные в layout.tsx
+  console.log('Font preloading handled by Next.js optimization');
 }
 
 /**
