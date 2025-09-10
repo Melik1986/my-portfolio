@@ -81,11 +81,18 @@ let cachedDesignOptions: EChartsOption | null = null;
 let cachedDesignWidth: number | null = null;
 let cachedDesignHeight: number | null = null;
 
-export const getMemoizedDesignChartOptions = (designWidth: number, designHeight: number): EChartsOption => {
-  if (cachedDesignOptions && cachedDesignWidth === designWidth && cachedDesignHeight === designHeight) {
+export const getMemoizedDesignChartOptions = (
+  designWidth: number,
+  designHeight: number,
+): EChartsOption => {
+  if (
+    cachedDesignOptions &&
+    cachedDesignWidth === designWidth &&
+    cachedDesignHeight === designHeight
+  ) {
     return cachedDesignOptions;
   }
-  
+
   cachedDesignOptions = getDesignChartOptions(designWidth, designHeight);
   cachedDesignWidth = designWidth;
   cachedDesignHeight = designHeight;

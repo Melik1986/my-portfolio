@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { AiVideoContentProps } from './types/AiVideoContent.types';
-import { VideoMarqueeGroup, VideoOverlay } from './component';
+import { VideoMarqueeGroupDynamic } from './component/VideoMarqueeGroup/VideoMarqueeGroupDynamic';
+import { VideoOverlayDynamic } from './component/VideoOverlay/VideoOverlayDynamic';
 import {
   DEFAULT_VIDEO_ROWS,
   DEFAULT_VIDEO_DESCRIPTION,
@@ -63,8 +64,8 @@ export function AiVideoContentSection({
               onClick={onContainerClick}
               className={groupStyles['ai-content__overlay-anchor']}
             >
-              <VideoMarqueeGroup rows={videoRows} />
-              <VideoOverlay
+              <VideoMarqueeGroupDynamic rows={videoRows} />
+              <VideoOverlayDynamic
                 isOpen={state.isOpen}
                 src={state.activeSrc}
                 onClose={closeOverlay}

@@ -3,7 +3,7 @@ import { VideoMarqueeRow } from '../VideoMarqueeRow/VideoMarqueeRow';
 import styles from './VideoMarqueeGroup.module.scss';
 import { MagnifierCursor } from '@/lib/ui';
 
-interface VideoMarqueeGroupProps {
+export interface VideoMarqueeGroupProps {
   rows: string[][];
   className?: string;
 }

@@ -142,7 +142,7 @@ function useAvatarVisibilityBridge(
   }, [wrapperRef, containerNode]);
 }
 
-export function Avatar() {
+function Avatar() {
   const refs = useAvatar();
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [containerNode, setContainerNode] = React.useState<HTMLDivElement | null>(null);
@@ -233,3 +233,7 @@ function AvatarTooltip({
     </div>
   );
 }
+
+// Экспорты для совместимости с dynamic импортом
+export default Avatar;
+export { Avatar };

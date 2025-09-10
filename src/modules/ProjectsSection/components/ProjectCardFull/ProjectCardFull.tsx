@@ -19,7 +19,7 @@ interface ProjectCardFullscreenProps {
 export function ProjectCardFullscreen({ project, onClose }: ProjectCardFullscreenProps) {
   const { t } = useI18n();
   const imageSource = getMobileImage(project);
-  
+
   // Применяем цветовую тему проекта
   useProjectTheme(project.theme);
 

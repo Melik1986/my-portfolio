@@ -140,7 +140,7 @@ export const getMemoizedDevChartOptions = (containerWidth: number): EChartsCoreO
   if (cachedOptions && cachedWidth === containerWidth) {
     return cachedOptions;
   }
-  
+
   cachedOptions = getDevChartOptions(containerWidth);
   cachedWidth = containerWidth;
   return cachedOptions;

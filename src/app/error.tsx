@@ -9,7 +9,7 @@ export default function Error({
   reset: () => void;
 }) {
   const { t } = useI18n();
-  console.error('Application error:', error);
+  console.error('Application error:', error instanceof Error ? error.message : String(error));
 
   return (
     <div className="error">

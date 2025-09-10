@@ -10,7 +10,11 @@ interface ProjectCardPreviewProps {
   title: string;
 }
 
-export const ProjectCardPreview = React.memo(function ProjectCardPreview({ number, previewImage, title }: ProjectCardPreviewProps) {
+export const ProjectCardPreview = React.memo(function ProjectCardPreview({
+  number,
+  previewImage,
+  title,
+}: ProjectCardPreviewProps) {
   return (
     <>
       <span className={styles['projects-card__number']}>{number}</span>

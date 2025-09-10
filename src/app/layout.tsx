@@ -13,6 +13,7 @@ import { GlobalPreloader } from '../lib/ui/GlobalPreloader/GlobalPreloader';
 import { AppReadyEmitter } from '../lib/ui/AppReadyEmitter';
 import { getRequestLocale } from './seo/getRequestLocale';
 import { buildMetadataForLocale } from './seo/buildMetadata';
+import PerformanceProvider from '../lib/performance/PerformanceProvider';
 
 // Локальные шрифты
 const chango = localFont({
@@ -93,23 +94,25 @@ export default async function RootLayout({
       >
         {/* Важно: прелоадер монтируется на уровне body, чтобы не попадать под скрытие main */}
         <GlobalPreloader />
-        <AppThemeProvider>
-          <I18nProvider locale={htmlLang as SupportedLocale}>
-            <main className="portfolio" id="smooth-wrapper">
-              <div className="portfolio__section" id="smooth-content">
-                <Container>
-                  {/* AppReadyEmitter отслеживает готовность ресурсов */}
-                  <AppReadyEmitter />
-                  {/* Прелоадер перенесен на уровень body */}
-                  <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
-                </Container>
-              </div>
-              <AnchorButton />
-              {/* Optional theme toggle, can be removed later */}
-              {/* <ThemeToggle /> */}
-            </main>
-          </I18nProvider>
-        </AppThemeProvider>
+        <PerformanceProvider>
+          <AppThemeProvider>
+            <I18nProvider locale={htmlLang as SupportedLocale}>
+              <main className="portfolio" id="smooth-wrapper">
+                <div className="portfolio__section" id="smooth-content">
+                  <Container>
+                    {/* AppReadyEmitter отслеживает готовность ресурсов */}
+                    <AppReadyEmitter />
+                    {/* Прелоадер перенесен на уровень body */}
+                    <ScrollSmootherProvider>{children}</ScrollSmootherProvider>
+                  </Container>
+                </div>
+                <AnchorButton />
+                {/* Optional theme toggle, can be removed later */}
+                {/* <ThemeToggle /> */}
+              </main>
+            </I18nProvider>
+          </AppThemeProvider>
+        </PerformanceProvider>
       </body>
     </html>
   );

@@ -10,6 +10,7 @@ import styles from './header.module.scss';
 import { useHeaderAnimation, useMobileNavigation } from '@/lib/hooks/useHeaderBehavior';
 import { navigateToSection } from '@/lib/utils/navigateToSection';
 import { useI18n } from '@/i18n';
+import { PageResourcePreloader } from '@/lib/components/PageResourcePreloader';
 
 /**
  * Навигация к секциям вынесена в util `navigateToSection`
@@ -24,6 +25,12 @@ export function Header() {
   const { headerRef } = useHeaderAnimation();
   const { scrollTo, isReady, smoother } = useScrollSmoother();
   const { isMobileNavOpen, toggleMobileNav, closeMobileNav, dropdownRef } = useMobileNavigation();
+
+  // Инициализируем предзагрузку ресурсов страниц
+  // Размещаем в Header, так как он присутствует на всех страницах
+  React.useEffect(() => {
+    // Компонент PageResourcePreloader инициализирует хуки предзагрузки
+  }, []);
 
   const handleNavigate = (sectionId: string) => {
     console.log('🎯 handleNavigate called with:', sectionId);
@@ -107,6 +114,9 @@ export function Header() {
           </div>
         </>
       )}
+
+      {/* Инициализация предзагрузки ресурсов страниц */}
+      <PageResourcePreloader />
     </header>
   );
 }

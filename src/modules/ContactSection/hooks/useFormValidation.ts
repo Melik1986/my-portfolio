@@ -125,7 +125,14 @@ function useValidationHelpers<T extends Record<string, string>>(
     [config, setFieldErrors],
   );
 
-  return { hasError, getErrorMessage, handleInputChange, handleInputBlur } as const;
+  const setFieldErrorMap = useCallback(
+    (errorMap: Record<string, string>) => {
+      setFieldErrors(errorMap);
+    },
+    [setFieldErrors],
+  );
+
+  return { hasError, getErrorMessage, handleInputChange, handleInputBlur, setFieldErrorMap } as const;
 }
 
 export function useFormValidation<T extends Record<string, string>>(config: ValidationConfig) {
@@ -135,11 +142,6 @@ export function useFormValidation<T extends Record<string, string>>(config: Vali
     core.errors,
     core.setFieldErrors,
     core.setFormData,
-  );
-
-  const setFieldErrorMap = useCallback(
-    (map: Record<string, string>) => core.setFieldErrors(map),
-    [core],
   );
 
   return {
@@ -153,6 +155,6 @@ export function useFormValidation<T extends Record<string, string>>(config: Vali
     getErrorMessage: helpers.getErrorMessage,
     handleInputChange: helpers.handleInputChange,
     handleInputBlur: helpers.handleInputBlur,
-    setFieldErrorMap,
+    setFieldErrorMap: helpers.setFieldErrorMap,
   } as const;
 }

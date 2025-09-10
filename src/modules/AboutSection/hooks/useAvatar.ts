@@ -397,7 +397,7 @@ const useModelHandler = (
 
       handleModelLoaded(gltf);
     } catch (error) {
-      console.error('Error loading model:', error);
+      console.error('Error loading model:', error instanceof Error ? error.message : String(error));
     } finally {
       isModelLoading = false;
     }

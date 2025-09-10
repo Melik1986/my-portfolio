@@ -1,6 +1,7 @@
 'use client';
 
-import { SkillsContent, SkillsCharts } from './components/index';
+import { SkillsContent } from './components/index';
+import { SkillsChartsDynamic } from './components/SkillsCharts/SkillsChartsDynamic';
 import styles from './SkillsSection.module.scss';
 import { useRef } from 'react';
 import { useI18n } from '@/i18n';
@@ -16,7 +17,7 @@ export function SkillsSection() {
         <SkillsContent />
       </div>
       <div className={`${styles['skills__content']} ${styles['skills__content-right']}`}>
-        <SkillsCharts />
+        <SkillsChartsDynamic />
       </div>
     </section>
   );

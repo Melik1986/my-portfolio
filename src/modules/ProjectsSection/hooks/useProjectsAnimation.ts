@@ -194,52 +194,55 @@ export function useProjectsAnimation(
   }, []);
 
   // Расширение в fullscreen с учетом мобильных устройств
-  const expandToFullscreen = useCallback((index: number) => {
-    const cardRef = cardsRef.current.get(index);
-    if (!cardRef) return;
+  const expandToFullscreen = useCallback(
+    (index: number) => {
+      const cardRef = cardsRef.current.get(index);
+      if (!cardRef) return;
 
-    const isMobile =
-      typeof window !== 'undefined' &&
-      (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
+      const isMobile =
+        typeof window !== 'undefined' &&
+        (window.matchMedia?.('(max-width: 768px)').matches || window.innerWidth <= 768);
 
-    // Получаем размеры и позицию контейнера
-    let containerRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-    if (containerRef?.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      containerRect = {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-      };
-    }
-
-    // Позиционируем карточку относительно контейнера
-    gsap.to(cardRef.element, {
-      x: -containerRect.left,
-      y: -containerRect.top,
-      z: 0,
-      rotateX: 0,
-      rotateY: 0,
-      scale: 1,
-      zIndex: 20000,
-      duration: 0.5,
-      ease: 'power2.inOut',
-    });
-
-    // Скрыть остальные карточки
-    cardsRef.current.forEach((otherCardRef, otherIndex) => {
-      if (otherIndex !== index) {
-        gsap.to(otherCardRef.element, {
-          opacity: 0,
-          scale: 0.8,
-          zIndex: isMobile ? 500 + otherIndex : otherIndex,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
+      // Получаем размеры и позицию контейнера
+      let containerRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+      if (containerRef?.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        containerRect = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        };
       }
-    });
-  }, [containerRef]);
+
+      // Позиционируем карточку относительно контейнера
+      gsap.to(cardRef.element, {
+        x: -containerRect.left,
+        y: -containerRect.top,
+        z: 0,
+        rotateX: 0,
+        rotateY: 0,
+        scale: 1,
+        zIndex: 20000,
+        duration: 0.5,
+        ease: 'power2.inOut',
+      });
+
+      // Скрыть остальные карточки
+      cardsRef.current.forEach((otherCardRef, otherIndex) => {
+        if (otherIndex !== index) {
+          gsap.to(otherCardRef.element, {
+            opacity: 0,
+            scale: 0.8,
+            zIndex: isMobile ? 500 + otherIndex : otherIndex,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        }
+      });
+    },
+    [containerRef],
+  );
 
   // Навигация стрелками - перемещение карточки вперед
   const navigateCardForward = useCallback(() => {
