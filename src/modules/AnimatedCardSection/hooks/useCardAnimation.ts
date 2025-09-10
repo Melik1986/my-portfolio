@@ -25,13 +25,10 @@ export const useCardAnimation = ({
   }, []);
 
   // Подключаем обработчик resize только для hero секции (избегаем дублирования)
-  useResizeHandler(
-    isHeroSection ? handleResize : () => {}, 
-    {
-      delay: 150,
-      useRAF: true,
-    }
-  );
+  useResizeHandler(isHeroSection ? handleResize : () => {}, {
+    delay: 150,
+    useRAF: true,
+  });
 
   useEffect(() => {
     const wrapper = wrapperRef.current;

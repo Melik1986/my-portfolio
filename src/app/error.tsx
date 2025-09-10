@@ -11,7 +11,7 @@ export default function Error({
 }) {
   const { t } = useI18n();
   const { restartApp } = useRestartApp();
-  
+
   console.error('Application error:', error instanceof Error ? error.message : String(error));
 
   return (

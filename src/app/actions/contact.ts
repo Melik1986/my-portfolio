@@ -151,7 +151,10 @@ async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<
     await transporter.sendMail(mail);
     return { ok: true, message: tServer(locale, 'api.ok') };
   } catch (error) {
-    console.error('[CONTACT_ACTION] Error:', error instanceof Error ? error.message : String(error));
+    console.error(
+      '[CONTACT_ACTION] Error:',
+      error instanceof Error ? error.message : String(error),
+    );
     return { ok: false, message: tServer(locale, 'api.serverError') };
   }
 }

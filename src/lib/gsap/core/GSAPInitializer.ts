@@ -17,13 +17,7 @@ export function ensureGSAPRegistered(): void {
     return;
   }
 
-  gsap.registerPlugin(
-    useGSAP,
-    ScrollTrigger,
-    ScrollSmoother,
-    ScrollToPlugin,
-    GsapSplitText
-  );
+  gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, ScrollToPlugin, GsapSplitText);
 
   isRegistered = true;
 }

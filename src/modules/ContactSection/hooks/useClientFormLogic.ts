@@ -13,7 +13,7 @@ export function useClientFormLogic() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [state, formAction] = useActionState(submitClientAction, { ok: false });
-  
+
   const {
     formData,
     fieldErrors,
@@ -34,8 +34,6 @@ export function useClientFormLogic() {
       setShowSuccessModal(true);
     }
   }, [state, setFieldErrorMap, clearErrors, resetFormData]);
-
-
 
   const handleCloseModal = (): void => {
     setShowSuccessModal(false);

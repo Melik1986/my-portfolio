@@ -14,20 +14,20 @@ export const useRestartApp = () => {
         // Сохраняем только критически важные данные
         const themeData = localStorage.getItem('theme');
         const localeData = localStorage.getItem('locale');
-        
+
         // Очищаем все данные
         localStorage.clear();
-        
+
         // Восстанавливаем критически важные данные
         if (themeData) localStorage.setItem('theme', themeData);
         if (localeData) localStorage.setItem('locale', localeData);
       }
-      
+
       // Очищаем sessionStorage
       if (typeof window !== 'undefined' && window.sessionStorage) {
         sessionStorage.clear();
       }
-      
+
       // Перезагружаем страницу с принудительной очисткой кэша
       if (typeof window !== 'undefined') {
         window.location.reload();
@@ -49,7 +49,7 @@ export const useRestartApp = () => {
     };
 
     window.addEventListener('animation-critical-error', handleAnimationError);
-    
+
     return () => {
       window.removeEventListener('animation-critical-error', handleAnimationError);
     };

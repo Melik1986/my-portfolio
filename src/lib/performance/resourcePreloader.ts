@@ -12,23 +12,27 @@ function setupLinkErrorHandler() {
   if (typeof window === 'undefined') return;
 
   // Обработчик для всех ошибок link элементов
-  document.addEventListener('error', (event) => {
-    const target = event.target as HTMLElement;
-    
-    // Проверяем, что это link элемент
-    if (target && target.tagName === 'LINK') {
-      const linkElement = target as HTMLLinkElement;
-      console.warn(`Failed to load resource: ${linkElement.href}`, {
-        rel: linkElement.rel,
-        as: linkElement.getAttribute('as'),
-        href: linkElement.href
-      });
-      
-      // Предотвращаем всплытие ошибки в консоль
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }, true); // Используем capture phase
+  document.addEventListener(
+    'error',
+    (event) => {
+      const target = event.target as HTMLElement;
+
+      // Проверяем, что это link элемент
+      if (target && target.tagName === 'LINK') {
+        const linkElement = target as HTMLLinkElement;
+        console.warn(`Failed to load resource: ${linkElement.href}`, {
+          rel: linkElement.rel,
+          as: linkElement.getAttribute('as'),
+          href: linkElement.href,
+        });
+
+        // Предотвращаем всплытие ошибки в консоль
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    },
+    true,
+  ); // Используем capture phase
 }
 
 // Инициализируем обработчик при загрузке модуля
@@ -74,7 +78,7 @@ export function preloadCriticalImages() {
 
   const isMobile = window.innerWidth < 768;
   const heroImage = isMobile ? '/images/banner_mobile.webp' : '/images/banner_desktop.webp';
-  
+
   const images = ['/sprite/logo.svg', heroImage, '/images/melik.svg', '/images/musinian.svg'];
 
   images.forEach((imageUrl) => {
@@ -88,8 +92,6 @@ export function preloadCriticalImages() {
     }
   });
 }
-
-
 
 /**
  * Предзагрузка внешних скриптов
@@ -185,17 +187,17 @@ export function preloadPageResources(page?: string) {
     about: ['/model/avatar.glb'], // 3D модель аватара
     projects: [
       '/images/catalog/project1.webp',
-      '/images/catalog/project2.webp', 
+      '/images/catalog/project2.webp',
       '/images/catalog/project3.webp',
       '/images/catalog/project4.webp',
-      '/images/catalog/project5.webp'
+      '/images/catalog/project5.webp',
     ],
     ai: [
       '/images/poster/poster1.webp',
       '/images/poster/poster2.webp',
       '/images/poster/poster3.webp',
       '/images/poster/poster4.webp',
-      '/images/poster/poster5.webp'
+      '/images/poster/poster5.webp',
     ],
   };
 

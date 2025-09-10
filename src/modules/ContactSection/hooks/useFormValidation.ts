@@ -132,7 +132,13 @@ function useValidationHelpers<T extends Record<string, string>>(
     [setFieldErrors],
   );
 
-  return { hasError, getErrorMessage, handleInputChange, handleInputBlur, setFieldErrorMap } as const;
+  return {
+    hasError,
+    getErrorMessage,
+    handleInputChange,
+    handleInputBlur,
+    setFieldErrorMap,
+  } as const;
 }
 
 export function useFormValidation<T extends Record<string, string>>(config: ValidationConfig) {

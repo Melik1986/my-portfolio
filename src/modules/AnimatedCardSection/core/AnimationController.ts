@@ -122,7 +122,9 @@ export class AnimationController {
   registerSection(sectionIndex: number, wrapper: HTMLElement): gsap.core.Timeline {
     // Проверяем, что секция ещё не зарегистрирована
     if (this.sections.has(sectionIndex)) {
-      console.warn(`[AnimationController] Re-registering section ${sectionIndex}. Cleaning up old one.`);
+      console.warn(
+        `[AnimationController] Re-registering section ${sectionIndex}. Cleaning up old one.`,
+      );
       this.cleanupSection(sectionIndex);
     }
 
@@ -142,7 +144,7 @@ export class AnimationController {
     };
 
     this.sections.set(sectionIndex, controller);
-    
+
     // Отложенная инициализация мастер-таймлайна, чтобы собрать все секции
     if (this.initDebounceTimer) {
       clearTimeout(this.initDebounceTimer);

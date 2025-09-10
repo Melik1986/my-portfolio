@@ -14,16 +14,16 @@ interface UseResizeHandlerOptions {
 /**
  * Универсальный хук для обработки изменения размера окна с debounce
  * Дополняет существующие решения useCssVarOnResize и useHeaderBehavior
- * 
+ *
  * @param callback - функция для вызова при изменении размера
  * @param options - опции конфигурации
  */
 export function useResizeHandler(
   callback: ResizeCallback,
-  options: UseResizeHandlerOptions = {}
+  options: UseResizeHandlerOptions = {},
 ): void {
   const { delay = 150, immediate = false, useRAF = true } = options;
-  
+
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const rafRef = useRef<number | null>(null);
   const callbackRef = useRef(callback);
@@ -65,11 +65,11 @@ export function useResizeHandler(
 
     return () => {
       window.removeEventListener('resize', debouncedCallback);
-      
+
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      
+
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
