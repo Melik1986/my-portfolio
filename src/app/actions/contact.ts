@@ -132,36 +132,51 @@ function buildMail(
 }
 
 async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<SubmitResult> {
+  console.log('[CONTACT] Starting email send process');
+  console.log('[CONTACT] Environment:', process.env.NODE_ENV);
+  console.log('[CONTACT] Payload type:', payload.type);
+  
   try {
-    // В режиме разработки - имитируем отправку для избежания проблем с SMTP
     const isDevelopment = process.env.NODE_ENV === 'development';
     const disableSend = boolFromEnv(process.env.CONTACT_DISABLE_SEND);
+    
+    console.log('[CONTACT] isDevelopment:', isDevelopment);
+    console.log('[CONTACT] disableSend:', disableSend);
 
     if (isDevelopment || disableSend) {
-      console.log(
-        '[CONTACT_ACTION] ' +
-          (isDevelopment
-            ? 'Development mode'
-            : 'Send disabled by CONTACT_DISABLE_SEND') +
-          ' - simulating email send',
-      );
-      console.log('[CONTACT_ACTION] Payload:', JSON.stringify(payload, null, 2));
+      const reason = isDevelopment ? 'Development mode' : 'Send disabled by CONTACT_DISABLE_SEND';
+      console.log(`[CONTACT] ${reason} - simulating email send`);
+      console.log('[CONTACT] Payload:', JSON.stringify(payload, null, 2));
       return { ok: true, message: tServer(locale, 'api.ok') };
     }
 
+    console.log('[CONTACT] Getting SMTP config...');
     const cfg = getSmtpConfig();
-    if ('error' in cfg) return { ok: false, message: tServer(locale, cfg.error) };
-
+    if ('error' in cfg) {
+      console.error('[CONTACT] SMTP config error:', cfg.error);
+      return { ok: false, message: tServer(locale, cfg.error) };
+    }
+    
+    console.log('[CONTACT] SMTP config loaded:', { host: cfg.host, port: cfg.port, secure: cfg.secure });
+    console.log('[CONTACT] Creating transporter...');
     const transporter = createTransporter(cfg);
+    
+    console.log('[CONTACT] Building mail...');
     const mail = buildMail(payload, cfg, locale);
-
-    await transporter.sendMail(mail);
+    console.log('[CONTACT] Mail subject:', mail.subject);
+    console.log('[CONTACT] Mail to:', mail.to);
+    
+    console.log('[CONTACT] Sending email...');
+    const result = await transporter.sendMail(mail);
+    console.log('[CONTACT] Email sent successfully:', result.messageId);
+    
     return { ok: true, message: tServer(locale, 'api.ok') };
   } catch (error) {
-    console.error(
-      '[CONTACT_ACTION] Error:',
-      error instanceof Error ? error.message : String(error),
-    );
+    console.error('[CONTACT] Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      code: error instanceof Error && 'code' in error ? error.code : undefined
+    });
     return { ok: false, message: tServer(locale, 'api.serverError') };
   }
 }
