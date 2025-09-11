@@ -189,5 +189,38 @@ export async function submitClientAction(
   };
 
   const result = await sendEmail(locale, payload);
-  return result.ok ? { ok: true } : result;
+  return result;
+}
+
+function validateCompany(form: FormData, locale: 'en' | 'ru'): Record<string, string> {
+  const errs: Record<string, string> = {};
+  const name = String(form.get('companyName') || '').trim();
+  const email = String(form.get('companyEmail') || '').trim();
+
+  if (!name) errs.companyName = requiredMessage(locale, 'form.validation.companyName');
+  if (!email) errs.companyEmail = requiredMessage(locale, 'form.validation.userEmail');
+  else if (!EMAIL_RE.test(email)) errs.companyEmail = invalidEmailMessage(locale);
+  return errs;
+}
+
+/**
+ * Server action to submit company contact form
+ */
+export async function submitCompanyAction(
+  _prev: SubmitResult,
+  formData: FormData,
+): Promise<SubmitResult> {
+  const locale = await getRequestLocale();
+  const errors = validateCompany(formData, locale);
+  if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
+
+  const payload: ContactPayload = {
+    type: 'company',
+    companyName: String(formData.get('companyName') || '').trim(),
+    companyEmail: String(formData.get('companyEmail') || '').trim(),
+    companyDetails: String(formData.get('companyDetails') || '').trim(),
+  };
+
+  const result = await sendEmail(locale, payload);
+  return result;
 }
