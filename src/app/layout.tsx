@@ -14,6 +14,8 @@ import { AppReadyEmitter } from '../lib/ui/AppReadyEmitter';
 import { getRequestLocale } from './seo/getRequestLocale';
 import { buildMetadataForLocale } from './seo/buildMetadata';
 import PerformanceProvider from '../lib/performance/PerformanceProvider';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 // Локальные шрифты
 const chango = localFont({
@@ -113,6 +115,8 @@ export default async function RootLayout({
             </I18nProvider>
           </AppThemeProvider>
         </PerformanceProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
