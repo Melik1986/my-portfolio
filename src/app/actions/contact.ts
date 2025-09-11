@@ -164,9 +164,17 @@ async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<
     console.error('[CONTACT] Error details:', {
       message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      code: error instanceof Error && 'code' in error ? error.code : undefined
+      code: error instanceof Error && 'code' in error ? error.code : undefined,
     });
-    return { ok: false, message: tServer(locale, 'api.serverError') };
+
+    const isDebug = boolFromEnv(process.env.CONTACT_DEBUG);
+    let message = tServer(locale, 'api.serverError');
+
+    if (isDebug && error instanceof Error) {
+      message = error.message;
+    }
+
+    return { ok: false, message };
   }
 }
 
