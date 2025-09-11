@@ -6,19 +6,19 @@ import styles from './SocialLinks.module.scss';
 const defaultLinks: SocialLink[] = [
   {
     id: 'linkedin',
-    href: '#',
+    href: 'https://www.linkedin.com/in/melik-musinian-5b6a572ba/',
     label: 'LinkedIn',
     iconId: 'icon-linkedin',
   },
   {
     id: 'google',
-    href: '#',
+    href: 'musinianmelik@gmail.com',
     label: 'Google',
     iconId: 'icon-google',
   },
   {
     id: 'behance',
-    href: '#',
+    href: 'https://www.behance.net/melikmusinian',
     label: 'Behance',
     iconId: 'icon-behance',
   },
