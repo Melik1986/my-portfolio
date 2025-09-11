@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
     // Дополнительные экспериментальные оптимизации
     optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP'],
+    // Включаем Server Actions
+    serverActions: {
+      bodySizeLimit: '1mb',
+      allowedOrigins: ['localhost:3000']
+    },
   },
   // Разрешенные источники для разработки
   allowedDevOrigins: ['192.168.2.109'],
