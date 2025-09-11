@@ -16,6 +16,7 @@ import { ContactSection } from '@/modules/ContactSection/ContactSection';
  * Содержит все секции портфолио с анимированными картами
  */
 export const revalidate = 86400; // каждые 24 часа
+export const runtime = 'nodejs';
 
 // Вынесенные компоненты для сокращения основной функции
 function AboutCard() {

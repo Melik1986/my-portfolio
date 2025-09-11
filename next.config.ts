@@ -10,7 +10,13 @@ const nextConfig: NextConfig = {
     // Включаем Server Actions
     serverActions: {
       bodySizeLimit: '1mb',
-      allowedOrigins: ['localhost:3000']
+      allowedOrigins: [
+        'localhost:3000',
+        'portfolio-melik-next.vercel.app',
+        ...(process.env.NEXT_PUBLIC_CUSTOM_DOMAIN
+          ? [process.env.NEXT_PUBLIC_CUSTOM_DOMAIN.replace(/^https?:\/\//, '')]
+          : []),
+      ],
     },
   },
   // Разрешенные источники для разработки
