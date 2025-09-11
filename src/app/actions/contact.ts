@@ -199,7 +199,8 @@ export async function submitClientAction(
     projectDescription: String(formData.get('projectDescription') || '').trim(),
   };
 
-  return sendEmail(locale, payload);
+  const result = await sendEmail(locale, payload);
+  return result.ok ? { ok: true } : result;
 }
 
 /**
@@ -220,5 +221,6 @@ export async function submitCompanyAction(
     companyDetails: String(formData.get('companyDetails') || '').trim(),
   };
 
-  return sendEmail(locale, payload);
+  const result = await sendEmail(locale, payload);
+  return result.ok ? { ok: true } : result;
 }
