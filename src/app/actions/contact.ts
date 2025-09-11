@@ -135,9 +135,16 @@ async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<
   try {
     // В режиме разработки - имитируем отправку для избежания проблем с SMTP
     const isDevelopment = process.env.NODE_ENV === 'development';
+    const disableSend = boolFromEnv(process.env.CONTACT_DISABLE_SEND);
 
-    if (isDevelopment) {
-      console.log('[CONTACT_ACTION] Development mode - simulating email send');
+    if (isDevelopment || disableSend) {
+      console.log(
+        '[CONTACT_ACTION] ' +
+          (isDevelopment
+            ? 'Development mode'
+            : 'Send disabled by CONTACT_DISABLE_SEND') +
+          ' - simulating email send',
+      );
       console.log('[CONTACT_ACTION] Payload:', JSON.stringify(payload, null, 2));
       return { ok: true, message: tServer(locale, 'api.ok') };
     }
