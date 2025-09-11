@@ -1,6 +1,6 @@
 /**
  * Утилита для предзагрузки статических ресурсов
- * Использует preload/preinit из react-dom для оптимизации загрузки
+ * Использует preload/preinit из 'react-dom' для оптимизации загрузки
  */
 
 import { preload, preinit } from 'react-dom';
@@ -113,27 +113,9 @@ export function preinitExternalScripts() {
 export function conditionalResourcePreload() {
   if (typeof window === 'undefined') return;
 
-  const isMobile = window.innerWidth < 768;
   const isSlowConnection =
     'connection' in navigator &&
     (navigator as NavigatorWithConnection).connection?.effectiveType === 'slow-2g';
-
-  // На мобильных устройствах предзагружаем меньше ресурсов
-  if (!isMobile && !isSlowConnection) {
-    // Предзагружаем первые видео файлы для улучшения UX
-    const criticalVideos = ['/video/video1.mp4', '/video/video2.mp4'];
-    
-    criticalVideos.forEach((videoUrl) => {
-      try {
-        preload(videoUrl, {
-          as: 'video',
-          fetchPriority: 'low',
-        });
-      } catch (error) {
-        console.warn(`Failed to preload video: ${videoUrl}`, error);
-      }
-    });
-  }
 
   // Предзагружаем изображения следующих секций (после hero)
   if (!isSlowConnection) {
