@@ -74,7 +74,7 @@ function getSmtpConfig(): SmtpConfig | { error: string } {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const secure = boolFromEnv(process.env.SMTP_SECURE, port === 465);
-  const from = process.env.SMTP_FROM || user || 'no-reply@example.com';
+  const from = process.env.SMTP_FROM || user || 'noreply@your-verified-domain.com';
   const to = process.env.CONTACT_TO_EMAIL || 'musinianmelik@gmail.com';
 
   if (!host || !user || !pass) return { error: 'api.smtpNotConfigured' };
@@ -223,4 +223,119 @@ export async function submitCompanyAction(
 
   const result = await sendEmail(locale, payload);
   return result.ok ? { ok: true } : result;
+}
+
+const transporter = nodemailer.createTransport(transportOptions);
+
+export const submitClientAction = async (
+  prevState: ContactState,
+  formData: FormData,
+): Promise<ContactState> => {
+  console.log('[CONTACT] Received submission for client action.');
+  const rawFormData = Object.fromEntries(formData.entries());
+  const validatedFields = clientSchema.safeParse(rawFormData);
+
+  if (!validatedFields.success) {
+    console.error(
+      '[CONTACT] Client form validation failed:',
+      validatedFields.error.flatten().fieldErrors,
+    );
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  console.log('[CONTACT] Client form validation successful. Proceeding to send email.');
+  const { name, email, message } = validatedFields.data;
+
+  if (process.env.NEXT_PUBLIC_CONTACT_FORM_DISABLED === 'true') {
+    console.log('[CONTACT] Contact form is disabled. Simulating success.');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return {
+      message: 'Message sent successfully!',
+    };
+  }
+
+  const { host, port, secure, user, pass } = transportOptions.auth;
+  const from = process.env.SMTP_FROM || user || 'noreply@your-verified-domain.com';
+
+  try {
+    console.log(`[CONTACT] Attempting to send email from ${from}...`);
+    await transporter.sendMail({
+      from,
+      subject: `Client contact form submission from ${name}`,
+      text: message,
+      html: `<p>${message}</p>`,
+    });
+
+    console.log('[CONTACT] Email sent successfully!');
+    return {
+      message: 'Message sent successfully!',
+    };
+  } catch (error) {
+    console.error('[CONTACT] Error details:', error);
+    return {
+      message: 'Failed to send message.',
+    };
+  }
+}
+
+export const submitCompanyAction = async (
+  prevState: ContactState,
+  formData: FormData,
+): Promise<ContactState> => {
+  console.log('[CONTACT] Received submission for company action.');
+  const rawFormData = Object.fromEntries(formData.entries());
+  const validatedFields = companySchema.safeParse(rawFormData);
+
+  if (!validatedFields.success) {
+    console.error(
+      '[CONTACT] Company form validation failed:',
+      validatedFields.error.flatten().fieldErrors,
+    );
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  console.log('[CONTACT] Company form validation successful. Proceeding to send email.');
+  const { name, email, company, budget, message } = validatedFields.data;
+
+  if (process.env.NEXT_PUBLIC_CONTACT_FORM_DISABLED === 'true') {
+    console.log('[CONTACT] Contact form is disabled. Simulating success.');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return {
+      message: 'Message sent successfully!',
+    };
+  }
+
+  const { host, port, secure, user, pass } = transportOptions.auth;
+  const from = process.env.SMTP_FROM || user || 'noreply@your-verified-domain.com';
+
+  try {
+    console.log(`[CONTACT] Attempting to send email from ${from}...`);
+    await transporter.sendMail({
+      from,
+      subject: `Company contact form submission from ${name}`,
+      text: message,
+      html: `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Company:</strong> ${company}</p>
+        <p><strong>Budget:</strong> ${budget}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message}</p>
+      `,
+    });
+
+    console.log('[CONTACT] Email sent successfully!');
+    return {
+      message: 'Message sent successfully!',
+    };
+  } catch (error) {
+    console.error('[CONTACT] Error details:', error);
+    return {
+      message: 'Failed to send message.',
+    };
+  }
 }
