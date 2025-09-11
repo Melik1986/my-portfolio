@@ -1,5 +1,4 @@
 'use server';
-export const runtime = 'nodejs';
 
 import { getRequestLocale } from '@/app/seo/getRequestLocale';
 import { tServer } from '@/i18n/server';
