@@ -120,8 +120,19 @@ export function conditionalResourcePreload() {
 
   // На мобильных устройствах предзагружаем меньше ресурсов
   if (!isMobile && !isSlowConnection) {
-    // Видео файлы отсутствуют в проекте, пропускаем предзагрузку
-    console.log('Video preloading skipped - no video files available');
+    // Предзагружаем первые видео файлы для улучшения UX
+    const criticalVideos = ['/video/video1.mp4', '/video/video2.mp4'];
+    
+    criticalVideos.forEach((videoUrl) => {
+      try {
+        preload(videoUrl, {
+          as: 'video',
+          fetchPriority: 'low',
+        });
+      } catch (error) {
+        console.warn(`Failed to preload video: ${videoUrl}`, error);
+      }
+    });
   }
 
   // Предзагружаем изображения следующих секций (после hero)
