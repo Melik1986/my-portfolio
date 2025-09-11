@@ -8,7 +8,7 @@
   }
 
   &__wrapper {
-    height: 100vh;
+    height: 100dvh;
 
     @include vp-768 {
       height: 100dvh;
@@ -38,9 +38,9 @@
 
     // Специальные стили для горизонтальной ориентации на мобильных
     @media (max-width: 768px) and (orientation: landscape) {
-      height: 100vh;
-      min-height: 100vh;
-      max-height: 100vh;
+      height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
     }
   }
 
@@ -59,7 +59,7 @@
 
     // Для горизонтальной ориентации на мобильных - полная высота
     @media (max-width: 768px) and (orientation: landscape) {
-      height: 100vh;
+      height: 100dvh;
       margin: 0;
     }
   }

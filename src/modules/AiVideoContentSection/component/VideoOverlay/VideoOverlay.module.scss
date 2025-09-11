@@ -7,7 +7,7 @@
   background: rgba(0, 0, 0, 0.6);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
-  z-index: 20;
+  z-index: 10000;
 }
 
 .overlayContent {
@@ -55,4 +55,31 @@
   object-fit: contain;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+// Landscape ориентация для видео
+@media screen and (orientation: landscape) {
+  .overlayContent {
+    max-width: min(95vw, 1400px);
+    width: 95%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .overlayVideo {
+    max-height: 100dvh;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  // Адаптация для низких экранов
+  @media (max-height: 500px) {
+    .overlayContent {
+      max-width: 98vw;
+      width: 98%;
+    }
+
+    .overlayVideo {
+      max-height: 90vh;
+    }
+  }
 }

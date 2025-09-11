@@ -79,7 +79,7 @@ html.preloader-ready.smoother-ready .portfolio__section {
  */
 .portfolio {
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
 
   /** Обертка для всех секций портфолио */
   &__section {
@@ -95,7 +95,7 @@ html.preloader-ready.smoother-ready .portfolio__section {
   }
 
   &__wrapper {
-    height: 100vh;
+    height: 100dvh;
   }
 
   &__list {
@@ -134,4 +134,37 @@ canvas[data-zr-dom-id] {
 div[_echarts_instance_] {
   touch-action: pan-y;
   will-change: transform;
+}
+
+// Медиа-запросы для горизонтальной ориентации (landscape)
+@media screen and (orientation: landscape) {
+  .portfolio {
+    &__section {
+      flex-direction: row;
+      padding: 1rem;
+      min-height: 100dvh;
+    }
+
+    &__wrapper {
+      height: 100dvh;
+      padding: 1rem;
+    }
+  }
+
+  // Адаптация для мобильных устройств в landscape
+  @media (max-height: 500px) {
+    .portfolio {
+      &__section,
+      &__wrapper {
+        padding: 0.5rem;
+      }
+    }
+
+    .hero,
+    .about,
+    .skills,
+    .projects-catalog {
+      padding: 0.5rem;
+    }
+  }
 }

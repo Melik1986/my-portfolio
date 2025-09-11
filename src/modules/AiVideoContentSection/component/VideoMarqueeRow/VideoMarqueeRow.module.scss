@@ -65,6 +65,29 @@
   }
 }
 
+// Landscape ориентация для видео в marquee
+@media screen and (orientation: landscape) {
+  .video-marquee-row__video {
+    max-height: 100dvh;
+    max-width: 100%;
+    object-fit: contain;
+    width: 350px;
+    height: 160px;
+    min-width: 350px;
+    min-height: 160px;
+  }
+
+  // Адаптация для низких экранов
+  @media (max-height: 500px) {
+    .video-marquee-row__video {
+      width: 300px;
+      height: 140px;
+      min-width: 300px;
+      min-height: 140px;
+    }
+  }
+}
+
 // Responsive: shrink video tiles so 3 rows fit
 @include vp-1024 {
   .video-marquee-row__video {

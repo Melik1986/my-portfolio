@@ -93,7 +93,7 @@
   inset: 0;
   transform: none !important;
   width: 100vw !important;
-  height: 100vh !important;
+  height: 100dvh !important;
   max-width: 100%;
   max-height: 100%;
   margin: 0;
@@ -130,7 +130,7 @@
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   z-index: 10000;
   background: rgba(0, 0, 0, 0.9);
   display: flex;

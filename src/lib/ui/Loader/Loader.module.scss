@@ -6,7 +6,7 @@
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +18,7 @@
   &__wrapper {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     align-items: center;
     justify-content: center;
   }
