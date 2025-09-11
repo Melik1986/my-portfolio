@@ -2,7 +2,7 @@
 import React from 'react';
 import { ClientFormFields } from '../FormFields/ClientFormFields';
 import { SocialLinks } from '@/lib/ui';
-import { SuccessModal } from '@/lib/ui/SuccessModal';
+import { SuccessModal } from '@/lib/ui';
 import type { ClientFormProps, ClientFormData } from '../../types';
 import { useI18n } from '@/i18n';
 import { useClientFormLogic } from '../../hooks/useClientFormLogic';

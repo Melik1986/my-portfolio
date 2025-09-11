@@ -2,7 +2,7 @@
 import React from 'react';
 import { CompanyFormFields } from '../FormFields/CompanyFormFields';
 import { SocialLinks } from '@/lib/ui';
-import { SuccessModal } from '@/lib/ui/SuccessModal';
+import { SuccessModal } from '@/lib/ui';
 import type { CompanyFormProps, CompanyFormData } from '../../types';
 import { useI18n } from '@/i18n';
 import { useCompanyFormLogic } from '../../hooks/useCompanyFormLogic';

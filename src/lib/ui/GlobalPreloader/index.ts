@@ -1,0 +1,1 @@
+export { GlobalPreloader } from './GlobalPreloader';
