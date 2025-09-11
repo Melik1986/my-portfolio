@@ -20,16 +20,6 @@ function invalidEmailMessage(locale: 'en' | 'ru'): string {
   return tServer(locale, 'validation.emailInvalid');
 }
 
-function validateClient(form: FormData, locale: 'en' | 'ru'): Record<string, string> {
-  const errs: Record<string, string> = {};
-  const name = String(form.get('userName') || '').trim();
-  const email = String(form.get('userEmail') || '').trim();
-
-  if (!name) errs.userName = requiredMessage(locale, 'form.validation.userName');
-  if (!email) errs.userEmail = requiredMessage(locale, 'form.validation.userEmail');
-  else if (!EMAIL_RE.test(email)) errs.userEmail = invalidEmailMessage(locale);
-  return errs;
-}
 
 interface SmtpConfig {
   host: string;
@@ -120,21 +110,80 @@ function buildMail(
   };
 }
 
+function shouldSkipEmailSend(): { skip: boolean; reason?: string } {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const disableSend = boolFromEnv(process.env.CONTACT_DISABLE_SEND);
+
+  console.log('[CONTACT] isDevelopment:', isDevelopment);
+  console.log('[CONTACT] disableSend:', disableSend);
+
+  if (isDevelopment) {
+    return { skip: true, reason: 'Development mode' };
+  }
+  if (disableSend) {
+    return { skip: true, reason: 'Send disabled by CONTACT_DISABLE_SEND' };
+  }
+  return { skip: false };
+}
+
+async function performEmailSend(
+  payload: ContactPayload,
+  cfg: SmtpConfig,
+  locale: 'en' | 'ru'
+): Promise<SubmitResult> {
+  console.log('[CONTACT] SMTP config loaded:', { host: cfg.host, port: cfg.port, secure: cfg.secure });
+  console.log('[CONTACT] Creating transporter...');
+  const transporter = createTransporter(cfg);
+
+  console.log('[CONTACT] Building mail...');
+  const mail = buildMail(payload, cfg, locale);
+  console.log('[CONTACT] Mail subject:', mail.subject);
+  console.log('[CONTACT] Mail to:', mail.to);
+
+  console.log('[CONTACT] Sending email...');
+  const result = await transporter.sendMail(mail);
+  console.log('[CONTACT] Email sent successfully:', result.messageId);
+
+  return { ok: true, message: tServer(locale, 'api.ok') };
+}
+
+function handleEmailError(error: unknown): SubmitResult {
+  const isDebug = process.env.CONTACT_DEBUG === 'true';
+  const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+
+  console.error('!!! --- EMAIL SENDING FAILED --- !!!');
+  console.error('Timestamp:', new Date().toISOString());
+  console.error('Error Object:', JSON.stringify(error, null, 2));
+  console.error('Error Message:', errorMessage);
+  if (error instanceof Error) {
+    console.error('Error Stack:', error.stack);
+  }
+  console.error('CONTACT_DEBUG value:', process.env.CONTACT_DEBUG);
+  console.error('isDebug flag:', isDebug);
+  console.error('!!! ---------------------------- !!!');
+
+  if (isDebug) {
+    return {
+      ok: false,
+      message: `Не удалось отправить сообщение: ${errorMessage}`,
+    };
+  }
+
+  return {
+    ok: false,
+    message: 'Не удалось отправить сообщение',
+  };
+}
+
 async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<SubmitResult> {
   console.log('[CONTACT] Starting email send process');
   console.log('[CONTACT] Environment:', process.env.NODE_ENV);
   console.log('[CONTACT] Payload type:', payload.type);
-  
-  try {
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const disableSend = boolFromEnv(process.env.CONTACT_DISABLE_SEND);
-    
-    console.log('[CONTACT] isDevelopment:', isDevelopment);
-    console.log('[CONTACT] disableSend:', disableSend);
 
-    if (isDevelopment || disableSend) {
-      const reason = isDevelopment ? 'Development mode' : 'Send disabled by CONTACT_DISABLE_SEND';
-      console.log(`[CONTACT] ${reason} - simulating email send`);
+  try {
+    const skipCheck = shouldSkipEmailSend();
+    if (skipCheck.skip) {
+      console.log(`[CONTACT] ${skipCheck.reason} - simulating email send`);
       console.log('[CONTACT] Payload:', JSON.stringify(payload, null, 2));
       return { ok: true, message: tServer(locale, 'api.ok') };
     }
@@ -145,90 +194,45 @@ async function sendEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<
       console.error('[CONTACT] SMTP config error:', cfg.error);
       return { ok: false, message: tServer(locale, cfg.error) };
     }
-    
-    console.log('[CONTACT] SMTP config loaded:', { host: cfg.host, port: cfg.port, secure: cfg.secure });
-    console.log('[CONTACT] Creating transporter...');
-    const transporter = createTransporter(cfg);
-    
-    console.log('[CONTACT] Building mail...');
-    const mail = buildMail(payload, cfg, locale);
-    console.log('[CONTACT] Mail subject:', mail.subject);
-    console.log('[CONTACT] Mail to:', mail.to);
-    
-    console.log('[CONTACT] Sending email...');
-    const result = await transporter.sendMail(mail);
-    console.log('[CONTACT] Email sent successfully:', result.messageId);
-    
-    return { ok: true, message: tServer(locale, 'api.ok') };
+
+    return await performEmailSend(payload, cfg, locale);
   } catch (error) {
-    console.error('[CONTACT] Error details:', {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      code: error instanceof Error && 'code' in error ? error.code : undefined,
-    });
-
-    const isDebug = boolFromEnv(process.env.CONTACT_DEBUG);
-    let message = tServer(locale, 'api.serverError');
-
-    if (isDebug && error instanceof Error) {
-      message = error.message;
-    }
-
-    return { ok: false, message };
+    return handleEmailError(error);
   }
 }
 
-/**
- * Server action to submit client contact form
- */
-export async function submitClientAction(
-  _prev: SubmitResult,
-  formData: FormData,
-): Promise<SubmitResult> {
-  const locale = await getRequestLocale();
-  const errors = validateClient(formData, locale);
-  if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
-
-  const payload: ContactPayload = {
-    type: 'client',
-    userName: String(formData.get('userName') || '').trim(),
-    userEmail: String(formData.get('userEmail') || '').trim(),
-    projectDescription: String(formData.get('projectDescription') || '').trim(),
+const validateCompany = (
+    form: FormData,
+    locale: 'en' | 'ru',
+  ): Record<string, string> => {
+    const errs: Record<string, string> = {};
+    const name = String(form.get('companyName') || '').trim();
+    const email = String(form.get('companyEmail') || '').trim();
+  
+    if (!name) errs.companyName = requiredMessage(locale, 'form.validation.companyName');
+    if (!email) errs.companyEmail = requiredMessage(locale, 'form.validation.userEmail');
+    else if (!EMAIL_RE.test(email)) errs.companyEmail = invalidEmailMessage(locale);
+    return errs;
   };
 
-  const result = await sendEmail(locale, payload);
-  return result;
-}
-
-function validateCompany(form: FormData, locale: 'en' | 'ru'): Record<string, string> {
-  const errs: Record<string, string> = {};
-  const name = String(form.get('companyName') || '').trim();
-  const email = String(form.get('companyEmail') || '').trim();
-
-  if (!name) errs.companyName = requiredMessage(locale, 'form.validation.companyName');
-  if (!email) errs.companyEmail = requiredMessage(locale, 'form.validation.userEmail');
-  else if (!EMAIL_RE.test(email)) errs.companyEmail = invalidEmailMessage(locale);
-  return errs;
-}
-
-/**
- * Server action to submit company contact form
- */
-export async function submitCompanyAction(
-  _prev: SubmitResult,
-  formData: FormData,
-): Promise<SubmitResult> {
-  const locale = await getRequestLocale();
-  const errors = validateCompany(formData, locale);
-  if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
-
-  const payload: ContactPayload = {
-    type: 'company',
-    companyName: String(formData.get('companyName') || '').trim(),
-    companyEmail: String(formData.get('companyEmail') || '').trim(),
-    companyDetails: String(formData.get('companyDetails') || '').trim(),
-  };
-
-  const result = await sendEmail(locale, payload);
+  /**
+   * Server action to submit company contact form
+   */
+  export async function submitCompanyAction(
+    _prev: SubmitResult,
+    formData: FormData,
+  ): Promise<SubmitResult> {
+    const locale = await getRequestLocale();
+    const errors = validateCompany(formData, locale);
+    if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
+  
+    const payload: ContactPayload = {
+      type: 'company',
+      companyName: String(formData.get('companyName') || '').trim(),
+      companyEmail: String(formData.get('companyEmail') || '').trim(),
+      companyDetails: String(formData.get('companyDetails') || '').trim(),
+    };
+  
+    const result = await sendEmail(locale, payload);
   return result;
 }

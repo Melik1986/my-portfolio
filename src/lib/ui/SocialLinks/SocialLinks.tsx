@@ -12,7 +12,7 @@ const defaultLinks: SocialLink[] = [
   },
   {
     id: 'google',
-    href: 'musinianmelik@gmail.com',
+    href: 'mailto:musinianmelik@gmail.com',
     label: 'Google',
     iconId: 'icon-google',
   },
