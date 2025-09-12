@@ -1,8 +1,5 @@
 'use server';
 
-// Указываем Node.js runtime для совместимости с nodemailer на Vercel
-export const runtime = 'nodejs';
-
 import { getRequestLocale } from '@/app/seo/getRequestLocale';
 import { tServer } from '@/i18n/server';
 import nodemailer from 'nodemailer';
