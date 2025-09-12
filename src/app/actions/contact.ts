@@ -215,6 +215,20 @@ const validateCompany = (
     return errs;
   };
 
+const validateClient = (
+    form: FormData,
+    locale: 'en' | 'ru',
+  ): Record<string, string> => {
+    const errs: Record<string, string> = {};
+    const name = String(form.get('userName') || '').trim();
+    const email = String(form.get('userEmail') || '').trim();
+  
+    if (!name) errs.userName = requiredMessage(locale, 'form.validation.userName');
+    if (!email) errs.userEmail = requiredMessage(locale, 'form.validation.userEmail');
+    else if (!EMAIL_RE.test(email)) errs.userEmail = invalidEmailMessage(locale);
+    return errs;
+  };
+
   /**
    * Server action to submit company contact form
    */
@@ -234,5 +248,27 @@ const validateCompany = (
     };
   
     const result = await sendEmail(locale, payload);
+  return result;
+}
+
+/**
+ * Server action to submit client contact form
+ */
+export async function submitClientAction(
+  _prev: SubmitResult,
+  formData: FormData,
+): Promise<SubmitResult> {
+  const locale = await getRequestLocale();
+  const errors = validateClient(formData, locale);
+  if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
+
+  const payload: ContactPayload = {
+    type: 'client',
+    userName: String(formData.get('userName') || '').trim(),
+    userEmail: String(formData.get('userEmail') || '').trim(),
+    projectDescription: String(formData.get('projectDescription') || '').trim(),
+  };
+
+  const result = await sendEmail(locale, payload);
   return result;
 }
