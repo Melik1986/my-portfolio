@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '1mb',
       allowedOrigins: [
         'localhost:3000',
+        '127.0.0.1:3000',
         'portfolio-melik-next.vercel.app',
+        '*.vercel.app', // Разрешаем все Vercel preview deployments
         ...(process.env.NEXT_PUBLIC_CUSTOM_DOMAIN
           ? [process.env.NEXT_PUBLIC_CUSTOM_DOMAIN.replace(/^https?:\/\//, '')]
           : []),

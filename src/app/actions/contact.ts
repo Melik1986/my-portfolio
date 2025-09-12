@@ -1,5 +1,8 @@
 'use server';
 
+// Указываем Node.js runtime для совместимости с nodemailer на Vercel
+export const runtime = 'nodejs';
+
 import { getRequestLocale } from '@/app/seo/getRequestLocale';
 import { tServer } from '@/i18n/server';
 import nodemailer from 'nodemailer';
@@ -56,7 +59,20 @@ function getSmtpConfig(): SmtpConfig | { error: string } {
   const from = process.env.SMTP_FROM || user || 'noreply@your-verified-domain.com';
   const to = process.env.CONTACT_TO_EMAIL || 'musinianmelik@gmail.com';
 
-  if (!host || !user || !pass) return { error: 'api.smtpNotConfigured' };
+  console.log('[SMTP_CONFIG] Environment check:', {
+    hasHost: !!host,
+    hasUser: !!user,
+    hasPass: !!pass,
+    port,
+    secure,
+    from: from?.replace(/(.{3}).*(@.*)/, '$1***$2'), // Маскируем email для безопасности
+    to: to?.replace(/(.{3}).*(@.*)/, '$1***$2'),
+  });
+
+  if (!host || !user || !pass) {
+    console.error('[SMTP_CONFIG] Missing required env vars:', { host: !!host, user: !!user, pass: !!pass });
+    return { error: 'api.smtpNotConfigured' };
+  }
   return { host, port, user, pass, secure, from, to };
 }
 
@@ -236,9 +252,15 @@ const validateClient = (
     _prev: SubmitResult,
     formData: FormData,
   ): Promise<SubmitResult> {
+    console.log('[COMPANY_ACTION] Starting submission');
+    console.log('[COMPANY_ACTION] FormData entries:', Object.fromEntries(formData));
+    
     const locale = await getRequestLocale();
     const errors = validateCompany(formData, locale);
-    if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
+    if (Object.keys(errors).length > 0) {
+      console.log('[COMPANY_ACTION] Validation errors:', errors);
+      return { ok: false, fieldErrors: errors };
+    }
   
     const payload: ContactPayload = {
       type: 'company',
@@ -246,9 +268,11 @@ const validateClient = (
       companyEmail: String(formData.get('companyEmail') || '').trim(),
       companyDetails: String(formData.get('companyDetails') || '').trim(),
     };
-  
+    
+    console.log('[COMPANY_ACTION] Payload:', payload);
     const result = await sendEmail(locale, payload);
-  return result;
+    console.log('[COMPANY_ACTION] Result:', result);
+    return result;
 }
 
 /**
@@ -258,9 +282,15 @@ export async function submitClientAction(
   _prev: SubmitResult,
   formData: FormData,
 ): Promise<SubmitResult> {
+  console.log('[CLIENT_ACTION] Starting submission');
+  console.log('[CLIENT_ACTION] FormData entries:', Object.fromEntries(formData));
+  
   const locale = await getRequestLocale();
   const errors = validateClient(formData, locale);
-  if (Object.keys(errors).length > 0) return { ok: false, fieldErrors: errors };
+  if (Object.keys(errors).length > 0) {
+    console.log('[CLIENT_ACTION] Validation errors:', errors);
+    return { ok: false, fieldErrors: errors };
+  }
 
   const payload: ContactPayload = {
     type: 'client',
@@ -268,7 +298,9 @@ export async function submitClientAction(
     userEmail: String(formData.get('userEmail') || '').trim(),
     projectDescription: String(formData.get('projectDescription') || '').trim(),
   };
-
+  
+  console.log('[CLIENT_ACTION] Payload:', payload);
   const result = await sendEmail(locale, payload);
+  console.log('[CLIENT_ACTION] Result:', result);
   return result;
 }
