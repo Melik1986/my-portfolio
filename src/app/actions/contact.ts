@@ -48,6 +48,15 @@ function boolFromEnv(value: string | undefined, fallback = false): boolean {
 }
 
 function getSmtpConfig(): SmtpConfig | { error: string } {
+  console.log('[SMTP CONFIG] Loading environment variables...');
+  console.log('[SMTP CONFIG] SMTP_HOST:', process.env.SMTP_HOST ? '***SET***' : 'NOT SET');
+  console.log('[SMTP CONFIG] SMTP_PORT:', process.env.SMTP_PORT || 'NOT SET (using default 587)');
+  console.log('[SMTP CONFIG] SMTP_USER:', process.env.SMTP_USER ? '***SET***' : 'NOT SET');
+  console.log('[SMTP CONFIG] SMTP_PASS:', process.env.SMTP_PASS ? '***SET***' : 'NOT SET');
+  console.log('[SMTP CONFIG] SMTP_SECURE:', process.env.SMTP_SECURE || 'NOT SET');
+  console.log('[SMTP CONFIG] SMTP_FROM:', process.env.SMTP_FROM ? '***SET***' : 'NOT SET');
+  console.log('[SMTP CONFIG] CONTACT_TO_EMAIL:', process.env.CONTACT_TO_EMAIL ? '***SET***' : 'NOT SET');
+  
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT || 587);
   const user = process.env.SMTP_USER;
