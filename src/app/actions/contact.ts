@@ -62,7 +62,8 @@ function getSmtpConfig(): SmtpConfig | { error: string } {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const secure = boolFromEnv(process.env.SMTP_SECURE, port === 465);
-  const from = process.env.SMTP_FROM || user || 'noreply@your-verified-domain.com';
+  // Gmail SMTP требует, чтобы поле 'from' совпадало с аутентифицированным пользователем
+  const from = user || 'noreply@your-verified-domain.com';
   const to = process.env.CONTACT_TO_EMAIL || 'musinianmelik@gmail.com';
 
   console.log('[SMTP_CONFIG] Environment check:', {
