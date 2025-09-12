@@ -1,6 +1,8 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import { fixupPluginRules } from '@eslint/compat';
+import securityPlugin from 'eslint-plugin-security';
 
 const currentFilename = fileURLToPath(import.meta.url);
 const currentDirname = dirname(currentFilename);
@@ -10,7 +12,40 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/.turbo/**',
+      '**/coverage/**',
+      '**/playwright-report/**',
+      '**/blob-report/**',
+      '**/test-results/**',
+      '**/.vercel/**',
+      '**/next-env.d.ts',
+    ],
+  },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  // Security: подключаем плагин в flat-конфиге и ограничиваем областью src
+  {
+    files: ['src/**/*.{js,ts,tsx}'],
+    plugins: { security: fixupPluginRules(securityPlugin) },
+    rules: {
+      // Отключаем шумное правило для FE-кода
+      'security/detect-object-injection': 'off',
+      // Базовые проверки
+      'security/detect-new-buffer': 'error',
+      'security/detect-eval-with-expression': 'error',
+      'security/detect-unsafe-regex': 'warn',
+      'security/detect-non-literal-regexp': 'warn',
+      'security/detect-pseudoRandomBytes': 'warn',
+      'security/detect-possible-timing-attacks': 'warn',
+      // Node-специфичные — пусть будут предупреждения (вдруг появятся server-only файлы)
+      'security/detect-child-process': 'warn',
+      'security/detect-non-literal-fs-filename': 'warn',
+      'security/detect-no-csrf-before-method-override': 'warn',
+    },
+  },
   {
     rules: {
       // Основное правило: максимум 50 строк для компонентов, хуков и бизнес-логики

@@ -34,6 +34,17 @@ function CompanyFormView({
       <form ref={formRef} className={formStyles.form} action={formAction} noValidate>
         <h1 className={formStyles['form__title']}>{t('section.contact.company.title')}</h1>
 
+        {/* Honeypot field to trap bots */}
+        <input
+          type="text"
+          name="website"
+          defaultValue=""
+          autoComplete="off"
+          tabIndex={-1}
+          aria-hidden="true"
+          hidden
+        />
+
         <CompanyFormFields
           formData={formData}
           handleInputChange={handleInputChange}
