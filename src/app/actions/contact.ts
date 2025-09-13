@@ -24,7 +24,7 @@ async function getClientIp(): Promise<string> {
   const ip = xf.split(',')[0]?.trim() || h.get('x-real-ip') || 'unknown';
   return ip;
 }
-function isRateLimited(ip: string): boolean {
+function isRateLimitedLocal(ip: string): boolean {
   const ts = nowSec();
   const rec = rateMap.get(ip);
   if (!rec || rec.resetAt <= ts) {
@@ -37,6 +37,45 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+// Upstash Redis (optional)
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+const RL_PREFIX = process.env.CONTACT_RL_PREFIX || 'contact';
+const hasUpstash = (): boolean => Boolean(UPSTASH_URL && UPSTASH_TOKEN);
+
+async function upstashIncrWithExpiry(key: string, ttlSec: number): Promise<number | null> {
+  try {
+    const url = `${UPSTASH_URL}/INCR/${encodeURIComponent(key)}`;
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+      cache: 'no-store',
+    });
+    if (!r.ok) return null;
+    const data = (await r.json()) as { result?: number };
+    const count = typeof data.result === 'number' ? data.result : null;
+    if (count === 1) {
+      const expUrl = `${UPSTASH_URL}/EXPIRE/${encodeURIComponent(key)}/${ttlSec}`;
+      await fetch(expUrl, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+        cache: 'no-store',
+      });
+    }
+    return count;
+  } catch {
+    return null;
+  }
+}
+
+async function isRateLimited(ip: string): Promise<boolean> {
+  if (!hasUpstash()) return isRateLimitedLocal(ip);
+  const key = `${RL_PREFIX}:ip:${ip}`;
+  const count = await upstashIncrWithExpiry(key, RL_WINDOW_SEC);
+  if (count == null) return isRateLimitedLocal(ip);
+  return count > RL_MAX;
+}
+
 function requiredMessage(locale: 'en' | 'ru', labelKey: string): string {
   return `${tServer(locale, labelKey)} ${tServer(locale, 'validation.isRequired')}`;
 }
@@ -45,6 +84,61 @@ function invalidEmailMessage(locale: 'en' | 'ru'): string {
   return tServer(locale, 'validation.emailInvalid');
 }
 
+// CAPTCHA (optional)
+const CAPTCHA_PROVIDER = (process.env.CONTACT_CAPTCHA_PROVIDER || '').toLowerCase();
+const CAPTCHA_SECRET = process.env.CONTACT_CAPTCHA_SECRET;
+const CAPTCHA_MIN_SCORE = Number(process.env.CONTACT_CAPTCHA_MIN_SCORE || '0.5');
+const CAPTCHA_ENFORCE = (process.env.CONTACT_CAPTCHA_ENFORCE || '').toLowerCase();
+
+const shouldVerifyCaptcha = (): boolean => Boolean(CAPTCHA_PROVIDER && CAPTCHA_SECRET);
+
+function isCaptchaEnforced(): boolean {
+  return CAPTCHA_ENFORCE === '1' || CAPTCHA_ENFORCE === 'true' || CAPTCHA_ENFORCE === 'yes' || CAPTCHA_ENFORCE === 'on';
+}
+
+async function verifyRecaptcha(token: string, ip: string): Promise<boolean> {
+  try {
+    const body = new URLSearchParams({ secret: CAPTCHA_SECRET!, response: token, remoteip: ip });
+    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+      cache: 'no-store',
+    });
+    if (!res.ok) return false;
+    const json = (await res.json()) as { success?: boolean; score?: number };
+    if (!json.success) return false;
+    if (typeof json.score === 'number' && json.score < CAPTCHA_MIN_SCORE) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function verifyHcaptcha(token: string, ip: string): Promise<boolean> {
+  try {
+    const body = new URLSearchParams({ secret: CAPTCHA_SECRET!, response: token, remoteip: ip });
+    const res = await fetch('https://hcaptcha.com/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+      cache: 'no-store',
+    });
+    if (!res.ok) return false;
+    const json = (await res.json()) as { success?: boolean };
+    return Boolean(json.success);
+  } catch {
+    return false;
+  }
+}
+
+async function verifyCaptcha(token: string, ip: string): Promise<boolean> {
+  if (!shouldVerifyCaptcha()) return true;
+  if (!token) return !isCaptchaEnforced();
+  if (CAPTCHA_PROVIDER === 'recaptcha') return verifyRecaptcha(token, ip);
+  if (CAPTCHA_PROVIDER === 'hcaptcha') return verifyHcaptcha(token, ip);
+  return true;
+}
 
 interface ResendConfig {
   apiKey: string;
@@ -129,12 +223,12 @@ function buildMail(
     subject: getMailSubject(p, locale),
     text: `${tServer(locale, 'mail.name')}: ${name}\n${tServer(locale, 'mail.email')}: ${email}\n${tServer(locale, 'mail.type')}: ${p.type}\n\n${tServer(locale, 'mail.message')}:\n${message || tServer(locale, 'mail.noMessage')}\n`,
     html: `
-      <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.6;">
+      <div style=\"font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.6;\">
         <p><strong>${tServer(locale, 'mail.type')}:</strong> ${p.type}</p>
         <p><strong>${tServer(locale, 'mail.name')}:</strong> ${name}</p>
-        <p><strong>${tServer(locale, 'mail.email')}:</strong> <a href="mailto:${email}">${email}</a></p>
+        <p><strong>${tServer(locale, 'mail.email')}:</strong> <a href=\"mailto:${email}\">${email}</a></p>
         <p><strong>${tServer(locale, 'mail.message')}:</strong></p>
-        <pre style="white-space: pre-wrap;">${message}</pre>
+        <pre style=\"white-space: pre-wrap;\">${message}</pre>
       </div>
     `,
   };
@@ -286,6 +380,7 @@ const validateClient = (
     console.log('[COMPANY_ACTION] FormData entries:', Object.fromEntries(formData));
     
     const locale = await getRequestLocale();
+    const ip = await getClientIp();
 
     // Honeypot check
     const honeypot = String(formData.get('website') || '').trim();
@@ -294,9 +389,20 @@ const validateClient = (
       return { ok: true, message: tServer(locale, 'api.ok') };
     }
 
+    // CAPTCHA check (optional)
+    const captchaToken = String(formData.get('captchaToken') || '');
+    const captchaOk = await verifyCaptcha(captchaToken, ip);
+    if (!captchaOk) {
+      console.warn('[COMPANY_ACTION] CAPTCHA verification failed');
+      return {
+        ok: false,
+        message: locale === 'ru' ? 'Проверка не пройдена. Попробуйте снова.' : 'Verification failed. Please try again.',
+      };
+    }
+
     // Rate limit check
-  const ip = await getClientIp();
-  if (isRateLimited(ip)) {
+  const limited = await isRateLimited(ip);
+  if (limited) {
     console.warn('[COMPANY_ACTION] Rate limit exceeded for IP:', ip);
     return {
       ok: false,
@@ -333,6 +439,7 @@ export async function submitClientAction(
   console.log('[CLIENT_ACTION] FormData entries:', Object.fromEntries(formData));
   
   const locale = await getRequestLocale();
+  const ip = await getClientIp();
 
   // Honeypot check
   const honeypot = String(formData.get('website') || '').trim();
@@ -341,9 +448,20 @@ export async function submitClientAction(
     return { ok: true, message: tServer(locale, 'api.ok') };
   }
 
+  // CAPTCHA check (optional)
+  const captchaToken = String(formData.get('captchaToken') || '');
+  const captchaOk = await verifyCaptcha(captchaToken, ip);
+  if (!captchaOk) {
+    console.warn('[CLIENT_ACTION] CAPTCHA verification failed');
+    return {
+      ok: false,
+      message: locale === 'ru' ? 'Проверка не пройдена. Попробуйте снова.' : 'Verification failed. Please try again.',
+    };
+  }
+
   // Rate limit check
-  const ip = await getClientIp();
-  if (isRateLimited(ip)) {
+  const limited = await isRateLimited(ip);
+  if (limited) {
     console.warn('[CLIENT_ACTION] Rate limit exceeded for IP:', ip);
     return {
       ok: false,

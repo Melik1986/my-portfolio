@@ -17,6 +17,7 @@ interface ClientFormViewProps {
   handleInputBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   fieldErrors: Record<string, string>;
   onToggleToCompany: () => void;
+  handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
 function ClientFormView({
@@ -27,11 +28,12 @@ function ClientFormView({
   handleInputBlur,
   fieldErrors,
   onToggleToCompany,
+  handleFormSubmit,
 }: ClientFormViewProps) {
   const { t } = useI18n();
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--freelance']}`}>
-      <form ref={formRef} className={formStyles.form} action={formAction} noValidate>
+      <form ref={formRef} className={formStyles.form} action={formAction} onSubmit={handleFormSubmit} noValidate>
         <h1 className={formStyles['form__title']}>{t('section.contact.client.title')}</h1>
         {/* Honeypot field to trap bots */}
         <input
@@ -81,6 +83,7 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
     handleInputChange,
     handleInputBlur,
     handleCloseModal,
+    handleFormSubmit,
   } = useClientFormLogic();
 
   return (
@@ -93,6 +96,7 @@ export function ClientForm({ onToggleToCompany }: ClientFormProps) {
         handleInputBlur={handleInputBlur}
         fieldErrors={fieldErrors}
         onToggleToCompany={onToggleToCompany}
+        handleFormSubmit={handleFormSubmit}
       />
       <SuccessModal isOpen={showSuccessModal} onClose={handleCloseModal} messageType="client" />
     </>

@@ -17,6 +17,7 @@ interface CompanyFormViewProps {
   handleInputBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   fieldErrors: Record<string, string>;
   onToggleToClient: () => void;
+  handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
 function CompanyFormView({
@@ -27,11 +28,12 @@ function CompanyFormView({
   handleInputBlur,
   fieldErrors,
   onToggleToClient,
+  handleFormSubmit,
 }: CompanyFormViewProps) {
   const { t } = useI18n();
   return (
     <div className={`${formStyles['form-box']} ${formStyles['form-box--company']}`}>
-      <form ref={formRef} className={formStyles.form} action={formAction} noValidate>
+      <form ref={formRef} className={formStyles.form} action={formAction} onSubmit={handleFormSubmit} noValidate>
         <h1 className={formStyles['form__title']}>{t('section.contact.company.title')}</h1>
 
         {/* Honeypot field to trap bots */}
@@ -82,6 +84,7 @@ export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
     handleInputChange,
     handleInputBlur,
     handleCloseModal,
+    handleFormSubmit,
   } = useCompanyFormLogic();
 
   return (
@@ -94,6 +97,7 @@ export function CompanyForm({ onToggleToClient }: CompanyFormProps) {
         handleInputBlur={handleInputBlur}
         fieldErrors={fieldErrors}
         onToggleToClient={onToggleToClient}
+        handleFormSubmit={handleFormSubmit}
       />
       <SuccessModal isOpen={showSuccessModal} onClose={handleCloseModal} messageType="company" />
     </>
