@@ -59,6 +59,7 @@
   // Стили для заголовка
   &__title {
     padding: 0;
+    font-family: $font-family-chango;
     @include typo.type-h3;
     margin: 0;
     color: var(--project-title-color, #292929);
@@ -68,6 +69,7 @@
   // Стили для текста
   &__text {
     padding: 0;
+    font-family: $font-family-roboto;
     @include typo.type-body;
     color: var(--project-text-color, #292929);
     -webkit-text-stroke: none;
@@ -76,6 +78,7 @@
 
   // Стили для ссылки
   &__link {
+    font-family: $font-family-leckerli;
     @include typo.type-small;
     text-decoration: none;
     color: $palette-primary; // Используем акцентный цвет
