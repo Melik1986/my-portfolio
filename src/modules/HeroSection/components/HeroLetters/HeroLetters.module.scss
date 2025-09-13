@@ -3,10 +3,10 @@
 
 .hero {
   &__container-letters {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative; // was absolute
+    top: auto; // neutralize absolute offsets
+    left: auto;
+    transform: none;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -15,13 +15,16 @@
     padding: 0;
     z-index: 2;
     opacity: 0;
+    // Integrate into flex column parent: push to top, keep centered
+    align-self: center;
+    margin-bottom: auto;
 
-    // Landscape orientation - adjust top position to stay within bounds
+    // Landscape orientation - remove top adjustments to avoid jumpiness
     @media (orientation: landscape) {
-      top: 10%;
+      top: auto;
 
       @media (max-width: 768px) {
-        top: 25%;
+        top: auto;
       }
     }
 
@@ -66,7 +69,7 @@
   // Tablet (769-1024px) - proportional scaling
   @media (min-width: 769px) and (max-width: 1024px) {
     &__container-letters {
-      top: 10%;
+      top: auto;
       gap: 16px;
     }
 

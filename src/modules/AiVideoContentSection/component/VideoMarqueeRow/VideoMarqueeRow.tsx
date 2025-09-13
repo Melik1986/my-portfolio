@@ -21,6 +21,7 @@ const renderVideoItem = (src: string, index: number, isClone: boolean) => (
       playsInline
       preload="metadata"
       autoPlay
+      {...({ 'webkit-playsinline': '' } as React.VideoHTMLAttributes<HTMLVideoElement>)}
       {...(isClone && { 'aria-hidden': true })}
       onError={(e) => {
         console.warn('Video failed to load:', src);

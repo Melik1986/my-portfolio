@@ -2,27 +2,27 @@
 
 .container {
   width: 100%;
-  max-width: 1440px;
+  max-width: clamp(320px, 92vw, 1440px);
   margin: 0 auto;
-  padding: 0 60px;
+  padding: 0 clamp(0.625rem, 3vw, 3.75rem);
 
   @include vp-1440 {
-    padding: 0 2.5rem;
+    padding: 0 clamp(1.5rem, 2.5vw, 2.5rem);
   }
 
   @include vp-1304 {
-    padding: 0 2.5rem;
+    padding: 0 clamp(1.25rem, 2.2vw, 2.5rem);
   }
 
   @include vp-1024 {
-    padding: 0 1.875rem;
+    padding: 0 clamp(0.875rem, 2vw, 1.875rem);
   }
 
   @include vp-768 {
-    padding: 0 0.625rem;
+    padding: 0 clamp(0.3125rem, 2vw, 0.625rem);
   }
 
   @include vp-375 {
-    padding: 0 0.3125rem;
+    padding: 0 clamp(0.25rem, 1.2vw, 0.3125rem);
   }
 }
