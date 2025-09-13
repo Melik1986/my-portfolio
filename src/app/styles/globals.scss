@@ -75,6 +75,13 @@ html.preloader-ready.smoother-ready .portfolio__section {
  * Базовые стили для портфолио
  * Определяет основную структуру и стили для всех секций
  */
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-hero-bold, 'Chango', Arial, sans-serif);
+  }
+
 .portfolio {
   width: 100%;
   min-height: 100dvh;

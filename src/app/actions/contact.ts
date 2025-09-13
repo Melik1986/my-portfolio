@@ -280,7 +280,7 @@ async function performEmailSend(
 
   if (error) {
     console.error('[CONTACT] Resend error:', error);
-    return { ok: false, message: tServer(locale, 'api.error') };
+    throw error; // пробрасываем, чтобы сработал handleEmailError и CONTACT_DEBUG
   }
 
   console.log('[CONTACT] Email sent successfully via Resend:', data?.id);
