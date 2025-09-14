@@ -90,6 +90,8 @@
   "api.smtpNotConfigured": "SMTP is not configured",
   "api.serverError": "Failed to send message",
   "api.ok": "Message sent successfully",
+  "api.emailSendFailed": "Failed to send your message. Please try again later or email me directly.",
+  "api.resendNotConfigured": "Email service is not configured. Please try again later.",
   "mail.subject.client": "New client inquiry from {name}",
   "mail.subject.company": "New company inquiry from {name}",
   "mail.type": "Type",

@@ -37,6 +37,15 @@ interface ContactPayload {
   companyDetails?: string;
 }
 
+interface EmailData {
+  from: string;
+  to: string[];
+  subject: string;
+  html: string;
+  text: string;
+  reply_to?: string[];
+}
+
 function boolFromEnv(value: string | undefined, fallback = false): boolean {
   if (value == null) return fallback;
   const v = value.trim().toLowerCase();
@@ -50,12 +59,12 @@ function getResendConfig(): ResendConfig | { error: string } {
   console.log('[RESEND CONFIG] CONTACT_TO_EMAIL:', process.env.CONTACT_TO_EMAIL ? '***SET***' : 'NOT SET');
   
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.CONTACT_FROM_EMAIL || 'team@portfolio-melik.xyz';
+  const from = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
   const to = process.env.CONTACT_TO_EMAIL || 'musinianmelik@gmail.com';
 
   console.log('[RESEND_CONFIG] Environment check:', {
     hasApiKey: !!apiKey,
-    from: from?.replace(/(.{3}).*(@.*)/, '$1***$2'), // Маскируем email для безопасности
+    from: from?.replace(/(.{3}).*(@.*)/, '$1***$2'),
     to: to?.replace(/(.{3}).*(@.*)/, '$1***$2'),
   });
 
@@ -135,7 +144,8 @@ async function sendEmail(
   config: ResendConfig,
   subject: string,
   htmlContent: string,
-  textContent: string
+  textContent: string,
+  replyTo?: string
 ): Promise<{ success: boolean; error?: string }> {
   console.log('[SEND_EMAIL] Initializing Resend with config:', {
     hasApiKey: !!config.apiKey,
@@ -145,13 +155,16 @@ async function sendEmail(
 
   const resend = new Resend(config.apiKey);
 
-  const emailData = {
+  const emailData: EmailData = {
     from: config.from,
     to: [config.to],
     subject,
     html: htmlContent,
     text: textContent,
   };
+  if (replyTo) {
+    emailData.reply_to = [replyTo];
+  }
 
   console.log('[SEND_EMAIL] Sending email with Resend:', {
     from: config.from?.replace(/(.{3}).*(@.*)/, '$1***$2'),
@@ -159,6 +172,7 @@ async function sendEmail(
     subject,
     hasHtml: !!htmlContent,
     hasText: !!textContent,
+    hasReplyTo: !!replyTo,
   });
 
   try {
@@ -216,7 +230,7 @@ async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): P
       </div>
     `;
 
-    const result = await sendEmail(cfg, subject, htmlContent, textContent);
+    const result = await sendEmail(cfg, subject, htmlContent, textContent, email);
     
     if (result.success) {
       return { ok: true, message: tServer(locale, 'api.ok') };
