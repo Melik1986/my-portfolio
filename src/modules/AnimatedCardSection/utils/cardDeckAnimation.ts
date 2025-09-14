@@ -212,22 +212,5 @@ export function initCardDeckScroll(
     return () => timeline.kill();
   });
 
-  // Дополнительно реагируем на смену ориентации, чтобы пересчитать триггеры
-  mm.add('(orientation: landscape)', () => {
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 100);
-    });
-    return () => {};
-  });
-
-  mm.add('(orientation: portrait)', () => {
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 100);
-    });
-    return () => {};
-  });
-
   return timeline!;
 }

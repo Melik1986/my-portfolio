@@ -44,7 +44,6 @@ export function VideoOverlay({ isOpen, src, onClose, videoRef }: VideoOverlayPro
           playsInline
           autoPlay
           controls
-          {...({ 'webkit-playsinline': '' } as React.VideoHTMLAttributes<HTMLVideoElement>)}
         />
       </div>
     </div>

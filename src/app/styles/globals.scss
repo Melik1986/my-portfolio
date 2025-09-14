@@ -2,6 +2,8 @@
 @use '../styles/_mixins' as *;
 @use '../styles/_normalize' as *;
 @use '../styles/_reboot' as *;
+// @use '../styles/_fonts' as *; // Отключено: конфликт с Next.js font optimization
+@use '../styles/_container' as *;
 @use '../styles/_visually-hidden' as *;
 @use '../styles/_animations' as *;
 
@@ -75,13 +77,6 @@ html.preloader-ready.smoother-ready .portfolio__section {
  * Базовые стили для портфолио
  * Определяет основную структуру и стили для всех секций
  */
-
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-hero-bold, 'Chango', Arial, sans-serif);
-  }
-
 .portfolio {
   width: 100%;
   min-height: 100dvh;
