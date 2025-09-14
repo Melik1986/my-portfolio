@@ -10,6 +10,12 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
 
+  // Заголовки для Server Actions
+  if (request.method === 'POST' && request.headers.get('next-action')) {
+    response.headers.set('Content-Type', 'application/json; charset=utf-8');
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  }
+
   // Кэширование для статических ресурсов
   if (request.nextUrl.pathname.startsWith('/api/projects')) {
     response.headers.set('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=86400');

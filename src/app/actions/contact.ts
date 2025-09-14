@@ -113,7 +113,7 @@ function shouldSkipEmailSend(): { skip: boolean; reason?: string } {
 
 
 
-function handleEmailError(error: unknown): SubmitResult {
+function handleEmailError(error: unknown, locale: 'en' | 'ru' = 'ru'): SubmitResult {
   const isDebug = process.env.CONTACT_DEBUG === 'true';
   const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
 
@@ -131,14 +131,59 @@ function handleEmailError(error: unknown): SubmitResult {
   if (isDebug) {
     return {
       ok: false,
-      message: `Не удалось отправить сообщение: ${errorMessage}`,
+      message: `${tServer(locale, 'api.serverError')}: ${errorMessage}`,
     };
   }
 
   return {
     ok: false,
-    message: 'Не удалось отправить сообщение',
+    message: tServer(locale, 'api.serverError'),
   };
+}
+
+function logEmailInit(config: ResendConfig): void {
+  console.log('[SEND_EMAIL] Initializing Resend with config:', {
+    hasApiKey: !!config.apiKey,
+    from: maskEmail(config.from),
+    to: maskEmail(config.to),
+  });
+}
+
+function logEmailSend(config: ResendConfig, emailParams: { subject: string; html?: string; text?: string; replyTo?: string }): void {
+  console.log('[SEND_EMAIL] Sending email with Resend:', {
+    from: maskEmail(config.from),
+    to: maskEmail(config.to),
+    subject: emailParams.subject,
+    hasHtml: !!emailParams.html,
+    hasText: !!emailParams.text,
+    hasReplyTo: !!emailParams.replyTo,
+  });
+}
+
+function handleResendError(error: unknown, emailData: EmailData): string {
+  const errorInfo = getResendErrorInfo(error);
+  console.error('[SEND_EMAIL] Resend API error:', errorInfo);
+  console.error('[SEND_EMAIL] Full Resend error object:', JSON.stringify(error, null, 2));
+  console.error('[SEND_EMAIL] Email data that failed:', {
+    from: maskEmail(emailData.from),
+    to: emailData.to.map(maskEmail),
+    subject: emailData.subject,
+    hasHtml: !!emailData.html,
+    hasText: !!emailData.text,
+    hasReplyTo: !!emailData.reply_to
+  });
+  
+  // Возвращаем более специфичную ошибку на основе типа ошибки Resend
+  if (errorInfo.statusCode === 401) {
+    return 'api.invalidApiKey';
+  } else if (errorInfo.statusCode === 403) {
+    return 'api.accessDenied';
+  } else if (errorInfo.statusCode === 422) {
+    return 'api.invalidEmailData';
+  } else if (errorInfo.message?.includes('domain')) {
+    return 'api.domainNotVerified';
+  }
+  return 'api.emailSendFailed';
 }
 
 async function sendEmail(
@@ -146,12 +191,7 @@ async function sendEmail(
 ): Promise<{ success: boolean; error?: string }> {
   const { config, subject, html, text, replyTo } = input;
 
-  console.log('[SEND_EMAIL] Initializing Resend with config:', {
-    hasApiKey: !!config.apiKey,
-    from: maskEmail(config.from),
-    to: maskEmail(config.to),
-  });
-
+  logEmailInit(config);
   const resend = new Resend(config.apiKey);
   const emailData = buildEmailData(config.from, config.to, {
     subject,
@@ -160,27 +200,80 @@ async function sendEmail(
     replyTo,
   });
 
-  console.log('[SEND_EMAIL] Sending email with Resend:', {
-    from: maskEmail(config.from),
-    to: maskEmail(config.to),
-    subject,
-    hasHtml: !!html,
-    hasText: !!text,
-    hasReplyTo: !!replyTo,
-  });
+  logEmailSend(config, { subject, html, text, replyTo });
 
   try {
     const { data, error } = await resend.emails.send(emailData);
     if (error) {
-      console.error('[SEND_EMAIL] Resend API error:', getResendErrorInfo(error));
-      return { success: false, error: 'api.emailSendFailed' };
+      const errorCode = handleResendError(error, emailData);
+      return { success: false, error: errorCode };
     }
     console.log('[SEND_EMAIL] Email sent successfully:', { id: data?.id });
     return { success: true };
   } catch (error) {
-    console.error('[SEND_EMAIL] Failed to send email:', error);
+    console.error('[SEND_EMAIL] Exception while sending email:', error);
+    console.error('[SEND_EMAIL] Exception stack:', error instanceof Error ? error.stack : 'No stack trace');
     return { success: false, error: 'api.emailSendFailed' };
   }
+}
+
+function createEmailContent(locale: 'en' | 'ru', payload: ContactPayload): { text: string; html: string } {
+  const name = payload.type === 'client' ? payload.userName : payload.companyName;
+  const email = getReplyTo(payload);
+  const message = getMessage(payload);
+  
+  const textContent = `${tServer(locale, 'mail.name')}: ${name}\n${tServer(locale, 'mail.email')}: ${email}\n${tServer(locale, 'mail.type')}: ${payload.type}\n\n${tServer(locale, 'mail.message')}:\n${message || tServer(locale, 'mail.noMessage')}\n`;
+  
+  const htmlContent = `
+    <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.6;">
+      <p><strong>${tServer(locale, 'mail.type')}:</strong> ${payload.type}</p>
+      <p><strong>${tServer(locale, 'mail.name')}:</strong> ${name}</p>
+      <p><strong>${tServer(locale, 'mail.email')}:</strong> <a href="mailto:${email}">${email}</a></p>
+      <p><strong>${tServer(locale, 'mail.message')}:</strong></p>
+      <pre style="white-space: pre-wrap;">${message}</pre>
+    </div>
+  `;
+
+  return { text: textContent, html: htmlContent };
+}
+
+function handleEmailSendResult(
+  result: { success: boolean; error?: string },
+  locale: 'en' | 'ru',
+  payload: ContactPayload,
+  cfg: ResendConfig
+): SubmitResult {
+  if (result.success) {
+    return { ok: true, message: tServer(locale, 'api.ok') };
+  }
+
+  console.error('[CONTACT] Email sending failed:', result.error);
+  console.error('[CONTACT] Full error details for debugging:', {
+    timestamp: new Date().toISOString(),
+    payload: {
+      type: payload.type,
+      name: payload.type === 'client' ? payload.userName : payload.companyName,
+      email: maskEmail(payload.type === 'client' ? payload.userEmail : payload.companyEmail),
+      message: getMessage(payload)
+    },
+    config: {
+      hasApiKey: !!cfg.apiKey,
+      from: maskEmail(cfg.from),
+      to: maskEmail(cfg.to)
+    },
+    errorCode: result.error
+  });
+  
+  // Если включен режим отладки, показываем детальную ошибку
+  const isDebug = process.env.CONTACT_DEBUG === 'true';
+  if (isDebug) {
+    return {
+      ok: false,
+      message: `${tServer(locale, 'api.emailSendFailed')} (Debug: ${result.error})`,
+    };
+  }
+  
+  return { ok: false, message: tServer(locale, result.error || 'api.emailSendFailed') };
 }
 
 async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): Promise<SubmitResult> {
@@ -204,21 +297,8 @@ async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): P
     }
 
     const subject = getMailSubject(payload, locale);
-    const name = payload.type === 'client' ? payload.userName : payload.companyName;
+    const { text: textContent, html: htmlContent } = createEmailContent(locale, payload);
     const email = getReplyTo(payload);
-    const message = getMessage(payload);
-    
-    const textContent = `${tServer(locale, 'mail.name')}: ${name}\n${tServer(locale, 'mail.email')}: ${email}\n${tServer(locale, 'mail.type')}: ${payload.type}\n\n${tServer(locale, 'mail.message')}:\n${message || tServer(locale, 'mail.noMessage')}\n`;
-    
-    const htmlContent = `
-      <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; line-height:1.6;">
-        <p><strong>${tServer(locale, 'mail.type')}:</strong> ${payload.type}</p>
-        <p><strong>${tServer(locale, 'mail.name')}:</strong> ${name}</p>
-        <p><strong>${tServer(locale, 'mail.email')}:</strong> <a href="mailto:${email}">${email}</a></p>
-        <p><strong>${tServer(locale, 'mail.message')}:</strong></p>
-        <pre style="white-space: pre-wrap;">${message}</pre>
-      </div>
-    `;
 
     const result = await sendEmail({
       config: cfg,
@@ -228,13 +308,9 @@ async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): P
       replyTo: email,
     });
     
-    if (result.success) {
-      return { ok: true, message: tServer(locale, 'api.ok') };
-    } else {
-      return { ok: false, message: tServer(locale, result.error || 'api.emailSendFailed') };
-    }
+    return handleEmailSendResult(result, locale, payload, cfg);
   } catch (error) {
-    return handleEmailError(error);
+    return handleEmailError(error, locale);
   }
 }
 
