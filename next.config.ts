@@ -50,6 +50,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/webp', 'image/avif'],
+    qualities: [25, 50, 75, 90, 95],
     // Конфигурация для внешних изображений
     remotePatterns: [
       {

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
-// three/examples: use type-only imports and dynamic import for runtime to optimize bundle
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { avatarConfig } from '../config/avatar3d.config';
@@ -193,7 +193,6 @@ let sharedModelPromise: Promise<GLTF> | null = null;
 let sharedModelGLTF: GLTF | null = null;
 
 const loadGLTFViaLoader = async (url: string): Promise<GLTF> => {
-  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
   const loader = new GLTFLoader();
   try {
     (loader as unknown as { crossOrigin?: string }).crossOrigin = 'anonymous';
