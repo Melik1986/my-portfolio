@@ -43,7 +43,7 @@ interface EmailData {
   subject: string;
   html: string;
   text: string;
-  reply_to?: string[];
+  reply_to?: string | string[];
 }
 
 function boolFromEnv(value: string | undefined, fallback = false): boolean {
@@ -163,7 +163,7 @@ async function sendEmail(
     text: textContent,
   };
   if (replyTo) {
-    emailData.reply_to = [replyTo];
+    emailData.reply_to = replyTo;
   }
 
   console.log('[SEND_EMAIL] Sending email with Resend:', {
@@ -179,7 +179,15 @@ async function sendEmail(
     const { data, error } = await resend.emails.send(emailData);
     
     if (error) {
-      console.error('[SEND_EMAIL] Resend API error:', error);
+      const errInfo = {
+        name: (error as any)?.name,
+        message: (error as any)?.message,
+        type: (error as any)?.type,
+        statusCode: (error as any)?.statusCode,
+        code: (error as any)?.code,
+        details: (error as any)?.details,
+      };
+      console.error('[SEND_EMAIL] Resend API error:', errInfo);
       return { success: false, error: 'api.emailSendFailed' };
     }
 
