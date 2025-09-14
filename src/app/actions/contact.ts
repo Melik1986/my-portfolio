@@ -3,12 +3,7 @@
 import { Resend } from 'resend';
 import { getRequestLocale } from '@/app/seo/getRequestLocale';
 import { tServer } from '@/i18n/server';
-
-interface SubmitResult {
-  ok: boolean;
-  fieldErrors?: Record<string, string>;
-  message?: string;
-}
+import type { SubmitResult, ResendConfig, ContactPayload, EmailData, ResendApiError, SendEmailInput } from './types/types';
 
 const EMAIL_RE = /.+@.+\..+/;
 
@@ -21,30 +16,36 @@ function invalidEmailMessage(locale: 'en' | 'ru'): string {
 }
 
 
-interface ResendConfig {
-  apiKey: string;
-  from: string;
-  to: string;
-}
 
-interface ContactPayload {
-  type: 'client' | 'company';
-  userName?: string;
-  userEmail?: string;
-  projectDescription?: string;
-  companyName?: string;
-  companyEmail?: string;
-  companyDetails?: string;
-}
+const maskEmail = (email?: string): string =>
+  email ? email.replace(/(.{3}).*(@.*)/, '$1***$2') : '';
 
-interface EmailData {
-  from: string;
-  to: string[];
-  subject: string;
-  html: string;
-  text: string;
-  reply_to?: string | string[];
-}
+const buildEmailData = (
+  from: string,
+  to: string,
+  i: Omit<SendEmailInput, 'config'>,
+): EmailData => ({
+  from,
+  to: [to],
+  subject: i.subject,
+  html: i.html,
+  text: i.text,
+  ...(i.replyTo ? { reply_to: i.replyTo } : {}),
+});
+
+const getResendErrorInfo = (error: unknown): ResendApiError => {
+  const info: ResendApiError = {};
+  if (error && typeof error === 'object') {
+    const e = error as Record<string, unknown>;
+    if (typeof e.name === 'string') info.name = e.name;
+    if (typeof e.message === 'string') info.message = e.message;
+    if (typeof e.type === 'string') info.type = e.type;
+    if (typeof e.statusCode === 'number') info.statusCode = e.statusCode;
+    if (typeof e.code === 'string') info.code = e.code;
+    if ('details' in e) info.details = e.details;
+  }
+  return info;
+};
 
 function boolFromEnv(value: string | undefined, fallback = false): boolean {
   if (value == null) return fallback;
@@ -141,59 +142,40 @@ function handleEmailError(error: unknown): SubmitResult {
 }
 
 async function sendEmail(
-  config: ResendConfig,
-  subject: string,
-  htmlContent: string,
-  textContent: string,
-  replyTo?: string
+  input: SendEmailInput,
 ): Promise<{ success: boolean; error?: string }> {
+  const { config, subject, html, text, replyTo } = input;
+
   console.log('[SEND_EMAIL] Initializing Resend with config:', {
     hasApiKey: !!config.apiKey,
-    from: config.from?.replace(/(.{3}).*(@.*)/, '$1***$2'),
-    to: config.to?.replace(/(.{3}).*(@.*)/, '$1***$2'),
+    from: maskEmail(config.from),
+    to: maskEmail(config.to),
   });
 
   const resend = new Resend(config.apiKey);
-
-  const emailData: EmailData = {
-    from: config.from,
-    to: [config.to],
+  const emailData = buildEmailData(config.from, config.to, {
     subject,
-    html: htmlContent,
-    text: textContent,
-  };
-  if (replyTo) {
-    emailData.reply_to = replyTo;
-  }
+    html,
+    text,
+    replyTo,
+  });
 
   console.log('[SEND_EMAIL] Sending email with Resend:', {
-    from: config.from?.replace(/(.{3}).*(@.*)/, '$1***$2'),
-    to: config.to?.replace(/(.{3}).*(@.*)/, '$1***$2'),
+    from: maskEmail(config.from),
+    to: maskEmail(config.to),
     subject,
-    hasHtml: !!htmlContent,
-    hasText: !!textContent,
+    hasHtml: !!html,
+    hasText: !!text,
     hasReplyTo: !!replyTo,
   });
 
   try {
     const { data, error } = await resend.emails.send(emailData);
-    
     if (error) {
-      const errInfo = {
-        name: (error as any)?.name,
-        message: (error as any)?.message,
-        type: (error as any)?.type,
-        statusCode: (error as any)?.statusCode,
-        code: (error as any)?.code,
-        details: (error as any)?.details,
-      };
-      console.error('[SEND_EMAIL] Resend API error:', errInfo);
+      console.error('[SEND_EMAIL] Resend API error:', getResendErrorInfo(error));
       return { success: false, error: 'api.emailSendFailed' };
     }
-
-    console.log('[SEND_EMAIL] Email sent successfully:', {
-      id: data?.id,
-    });
+    console.log('[SEND_EMAIL] Email sent successfully:', { id: data?.id });
     return { success: true };
   } catch (error) {
     console.error('[SEND_EMAIL] Failed to send email:', error);
@@ -238,7 +220,13 @@ async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): P
       </div>
     `;
 
-    const result = await sendEmail(cfg, subject, htmlContent, textContent, email);
+    const result = await sendEmail({
+      config: cfg,
+      subject,
+      html: htmlContent,
+      text: textContent,
+      replyTo: email,
+    });
     
     if (result.success) {
       return { ok: true, message: tServer(locale, 'api.ok') };
