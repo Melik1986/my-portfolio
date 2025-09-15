@@ -53,6 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "default-passive-events": "^4.0.0",
+    "dotenv": "^17.2.2",
     "eslint": "^9.31.0",
     "eslint-config-next": "^15.5.3",
     "eslint-config-prettier": "^10.1.8",
@@ -61,6 +62,7 @@
     "lockfile-lint": "^4.0.0",
     "prettier": "^3.6.2",
     "sass": "^1.89.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

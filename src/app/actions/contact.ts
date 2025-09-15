@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 import { getRequestLocale } from '@/app/seo/getRequestLocale';
 import { tServer } from '@/i18n/server';
 import type { SubmitResult, ResendConfig, ContactPayload, EmailData, ResendApiError, SendEmailInput } from './types/types';
+import { headers } from 'next/headers';
 
 const EMAIL_RE = /.+@.+\..+/;
 
@@ -55,13 +56,17 @@ function boolFromEnv(value: string | undefined, fallback = false): boolean {
 
 function getResendConfig(): ResendConfig | { error: string } {
   console.log('[RESEND CONFIG] Loading environment variables...');
-  console.log('[RESEND CONFIG] RESEND_API_KEY:', process.env.RESEND_API_KEY ? '***SET***' : 'NOT SET');
-  console.log('[RESEND CONFIG] CONTACT_FROM_EMAIL:', process.env.CONTACT_FROM_EMAIL ? '***SET***' : 'NOT SET');
-  console.log('[RESEND CONFIG] CONTACT_TO_EMAIL:', process.env.CONTACT_TO_EMAIL ? '***SET***' : 'NOT SET');
-  
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
   const to = process.env.CONTACT_TO_EMAIL || 'musinianmelik@gmail.com';
+  const apiKeyPrefix = apiKey ? `${apiKey.slice(0, 4)}***` : 'N/A';
+
+  console.log('[RESEND CONFIG] RESEND_API_KEY:', apiKey ? '***SET***' : 'NOT SET');
+  console.log('[RESEND CONFIG] keyPrefix:', apiKeyPrefix);
+  console.log('[RESEND CONFIG] CONTACT_FROM_EMAIL:', process.env.CONTACT_FROM_EMAIL ? '***SET***' : 'NOT SET');
+  console.log('[RESEND CONFIG] CONTACT_TO_EMAIL:', process.env.CONTACT_TO_EMAIL ? '***SET***' : 'NOT SET');
+  console.log('[RESEND CONFIG] CONTACT_DISABLE_SEND:', process.env.CONTACT_DISABLE_SEND ?? 'NOT SET');
+  console.log('[RESEND CONFIG] NEXT_PUBLIC_CUSTOM_DOMAIN:', process.env.NEXT_PUBLIC_CUSTOM_DOMAIN ?? 'NOT SET');
 
   console.log('[RESEND_CONFIG] Environment check:', {
     hasApiKey: !!apiKey,
@@ -282,6 +287,13 @@ async function sendContactEmail(locale: 'en' | 'ru', payload: ContactPayload): P
   console.log('[CONTACT] Payload type:', payload.type);
 
   try {
+    const reqHeaders = await headers();
+    console.log('[CONTACT] Request info:', {
+      origin: reqHeaders.get('origin') || 'N/A',
+      referer: reqHeaders.get('referer') || 'N/A',
+      vercelUrl: reqHeaders.get('x-vercel-deployment-url') || 'N/A',
+    });
+
     const skipCheck = shouldSkipEmailSend();
     if (skipCheck.skip) {
       console.log(`[CONTACT] ${skipCheck.reason} - simulating email send`);
