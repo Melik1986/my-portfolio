@@ -1,0 +1,167 @@
+.test-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.test-info {
+  background: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.test-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.test-controls button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.test-controls button:hover {
+  background: #0056b3;
+}
+
+.test-controls button:active {
+  transform: scale(0.98);
+}
+
+.smooth-wrapper-test {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: auto;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.smooth-content-test {
+  position: relative;
+}
+
+.test-content {
+  padding: 20px;
+}
+
+.video-container {
+  margin-bottom: 30px;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 360px;
+}
+
+.test-video {
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+  display: block;
+}
+
+.animated-box {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  margin: 30px auto;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-content {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+.test-results {
+  background: #2d2d2d;
+  color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+.test-results h2 {
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.test-results pre {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #00ff00;
+}
+
+/* Fullscreen styles */
+video:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+video:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+video:-moz-full-screen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+video:-ms-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .test-controls {
+    flex-direction: column;
+  }
+  
+  .test-controls button {
+    width: 100%;
+  }
+  
+  .animated-box {
+    width: 100px;
+    height: 100px;
+    font-size: 12px;
+  }
+}
