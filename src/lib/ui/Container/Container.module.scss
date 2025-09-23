@@ -19,10 +19,10 @@
   }
 
   @include vp-768 {
-    padding: 0 clamp(0.15rem, 1vw, 0.3rem);
+    padding: 0 clamp(0.1rem, 0.75vw, 0.2rem);
   }
 
   @include vp-375 {
-    padding: 0 clamp(0.1rem, 0.5vw, 0.15rem);
+    padding: 0 clamp(0.05rem, 0.25vw, 0.1rem);
   }
 }
