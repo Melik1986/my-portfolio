@@ -76,6 +76,11 @@
     margin: 0;
   }
 
+  &__links-container {
+    display: flex;
+    gap: 10px;
+  }
+
   // Стили для ссылки
   &__link {
     font-family: $font-family-leckerli;

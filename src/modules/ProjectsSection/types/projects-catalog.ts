@@ -14,6 +14,7 @@ export interface ProjectData {
   title: string;
   text: string;
   link: string;
+  preview?: string; // Ссылка на живую preview-версию проекта
   theme?: ProjectTheme; // Опциональная цветовая тема для проекта
 }
 

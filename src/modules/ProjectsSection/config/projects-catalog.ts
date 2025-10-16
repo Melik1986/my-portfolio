@@ -64,6 +64,7 @@ export const PROJECTS_DATA: ProjectData[] = [
       'The project was implemented with an emphasis on adaptability, animation and usability. ' +
       'The work applied modern approaches to the development and optimization of the interface.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/algora',
+    preview: 'https://my-projectalgora.vercel.app/',
     theme: {
       textColor: '#292929',
       titleColor: '#292929',
@@ -78,6 +79,7 @@ export const PROJECTS_DATA: ProjectData[] = [
     title: 'VK Marusya',
     text: 'A modern TypeScript React application for watching movies and trailers with genre filtering, search functionality, and user authentication.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/ВК-Маруся',
+    preview: 'https://my-projects-vk-kino.vercel.app/',
     theme: {
       textColor: '#ffffff',
       titleColor: '#ffffff',
@@ -92,6 +94,7 @@ export const PROJECTS_DATA: ProjectData[] = [
     title: 'Houzzy',
     text: 'Complete furniture e-commerce platform with shopping cart, advanced filters, product search, and recently viewed items.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/Houzzy',
+    preview: 'https://houzzy-furniture-store.vercel.app/',
     theme: {
       textColor: '#292929',
       titleColor: '#292929',
@@ -136,6 +139,7 @@ export const PROJECTS_DATA: ProjectData[] = [
       ' Design & Art Direction Portfolio ' +
       'A fast, minimal, motion‑driven portfolio built with React + Vite.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/aiden-brooks',
+    preview: 'https://my-project-aiden-brooks.vercel.app/',
     theme: {
       textColor: '#ffffff',
       titleColor: '#ffffff',
@@ -198,6 +202,7 @@ export const PROJECTS_DATA: ProjectData[] = [
     title: 'CG Karim ',
     text: 'CG Karim Saab Scroll Animation.',
     link: 'https://github.com/Melik1986/Projects-catalog/tree/master/cg-karim-saab-scroll-animation',
+    preview: 'https://my-projects-gcg-karim.vercel.app/',
     theme: {
       textColor: '#ffffff',
       titleColor: '#ffffff',
